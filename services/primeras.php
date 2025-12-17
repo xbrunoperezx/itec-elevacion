@@ -1,16 +1,25 @@
 <?php
 
-if(isset($_POST["filtro_total"])){
-	$lim = $_POST["filtro_total"];
-}else{
-    $lim = 15;
+// Initialize expected POST variables with safe defaults to avoid undefined index notices
+$__post_defaults = [
+  'filtro_total' => 15,
+  'filtro_id' => '',
+  'filtro_direccion' => '',
+  'filtro_nombre' => '',
+  'filtro_rae' => '',
+  'filtro_localidad' => '',
+  'filtro_fecha_inicio' => '',
+  'filtro_fecha_fin' => '',
+  'filtro_pendientes' => 'false'
+];
+foreach ($__post_defaults as $k => $v) {
+  if (!isset($_POST[$k])) {
+    $_POST[$k] = $v;
+  }
 }
 
-if(isset($_POST["filtro_id"])){
-  $id = $_POST["filtro_id"];
-}else{
-    $id = "";
-}
+$lim = $_POST["filtro_total"];
+$id = $_POST["filtro_id"];
 
 include("conn_bbdd.php");
 // $link = mysqli_connect("89.46.111.188", "Sql1396152", "5i4w182228", "Sql1396152_2");
