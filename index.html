@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="robots" content="noindex, nofollow">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Librería XLS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Importación de Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Tu propio CSS personalizado -->
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <title>SGASTUR - SGA Elevación</title>
+  </head>
+  <body>
+
+    <!-- Menú de navegación -->
+    <nav>
+      <div class="nav-wrapper">
+        <img class="right logo_itec" src="img/logo_itec.png" height="50">&nbsp;&nbsp;
+        <ul id="nav-mobile" class="left hide-on-med-and-down">
+          <li id="cli" class="active"><a href="#Clientes"><i class="material-icons left">people</i>Clientes</a></li>
+          <li id="con"><a href="#Contratadas"><i class="material-icons left">business</i>Contratadas</a></li>
+          <li id="pri"><a href="#Primeras"><i class="material-icons left">star</i>Primeras</a></li>
+          <li id="seg"><a href="#Segundas"><i class="material-icons left">star_half</i>Segundas</a></li>
+          <li id="cer"><a href="#Cerradas"><i class="material-icons left">close</i>Cerradas</a></li>
+          <li id="fac"><a href="#Facturas"><i class="material-icons left">receipt</i>Facturas</a></li>
+          <li id="adm"><a href="#Administrador"><i class="material-icons left">supervisor_account</i>Administrador</a></li>
+          <li id="equ"><a href="#Equipos"><i class="material-icons left">devices</i>Equipos</a></li>
+          <li id="usu"><a href="#Usuario"><i class="material-icons left">person</i>Usuario</a></li>
+          <li id="his"><a href="#Historial de versiones"><i class="material-icons left">history</i>Historial de versiones</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Contenido de la aplicación -->
+    <div class="container">
+      <div id="app-content">
+        <div id="tab_cli" class="tab-content">
+          <div class="row">
+            <div class="section" id="sectionToggle_cli">
+              <div class="input-field col ancho75">
+                  <input type="number" id="filtro_cli_total" value="15">
+                  <label for="filtro_cli_total">Registros</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_cli_nombre">
+                  <label for="filtro_cli_nombre">Nombre</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_cli_direccion">
+                  <label for="filtro_cli_direccion">Dirección</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_cli_localidad">
+                  <label for="filtro_cli_localidad">Localidad</label>
+              </div>
+              <div class="input-field col ancho75">
+                  <input type="text" id="filtro_cli_cp">
+                  <label for="filtro_cli_cp">CP</label>
+              </div>
+              <div class="input-field col ancho75">
+                  <input type="text" id="filtro_cli_rae">
+                  <label for="filtro_cli_rae">Rae</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="date" id="filtro_cli_fechainicio">
+                  <label for="filtro_cli_fechainicio">F.Vencimiento [ desde ]</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="date" id="filtro_cli_fechafin">
+                  <label for="filtro_cli_fechafin">[ hasta ]</label>
+              </div>
+              <div class="input-field col s1">
+                  <button class="btn-floating waves-effect waves-light red" id="filtrar_cli" title='Filtrar'>
+                      <i class="material-icons">search</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light grey hide" id="filtrar_cli_clear" title='Limpiar'>
+                      <i class="material-icons">clear</i>
+                  </button>
+              </div>
+              <div class="right input-field col s1"><button class="right btn-floating waves-effect waves-light grey" id="btnToggle_cli"><i class="material-icons">arrow_drop_up</i></button></div>
+              <div class="right input-field col s1">
+                  <button class="btn-floating waves-effect waves-light black" id="imprimir_cli" title='Generar PDF'>
+                    <i class="material-icons">print</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light green" id="exportar_cli" title='Exportar a XLS (Excel)'>
+                    <i class="material-icons">import_export</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light red" id="settings_cli" title='Configurar listado'>
+                    <i class="material-icons">settings</i>
+                  </button>
+              </div>
+            </div>
+          </div>
+          <table class="highlight" id="table_cli">
+            <thead>
+              <tr class="header-row">
+                <th>&nbsp;</th>
+                <th class="orderBy">RAE<span class="direct"></span></th>
+                <th>&nbsp;</th>
+                <th class="orderBy">Dirección<span class="direct"></span></th>
+                <th class="orderBy">CP<span class="direct"></span></th>
+                <th class="orderBy">Localidad<span class="direct"></span></th>
+                <th class="orderBy">Mantenedor<span class="direct"></span></th>
+                <th class="orderBy">Vencimiento<span class="direct"></span></th>
+                <th>Opciones<span class="direct"></span></th>
+                <th>&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+          <div id="resultados_cli"></div>
+        </div>
+
+        <div id="tab_con" class="tab-content" style="display:none;">
+          <div class="row">
+            <div class="section" id="sectionToggle_con">
+              <div class="input-field col ancho75">
+                  <input type="number" id="filtro_con_total" value="15">
+                  <label for="filtro_con_total">Registros</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_con_nombre">
+                  <label for="filtro_con_nombre">Nombre</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_con_direccion">
+                  <label for="filtro_con_direccion">Dirección</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_con_localidad">
+                  <label for="filtro_con_localidad">Localidad</label>
+              </div>
+              <div class="input-field col ancho75">
+                  <input type="text" id="filtro_con_rae">
+                  <label for="filtro_con_rae">Rae</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="date" id="filtro_con_fechainicio">
+                  <label for="filtro_con_fechainicio">F.Vencimiento [ desde ]</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="date" id="filtro_con_fechafin">
+                  <label for="filtro_con_fechafin">[ hasta ]</label>
+              </div>
+              <div class="input-field col s1">
+                  <button class="btn-floating waves-effect waves-light red" id="filtrar_con" title='Filtrar'>
+                      <i class="material-icons">search</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light grey hide" id="filtrar_con_clear" title='Limpiar'>
+                      <i class="material-icons">clear</i>
+                  </button>
+              </div>
+              <div class="right input-field col s1"><button class="right btn-floating waves-effect waves-light grey" id="btnToggle_con"><i class="material-icons">arrow_drop_up</i></button></div>
+              <div class="right input-field col s1">
+                  <button class="btn-floating waves-effect waves-light black" id="imprimir_con" title='Generar PDF'>
+                    <i class="material-icons">print</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light green" id="exportar_con" title='Exportar a XLS (Excel)'>
+                    <i class="material-icons">import_export</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light red" id="settings_con" title='Configurar listado'>
+                    <i class="material-icons">settings</i>
+                  </button>
+              </div>
+            </div>
+          </div>
+          <table class="highlight" id="table_con">
+            <thead>
+              <tr class="header-row">
+                <th>&nbsp;</th>
+                <th class="orderBy">Nº Sol.<span class="direct"></span></th>
+                <th class="orderBy">Inf.<span class="direct"></span></th>
+                <th class="orderBy">RAE<span class="direct"></span></th>
+                <th>&nbsp;</th>
+                <th class="orderBy">Dirección<span class="direct"></span></th>
+                <th class="orderBy">CP<span class="direct"></span></th>
+                <th class="orderBy">Localidad<span class="direct"></span></th>
+                <th class="orderBy">Mantenedor<span class="direct"></span></th>
+                <th class="orderBy">Vencimiento<span class="direct"></span></th>
+                <th>Opciones<span class="direct"></span></th>
+                <th>&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+          <div id="resultados_con"></div>
+        </div>
+
+        <div id="tab_pri" class="tab-content" style="display:none;">
+          <div class="row">
+            <div class="section" id="sectionToggle_pri">
+              <div class="input-field col ancho75">
+                  <input type="number" id="filtro_pri_total" value="15">
+                  <label for="filtro_pri_total">Registros</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_pri_nombre">
+                  <label for="filtro_pri_nombre">Nombre</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_pri_direccion">
+                  <label for="filtro_pri_direccion">Dirección</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_pri_localidad">
+                  <label for="filtro_pri_localidad">Localidad</label>
+              </div>
+              <div class="input-field col ancho75">
+                  <input type="text" id="filtro_pri_rae">
+                  <label for="filtro_pri_rae">Rae</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="date" id="filtro_pri_fechainicio">
+                  <label for="filtro_pri_fechainicio">F.Inspección [ desde ]</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="date" id="filtro_pri_fechafin">
+                  <label for="filtro_pri_fechafin">[ hasta ]</label>
+              </div>
+              <div class="input-field col s1">
+                  <label><input type="checkbox" id="filtro_pri_pendiente" class="filled-in">
+                  <span>Pendientes</span></label>
+              </div>
+              <div class="input-field col s1">
+                  <button class="btn-floating waves-effect waves-light red" id="filtrar_pri" title='Filtrar'>
+                      <i class="material-icons">search</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light grey hide" id="filtrar_pri_clear" title='Limpiar'>
+                      <i class="material-icons">clear</i>
+                  </button>
+              </div>
+              <div class="right input-field col s1"><button class="right btn-floating waves-effect waves-light grey" id="btnToggle_pri"><i class="material-icons">arrow_drop_up</i></button></div>
+              <div class="right input-field col s1">
+                  <button class="btn-floating waves-effect waves-light black" id="imprimir_pri" title='Generar PDF'>
+                    <i class="material-icons">print</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light green" id="exportar_pri" title='Exportar a XLS (Excel)'>
+                    <i class="material-icons">import_export</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light red" id="settings_pri" title='Configurar listado'>
+                    <i class="material-icons">settings</i>
+                  </button>
+              </div>
+            </div>
+          </div>
+          <table class="highlight" id="table_pri" border=1>
+            <thead>
+              <tr class="header-row">
+                <th>&nbsp;</th>
+                <th class="orderBy">Año<span class="direct"></span></th>
+                <th class="orderBy">Inf.<span class="direct"></span></th>
+                <th class="orderBy">RAE<span class="direct"></span></th>
+                <th>&nbsp;</th>
+                <th class="orderBy">Dirección<span class="direct"></span></th>
+                <th class="orderBy">Mantenedor<span class="direct"></span></th>
+                <th>&nbsp;</th>
+                <th class="orderBy">Fecha<span class="direct"></span></th>
+                <th class="orderBy">Resultado<span class="direct"></span></th>
+                <th class="orderBy">F. Industria<span class="direct"></span></th>
+                <th>Opciones<span class="direct"></span></th>
+                <th>&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+          <div id="resultados_pri"></div>
+        </div>
+
+        <div id="tab_seg" class="tab-content" style="display:none;">
+          <div class="row">
+            <div class="section" id="sectionToggle_seg">
+              <div class="input-field col ancho75">
+                  <input type="number" id="filtro_seg_total" value="15">
+                  <label for="filtro_seg_total">Registros</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_seg_nombre">
+                  <label for="filtro_seg_nombre">Nombre</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_seg_direccion">
+                  <label for="filtro_seg_direccion">Dirección</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_seg_localidad">
+                  <label for="filtro_seg_localidad">Localidad</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_seg_rae">
+                  <label for="filtro_seg_rae">Rae</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="date" id="filtro_seg_fechainicio">
+                  <label for="filtro_seg_fechainicio">F.Inspección [ desde ]</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="date" id="filtro_seg_fechafin">
+                  <label for="filtro_seg_fechafin">[ hasta ]</label>
+              </div>
+              <div class="input-field col s1">
+                  <label><input type="checkbox" id="filtro_seg_pendiente" class="filled-in">
+                  <span>Pendientes</span></label>
+              </div>
+              <div class="input-field col s1">
+                  <button class="btn-floating waves-effect waves-light red" id="filtrar_seg" title='Filtrar'>
+                      <i class="material-icons">search</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light grey hide" id="filtrar_seg_clear" title='Limpiar'>
+                      <i class="material-icons">clear</i>
+                  </button>
+              </div>
+              <div class="right input-field col s1"><button class="right btn-floating waves-effect waves-light grey" id="btnToggle_seg"><i class="material-icons">arrow_drop_up</i></button></div>
+              <div class="right input-field col s1">
+                  <button class="btn-floating waves-effect waves-light black" id="imprimir_seg" title='Generar PDF'>
+                    <i class="material-icons">print</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light green" id="exportar_seg" title='Exportar a XLS (Excel)'>
+                    <i class="material-icons">import_export</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light red" id="settings_seg" title='Configurar listado'>
+                    <i class="material-icons">settings</i>
+                  </button>
+              </div>
+            </div>
+          </div>
+          <table class="highlight" id="table_seg" border=1>
+            <thead>
+              <tr class="header-row">
+                <th>&nbsp;</th>
+                <th class="orderBy">Año<span class="direct"></span></th>
+                <th class="orderBy">Inf.<span class="direct"></span></th>
+                <th class="orderBy">RAE<span class="direct"></span></th>
+                <th>&nbsp;</th>
+                <th class="orderBy">Dirección<span class="direct"></span></th>
+                <th class="orderBy">Mantenedor<span class="direct"></span></th>
+                <th>&nbsp;</th>
+                <th class="orderBy">Vencimiento<span class="direct"></span></th>
+                <th>&nbsp;</th>
+                <th class="orderBy">Fecha<span class="direct"></span></th>
+                <th class="orderBy">Resultado<span class="direct"></span></th>
+                <th class="orderBy">F. Industria<span class="direct"></span></th>
+                <th>Opciones<span class="direct"></span></th>
+                <th>&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+          <div id="resultados_seg"></div>
+        </div>
+        <div id="tab_cer" class="tab-content" style="display:none;">Contenido de la pestaña Cerradas</div>
+        <div id="tab_fac" class="tab-content" style="display:none;">Contenido de la pestaña Facturas</div>
+        <div id="tab_adm" class="tab-content" style="display:none;">Contenido de la pestaña Administrador</div>
+        <div id="tab_equ" class="tab-content" style="display:none;">Contenido de la pestaña Equipos</div>
+        <div id="tab_usu" class="tab-content" style="display:none;">Contenido de la pestaña Usuario</div>
+        <div id="tab_his" class="tab-content" style="display:none;">Contenido de la pestaña Historial de versiones</div>
+        <div id="loading" class="center-align" style="display: none;">... LOADING ...</div>
+      </div>
+    </div>
+
+  <!-- Estructura del Modal -->
+  <div id="modal_cli" class="modal">
+    <div class="modal-content">
+      <div class="red white-text row valign-wrapper">
+          &nbsp;&nbsp;<i class='left material-icons'>people</i><h6 class="modal_txt_title">Título del Modal</h6>
+      </div>
+    </div>
+    <div class="contentTabs"></div>
+    <div class="contentForm"></div>
+    <div class="modal-footer">
+      <a href="#!" class="modal_txt_btn_left left waves-effect waves-light btn modal-trigger green accent-4" id="cli_save"><i class="material-icons left">save</i>Guardar</a>
+      <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn modal-trigger red accent-4" id="cli_exit">Salir</a>
+    </div>
+  </div>
+  <div id="modal_con" class="modal">
+    <div class="modal-content">
+      <div class="red white-text row valign-wrapper">
+          &nbsp;&nbsp;<i class='left material-icons' id="modal_edit_icon">business</i><h6 class="modal_txt_title">Título del Modal</h6>
+      </div>
+    </div>
+    <div class="contentTabs"></div>
+    <div class="contentForm"></div>
+    <div class="modal-footer">
+      <a href="#!" class="modal_txt_btn_left left modal-close waves-effect waves-light btn modal-trigger green accent-4" id="con_save">Guardar</a>
+      <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn modal-trigger red accent-4" id="con_exit">Salir</a>
+    </div>
+  </div>
+
+  <div id="modal_pri" class="modal">
+    <div class="modal-content">
+      <div class="red white-text row valign-wrapper">
+          &nbsp;&nbsp;<i class='left material-icons' id="modal_edit_icon">edit</i><h6 class="modal_txt_title">Título del Modal</h6>
+      </div>
+    </div>
+    <div class="contentTabs"></div>
+    <div class="contentForm"></div>
+    <div class="modal-footer">
+      <a href="#!" class="modal_txt_btn_left left modal-close waves-effect waves-light btn modal-trigger green accent-4" id="pri_save">Guardar</a>
+      <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn modal-trigger red accent-4" id="pri_save">Salir</a>
+    </div>
+  </div>
+
+  <div id="modal_seg" class="modal">
+    <div class="modal-content">
+      <div class="red white-text row valign-wrapper">
+          &nbsp;&nbsp;<i class='left material-icons' id="modal_edit_icon">edit</i><h6 class="modal_txt_title">Título del Modal</h6>
+      </div>
+    </div>
+    <div class="contentTabs"></div>
+    <div class="contentForm"></div>
+    <div class="modal-footer">
+      <a href="#!" class="modal_txt_btn_left left modal-close waves-effect waves-light btn modal-trigger green accent-4" id="seg_save">Guardar</a>
+      <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn modal-trigger red accent-4" id="seg_save">Salir</a>
+    </div>
+  </div>
+
+  <div id="modal_error" class="modal">
+    <div class="modal-content">
+      <div class="valign-wrapper tituloModal red white-text">
+        <i class='left material-icons white-text' id="modal_error_icon">warning</i><h6 id="error-title"></h6>
+      </div>
+      <p id="error-message" class="center"></p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="right modal-close waves-effect waves-light btn modal-trigger red accent-4"><i class='material-icons left'>check</i>Aceptar</a>
+    </div>
+  </div>
+
+  <div id="modal_confirm" class="modal">
+    <div class="modal-content">
+      <div class="valign-wrapper tituloModal red white-text">
+        <i class='left material-icons white-text' id="modal_confirm_icon">save</i><h6 id="confirm-title"></h6>
+      </div>
+      <p id="confirm-message" class="center"></p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="left waves-effect waves-light btn modal-trigger green accent-4" id="save_confirm"><i class="material-icons left">check</i>Aceptar</a>
+      <a href="#!" class="right waves-effect waves-light btn modal-trigger red accent-4" id="save_cancel"><i class="material-icons left">clear</i>Cancelar</a>
+    </div>
+  </div>
+
+  <div id="modal_export" class="modal">
+    <div class="modal-content">
+      <div class="valign-wrapper tituloModal green white-text">
+        <i class='left material-icons white-text' id="modal_export_icon">import_export</i><h6 id="export-title"></h6>
+      </div>
+      <div id="export-content"></div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="right modal-close waves-effect waves-light btn modal-trigger green accent-4"><i class='material-icons left'>exit_to_app</i>Cerrar</a>
+    </div>
+  </div>
+
+    <!-- Footer -->
+    <br><br>&nbsp;
+    <footer>
+      <div class="footer-copyright">
+        <div class="container">
+          SGASTUR © Todos los derechos reservados
+        </div>
+      </div>
+    </footer>
+    <!-- JavaScript personalizado -->
+    <script src="js/func_clientes.js"></script>
+    <script src="js/func_contratadas.js"></script>
+    <script src="js/func_informes.js"></script>
+    <script src="js/func_segundas.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

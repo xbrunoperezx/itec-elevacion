@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Materialize Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <title>SGASTUR - SGA Elevación Login</title>
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+  </head>
+  <body>
+    <div class="container">
+  <div class="row">
+    <div class="col s12 m6 offset-m3">
+      <div id="login-dialog">
+      <!-- Formulario de Login -->
+        <img src="img/logo_itec_login.png" style="margin-left:20px">
+        <form class="col s12" id="formulario_login">
+          <div class="row">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">user</i>
+              <input type="text" id="user" required>
+              <label for="user">Usuario</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">vpn_key</i>
+              <input type="password" id="password" required>
+              <label for="password">Password</label>
+            </div>
+          </div>
+          <div class="row center-align">
+            <button class="btn waves-effect waves-light grey" type="submit">Login
+              <i class="material-icons right">send</i>
+            </button>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-copyright">
+        <div class="container">
+          SGASTUR © Todos los derechos reservados
+        </div>
+      </div>
+    </footer>
+    <!-- Script de Login -->
+    <script>
+
+      // Al hacer submit en el formulario
+      $("#formulario_login").submit(function(event){
+        // Prevenir comportamiento por defecto
+        event.preventDefault();
+
+        // Recoger valores de los campos user y password
+        var user = $("#user").val();
+        var password = $("#password").val();
+
+        // Realizar petición POST a user_access.php
+        $.post("services/user_access.php", {user: user, password: password}, function(data){
+          // Si el resultado es "success"
+          if(data == "success"){
+            // Redirigir a la página principal
+            window.location.href = "index.html";
+          }
+          // Si el resultado es "error"
+          else{
+            // Mostrar modal de error
+            M.toast({html: "Usuario o password incorrectos"});
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

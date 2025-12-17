@@ -1,0 +1,515 @@
+// Funciones relacionadas con la pestaña de clientes
+var readClientes = function(id, totalParams){
+	// limpiamos la tabla de clientes
+	$("#table_cli tbody").empty();
+	// Realizar la petición HTTP a la API
+	$.ajax({
+		url: 'services/clientes.php',
+		type: 'POST',
+		data: totalParams,
+		success: function(data) {
+				$("span.direct").html('');
+		    // Recorrer los datos devueltos por la consulta
+		    datos = JSON.parse(data)["resultados"];
+		    dataLayer.push({
+		    	"event" : "service",
+		    	"type" : "list_cli",
+		    	"data" : datos
+		    });
+		    mantenedores = JSON.parse(data)["mantenedores"];
+		    var totalResultados = 0;
+		    $.each(datos, function(index, item) {
+		      // Construir la fila de la tabla con los datos
+		      var tableRow = "<tr>" +
+		        "<td class='ancho50'>";
+		        if(item.contratada==0){
+		          tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Contratar inspección'>" +
+		            "<i class='material-icons'>assignment_turned_in</i>" +
+		          "</a>";
+		        }else{
+		          tableRow += "<a class='disabled btn-floating btn-small waves-effect waves-light grey' title='Contratada'>" +
+		            "<i class='material-icons'>assignment_turned_in</i>" +
+		          "</a>";
+		        }
+		        tableRow += "</td>" +
+		        "<td class='ancho75'>" + item.rae + "</td>" +
+		        "<td class='ancho50'>" +
+		          "<a seccion='cli' tipo='frm_editcli' data-id='" + item.id + "' class='editar_cli btn-floating btn-small waves-effect waves-light green' title='Editar cliente'>" +
+		            "<i class='material-icons'>edit</i>" +
+		          "</a>&nbsp;" +
+		        "</td>" +
+		        "<td><span class='main-text'>" + item.nombre + "</span><br><span class='secondary-text'>" + item.direccion + "</span></td>" +
+		        "<td class='ancho75'>" + item.cp + "</td>" +
+		        "<td>" + item.localidad + "</td>" +
+		        "<td class='ancho200'>" + item.mantenedor + "</td>" +
+		        "<td class='ancho150'>" + item.vencimiento_dmy + "</td>" +
+		        "<td class='ancho150'>";
+		        if(item.email!=""){
+		          tableRow += "<a class='btn-floating btn-small waves-effect waves-light black' title='Enviar email: " + item.email + "' href='mailto:" + item.email + "'>" +
+		            "<i class='material-icons'>email</i>" +
+		          "</a>&nbsp;";
+		        }else{
+		          tableRow += "<a class='disabled btn-floating btn-small waves-effect waves-light black' title='Sin email' href=''>" +
+		            "<i class='material-icons'>email</i>" +
+		          "</a>&nbsp;";		        	
+		        }
+		        if(item.telefono!=""){
+		        	tableRow += "<a class='btn-floating btn-small waves-effect waves-light black' title='Llamar a: " + item.telefono + "' href='tel:" + item.telefono + "'>" +
+		            "<i class='material-icons'>local_phone</i>" +
+		          "</a>&nbsp;";
+		        }else{
+		        	tableRow += "<a class='disabled btn-floating btn-small waves-effect waves-light grey' title='Llamar a: " + item.telefono + "' href='tel:" + item.telefono + "'>" +
+		            "<i class='material-icons'>local_phone</i>" +
+		          "</a>&nbsp;";
+		        }
+		        if(item.id_administrador!=0){
+		        	tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Administrador: "+ item.quien_contrata +"' href=''>" +
+		            "<i class='material-icons'>home</i>" +
+		          "</a>";
+		        }else{
+		        	tableRow += "<a class='disabled btn-floating btn-small waves-effect waves-light grey' title='' href=''>" +
+		            "<i class='material-icons'>home</i>" +
+		          "</a>";
+		        }
+		          tableRow += "</td>" +
+		        "<td class='ancho50'>" +
+		          "<a class='btn-floating btn-small waves-effect waves-light red' title='Más'>" +
+		            "<i class='material-icons'>more_vert</i>" +
+		          "</a>" +
+		        "</td>" +
+		      "</tr>";
+
+		      // Agregar la fila a la tabla
+		      $("#table_cli").append(tableRow);
+		      totalResultados++;
+		    });
+
+		    // Crear la fila que muestra el total de resultados
+			var totalRow = "<span class='main-text'>Total de resultados:</span> <span class='secondary-text'>" + totalResultados + "</span>";
+			// Agregar la fila a la tabla
+			$("#resultados_cli").html(totalRow);
+
+		    $('#app-content > div#loading').hide();
+			$('#app-content div#tab_'+id).show();
+		},
+		error: function(xhr, status, error) {
+			// Mostrar un mensaje de error en el centro de la pantalla
+			$('#app-content div#error').html(error);
+			$('#app-content div#error').show();
+		}
+	});
+}
+
+// Filtros de cliente
+jQuery(document).on("keypress", "#tab_cli [id*=filtro_cli]", function(){
+	jQuery("#filtrar_cli_clear").removeClass("hide");
+});
+
+jQuery(document).on("click", "#filtrar_cli", function() {
+  var total = jQuery(this).parents("#tab_cli").find("#filtro_cli_total").val();
+  if((parseInt(total)>=1)){
+	  var nombre = jQuery(this).parents("#tab_cli").find("#filtro_cli_nombre").val();
+	  var direccion = jQuery(this).parents("#tab_cli").find("#filtro_cli_direccion").val();
+	  var localidad = jQuery(this).parents("#tab_cli").find("#filtro_cli_localidad").val();
+	  var cp = jQuery(this).parents("#tab_cli").find("#filtro_cli_cp").val();
+	  var rae = jQuery(this).parents("#tab_cli").find("#filtro_cli_rae").val();
+	  var fechaini = jQuery(this).parents("#tab_cli").find("#filtro_cli_fechainicio").val();
+	  var fechafin = jQuery(this).parents("#tab_cli").find("#filtro_cli_fechafin").val();
+	  var filtros = {
+	  	filtro_total : total,
+	  	filtro_nombre : nombre,
+	  	filtro_direccion : direccion,
+	  	filtro_localidad : localidad,
+	  	filtro_cp : cp,
+		filtro_rae : rae,
+		filtro_fecha_inicio : fechaini,
+		filtro_fecha_fin : fechafin
+	  };
+	  var tipo = "cli";
+		readClientes(tipo, filtros);
+  }else{
+  	$("#error-title").text("ERROR");
+  	$("#error-message").text("Hay que introducir un número mínimo de resultados esperados! Para ello introduce un valor en el campo registros, dentro del módulo de filtros.");
+  	jQuery("#modal_error").modal({
+		dismissible: false
+	});
+  	$("#modal_error").modal("open");	
+  }
+});
+
+// Limpiar filtros de cliente
+jQuery(document).on("click", "#filtrar_cli_clear", function() {
+	jQuery(this).addClass("hide");
+	jQuery(this).parents("#tab_cli").find("#filtro_cli_nombre").val('');
+	jQuery(this).parents("#tab_cli").find("#filtro_cli_direccion").val('');
+	jQuery(this).parents("#tab_cli").find("#filtro_cli_localidad").val('');
+	jQuery(this).parents("#tab_cli").find("#filtro_cli_cp").val('');	
+	jQuery(this).parents("#tab_cli").find("#filtro_cli_rae").val('');	
+	jQuery(this).parents("#tab_cli").find("#filtro_cli_fechainicio").val('');	
+	jQuery(this).parents("#tab_cli").find("#filtro_cli_fechafin").val('');	
+	jQuery(this).parents("#tab_cli").find("label").not(":eq(0)").removeClass("active");
+	jQuery(this).parents("#tab_cli").find("#filtro_cli_total").val('15');	
+	jQuery(this).parents("#tab_cli").find("#filtrar_cli").click();
+}); // end limpiar filtros de cliente
+
+var openCliente = function(seccion, cual, id){
+	// formulario edicion cliente
+	if(cual=="frm_editcli"){
+		// Realizar la petición HTTP a la API
+		var totalParams = {
+			filtro_id : id
+		}
+		$.ajax({
+			url: 'services/clientes.php',
+			type: 'POST',
+			data: totalParams,
+			success: function(data) {
+			    // Recorrer los datos devueltos por la consulta
+			    item = JSON.parse(data)["resultados"][0];
+			    dataLayer.push({
+		    		"event" : "service",
+		    		"type" : "view_cli",
+		    		"data" : item
+		    	});
+			    mantenedores = JSON.parse(data)["mantenedores"];
+			    var title = "Editar cliente";
+			    title+= " - RAE: "+item.rae;
+					$("#modal_"+seccion).find(".modal_txt_title").text(title);
+					$("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
+					$("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
+					var frm_tabs = '<ul class="tabs">' + 
+		        '<li class="tab col s3"><a class="active tablink1" href="#tab1_cli">Ascensor</a></li>' + 
+		        '<li class="tab col s3"><a class="tablink2" href="#tab2_cli">Datos</a></li>' + 
+		        '<li class="tab col s3"><a class="tablink3" href="#tab3_cli">Contratación</a></li>' + 
+		        '<li class="tab col s3"><a class="tablink4" href="#tab4_cli">Facturación</a></li>' + 
+		        '<li class="tab col s3"><a class="tablink5" href="#tab5_cli">Otros</a></li>' + 
+		      '</ul>';
+					var frm_render = '<form id="cliente_frm_editar">' +
+			    '<div id="tab1_cli" class="active col s12">' + 
+			    '<div class="input-field anchoFrm4">' +
+			      '<input type="text" id="rae_cli" name="rae_cli" value="' + item.rae + '">' +
+			      '<label for="rae_cli" class="active">RAE</label>' +
+			    '</div>' +
+			    '<div class="input-field anchoFrm4">' +
+			      '<select id="mantenedor_cli" name="mantenedor_cli">';
+			      	for (let clave in mantenedores){
+				      	if(item.id_mantenedor==clave){
+				      		frm_render += '<option value="'+ clave +'" selected>'+ mantenedores[clave] +'</option>';
+				      	}else{
+				      		frm_render += '<option value="'+ clave +'">'+ mantenedores[clave] +'</option>';				      	
+				      	}
+			      	};
+			      frm_render+='</select>' + 
+			      '<label for="mantenedor_cli">Mantenedor</label>' +
+			    '</div>' +	
+			    '<div class="input-field anchoFrm4">';
+			    if(item.vencimiento!="0000-00-00"){
+			    	frm_render+='<input type="date" id="vencimiento_cli" name="vencimiento_cli" value="' + item.vencimiento + '">';
+				}else{
+					frm_render+='<input type="date" id="vencimiento_cli" name="vencimiento_cli">';
+				}
+			      frm_render+='<label for="vencimiento_cli" class="active">Vencimiento</label>' +
+			    '</div>' +
+			    '<div class="input-field anchoFrm4">' +
+			      '<input type="number" id="cada_cli" name="cada_cli" value="' + item.cada + '">' +
+			      '<label for="cada_cli" class="active">Periodicidad (años)</label>' +
+			    '</div>' +	
+			    '</div>' +
+
+			    '<div id="tab2_cli" class="active col s12">' + 
+				    '<div class="input-field">' +
+				      '<input type="text" id="nombre_cli" name="nombre_cli" value="' + item.nombre + '">' +
+				      '<label for="nombre_cli" class="active">Titular</label>' +
+				    '</div>' +
+				    '<div class="input-field">' +
+				      '<input type="text" id="direccion_cli" name="direccion_cli" value="' + item.direccion + '">' +
+				      '<label for="direccion_cli" class="active">Dirección</label>' +
+				    '</div>' +
+				    '<div class="input-field anchoFrm4">' +
+				      '<input type="text" id="cp_cli" name="cp_cli" value="' + item.cp + '">' +
+				      '<label for="cp_cli" class="active">Código Postal</label>' +
+				    '</div>' +
+				    '<div class="input-field anchoFrm2">' +
+				      '<input type="text" id="localidad_cli" name="localidad_cli" value="' + item.localidad + '">' +
+				      '<label for="localidad_cli" class="active">Localidad</label>' +
+				    '</div>' +   
+				    '<div class="input-field anchoFrm2">' +
+				      '<input type="text" id="municipio_cli" name="municipio_cli" value="' + item.municipio + '">' +
+				      '<label for="municipio_cli" class="active">Municipio</label>' +
+				    '</div>' +      	
+				    '<div class="input-field anchoFrm2">' +
+				      '<input type="text" id="provincia_cli" name="provincia_cli" value="' + item.provincia + '">' +
+				      '<label for="provincia_cli" class="active">Provincia</label>' +
+				    '</div>' +    
+			    '</div>' + 
+
+			    '<div id="tab3_cli" class="col s12">' + 
+				    '<div class="input-field anchoFrm2">' +
+				    '<input type="text" id="quien_contrata_cli" name="quien_contrata_cli" value="' + item.quien_contrata + '">' +
+				    '<label for="quien_contrata_cli" class="active">Quien Contrata</label>' +
+				    '</div>' +
+				    '<div class="input-field switch">' +
+						'<label for="id_administrador_cli" class="active">' +
+						'<input type="checkbox" id="id_administrador_cli" name="id_administrador_cli"' + (item.id_administrador == 1 ? 'checked' : '') + ' />' +
+						'<span class="lever"></span>Administrador' +
+						'</label>' +
+				    '</div><br>' +
+			    	'<div class="input-field anchoFrm4">' +
+			      '<input type="text" id="telefono_cli" name="telefono_cli" value="' + item.telefono + '">' +
+			      '<label for="telefono_cli" class="active">Teléfono</label>' +
+			      '</div>' +
+			    	'<div class="input-field anchoFrm4">' +
+			      '<input type="text" id="telefono2_cli" name="telefono2_cli" value="' + item.telefono2 + '">' +
+			      '<label for="telefono2_cli" class="active">Teléfono 2</label>' +
+			      '</div>' +
+			    	'<div class="input-field anchoFrm2">' +
+			      '<input type="text" id="email_cli" name="email_cli" value="' + item.email + '">' +
+			      '<label for="email_cli" class="active">eMail</label>' +
+			      '</div>' +
+				    '<div class="input-field">' +
+				      '<input type="text" id="observaciones_cli" name="observaciones_cli" value="' + item.observaciones + '">' +
+				      '<label for="observaciones_cli" class="active">Observaciones</label>' +
+				    '</div>' +    
+			    '</div>' +
+
+			    '<div id="tab4_cli" class="col s12">' + 
+			    '</div>' +
+
+			    '<div id="tab5_cli" class="col s12">' + 
+				    '<div class="input-field">' +
+				      '<input type="text" id="id_cli" name="id_cli" value="' + item.id + '" disabled>' +
+				      '<label for="id_cli" class="active">ID Cliente BBDD</label>' +
+				    '</div>' +    
+				    '<div class="input-field">' +
+				      '<input type="text" id="id_mantenedor_cli" name="id_mantenedor_cli" value="' + item.id_mantenedor + '" disabled>' +
+				      '<label for="id_mantenedor_cli" class="active">ID Mantenedor BBDD</label>' +
+				    '</div>' +   
+			    '</div>' +
+
+				  '</form>';
+				$("#modal_"+seccion).find(".contentTabs").html(frm_tabs);
+				$("#modal_"+seccion).find(".contentForm").html(frm_render);
+				$("#modal_"+seccion).find('.tabs').tabs();
+				$('select#mantenedor_cli').formSelect();
+				$("#modal_"+seccion).modal({
+					dismissible: false
+				});
+				$("#modal_"+seccion).modal("open");		
+			},
+			error: function(xhr, status, error) {
+				// Mostrar un mensaje de error en el centro de la pantalla
+				$('#app-content div#error').html(error);
+				$('#app-content div#error').show();
+			}
+		});				
+	}
+} // end openCliente()
+
+// Click en exportar clientes (abrir popup)
+jQuery(document).on("click", "#exportar_cli", function(){
+	jQuery("#export-title").text("Exportar listado de clientes en XLS (Excel)");
+  	//const lastView = dataLayer.reverse().find(obj => obj.type === "view_cli");
+  	var export_content = '<form>' +
+  	'<div class="input-field col s12">' + 
+  	'<span>Selecciona los campos que deseas incluir en la exportación:</span>' + 
+  	'</div>' + 
+  	'<div class="row">' + 
+	  	'<div class="col s6">' + 
+		  	'<div class="input-field">' + 
+		  	'<p><label><input type="checkbox" class="filled-in" cli_data="id" checked="checked" /><span>ID BBDD</span></label></p>' +
+		  	'</div>' + 
+		  	'<div class="input-field">' + 
+		  	'<p><label><input type="checkbox" class="filled-in" cli_data="rae" checked="checked" /><span>RAE</span></label></p>' +
+		  	'</div>' + 
+		  	'<div class="input-field">' + 
+		  	'<p><label><input type="checkbox" class="filled-in" cli_data="nombre" checked="checked" /><span>Titular</span></label></p>' +
+		  	'</div>' + 
+		  	'<div class="input-field">' + 
+		  	'<p><label><input type="checkbox" class="filled-in" cli_data="direccion" checked="checked" /><span>Dirección</span></label></p>' + 
+		  	'</div>' + 
+		  	'<div class="input-field">' + 
+		  	'<p><label><input type="checkbox" class="filled-in" cli_data="localidad" checked="checked" /><span>Localidad</span></label></p>' + 
+		  	'</div>' + 
+		  	'<div class="input-field">' + 
+		  	'<p><label><input type="checkbox" class="filled-in" cli_data="municipio" checked="checked" /><span>Municipio</span></label></p>' + 
+		  	'</div>' + 
+		  	'<div class="input-field">' + 
+		  	'<p><label><input type="checkbox" class="filled-in" cli_data="cp" checked="checked" /><span>Código Postal</span></label></p>' + 
+		  	'</div>' + 
+	  	'</div>' + 
+		'<div class="col s6">' + 
+		  	'<div class="input-field">' + 
+		  	'<p><label><input type="checkbox" class="filled-in" cli_data="mantenedor" checked="checked" /><span>Mantenedor</span></label></p>' + 
+		  	'</div>' + 
+		  	'<div class="input-field">' + 
+		  	'<p><label><input type="checkbox" class="filled-in" cli_data="vencimiento_dmy" checked="checked" /><span>Vencimiento</span></label></p>' + 
+		  	'</div>' + 
+		  	'<div class="input-field">' + 
+		  	'<p><label><input type="checkbox" class="filled-in" cli_data="cada" checked="checked" /><span>Periodicidad (cada)</span></label></p>' + 
+		  	'</div>' + 
+		  	'<div class="input-field">' + 
+		  	'<p><label><input type="checkbox" class="filled-in" cli_data="telefono" checked="checked" /><span>Telefono</span></label></p>' + 
+		  	'</div>' + 
+		  	'<div class="input-field">' + 
+		  	'<p><label><input type="checkbox" class="filled-in" cli_data="telefono2" checked="checked" /><span>Telefono 2</span></label></p>' + 
+		  	'</div>' + 
+		  	'<div class="input-field">' + 
+		  	'<p><label><input type="checkbox" class="filled-in" cli_data="email" checked="checked" /><span>Correo electrónico</span></label></p>' + 
+		  	'</div>' + 
+		  	'<div class="input-field">' + 
+		  	'<p><label><input type="checkbox" class="filled-in" cli_data="observaciones" checked="checked" /><span>Observaciones</span></label></p>' + 
+		  	'</div>' + 
+		'</div>' +   	
+		'<div class="col s12">' + 
+		  	'<div class="input-field col s12 center">' + 
+		  		'<a href="#!" class="waves-effect waves-light btn green accent-4" id="exportar_xls_cli"><i class="material-icons left">file_download</i>Descargar</a>' + 
+		  	'</div>' + 
+		'</div>' + 
+	'</div>' + 
+  	'</form>' + 
+  	'</div>';
+  	jQuery("#export-content").html(export_content);
+  	jQuery("#modal_export").modal({
+		dismissible: false
+	});
+  	jQuery("#modal_export").modal("open");
+}); // end click en exportar clientes
+
+// Click en exportar clientes (abrir popup)
+jQuery(document).on("click", "#exportar_xls_cli", function(){
+	lastObject = dataLayer.reverse().find(obj => obj.type === "list_cli");
+	var filteredData = filterData(lastObject.data);
+	downloadXLS(filteredData);
+});
+
+// función auxiliar para filtrar clientes
+function filterData(data) {
+	var selectedFields = [];
+	jQuery('input[type="checkbox"]:checked').each(function() {
+		selectedFields.push(jQuery(this).attr("cli_data"));
+	});
+
+	var filteredData = [];
+	for (var i = 0; i < data.length; i++) {
+		var obj = {};
+		for (var j = 0; j < selectedFields.length; j++) {
+			obj[selectedFields[j]] = data[i][selectedFields[j]];
+		}
+		filteredData.push(obj);
+	}
+
+	return filteredData;
+} // end filterdata()
+
+// función auxiliar para descargar XLS
+function downloadXLS(datos) {
+  var headers = Object.keys(datos[0]);
+  var data = [];
+  data.push(headers);
+
+  for (var i = 0; i < datos.length; i++) {
+    var row = [];
+    for (var j = 0; j < headers.length; j++) {
+      row.push(datos[i][headers[j]]);
+    }
+    data.push(row);
+  }
+
+  var ws = XLSX.utils.aoa_to_sheet(data);
+  var wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Datos");
+  XLSX.writeFile(wb, "datos.xlsx");
+} // end downloadXLS()
+
+// funcion guardar el cliente
+var saveCliente = function() {
+
+	// informamos en el popup del estado
+	$('#confirm-message').text("...guardando los cambios...");
+
+	// Obtener los valores de los campos del formulario
+  var id = $('#id_cli').val();
+  var rae = $('#rae_cli').val();
+  var nombre = $('#nombre_cli').val();
+  var direccion = $('#direccion_cli').val();
+  var localidad = $('#localidad_cli').val();
+  var municipio = $('#municipio_cli').val();
+  var cp = $('#cp_cli').val();
+  var provincia = $('#provincia_cli').val();
+  var quien_contrata = $('#quien_contrata_cli').val();
+  var observaciones = $('#observaciones_cli').val();
+  var id_mantenedor = $('#id_mantenedor_cli').val();
+  var id_administrador = $('#id_administrador_cli').is(':checked') ? 1 : 0;
+  var vencimiento = $('#vencimiento_cli').val();
+  var cada = $('#cada_cli').val();
+  var telefono = $('#telefono_cli').val();
+  var telefono2 = $('#telefono2_cli').val();
+  var email = $('#email_cli').val();
+
+  // Crear un objeto con los valores de los campos del formulario
+  var cliente = {
+    id: id,
+    rae: rae,
+    nombre: nombre,
+    direccion: direccion,
+    localidad: localidad,
+    municipio: municipio,
+    cp: cp,
+    provincia: provincia,
+    quien_contrata: quien_contrata,
+    observaciones: observaciones,
+    id_mantenedor: id_mantenedor,
+    vencimiento: vencimiento,
+    cada: cada,
+		id_administrador : id_administrador,
+		telefono : telefono,
+		telefono2 : telefono2,
+		email : email
+  };
+
+	$.ajax({
+		url: 'services/clientes_save.php',
+		type: 'POST',
+		data: cliente,
+		success: function(data) {
+
+			// Cerrar el modal de confirmación
+		  $('#modal_confirm').modal('close');
+		 	// Cerrar el modal de clientes
+		  $('#modal_cli').modal('close'); 
+		  // actualizar el listado
+		  $("#filtrar_cli").click();
+		},
+		error: function(xhr, status, error) {
+			// Mostrar un mensaje de error en el centro de la pantalla
+			$('#app-content div#error').html(error);
+			$('#app-content div#error').show();
+		}
+	});
+} // end saveCliente()
+
+
+// Click en guardar cliente
+$(document.body).on("click", "#cli_save", function(){
+	var confirmMessage = '¿Estás seguro de que quieres guardar los cambios?\n\n';
+	// Asignar mensaje de confirmación al modal
+  $('#confirm-message').text(confirmMessage);
+  $('#confirm-title').text("Guardar cambios en cliente");
+  $('#modal_confirm').attr("who", "cli");
+  // Mostrar el modal de confirmación
+  $('#modal_confirm').modal({
+		dismissible: false
+	});
+  $('#modal_confirm').modal('open');
+}); // end click en guardar cliente
+
+// Click en guardar en popup de confirmacion
+$(document.body).on("click", "#save_confirm", function(){
+	if(jQuery(this).closest("#modal_confirm").attr("who")=="cli") saveCliente();	
+}); // end click en guardar en popup de confirmacion
+
+// Click en cancelar en popup de confirmacion
+$(document.body).on("click", "#save_cancel", function(){
+	// Cerrar el modal de confirmación
+  $('#modal_confirm').modal('close');
+}); // click en cancelar popup confirmacion
