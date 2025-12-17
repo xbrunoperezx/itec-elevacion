@@ -102,7 +102,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     foreach (array_keys($row) as $key) {
         if (in_array($key, ["id","rae","nombre","direccion","localidad","municipio","cp","provincia","id_campo","id_mantenedor","id_administrador","quien_contrata","telefono","telefono2","email","tiene_datos","id_tarifa","id_formapago","vencimiento","cada","contratada","observaciones"])) {
             if($key=="id_mantenedor"){
-                if($mantenedores[$row[$key]]!=null){
+                if(isset($mantenedores[$row[$key]])){
                     $cliente['mantenedor'] = $mantenedores[$row[$key]];
                 }else{
                     $cliente['mantenedor'] = "-";
