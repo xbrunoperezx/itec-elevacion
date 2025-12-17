@@ -1,9 +1,9 @@
 <?php
 try {
     $host = "ikw4cos008ksg4w4g04cso4k";
-    $db   = "LELGRzf6r3yJoSzmYzvcgZK59KjxCYdGgc6q4dTjXLbxbtTlW2xKbHa6WgwTetXf";
-    $user = "itec_elevacion";
-    $pass = "mysql";
+    $db   = "itec_elevacion";
+    $user = "mysql";
+    $pass = "LELGRzf6r3yJoSzmYzvcgZK59KjxCYdGgc6q4dTjXLbxbtTlW2xKbHa6WgwTetXf";
 
     $link = new PDO(
         "mysql:host=$host;dbname=$db;charset=utf8mb4",
