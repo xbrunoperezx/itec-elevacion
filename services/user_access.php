@@ -17,28 +17,18 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
     }
 
     // Escapamos los datos del usuario para prevenir inyecciones SQL
-    //$username = mysqli_real_escape_string($link, $_POST['user']);
-    //$password = md5(mysqli_real_escape_string($link, $_POST['password']));
-    $username = $_POST['user'];
-    $password = md5($_POST['password']);
+    $username = mysqli_real_escape_string($link, $_POST['user']);
+    $password = md5(mysqli_real_escape_string($link, $_POST['password']));
 
     // Definimos la consulta SQL para verificar si existe el usuario
-    //$sql = "SELECT * FROM usuarios WHERE user = '{$username}' AND password = '{$password}'";
-    $stmt = $link->prepare(
-        "SELECT * FROM usuarios WHERE user = :user AND password = :password"
-    );
+    $sql = "SELECT * FROM usuarios WHERE user = '{$username}' AND password = '{$password}'";
 
     // Ejecutamos la consulta SQL
-    //$result = mysqli_query($link, $sql);
-    $stmt->execute([
-        ':user' => $username,
-        ':password' => $password
-    ]);
+    $result = mysqli_query($link, $sql);
 
     // Verificamos si la consulta devuelve algún resultado
-    if ($stmt->rowCount() > 0) {
+    if (mysqli_num_rows($result) > 0) {
         // Almacenamos el nombre de usuario en una variable de sesión
-
         $_SESSION['user'] = $username;
         // Establece la cookie de sesión
         setcookie("session", "autenticado", time() + 7200);  
@@ -50,7 +40,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
     }
 
     // Cerramos la conexión a la base de datos
-    //mysqli_close($link);
+    mysqli_close($link);
 } else {
     // Devolvemos un mensaje de error si no existen los datos del usuario enviados por POST
     echo 'Debe enviar los datos del usuario para hacer login';
