@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta name="robots" content="noindex, nofollow">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Librería XLS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Importación de Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Tu propio CSS personalizado -->
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <title>SGASTUR - SGA Elevación 2</title>
+  
+</head>
+<body>
+    
+    <script>
+        $(document).ready(function(){  //cargamos la web (el JS) nada mas acceder a la Url
+            $.ajax({ //aqui hacemos la peticion de los datos al back (ajax no recarga la pagina)
+                //donde lo llamo 
+                type:"POST",
+                //como lo llamo
+                url:"services/clientes.php", 
+                //que mando
+                data:{  
+                    filtro_total: 15
+                },
+                //que hago cuando vuelve? ->successs/error
+                success: function(response){ //el response es el objeto que vi en POSTMAN la respuesta en JSON
+                    //aqui llega la respuesta el JSON
+                    console.log(response)
+
+
+                }
+               
+
+            })
+        })
+
+    </script>
+</body>
+</html>
