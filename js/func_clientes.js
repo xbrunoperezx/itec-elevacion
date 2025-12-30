@@ -169,10 +169,38 @@ jQuery(document).on("click", ".more_cli", function(e){
     var offset = $btn.offset();
 
     var menu = jQuery("<div class='row-menu'><ul><li class='row-menu-hide'>Ocultar fila</li><li class='row-menu-cancel'>Cancelar</li></ul></div>");
-    // posicionar el menú justo debajo del botón
-    var top = offset.top + $btn.outerHeight() + 6;
-    var left = offset.left;
-    menu.css({ top: top + 'px', left: left + 'px' });
+
+    // añadirlo oculto para medir y posicionar correctamente (alineado a la derecha del icono)
+    menu.css({ visibility: 'hidden', top: 0, left: 0 });
+    jQuery('body').append(menu);
+
+    // medir dimensiones y ventana
+    var menuW = menu.outerWidth();
+    var menuH = menu.outerHeight();
+    var winW = jQuery(window).width();
+    var winTop = jQuery(window).scrollTop();
+
+    // calcular izquierda para alinear a la derecha del botón
+    var desiredLeft = offset.left + $btn.outerWidth() - menuW;
+    // evitar que salga por la derecha
+    if (desiredLeft + menuW > winW - 6) {
+        desiredLeft = winW - menuW - 6;
+    }
+    // evitar que salga por la izquierda
+    if (desiredLeft < 6) {
+        desiredLeft = 6;
+    }
+
+    // calcular top (por defecto debajo del botón)
+    var desiredTop = offset.top + $btn.outerHeight() + 6;
+    // si se desborda por abajo, mostrar encima del botón
+    if (desiredTop + menuH > winTop + jQuery(window).height()) {
+        desiredTop = offset.top - menuH - 6;
+        // si aun así sale por arriba, ajustamos al tope visible
+        if (desiredTop < winTop + 6) desiredTop = winTop + 6;
+    }
+
+    menu.css({ top: desiredTop + 'px', left: desiredLeft + 'px', visibility: 'visible' });
 
     // acción ocultar
     menu.on('click', '.row-menu-hide', function(ev){
@@ -199,9 +227,6 @@ jQuery(document).on("click", ".more_cli", function(e){
         }
       });
     }, 10);
-
-    // agregar al body
-    jQuery('body').append(menu);
 });
 
 var openCliente = function(seccion, cual, id){
