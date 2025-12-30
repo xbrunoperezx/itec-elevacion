@@ -101,8 +101,14 @@ var readClientes = function(id, totalParams){
 }
 
 // Filtros de cliente
-jQuery(document).on("keypress", "#tab_cli [id*=filtro_cli]", function(){
+jQuery(document).on("keydown", "#tab_cli [id*=filtro_cli]", function(e){
+	// Mostrar botón limpiar cuando se escribe
 	jQuery("#filtrar_cli_clear").removeClass("hide");
+	// Si se pulsa Enter, ejecutar búsqueda
+	if (e.key === 'Enter' || e.which === 13 || e.keyCode === 13) {
+		e.preventDefault();
+		jQuery(this).parents("#tab_cli").find("#filtrar_cli").click();
+	}
 });
 
 jQuery(document).on("click", "#filtrar_cli", function() {

@@ -133,8 +133,14 @@ var readInformes = function(id, totalParams){
 
 
 // Filtros de informe
-jQuery(document).on("keypress", "#tab_pri [id*=filtro_pri]", function(){
+jQuery(document).on("keydown", "#tab_pri [id*=filtro_pri]", function(e){
+	// Mostrar botón limpiar cuando se escribe
 	jQuery("#filtrar_pri_clear").removeClass("hide");
+	// Si se pulsa Enter, ejecutar búsqueda
+	if (e.key === 'Enter' || e.which === 13 || e.keyCode === 13) {
+		e.preventDefault();
+		jQuery(this).parents("#tab_pri").find("#filtrar_pri").click();
+	}
 });
 
 jQuery(document).on("click", "#filtrar_pri", function() {
