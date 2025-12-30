@@ -118,12 +118,7 @@ jQuery(document).on("click", "#filtrar_con", function() {
 	  var tipo = "con";
 		readContratadas(tipo, filtros);
   }else{
-  	jQuery("#error-title").text("ERROR");
-  	jQuery("#error-message").text("Hay que introducir un número mínimo de resultados esperados! Para ello introduce un valor en el campo registros, dentro del módulo de filtros.");
-  	jQuery("#modal_error").modal({
-			dismissible: false
-		});
-  	jQuery("#modal_error").modal("open");	
+    modalError("ERROR","Hay que introducir un número mínimo de resultados esperados! Para ello introduce un valor en el campo registros, dentro del módulo de filtros.", false);
   }
 });
 

@@ -223,9 +223,7 @@ jQuery(document).on("click", "#filtrar_seg", function() {
 	  var tipo = "seg";
 		readSegundas(tipo, filtros);
   }else{
-  	$("#error-title").text("ERROR");
-  	$("#error-message").text("Hay que introducir un número mínimo de resultados esperados! Para ello introduce un valor en el campo registros, dentro del módulo de filtros.");
-  	$("#modal_error").modal("open");	
+    modalError("ERROR","Hay que introducir un número mínimo de resultados esperados! Para ello introduce un valor en el campo registros, dentro del módulo de filtros.", false);
   }
 });
 

@@ -80,6 +80,15 @@ $(document).ready(function() {
 	jQuery(document).on('click', 'nav li', function(e) {
 		jQuery('nav li').removeClass('active');
 		jQuery(this).addClass('active');
+		if($(this).attr('id')=="cli"){
+			$("#sectionToggle_cli").show();
+		}else if($(this).attr('id')=="con"){
+			$("#sectionToggle_con").show();
+		}else if($(this).attr('id')=="pri"){
+			$("#sectionToggle_pri").show();
+		}else if($(this).attr('id')=="seg"){
+			$("#sectionToggle_seg").show();
+		}
 	});
 
 	// Escuchar el evento de click en los elementos del menú
@@ -140,13 +149,82 @@ $(document).ready(function() {
 
 	// Botones de ocultar los filtros
 	$("#btnToggle_cli").click(function(){
-  	$("#sectionToggle_cli").toggle();
-  });
-  $("#btnToggle_con").click(function(){
-  	$("#sectionToggle_con").toggle();
-  });
-  
+		$("#sectionToggle_cli").toggle();
+	});
+  	$("#btnToggle_con").click(function(){
+		$("#sectionToggle_con").toggle();
+	});
+	$("#btnToggle_pri").click(function(){
+		$("#sectionToggle_pri").toggle();
+	});
+	$("#btnToggle_seg").click(function(){
+		$("#sectionToggle_seg").toggle();
+	});
+
 }); // end jQuery ready
+
+// Función global para mostrar modal de error
+function modalError(title, message, dismiss) {
+  // Asegurarse que dismiss sea booleano
+  var dismissible = (typeof dismiss === 'boolean') ? dismiss : false;
+  $('#error-title').text(title);
+  $('#error-message').text(message);
+  $('#modal_error').modal({ dismissible: dismissible });
+  $('#modal_error').modal('open');
+}
+
+// Función global para modal de confirmación con callbacks
+// modalConfirm(title, message, dismiss, confirmCallback, cancelCallback)
+function modalConfirm(title, message, dismiss, confirmCallback, cancelCallback) {
+  var dismissible = (typeof dismiss === 'boolean') ? dismiss : false;
+  $('#confirm-title').text(title);
+  $('#confirm-message').text(message);
+  // Guardar callbacks en el elemento modal para que el handler los ejecute
+  if (typeof confirmCallback === 'function') {
+    $('#modal_confirm').data('confirmCallback', confirmCallback);
+  } else {
+    $('#modal_confirm').removeData('confirmCallback');
+  }
+  if (typeof cancelCallback === 'function') {
+    $('#modal_confirm').data('confirmCancelCallback', cancelCallback);
+  } else {
+    $('#modal_confirm').removeData('confirmCancelCallback');
+  }
+  $('#modal_confirm').modal({ dismissible: dismissible });
+  $('#modal_confirm').modal('open');
+}
+
+// Handlers globales para modal de confirmación
+$(document).on('click', '#save_confirm', function(){
+  var $modal = $('#modal_confirm');
+  var cb = $modal.data('confirmCallback');
+  if(cb && typeof cb === 'function'){
+    $modal.modal('close');
+    $modal.removeData('confirmCallback');
+    $modal.removeData('confirmCancelCallback');
+    cb();
+    return;
+  }
+  // si no hay callback, solo cerramos y limpiamos
+  $modal.modal('close');
+  $modal.removeData('confirmCallback');
+  $modal.removeData('confirmCancelCallback');
+});
+
+$(document).on('click', '#save_cancel', function(){
+  var $modal = $('#modal_confirm');
+  var cancelCb = $modal.data('confirmCancelCallback');
+  $modal.modal('close');
+  if(cancelCb && typeof cancelCb === 'function'){
+    $modal.removeData('confirmCancelCallback');
+    $modal.removeData('confirmCallback');
+    cancelCb();
+    return;
+  }
+  // limpiar si no hay callback
+  $modal.removeData('confirmCallback');
+  $modal.removeData('confirmCancelCallback');
+});
 
 // ordenar resultados
 function comparer(index) {

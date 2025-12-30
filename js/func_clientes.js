@@ -134,12 +134,7 @@ jQuery(document).on("click", "#filtrar_cli", function() {
 	  var tipo = "cli";
 		readClientes(tipo, filtros);
   }else{
-  	$("#error-title").text("ERROR");
-  	$("#error-message").text("Hay que introducir un número mínimo de resultados esperados! Para ello introduce un valor en el campo registros, dentro del módulo de filtros.");
-  	jQuery("#modal_error").modal({
-		dismissible: false
-	});
-  	$("#modal_error").modal("open");	
+    modalError("ERROR","Hay que introducir un número mínimo de resultados esperados! Para ello introduce un valor en el campo registros, dentro del módulo de filtros.", false);
   }
 });
 
@@ -568,25 +563,8 @@ var saveCliente = function() {
 
 // Click en guardar cliente
 $(document.body).on("click", "#cli_save", function(){
-	var confirmMessage = '¿Estás seguro de que quieres guardar los cambios?\n\n';
-	// Asignar mensaje de confirmación al modal
-  $('#confirm-message').text(confirmMessage);
-  $('#confirm-title').text("Guardar cambios en cliente");
-  $('#modal_confirm').attr("who", "cli");
-  // Mostrar el modal de confirmación
-  $('#modal_confirm').modal({
-		dismissible: false
+	// Abrir modalConfirm con callback a saveCliente
+	modalConfirm("Guardar cambios en cliente", "¿Estás seguro de que quieres guardar los cambios?\n\n", false, function(){
+		saveCliente();
 	});
-  $('#modal_confirm').modal('open');
 }); // end click en guardar cliente
-
-// Click en guardar en popup de confirmacion
-$(document.body).on("click", "#save_confirm", function(){
-	if(jQuery(this).closest("#modal_confirm").attr("who")=="cli") saveCliente();	
-}); // end click en guardar en popup de confirmacion
-
-// Click en cancelar en popup de confirmacion
-$(document.body).on("click", "#save_cancel", function(){
-	// Cerrar el modal de confirmación
-  $('#modal_confirm').modal('close');
-}); // click en cancelar popup confirmacion
