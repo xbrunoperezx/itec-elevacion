@@ -73,7 +73,7 @@ var readClientes = function(id, totalParams){
 		        }
 		          tableRow += "</td>" +
 		        "<td class='ancho50'>" +
-		          "<a class='btn-floating btn-small waves-effect waves-light red' title='Más'>" +
+	          "<a class='more_cli btn-floating btn-small waves-effect waves-light red' title='Más' data-id='" + item.id + "'>" +
 		            "<i class='material-icons'>more_vert</i>" +
 		          "</a>" +
 		        "</td>" +
@@ -157,6 +157,52 @@ jQuery(document).on("click", "#filtrar_cli_clear", function() {
 	jQuery(this).parents("#tab_cli").find("#filtro_cli_total").val('15');	
 	jQuery(this).parents("#tab_cli").find("#filtrar_cli").click();
 }); // end limpiar filtros de cliente
+
+// Menú contextual para cada fila (ocultar visualmente la fila)
+jQuery(document).on("click", ".more_cli", function(e){
+    e.preventDefault();
+    // cerrar cualquier menú abierto
+    jQuery('.row-menu').remove();
+
+    var $btn = jQuery(this);
+    var itemId = $btn.data('id');
+    var offset = $btn.offset();
+
+    var menu = jQuery("<div class='row-menu'><ul><li class='row-menu-hide'>Ocultar fila</li><li class='row-menu-cancel'>Cancelar</li></ul></div>");
+    // posicionar el menú justo debajo del botón
+    var top = offset.top + $btn.outerHeight() + 6;
+    var left = offset.left;
+    menu.css({ top: top + 'px', left: left + 'px' });
+
+    // acción ocultar
+    menu.on('click', '.row-menu-hide', function(ev){
+        ev.stopPropagation();
+        var $tr = $btn.closest('tr');
+        // añadir clase para ocultar visualmente
+        $tr.addClass('hidden-row');
+        // eliminar el menú
+        menu.remove();
+    });
+
+    // cancelar
+    menu.on('click', '.row-menu-cancel', function(ev){
+        ev.stopPropagation();
+        menu.remove();
+    });
+
+    // cerrar si se hace click fuera
+    setTimeout(function(){
+      jQuery(document).on('click.rowMenuClose', function(ev){
+        if(jQuery(ev.target).closest('.row-menu').length===0 && jQuery(ev.target).closest('.more_cli').length===0){
+          jQuery('.row-menu').remove();
+          jQuery(document).off('click.rowMenuClose');
+        }
+      });
+    }, 10);
+
+    // agregar al body
+    jQuery('body').append(menu);
+});
 
 var openCliente = function(seccion, cual, id){
 	// formulario edicion cliente

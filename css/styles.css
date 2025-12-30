@@ -211,3 +211,28 @@ table td{
 div#export-content{
   padding: 20px;
 }
+
+/* Contextual menu for table rows */
+.row-menu{
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 9999;
+  min-width: 140px;
+}
+.row-menu ul{
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+}
+.row-menu ul li{
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+.row-menu ul li:hover{
+  background-color: #f2f2f2;
+}
+.hidden-row{display: none !important;}
