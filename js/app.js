@@ -177,7 +177,7 @@ function modalError(title, message, dismiss) {
 // modalConfirm(title, message, dismiss, confirmCallback, cancelCallback, confirmText, cancelText)
 // cancelCallback es opcional y se ejecuta si el usuario cierra o cancela el popup
 // confirmText / cancelText son opcionales y reemplazan los textos de los botones
-function modalConfirm(title, message, dismiss, confirmCallback, cancelCallback, confirmText, cancelText) {
+function modalConfirm(title, message, dismiss, confirmText, cancelText, confirmCallback, cancelCallback) {
   var dismissible = (typeof dismiss === 'boolean') ? dismiss : false;
   $('#confirm-title').text(title);
   $('#confirm-message').text(message);
