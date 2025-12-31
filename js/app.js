@@ -175,6 +175,7 @@ function modalError(title, message, dismiss) {
 
 // Función global para modal de confirmación con callbacks
 // modalConfirm(title, message, dismiss, confirmCallback, cancelCallback)
+// cancelCallback es opcional y se ejecuta si el usuario cierra o cancela el popup
 function modalConfirm(title, message, dismiss, confirmCallback, cancelCallback) {
   var dismissible = (typeof dismiss === 'boolean') ? dismiss : false;
   $('#confirm-title').text(title);
@@ -190,7 +191,24 @@ function modalConfirm(title, message, dismiss, confirmCallback, cancelCallback) 
   } else {
     $('#modal_confirm').removeData('confirmCancelCallback');
   }
-  $('#modal_confirm').modal({ dismissible: dismissible });
+  // Asegurarnos de que si el modal se cierra por fuera (overlay o ESC), ejecutamos el cancelCallback cuando exista
+  $('#modal_confirm').modal({
+    dismissible: dismissible,
+    onCloseEnd: function() {
+      var $modal = $('#modal_confirm');
+      var cancelCb = $modal.data('confirmCancelCallback');
+      if (cancelCb && typeof cancelCb === 'function') {
+        // limpiamos los datos antes de ejecutar para evitar dobles llamadas
+        $modal.removeData('confirmCancelCallback');
+        $modal.removeData('confirmCallback');
+        cancelCb();
+        return;
+      }
+      // limpieza por defecto
+      $modal.removeData('confirmCallback');
+      $modal.removeData('confirmCancelCallback');
+    }
+  });
   $('#modal_confirm').modal('open');
 }
 
