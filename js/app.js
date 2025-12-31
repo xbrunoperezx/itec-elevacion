@@ -174,12 +174,26 @@ function modalError(title, message, dismiss) {
 }
 
 // Función global para modal de confirmación con callbacks
-// modalConfirm(title, message, dismiss, confirmCallback, cancelCallback)
+// modalConfirm(title, message, dismiss, confirmCallback, cancelCallback, confirmText, cancelText)
 // cancelCallback es opcional y se ejecuta si el usuario cierra o cancela el popup
-function modalConfirm(title, message, dismiss, confirmCallback, cancelCallback) {
+// confirmText / cancelText son opcionales y reemplazan los textos de los botones
+function modalConfirm(title, message, dismiss, confirmCallback, cancelCallback, confirmText, cancelText) {
   var dismissible = (typeof dismiss === 'boolean') ? dismiss : false;
   $('#confirm-title').text(title);
   $('#confirm-message').text(message);
+
+  // textos por defecto si no se pasan
+  var confirmBtnText = (typeof confirmText === 'string' && confirmText.length>0) ? confirmText : 'Aceptar';
+  var cancelBtnText = (typeof cancelText === 'string' && cancelText.length>0) ? cancelText : 'Cancelar';
+
+  // Actualizar los textos de los botones (con icono)
+  if ($('#save_confirm').length) {
+    $('#save_confirm').html('<i class="material-icons left">check</i>' + confirmBtnText);
+  }
+  if ($('#save_cancel').length) {
+    $('#save_cancel').html('<i class="material-icons left">clear</i>' + cancelBtnText);
+  }
+
   // Guardar callbacks en el elemento modal para que el handler los ejecute
   if (typeof confirmCallback === 'function') {
     $('#modal_confirm').data('confirmCallback', confirmCallback);
@@ -191,6 +205,7 @@ function modalConfirm(title, message, dismiss, confirmCallback, cancelCallback) 
   } else {
     $('#modal_confirm').removeData('confirmCancelCallback');
   }
+
   // Asegurarnos de que si el modal se cierra por fuera (overlay o ESC), ejecutamos el cancelCallback cuando exista
   $('#modal_confirm').modal({
     dismissible: dismissible,
@@ -213,7 +228,8 @@ function modalConfirm(title, message, dismiss, confirmCallback, cancelCallback) 
 }
 
 // Handlers globales para modal de confirmación
-$(document).on('click', '#save_confirm', function(){
+$(document).on('click', '#save_confirm', function(e){
+  e.preventDefault();
   var $modal = $('#modal_confirm');
   var cb = $modal.data('confirmCallback');
   if(cb && typeof cb === 'function'){
@@ -229,7 +245,8 @@ $(document).on('click', '#save_confirm', function(){
   $modal.removeData('confirmCancelCallback');
 });
 
-$(document).on('click', '#save_cancel', function(){
+$(document).on('click', '#save_cancel', function(e){
+  e.preventDefault();
   var $modal = $('#modal_confirm');
   var cancelCb = $modal.data('confirmCancelCallback');
   $modal.modal('close');
