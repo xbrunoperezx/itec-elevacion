@@ -563,7 +563,7 @@ var saveCliente = function() {
 
 // Click en guardar cliente
 $(document.body).on("click", "#cli_save", function(){
-	modalConfirm("Guardar cambios en cliente", "¿Estás seguro de que quieres guardar los cambios?\n\n", false, "Guardar", "Cancelar", function(){
+	modalConfirm("Guardar cambios en cliente", "¿Estás seguro de que quieres guardar los cambios?\n\n", false, "Guardar", "Cancelar", "save", "clear", function(){
 		saveCliente();
 	}, function(){ 
 		console.log('Accion cancelar: no se han guardado los cambios');

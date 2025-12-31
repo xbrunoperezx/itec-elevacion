@@ -177,7 +177,7 @@ function modalError(title, message, dismiss) {
 // modalConfirm(title, message, dismiss, confirmCallback, cancelCallback, confirmText, cancelText)
 // cancelCallback es opcional y se ejecuta si el usuario cierra o cancela el popup
 // confirmText / cancelText son opcionales y reemplazan los textos de los botones
-function modalConfirm(title, message, dismiss, confirmText, cancelText, confirmCallback, cancelCallback) {
+function modalConfirm(title, message, dismiss, confirmText, cancelText, confirmIcon, cancelIcon, confirmCallback, cancelCallback) {
   var dismissible = (typeof dismiss === 'boolean') ? dismiss : false;
   $('#confirm-title').text(title);
   $('#confirm-message').text(message);
@@ -188,10 +188,10 @@ function modalConfirm(title, message, dismiss, confirmText, cancelText, confirmC
 
   // Actualizar los textos de los botones (con icono)
   if ($('#save_confirm').length) {
-    $('#save_confirm').html('<i class="material-icons left">check</i>' + confirmBtnText);
+    $('#save_confirm').html('<i class="material-icons left">' + (confirmIcon || 'check') + '</i>' + confirmBtnText);
   }
   if ($('#save_cancel').length) {
-    $('#save_cancel').html('<i class="material-icons left">clear</i>' + cancelBtnText);
+    $('#save_cancel').html('<i class="material-icons left">' + (cancelIcon || 'clear') + '</i>' + cancelBtnText);
   }
 
   // Guardar callbacks en el elemento modal para que el handler los ejecute
