@@ -374,8 +374,140 @@ var openCliente = function(seccion, cual, id){
 				$('#app-content div#error').show();
 			}
 		});				
+	}else if(cual=="frm_newcli"){
+		// petición para obtener mantenedores y construir formulario vacío
+		$.ajax({
+			url: 'services/clientes.php',
+			type: 'POST',
+			data: {},
+			success: function(data) {
+				mantenedores = JSON.parse(data)["mantenedores"];
+				var title = "Nuevo cliente";
+				$("#modal_"+seccion).find(".modal_txt_title").text(title);
+				$("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
+				$("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
+				var frm_tabs = '<ul class="tabs">' + 
+				'<li class="tab col s3"><a class="active tablink1" href="#tab1_cli">Ascensor</a></li>' + 
+				'<li class="tab col s3"><a class="tablink2" href="#tab2_cli">Datos</a></li>' + 
+				'<li class="tab col s3"><a class="tablink3" href="#tab3_cli">Contratación</a></li>' + 
+				'<li class="tab col s3"><a class="tablink4" href="#tab4_cli">Facturación</a></li>' + 
+				'<li class="tab col s3"><a class="tablink5" href="#tab5_cli">Otros</a></li>' + 
+				'</ul>';
+				var frm_render = '<form id="cliente_frm_nuevo">' +
+				'<div id="tab1_cli" class="active col s12">' + 
+				'<div class="input-field anchoFrm4">' +
+				  '<input type="text" id="rae_cli" name="rae_cli" value="">' +
+				  '<label for="rae_cli">RAE</label>' +
+				'</div>' +
+				'<div class="input-field anchoFrm4">' +
+				  '<select id="mantenedor_cli" name="mantenedor_cli">';
+				for (let clave in mantenedores){
+					frm_render += '<option value="'+ clave +'">'+ mantenedores[clave] +'</option>'; 
+				};
+				frm_render+='</select>' + 
+				  '<label for="mantenedor_cli">Mantenedor</label>' +
+				'</div>' +
+				'<div class="input-field anchoFrm4">' +
+				  '<input type="date" id="vencimiento_cli" name="vencimiento_cli">' +
+				  '<label for="vencimiento_cli">Vencimiento</label>' +
+				'</div>' +
+				'<div class="input-field anchoFrm4">' +
+				  '<input type="number" id="cada_cli" name="cada_cli" value="">' +
+				  '<label for="cada_cli">Periodicidad (años)</label>' +
+				'</div>' +
+				'</div>' +
+
+				'<div id="tab2_cli" class="active col s12">' + 
+				    '<div class="input-field">' +
+				      '<input type="text" id="nombre_cli" name="nombre_cli" value="">' +
+				      '<label for="nombre_cli">Titular</label>' +
+				    '</div>' +
+				    '<div class="input-field">' +
+				      '<input type="text" id="direccion_cli" name="direccion_cli" value="">' +
+				      '<label for="direccion_cli">Dirección</label>' +
+				    '</div>' +
+				    '<div class="input-field anchoFrm4">' +
+				      '<input type="text" id="cp_cli" name="cp_cli" value="">' +
+				      '<label for="cp_cli">Código Postal</label>' +
+				    '</div>' +
+				    '<div class="input-field anchoFrm2">' +
+				      '<input type="text" id="localidad_cli" name="localidad_cli" value="">' +
+				      '<label for="localidad_cli">Localidad</label>' +
+				    '</div>' +   
+				    '<div class="input-field anchoFrm2">' +
+				      '<input type="text" id="municipio_cli" name="municipio_cli" value="">' +
+				      '<label for="municipio_cli">Municipio</label>' +
+				    '</div>' +       
+				    '<div class="input-field anchoFrm2">' +
+				      '<input type="text" id="provincia_cli" name="provincia_cli" value="">' +
+				      '<label for="provincia_cli">Provincia</label>' +
+				    '</div>' +    
+				'</div>' + 
+
+				'<div id="tab3_cli" class="col s12">' + 
+				    '<div class="input-field anchoFrm2">' +
+				    '<input type="text" id="quien_contrata_cli" name="quien_contrata_cli" value="">' +
+				    '<label for="quien_contrata_cli">Quien Contrata</label>' +
+				    '</div>' +
+				    '<div class="input-field switch">' +
+						'<label for="id_administrador_cli">' +
+						'<input type="checkbox" id="id_administrador_cli" name="id_administrador_cli" />' +
+						'<span class="lever"></span>Administrador' +
+						'</label>' +
+				    '</div><br>' +
+				    '<div class="input-field anchoFrm4">' +
+				      '<input type="text" id="telefono_cli" name="telefono_cli" value="">' +
+				      '<label for="telefono_cli">Teléfono</label>' +
+				      '</div>' +
+				    '<div class="input-field anchoFrm4">' +
+				      '<input type="text" id="telefono2_cli" name="telefono2_cli" value="">' +
+				      '<label for="telefono2_cli">Teléfono 2</label>' +
+				      '</div>' +
+				    '<div class="input-field anchoFrm2">' +
+				      '<input type="text" id="email_cli" name="email_cli" value="">' +
+				      '<label for="email_cli">eMail</label>' +
+				      '</div>' +
+				    '<div class="input-field">' +
+				      '<input type="text" id="observaciones_cli" name="observaciones_cli" value="">' +
+				      '<label for="observaciones_cli">Observaciones</label>' +
+				    '</div>' +    
+				'</div>' +
+
+				'<div id="tab4_cli" class="col s12">' + 
+				'</div>' +
+
+				'<div id="tab5_cli" class="col s12">' + 
+				    '<div class="input-field">' +
+				      '<input type="text" id="id_mantenedor_cli" name="id_mantenedor_cli" value="" disabled>' +
+				      '<label for="id_mantenedor_cli">ID Mantenedor BBDD</label>' +
+				    '</div>' +   
+				'</div>' +
+
+				'</form>';
+				$("#modal_"+seccion).find(".contentTabs").html(frm_tabs);
+				$("#modal_"+seccion).find(".contentForm").html(frm_render);
+				$("#modal_"+seccion).find('.tabs').tabs();
+				$('select#mantenedor_cli').formSelect();
+				$("#modal_"+seccion).modal({
+					dismissible: false
+				});
+				$("#modal_"+seccion).modal("open");
+				setTimeout(function(){ $('#rae_cli').focus(); }, 200);
+			},
+			error: function(xhr, status, error) {
+				// Mostrar un mensaje de error en el centro de la pantalla
+				$('#app-content div#error').html(error);
+				$('#app-content div#error').show();
+			}
+		});
+	
 	}
 } // end openCliente()
+
+// Click en crear nuevo cliente (abrir popup)
+jQuery(document).on("click", "#add_cli", function(){
+	openModal('cli', 'frm_newcli');
+});
 
 // Click en exportar clientes (abrir popup)
 jQuery(document).on("click", "#exportar_cli", function(){
@@ -520,7 +652,6 @@ var saveCliente = function() {
 
   // Crear un objeto con los valores de los campos del formulario
   var cliente = {
-    id: id,
     rae: rae,
     nombre: nombre,
     direccion: direccion,
@@ -538,6 +669,10 @@ var saveCliente = function() {
 		telefono2 : telefono2,
 		email : email
   };
+  // incluir id solo si tiene valor (para diferenciar update de insert)
+  if (typeof id !== 'undefined' && id !== null && String(id).trim() !== '') {
+    cliente.id = id;
+  }
 
 	$.ajax({
 		url: 'services/clientes_save.php',
