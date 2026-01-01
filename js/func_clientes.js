@@ -506,7 +506,7 @@ var openCliente = function(seccion, cual, id){
 
 // Click en crear nuevo cliente (abrir popup)
 jQuery(document).on("click", "#add_cli", function(){
-	openModal('cli', 'frm_newcli');
+	window.openModal('cli', 'frm_newcli');
 });
 
 // Click en exportar clientes (abrir popup)

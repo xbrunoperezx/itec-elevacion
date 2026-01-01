@@ -64,7 +64,7 @@ $(document).ready(function() {
 	$(".modal").modal();
 
 	// funcion de abrir popups en funcion de la seccion y formulario (también recibe el id)
-	var openModal = function(seccion, cual, id){
+	window.openModal = function(seccion, cual, id){
 		$("#modal_"+seccion).find(".modal_txt_title").empty();
 		$("#modal_"+seccion).find(".modal_txt_btn_left").empty();
 		$("#modal_"+seccion).find(".modal_txt_btn_right").empty();
