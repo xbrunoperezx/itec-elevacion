@@ -545,26 +545,43 @@ var saveCliente = function() {
 		data: cliente,
 		success: function(data) {
 
-			// Cerrar el modal de confirmación
-		  $('#modal_confirm').modal('close');
-		 	// Cerrar el modal de clientes
-		  $('#modal_cli').modal('close'); 
-		  // actualizar el listado
-		  $("#filtrar_cli").click();
+			// Si el servidor devuelve OK, procedemos como siempre
+			if (typeof data === 'string' && data.trim() === 'OK') {
+			  // Cerrar el modal de confirmación
+			  $('#modal_confirm').modal('close');
+			  // Cerrar el modal de clientes
+			  $('#modal_cli').modal('close'); 
+			  // actualizar el listado
+			  $("#filtrar_cli").click();
+			  return;
+			}
+
+			// Si llegamos aquí, el servidor devolvió un mensaje de error (texto)
+			var serverMsg = (typeof data === 'string') ? data : JSON.stringify(data);
+			modalError('ERROR', 'Error al guardar cliente: ' + serverMsg, false, 'Cerrar', 'error', function(){
+				// El modal de error ya se cierra en su handler; aquí cerramos el modal de cliente
+				$('#modal_cli').modal('close');
+			});
 		},
 		error: function(xhr, status, error) {
-			// Mostrar un mensaje de error en el centro de la pantalla
-			$('#app-content div#error').html(error);
-			$('#app-content div#error').show();
-		}
-	});
+			// Construir mensaje informativo con código y cuerpo de respuesta si existe
+			var msg = '';
+			if(xhr && xhr.responseText){
+				msg = xhr.status + ' ' + (xhr.statusText || '') + ': ' + xhr.responseText;
+			}else{
+				msg = status + ' - ' + error;
+			}
+			modalError('ERROR', 'Error en la petición al guardar cliente. ' + msg, false, 'Cerrar', 'error', function(){
+				// Cerrar el modal de cliente al aceptar el error
+				$('#modal_cli').modal('close');
+			});
 } // end saveCliente()
 
 
 // Click en guardar cliente
 $(document.body).on("click", "#cli_save", function(){
 	modalConfirm("Guardar cambios en cliente", "¿Estás seguro de que quieres guardar los cambios?\n\n", false, "Guardar", "Cancelar", "save", "clear", function(){
-		saveCliente();
+		saveCliente(); // acción de guardar
 	}, function(){ 
 		console.log('Accion cancelar: no se han guardado los cambios');
 	});

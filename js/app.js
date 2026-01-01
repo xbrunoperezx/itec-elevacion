@@ -164,12 +164,36 @@ $(document).ready(function() {
 }); // end jQuery ready
 
 // Función global para mostrar modal de error
-function modalError(title, message, dismiss) {
+// Nueva firma: modalError(title, message, dismiss, btnText, btnIcon, successCallback)
+function modalError(title, message, dismiss, btnText, btnIcon, successCallback) {
   // Asegurarse que dismiss sea booleano
   var dismissible = (typeof dismiss === 'boolean') ? dismiss : false;
   $('#error-title').text(title);
   $('#error-message').text(message);
-  $('#modal_error').modal({ dismissible: dismissible });
+
+  // textos por defecto si no se pasan
+  var btnTextFinal = (typeof btnText === 'string' && btnText.length>0) ? btnText : 'Aceptar';
+  var btnIconFinal = (typeof btnIcon === 'string' && btnIcon.length>0) ? btnIcon : 'check';
+
+  // Actualizar el texto y el icono del botón
+  if ($('#error_confirm').length) {
+    $('#error_confirm').html('<i class="material-icons left">' + btnIconFinal + '</i>' + btnTextFinal);
+  }
+
+  // Guardar callback en el elemento modal para que el handler lo ejecute
+  if (typeof successCallback === 'function') {
+    $('#modal_error').data('errorCallback', successCallback);
+  } else {
+    $('#modal_error').removeData('errorCallback');
+  }
+
+  // Asegurarnos de limpiar callback si el modal se cierra por fuera
+  $('#modal_error').modal({
+    dismissible: dismissible,
+    onCloseEnd: function() {
+      $('#modal_error').removeData('errorCallback');
+    }
+  });
   $('#modal_error').modal('open');
 }
 
@@ -259,6 +283,20 @@ $(document).on('click', '#save_cancel', function(e){
   // limpiar si no hay callback
   $modal.removeData('confirmCallback');
   $modal.removeData('confirmCancelCallback');
+});
+
+// Handler para el botón del modal de error
+$(document).on('click', '#error_confirm', function(e){
+  e.preventDefault();
+  var $modal = $('#modal_error');
+  var cb = $modal.data('errorCallback');
+  $modal.modal('close');
+  if(cb && typeof cb === 'function'){
+    $modal.removeData('errorCallback');
+    cb();
+    return;
+  }
+  $modal.removeData('errorCallback');
 });
 
 // ordenar resultados
