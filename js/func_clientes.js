@@ -634,12 +634,12 @@ var saveCliente = function() {
 	// Obtener los valores de los campos del formulario
   var id = $('#id_cli').val();
   var rae = $('#rae_cli').val();
-  var nombre = $('#nombre_cli').val();
-  var direccion = $('#direccion_cli').val();
-  var localidad = $('#localidad_cli').val();
-  var municipio = $('#municipio_cli').val();
+  var nombre = $('#nombre_cli').val().toUpperCase();
+  var direccion = $('#direccion_cli').val().toUpperCase();
+  var localidad = $('#localidad_cli').val().toUpperCase();
+  var municipio = $('#municipio_cli').val().toUpperCase();
   var cp = $('#cp_cli').val();
-  var provincia = $('#provincia_cli').val();
+  var provincia = $('#provincia_cli').val().toUpperCase();
   var quien_contrata = $('#quien_contrata_cli').val();
   var observaciones = $('#observaciones_cli').val();
   var id_mantenedor = $('#mantenedor_cli').val();
