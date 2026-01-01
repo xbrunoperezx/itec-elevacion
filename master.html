@@ -40,6 +40,7 @@
                     filtro_total: 15
                 },
                 //que hago cuando vuelve? ->successs/error
+                dataType: "json",
                 success: function(response){ //el response es el objeto que vi en POSTMAN la respuesta en JSON
                     //aqui llega la respuesta el JSON
                     //console.log(response)
@@ -48,12 +49,13 @@
 
                     let html= `
 
-                        <p> <strong>Nombre:</strong> ${cliente.nombre}<br>
-                            <strong>Municipio:</strong> ${cliente.direccion}
+                        <p> 
+                            <strong>Nombre:</strong> ${cliente.nombre}<br>
+                            <strong>direccion:</strong> ${cliente.direccion}
                         </p>    
                     `;
 
-                $('#resultado').html(html)
+                    $('#resultado').html(html)
 
 
 
