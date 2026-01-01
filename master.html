@@ -43,7 +43,17 @@
                 success: function(response){ //el response es el objeto que vi en POSTMAN la respuesta en JSON
                     //aqui llega la respuesta el JSON
                     //console.log(response)
-                    $('#resultado').html('<p>Hola, el js funciona </p>')
+                    //$('#resultado').html('<p>Hola, el js funciona </p>')
+                    let cliente= response.resultados[0];
+
+                    let html= `
+
+                        <p> <strong>Nombre:</strong> ${cliente.nombre}<br>
+                            <strong>Municipio:</strong> ${cliente.direccion}
+                        </p>    
+                    `;
+
+                $('#resultado').html(html)
 
 
 
