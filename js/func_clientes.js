@@ -353,8 +353,8 @@ var openCliente = function(seccion, cual, id){
 				      '<label for="id_cli" class="active">ID Cliente BBDD</label>' +
 				    '</div>' +    
 				    '<div class="input-field">' +
-				      '<input type="text" id="id_mantenedor_cli" name="id_mantenedor_cli" value="' + item.id_mantenedor + '" disabled>' +
-				      '<label for="id_mantenedor_cli" class="active">ID Mantenedor BBDD</label>' +
+				      '<input type="text" id="mantenedor_cli" name="mantenedor_cli" value="' + item.id_mantenedor + '" disabled>' +
+				      '<label for="mantenedor_cli" class="active">ID Mantenedor BBDD</label>' +
 				    '</div>' +   
 			    '</div>' +
 
@@ -478,8 +478,8 @@ var openCliente = function(seccion, cual, id){
 
 				'<div id="tab5_cli" class="col s12">' + 
 				    '<div class="input-field">' +
-				      '<input type="text" id="id_mantenedor_cli" name="id_mantenedor_cli" value="" disabled>' +
-				      '<label for="id_mantenedor_cli">ID Mantenedor BBDD</label>' +
+				      '<input type="text" id="mantenedor_cli" name="mantenedor_cli" value="" disabled>' +
+				      '<label for="mantenedor_cli">ID Mantenedor BBDD</label>' +
 				    '</div>' +   
 				'</div>' +
 
@@ -642,7 +642,7 @@ var saveCliente = function() {
   var provincia = $('#provincia_cli').val();
   var quien_contrata = $('#quien_contrata_cli').val();
   var observaciones = $('#observaciones_cli').val();
-  var id_mantenedor = $('#id_mantenedor_cli').val();
+  var id_mantenedor = $('#mantenedor_cli').val();
   var id_administrador = $('#id_administrador_cli').is(':checked') ? 1 : 0;
   var vencimiento = $('#vencimiento_cli').val();
   var cada = $('#cada_cli').val();
