@@ -20,7 +20,14 @@
   
 </head>
 <body>
+    <!--creamos un contenedor para poder dibujar o escribir dentro de el con  una clase y una id (resultado sera el pincel)-->
+    <div class="container" id="resultado">
+        <h5>Clientes</h5>
+    </div>
+
+
     
+    <!--Scrip de peticion back via ajax-->
     <script>
         $(document).ready(function(){  //cargamos la web (el JS) nada mas acceder a la Url
             $.ajax({ //aqui hacemos la peticion de los datos al back (ajax no recarga la pagina)
@@ -35,7 +42,9 @@
                 //que hago cuando vuelve? ->successs/error
                 success: function(response){ //el response es el objeto que vi en POSTMAN la respuesta en JSON
                     //aqui llega la respuesta el JSON
-                    console.log(response)
+                    //console.log(response)
+                    $('#resultado').html('<p>Hola, el js funciona </p>')
+
 
 
                 }
