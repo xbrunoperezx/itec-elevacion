@@ -262,7 +262,7 @@ var openCliente = function(seccion, cual, id){
 			      '<input type="text" id="rae_cli" name="rae_cli" value="' + item.rae + '">' +
 			      '<label for="rae_cli" class="active">RAE</label>' +
 			    '</div>' +
-			    '<div class="input-field anchoFrm4">' +
+			    '<div class="input-field anchoFrm2">' +
 			      '<select id="mantenedor_cli" name="mantenedor_cli">';
 			      	for (let clave in mantenedores){
 				      	if(item.id_mantenedor==clave){
