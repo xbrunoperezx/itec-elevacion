@@ -575,6 +575,8 @@ var saveCliente = function() {
 				// Cerrar el modal de cliente al aceptar el error
 				$('#modal_cli').modal('close');
 			});
+		}
+	});
 } // end saveCliente()
 
 
