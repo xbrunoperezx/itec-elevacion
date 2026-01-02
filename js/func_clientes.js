@@ -120,7 +120,7 @@ var readDatosFacturacion = function(id){
 				return;
 			}
 			// generar encabezados a partir de las keys del primer registro
-			var keys = Object.keys(datos[0]);
+			var keys = ["Datos Facturación", ""];
 			var thead = '<tr>';
 			keys.forEach(function(k){ thead += '<th>' + k + '</th>'; });
 			thead += '</tr>';
@@ -128,13 +128,14 @@ var readDatosFacturacion = function(id){
 
 			var total = 0;
 			datos.forEach(function(row){
-				var tr = '<tr>';
-				keys.forEach(function(k){
-					var val = row[k];
-					if(val === null) val = '';
-					tr += '<td>' + val + '</td>';
-				});
-				tr += '</tr>';
+				var tr = '<tr><td>';
+				tr += '<b>' + row['fis_nombre'] + '</b><br>';
+				tr += '' + row['fis_direccion'] + ' ';
+				tr += '' + row['fis_cp'] + ' ';
+				tr += '' + row['fis_localidad'] + ' ';
+				tr += '(' + row['fis_provincia'] + ')<br>';
+				tr += '' + row['observaciones'] + '';
+				tr += '</td></tr>';
 				$("#table_cli_fact tbody").append(tr);
 				total++;
 			});
@@ -399,12 +400,15 @@ var openCliente = function(seccion, cual, id){
 
 								'<div id="tab4_cli" class="col s12">' + 
 								'<div class="row">' +
+									'<a id="btn_new_fact" class="btn-floating btn-small waves-effect waves-light orange" title="Nuevos datos">' +
+										'<i class="material-icons">add</i>' +
+									'</a>' +
 									'<a id="btn_refresh_fact" data-id="' + item.id + '" class="btn-floating btn-small waves-effect waves-light blue" title="Actualizar">' +
 										'<i class="material-icons">refresh</i>' +
 									'</a>' +
 								'</div>' +
 								'<table id="table_cli_fact" class="striped">' +
-									'<thead><tr><th>ID</th><th>Concepto</th><th>Tarifa</th><th>Forma pago</th><th>Importe</th><th>Observaciones</th></tr></thead>' +
+									'<thead><tr><th>Datos Facturación</th></tr></thead>' +
 									'<tbody></tbody>' +
 								'</table>' +
 								'<div id="resultados_facturacion" class="right-align"></div>' +
