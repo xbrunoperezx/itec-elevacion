@@ -131,8 +131,8 @@ var readDatosFacturacion = function(id){
 				tr += '(' + row['fis_provincia'] + ')<br>';
 				tr += 'Observaciones: ' + row['observaciones'] + '<br>&nbsp;';
 				tr += '</td>';
-				tr += '<td>' + row['tarifa'] + '<br>' + row['forma_pago'] + '</td>';
-				tr += '<td>' + row['num_cuenta'] + '</td>';
+				tr += '<td>Tarifa:<br>' + row['tarifa'] + '<br>Forma de pago:<br>' + row['forma_pago'] + '</td>';
+				tr += '<td>Núm. cuenta:<br>' + row['num_cuenta'] + '</td>';
 				tr += '<td><a seccion="cli" tipo="frm_edit_fac" data-id="' + row['id'] + '" class="editar_cli_fac btn-floating btn-small waves-effect waves-light red" title="Eliminar datos"><i class="material-icons">delete_forever</i></a></td>';
 				tr += '</tr>';
 				$("#table_cli_fact").append(tr);
@@ -162,6 +162,32 @@ jQuery(document).on("click", "#btn_refresh_fact", function(e){
 	e.preventDefault();
 	var cid = $(this).data('id');
 	if(cid) readDatosFacturacion(cid);
+});
+
+// Eliminar registro de datos de facturación (botón borrar por fila)
+jQuery(document).on("click", ".editar_cli_fac", function(e){
+	e.preventDefault();
+	var rowId = $(this).data('id');
+	if(!rowId) return;
+	modalConfirm("Eliminar datos facturación", "¿Estás seguro de que quieres eliminar este registro?", false, "Eliminar", "Cancelar", "delete_forever", "cancel", function(){
+		$.ajax({
+			url: 'services/datos_facturacion_delete.php',
+			type: 'POST',
+			data: { id: rowId },
+			success: function(data){
+				if(typeof data === 'string' && data.trim() === 'OK'){
+					$('#modal_confirm').modal('close');
+					var cid = $('#id_cli').val();
+					if(cid) readDatosFacturacion(cid);
+				}else{
+					modalError('ERROR', 'No se pudo eliminar: ' + data, false);
+				}
+			},
+			error: function(xhr, status, error){
+				modalError('ERROR', 'Error en la petición: ' + error, false);
+			}
+		});
+	}, function(){ /* cancel */ });
 });
 
 jQuery(document).on("click", "#filtrar_cli", function() {
@@ -397,19 +423,20 @@ var openCliente = function(seccion, cual, id){
 				    '</div>' +    
 			    '</div>' +
 
-								'<div id="tab4_cli" class="col s12">' + 
-								'<div class="right input-field">' +
-									'<button type="button" id="btn_new_fact" class="btn-floating waves-effect waves-light orange" title="Nuevos datos">' +
-										'<i class="material-icons">add</i>' +
-									'</button>&nbsp;' +
-									'<button type="button" id="btn_refresh_fact" data-id="' + item.id + '" class="btn-floating waves-effect waves-light blue" title="Actualizar">' +
-										'<i class="material-icons">refresh</i>' +
-									'</button>' +
-								'</div>' +
-								'<table id="table_cli_fact" class="highlight">' +
-								'</table>' +
-								'<div id="resultados_facturacion" class="right-align"></div>' +
-								'</div>' +
+				'<div id="tab4_cli" class="col s12">' + 
+				'<div class="right input-field">' +
+					'<button type="button" id="btn_new_fact" class="btn-floating waves-effect waves-light orange" title="Nuevos datos">' +
+						'<i class="material-icons">add</i>' +
+					'</button>&nbsp;' +
+					'<button type="button" id="btn_refresh_fact" data-id="' + item.id + '" class="btn-floating waves-effect waves-light blue" title="Actualizar">' +
+						'<i class="material-icons">refresh</i>' +
+					'</button>' +
+				'</div>' +
+				'<table id="table_cli_fact" class="highlight">' +
+				'</table>' +
+				'<div id="resultados_facturacion" class="right-align"></div>' +
+				
+				'</div>' +
 
 			    '<div id="tab5_cli" class="col s12">' + 
 				    '<div class="input-field">' +
