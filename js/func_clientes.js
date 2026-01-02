@@ -102,7 +102,7 @@ var readClientes = function(id, totalParams){
 
 var readDatosFacturacion = function(id){
 	// vaciamos la tabla
-	$("#table_cli_fact tbody").empty();
+	$("#table_cli_fact").empty();
 	$("#resultados_facturacion").html('Cargando...');
 	$.ajax({
 		url: 'services/datos_facturacion.php',
