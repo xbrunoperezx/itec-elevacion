@@ -317,10 +317,11 @@ $(document).on('click', '#error_confirm', function(e){
 });
 
 // Cambia el título al hacer click en el menú de navegación desktop
-$(document).on('click', '#nav-desktop a', function(e) {
-  var text = $(this).text().trim();
-  if (text) {
-    $('#title-nav').text(text);
+$(document).on('click', '#nav-desktop li', function(e) {
+  var text = $(this).find("a").attr("href").split("#")[1].trim();
+  console.log(text);
+    if (text) {
+    $('#title_nav').text(text);
   }
 });
 
