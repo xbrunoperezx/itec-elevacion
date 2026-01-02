@@ -76,7 +76,7 @@ $result = mysqli_query($link, $sql);
 $resultados = array();
 
 // Bucle a través de cada fila de resultados y almacenamiento de datos en el array
-while ($orw = mysqli_fetch_assoc($result)) {
+while ($row= mysqli_fetch_assoc($result)) {
     if (isset($mantenedores[$row['id_mantenedor']])) {
       $row['mantenedor'] = $mantenedores[$row['id_mantenedor']];
     }else{
