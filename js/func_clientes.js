@@ -100,6 +100,52 @@ var readClientes = function(id, totalParams){
 	});
 }
 
+var readDatosFacturacion = function(id){
+	// vaciamos la tabla
+	$("#table_cli_fact tbody").empty();
+	$("#resultados_facturacion").html('Cargando...');
+	$.ajax({
+		url: 'services/datos_facturacion.php',
+		type: 'POST',
+		data: { filtro_id_cliente: id },
+		success: function(data) {
+			if(typeof data === 'string' && data.trim() === 'KO'){
+				$("#resultados_facturacion").html('No hay datos');
+				return;
+			}
+			var parsed = JSON.parse(data);
+			var datos = parsed["resultados"] || [];
+			if(!datos || datos.length === 0){
+				$("#resultados_facturacion").html('No hay datos');
+				return;
+			}
+			// generar encabezados a partir de las keys del primer registro
+			var keys = Object.keys(datos[0]);
+			var thead = '<tr>';
+			keys.forEach(function(k){ thead += '<th>' + k + '</th>'; });
+			thead += '</tr>';
+			$("#table_cli_fact thead").html(thead);
+
+			var total = 0;
+			datos.forEach(function(row){
+				var tr = '<tr>';
+				keys.forEach(function(k){
+					var val = row[k];
+					if(val === null) val = '';
+					tr += '<td>' + val + '</td>';
+				});
+				tr += '</tr>';
+				$("#table_cli_fact tbody").append(tr);
+				total++;
+			});
+			$("#resultados_facturacion").html('Total: ' + total);
+		},
+		error: function(xhr, status, error) {
+			$("#resultados_facturacion").html('Error: ' + error);
+		}
+	});
+}
+
 // Filtros de cliente
 jQuery(document).on("keydown", "#tab_cli [id*=filtro_cli]", function(e){
 	// Mostrar botón limpiar cuando se escribe
@@ -109,6 +155,13 @@ jQuery(document).on("keydown", "#tab_cli [id*=filtro_cli]", function(e){
 		e.preventDefault();
 		jQuery(this).parents("#tab_cli").find("#filtrar_cli").click();
 	}
+});
+
+// botón recargar facturación en editar cliente
+jQuery(document).on("click", "#btn_refresh_fact", function(e){
+	e.preventDefault();
+	var cid = $(this).data('id');
+	if(cid) readDatosFacturacion(cid);
 });
 
 jQuery(document).on("click", "#filtrar_cli", function() {
@@ -344,8 +397,18 @@ var openCliente = function(seccion, cual, id){
 				    '</div>' +    
 			    '</div>' +
 
-			    '<div id="tab4_cli" class="col s12">' + 
-			    '</div>' +
+								'<div id="tab4_cli" class="col s12">' + 
+								'<div class="row">' +
+									'<a id="btn_refresh_fact" data-id="' + item.id + '" class="btn-floating btn-small waves-effect waves-light blue" title="Actualizar">' +
+										'<i class="material-icons">refresh</i>' +
+									'</a>' +
+								'</div>' +
+								'<table id="table_cli_fact" class="striped">' +
+									'<thead><tr><th>ID</th><th>Concepto</th><th>Tarifa</th><th>Forma pago</th><th>Importe</th><th>Observaciones</th></tr></thead>' +
+									'<tbody></tbody>' +
+								'</table>' +
+								'<div id="resultados_facturacion" class="right-align"></div>' +
+								'</div>' +
 
 			    '<div id="tab5_cli" class="col s12">' + 
 				    '<div class="input-field">' +
@@ -366,7 +429,9 @@ var openCliente = function(seccion, cual, id){
 				$("#modal_"+seccion).modal({
 					dismissible: false
 				});
-				$("#modal_"+seccion).modal("open");		
+				$("#modal_"+seccion).modal("open");
+				// cargar datos de facturación del cliente y asignar id al botón recargar
+				readDatosFacturacion(item.id);
 			},
 			error: function(xhr, status, error) {
 				// Mostrar un mensaje de error en el centro de la pantalla
