@@ -165,7 +165,7 @@ var renderFormDatosFacturacion = function(clientId){
 	html += '</form>';
 	$('#frm_datos_facturacion').html(html);
 }
-j// Validación auxiliar: validar IBAN / número de cuenta
+// Validación auxiliar: validar IBAN / número de cuenta
 function isValidIBAN(iban){
 	if(!iban) return false;
 	var s = iban.replace(/[^A-Za-z0-9]/g,'').toUpperCase();
