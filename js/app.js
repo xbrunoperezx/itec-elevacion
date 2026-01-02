@@ -176,6 +176,8 @@ $(document).ready(function() {
 		$("#sectionToggle_seg").toggle();
 	});
 
+  
+
 }); // end jQuery ready
 
 // Función global para mostrar modal de error
@@ -312,6 +314,14 @@ $(document).on('click', '#error_confirm', function(e){
     return;
   }
   $modal.removeData('errorCallback');
+});
+
+// Cambia el título al hacer click en el menú de navegación desktop
+$(document).on('click', '#nav-desktop a', function(e) {
+  var text = $(this).text().trim();
+  if (text) {
+    $('#title-nav').text(text);
+  }
 });
 
 // ordenar resultados

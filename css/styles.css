@@ -244,42 +244,4 @@ div#export-content{
   background-color: #f2f2f2;
 }
 .hidden-row{display: none !important;}
-
-/* Versión responsive: mobile cuando la resolución es menor a 1558px,
-   desktop normal por encima. */
-@media (max-width: 1558px) {
-  /* Compactar el listado y mostrar solo iconos */
-  #nav-mobile {
-    display: flex;
-    align-items: center;
-    padding-left: 0;
-  }
-  #nav-mobile li {
-    display: inline-block;
-    margin: 0 6px;
-  }
-  /* Ocultar el texto (por simplicidad) y centrar el icono */
-  #nav-mobile li a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px; /* suficiente para el icono */
-    padding: 6px 4px !important;
-    box-sizing: border-box;
-    font-size: 0; /* oculta el texto sin eliminar el icono */
-    overflow: hidden;
-  }
-  /* Asegurar que el icono quede visible y con tamaño legible */
-  #nav-mobile li a i.material-icons {
-    font-size: 22px;
-    line-height: 22px;
-    margin: 0 !important;
-    color: #FFF; /* contraste con la nav-wrapper */
-  }
-}
-
-/* Para pantallas >= 1559px usamos el comportamiento desktop por defecto */
-@media (min-width: 1559px) {
-  #nav-mobile li a { font-size: 0.95rem; width: auto; padding: 0 12px; }
-  #nav-mobile li a i.material-icons { margin-right: 8px; font-size: 20px; color: inherit; }
-}
+/* End of contextual menu styles */
