@@ -146,6 +146,45 @@ var readDatosFacturacion = function(id){
 	});
 }
 
+// Leer historial de comentarios para el cliente
+var readHistorial = function(id){
+	$("#table_historial").empty();
+	$("#resultados_historial").html('Cargando...');
+	$.ajax({
+		url: 'services/historial.php',
+		type: 'POST',
+		data: { filtro_id_cliente: id },
+		success: function(data){
+			try{
+				var parsed = (typeof data === 'string') ? JSON.parse(data) : data;
+			}catch(e){
+				$("#resultados_historial").html('Error parseando respuesta');
+				return;
+			}
+			var datos = parsed['resultados'] || [];
+			if(!datos || datos.length === 0){
+				$("#resultados_historial").html('No hay historial');
+				return;
+			}
+			var total = 0;
+			datos.forEach(function(row){
+				var fecha = row['fecha'];
+				var quien = row['usuario'];
+				var comentario = row['comentario'];
+				var tr = '<tr>';
+				tr += '<td><b>' + (fecha ? fecha : '') + ' ' + (quien ? ('(' + quien + ')') : '') + '</b><br>' + comentario + '</td>';
+				tr += '</tr>';
+				$("#table_historial").append(tr);
+				total++;
+			});
+			$("#resultados_historial").html('Total: ' + total);
+		},
+		error: function(xhr, status, error){
+			$("#resultados_historial").html('Error: ' + error);
+		}
+	});
+}
+
 // Renderiza el pequeño formulario para añadir nuevos datos de facturación
 var renderFormDatosFacturacion = function(clientId){
 	var html = '';
@@ -454,13 +493,14 @@ var openCliente = function(seccion, cual, id){
 					$("#modal_"+seccion).find(".modal_txt_title").text(title);
 					$("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
 					$("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
-					var frm_tabs = '<ul class="tabs">' + 
-		        '<li class="tab col s3"><a class="active tablink1" href="#tab1_cli">Ascensor</a></li>' + 
-		        '<li class="tab col s3"><a class="tablink2" href="#tab2_cli">Datos</a></li>' + 
-		        '<li class="tab col s3"><a class="tablink3" href="#tab3_cli">Contratación</a></li>' + 
-		        '<li class="tab col s3"><a class="tablink4" href="#tab4_cli">Facturación</a></li>' + 
-		        '<li class="tab col s3"><a class="tablink5" href="#tab5_cli">Otros</a></li>' + 
-		      '</ul>';
+										var frm_tabs = '<ul class="tabs">' + 
+								'<li class="tab col s2"><a class="active tablink1" href="#tab1_cli">Ascensor</a></li>' + 
+								'<li class="tab col s2"><a class="tablink2" href="#tab2_cli">Datos</a></li>' + 
+								'<li class="tab col s2"><a class="tablink3" href="#tab3_cli">Contratación</a></li>' + 
+								'<li class="tab col s2"><a class="tablink4" href="#tab4_cli">Facturación</a></li>' + 
+								'<li class="tab col s2"><a class="tablink5" href="#tab5_cli">Otros</a></li>' + 
+								'<li class="tab col s2"><a class="tablink6" href="#tab6_cli">Historial</a></li>' + 
+							'</ul>';
 					var frm_render = '<form id="cliente_frm_editar">' +
 			    '<div id="tab1_cli" class="active col s12">' + 
 			    '<div class="input-field anchoFrm4">' +
@@ -564,16 +604,21 @@ var openCliente = function(seccion, cual, id){
 				'<div id="frm_datos_facturacion" class="left-align"></div>' +				
 				'</div>' +
 
-			    '<div id="tab5_cli" class="col s12">' + 
-				    '<div class="input-field">' +
-				      '<input type="text" id="id_cli" name="id_cli" value="' + item.id + '" disabled>' +
-				      '<label for="id_cli" class="active">ID Cliente BBDD</label>' +
-				    '</div>' +    
-				    '<div class="input-field">' +
-				      '<input type="text" id="mantenedor_cli" name="mantenedor_cli" value="' + item.id_mantenedor + '" disabled>' +
-				      '<label for="mantenedor_cli" class="active">ID Mantenedor BBDD</label>' +
-				    '</div>' +   
-			    '</div>' +
+								'<div id="tab5_cli" class="col s12">' + 
+										'<div class="input-field">' +
+											'<input type="text" id="id_cli" name="id_cli" value="' + item.id + '" disabled>' +
+											'<label for="id_cli" class="active">ID Cliente BBDD</label>' +
+										'</div>' +    
+										'<div class="input-field">' +
+											'<input type="text" id="mantenedor_cli" name="mantenedor_cli" value="' + item.id_mantenedor + '" disabled>' +
+											'<label for="mantenedor_cli" class="active">ID Mantenedor BBDD</label>' +
+										'</div>' +   
+								'</div>' +
+
+								'<div id="tab6_cli" class="col s12">' +
+										'<table id="table_historial" class="highlight"></table>' +
+										'<div id="resultados_historial" class="right-align"></div>' +
+								'</div>' +
 
 				  '</form>';
 				$("#modal_"+seccion).find(".contentTabs").html(frm_tabs);
@@ -586,6 +631,8 @@ var openCliente = function(seccion, cual, id){
 				$("#modal_"+seccion).modal("open");
 				// cargar datos de facturación del cliente, asignar id al botón recargar y renderizar formulario de nuevos datos
 				readDatosFacturacion(item.id);
+				// cargar historial de comentarios
+				readHistorial(item.id);
 			},
 			error: function(xhr, status, error) {
 				// Mostrar un mensaje de error en el centro de la pantalla
@@ -609,8 +656,6 @@ var openCliente = function(seccion, cual, id){
 				'<li class="tab col s3"><a class="active tablink1" href="#tab1_cli">Ascensor</a></li>' + 
 				'<li class="tab col s3"><a class="tablink2" href="#tab2_cli">Datos</a></li>' + 
 				'<li class="tab col s3"><a class="tablink3" href="#tab3_cli">Contratación</a></li>' + 
-				'<li class="tab col s3"><a class="tablink4" href="#tab4_cli">Facturación</a></li>' + 
-				'<li class="tab col s3"><a class="tablink5" href="#tab5_cli">Otros</a></li>' + 
 				'</ul>';
 				var frm_render = '<form id="cliente_frm_nuevo">' +
 				'<div id="tab1_cli" class="active col s12">' + 
@@ -691,17 +736,6 @@ var openCliente = function(seccion, cual, id){
 				      '<label for="observaciones_cli">Observaciones</label>' +
 				    '</div>' +    
 				'</div>' +
-
-				'<div id="tab4_cli" class="col s12">' + 
-				'</div>' +
-
-				'<div id="tab5_cli" class="col s12">' + 
-				    '<div class="input-field">' +
-				      '<input type="text" id="mantenedor_cli" name="mantenedor_cli" value="" disabled>' +
-				      '<label for="mantenedor_cli">ID Mantenedor BBDD</label>' +
-				    '</div>' +   
-				'</div>' +
-
 				'</form>';
 				$("#modal_"+seccion).find(".contentTabs").html(frm_tabs);
 				$("#modal_"+seccion).find(".contentForm").html(frm_render);
