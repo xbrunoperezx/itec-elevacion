@@ -122,14 +122,17 @@ var readDatosFacturacion = function(id){
 
 			var total = 0;
 			datos.forEach(function(row){
-				var tr = '<tr><td>';
+				var tr = '<tr>';
+				tr += '<td>';
 				tr += '<b>' + row['fis_nombre'] + '</b><br>';
 				tr += '' + row['fis_direccion'] + ' ';
 				tr += '' + row['fis_cp'] + ' ';
 				tr += '' + row['fis_localidad'] + ' ';
 				tr += '(' + row['fis_provincia'] + ')<br>';
 				tr += '' + row['observaciones'] + '';
-				tr += '</td></tr>';
+				tr += '</td>';
+				tr += '<td><a seccion="cli" tipo="frm_edit_fac" data-id="' + row['id'] + '" class="editar_cli_fac btn-floating btn-small waves-effect waves-light red" title="Eliminar"><i class="material-icons">delete</i></a></td>';
+				tr += '</tr>';
 				$("#table_cli_fact").append(tr);
 				total++;
 			});
