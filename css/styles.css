@@ -90,17 +90,17 @@ div.modal#modal_export {
   width: 600px;
 }
 
-div#resultados_cli, div#resultados_con, div#resultados_pri, div#resultados_seg, div#resultados_facturacion{
+div#resultados_cli, div#resultados_con, div#resultados_pri, div#resultados_seg, div#table_cli_fact{
   margin: 10px;
   background-color: #FDFFFC;
   padding: 10px;
 }
 
 /* Resultado contadores de facturación: texto más pequeño */
-div#resultados_facturacion{
+div#table_cli_fact{
   font-size: 0.80em;
 }
-div#resultados_facturacion td{
+div#table_cli_fact td{
   vertical-align: top;
 }
 
