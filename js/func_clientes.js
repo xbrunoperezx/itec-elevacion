@@ -129,9 +129,11 @@ var readDatosFacturacion = function(id){
 				tr += '' + row['fis_cp'] + ' ';
 				tr += '' + row['fis_localidad'] + ' ';
 				tr += '(' + row['fis_provincia'] + ')<br>';
-				tr += '' + row['observaciones'] + '';
+				tr += 'Observaciones: ' + row['observaciones'] + '<br>&nbsp;';
 				tr += '</td>';
-				tr += '<td><a seccion="cli" tipo="frm_edit_fac" data-id="' + row['id'] + '" class="editar_cli_fac btn-floating btn-small waves-effect waves-light red" title="Eliminar"><i class="material-icons">delete</i></a></td>';
+				tr += '<td>' + row['tarifa'] + '</td>';
+				tr += '<td>' + row['forma_pago'] + '</td>';
+				tr += '<td><a seccion="cli" tipo="frm_edit_fac" data-id="' + row['id'] + '" class="editar_cli_fac btn-floating btn-small waves-effect waves-light red" title="Eliminar datos"><i class="material-icons">delete_forever</i></a></td>';
 				tr += '</tr>';
 				$("#table_cli_fact").append(tr);
 				total++;
