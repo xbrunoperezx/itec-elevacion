@@ -19,9 +19,6 @@ $telefono2 = isset($_POST['telefono2']) ? $_POST['telefono2'] : '';
 $email = isset($_POST['email']) ? $_POST['email'] : '';
 
 include("conn_bbdd.php");
-  // $link = mysqli_connect("89.46.111.188", "Sql1396152", "5i4w182228", "Sql1396152_2");
-  // mysqli_query($link, "SET SESSION sql_mode='ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'");
-  // mysqli_set_charset($link,"utf8");
 
   // Verifica si la conexión es exitosa
   if (!$link) {
