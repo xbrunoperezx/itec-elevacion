@@ -160,9 +160,7 @@ var renderFormDatosFacturacion = function(clientId){
 	html += '<div class="input-field"><input type="text" id="fact_num_cuenta" name="num_cuenta"><label for="fact_num_cuenta">Núm. cuenta</label></div>';
 	html += '<div class="input-field"><textarea id="fact_observaciones" class="materialize-textarea" name="observaciones"></textarea><label for="fact_observaciones">Observaciones</label></div>';
 	html += '<div class="input-field">' +
-				'<button type="button" id="btn_save_fact" class="waves-effect waves-light btn green"><i class="material-icons left">save</i>Guardar</button>' +
-			'</div>';
-	html += '<div class="input-field">' +
+				'<button type="button" id="btn_save_fact" class="waves-effect waves-light btn green"><i class="material-icons left">add</i>Crear</button>&nbsp;' +
 				'<button type="button" id="btn_cancel_fact" class="waves-effect waves-light btn red"><i class="material-icons left">cancel</i>Cancelar</button>' +
 			'</div>';
 	html += '</form>';
