@@ -185,6 +185,69 @@ var readHistorial = function(id){
 	});
 }
 
+// Renderiza el formulario para añadir un comentario al historial
+var renderFormHistorial = function(clientId){
+	var html = '';
+	html += '<form id="form_historial">';
+	html += '<input type="hidden" id="hist_id_cliente" value="' + clientId + '">';
+	html += '<div class="input-field"><textarea id="hist_comentario" class="materialize-textarea" name="comentario"></textarea><label for="hist_comentario">Comentario</label></div>';
+	html += '<div class="input-field">' +
+				'<button type="button" id="btn_save_hist" class="waves-effect waves-light btn green"><i class="material-icons left">save</i>Guardar</button>&nbsp;' +
+				'<button type="button" id="btn_cancel_hist" class="waves-effect waves-light btn red"><i class="material-icons left">cancel</i>Cancelar</button>' +
+			'</div>';
+	html += '</form>';
+	$('#frm_historial').html(html);
+}
+
+// Guardar comentario historial
+jQuery(document).on('click', '#btn_save_hist', function(e){
+	e.preventDefault();
+	var payload = {
+		id_cliente: $('#hist_id_cliente').val(),
+		comentario: $('#hist_comentario').val()
+	};
+	payload.id_cliente = parseInt(payload.id_cliente,10) || 0;
+	payload.comentario = (payload.comentario || '').trim();
+	if(payload.id_cliente <= 0){ modalError('ERROR','ID cliente no disponible',false); return; }
+	if(!payload.comentario){ modalError('ERROR','Comentario vacío',false); return; }
+	$.ajax({
+		url: 'services/historial_new.php',
+		type: 'POST',
+		data: payload,
+		success: function(data){
+			if(typeof data === 'string' && data.trim() === 'OK'){
+				readHistorial(payload.id_cliente);
+				$('#frm_historial').empty();
+			}else{
+				modalError('ERROR','No se pudo guardar: ' + data, false);
+			}
+		},
+		error: function(xhr,status,error){
+			modalError('ERROR','Error en la petición: ' + error, false);
+		}
+	});
+});
+
+// Cancelar formulario historial
+jQuery(document).on('click', '#btn_cancel_hist', function(e){
+	e.preventDefault();
+	$('#frm_historial').empty();
+});
+
+// Botones nuevo/refresh historial
+jQuery(document).on('click', '#btn_new_hist', function(e){
+	e.preventDefault();
+	var cid = $(this).data('id') || $('#id_cli').val();
+	if(!cid){ modalError('ERROR','ID cliente no disponible',false); return; }
+	renderFormHistorial(cid);
+});
+
+jQuery(document).on('click', '#btn_refresh_hist', function(e){
+	e.preventDefault();
+	var cid = $(this).data('id') || $('#id_cli').val();
+	if(cid) readHistorial(cid);
+});
+
 // Renderiza el pequeño formulario para añadir nuevos datos de facturación
 var renderFormDatosFacturacion = function(clientId){
 	var html = '';
@@ -616,8 +679,17 @@ var openCliente = function(seccion, cual, id){
 								'</div>' +
 
 								'<div id="tab6_cli" class="col s12">' +
-										'<table id="table_historial" class="highlight"></table>' +
-										'<div id="resultados_historial" class="right-align"></div>' +
+									'<div class="right input-field">' +
+										'<button type="button" id="btn_new_hist" data-id="' + item.id + '" class="btn-floating waves-effect waves-light orange" title="Nuevo comentario">' +
+											'<i class="material-icons">add</i>' +
+										'</button>&nbsp;' +
+										'<button type="button" id="btn_refresh_hist" data-id="' + item.id + '" class="btn-floating waves-effect waves-light blue" title="Actualizar">' +
+											'<i class="material-icons">refresh</i>' +
+										'</button>' +
+									'</div>' +
+									'<table id="table_historial" class="highlight"></table>' +
+									'<div id="resultados_historial" class="right-align"></div>' +
+									'<div id="frm_historial" class="left-align"></div>' +
 								'</div>' +
 
 				  '</form>';
