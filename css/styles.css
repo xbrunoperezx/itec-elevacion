@@ -244,3 +244,34 @@ div#export-content{
   background-color: #f2f2f2;
 }
 .hidden-row{display: none !important;}
+
+/* Mostrar solo iconos en #nav-mobile cuando el ancho de ventana es menor a 1558px */
+@media (max-width: 1558px) {
+  #nav-mobile {
+    display: flex;
+    align-items: center;
+  }
+  #nav-mobile li {
+    display: inline-block;
+    margin: 0 4px;
+  }
+  /* Limitar ancho del enlace para ocultar el texto y mantener el icono visible */
+  #nav-mobile li a {
+    display: inline-block;
+    width: 40px; /* suficiente para el icono */
+    padding: 6px 4px !important;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+  }
+  /* Asegurar que el icono quede visible y centrado */
+  #nav-mobile li a i.material-icons {
+    float: none !important;
+    margin: 0 !important;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 22px;
+    line-height: 22px;
+  }
+}
