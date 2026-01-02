@@ -1,6 +1,4 @@
 <?php
-header('Content-Type: application/json');
-require_once 'conn_bbdd.php';
 
 $lim = isset($_POST['filtro_total']) ? intval($_POST['filtro_total']) : 100;
 $filtro_id = 0;
@@ -15,6 +13,12 @@ if($filtro_id <= 0){
     exit;
 }
 
+include("conn_bbdd.php");
+
+// Verifica si la conexión es exitosa
+if (!$link) {
+    die("Conexión fallida: " . mysqli_connect_error());
+}
 
 // Consulta para obtener la información de los usuarios
 $usuarios_sql = "SELECT * FROM usuarios";
@@ -30,7 +34,7 @@ while ($row = mysqli_fetch_assoc($usuarios_result)) {
 
 $sql = "SELECT * FROM historial WHERE id_cliente = %d ORDER BY id DESC LIMIT %d";
 $sql = sprintf($sql, $filtro_id, $lim);
-$res = mysqli_query($conn, $sql);
+$res = mysqli_query($link, $sql);
 $resultados = array();
 if($res){
     while($row = mysqli_fetch_assoc($res)){
