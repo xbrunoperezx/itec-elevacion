@@ -6,6 +6,12 @@ if(isset($_POST["filtro_id"])){
     $id = "";
 }
 
+if(isset($_POST["filtro_id_cliente"])){
+  $id_cliente = intval($_POST["filtro_id_cliente"]);
+}else{
+    $id_cliente = "";
+}
+
 include("conn_bbdd.php");
 
 // Verifica si la conexión es exitosa
@@ -36,9 +42,14 @@ while ($row = mysqli_fetch_assoc($tarifas_result)) {
     $tarifas[$row["id"]] = $row["tarifa"];
 }
 
-if($id!=""){
+if($id!="" || $id_cliente!=""){
     // Define la consulta SQL
-    $sql = "SELECT * FROM datos_facturacion WHERE id=$id ORDER BY id ASC";
+    if($id!=""){
+        $sql = "SELECT * FROM datos_facturacion WHERE id=$id ORDER BY id ASC";
+    }else{
+        $sql = "SELECT * FROM datos_facturacion WHERE id_cliente=$id_cliente ORDER BY id ASC";
+    }
+    
     // Ejecuta la consulta
     $result = mysqli_query($link, $sql);
 
