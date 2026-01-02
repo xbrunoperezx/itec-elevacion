@@ -245,33 +245,41 @@ div#export-content{
 }
 .hidden-row{display: none !important;}
 
-/* Mostrar solo iconos en #nav-mobile cuando el ancho de ventana es menor a 1558px */
+/* Versión responsive: mobile cuando la resolución es menor a 1558px,
+   desktop normal por encima. */
 @media (max-width: 1558px) {
+  /* Compactar el listado y mostrar solo iconos */
   #nav-mobile {
     display: flex;
     align-items: center;
+    padding-left: 0;
   }
   #nav-mobile li {
     display: inline-block;
-    margin: 0 4px;
+    margin: 0 6px;
   }
-  /* Limitar ancho del enlace para ocultar el texto y mantener el icono visible */
+  /* Ocultar el texto (por simplicidad) y centrar el icono */
   #nav-mobile li a {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 40px; /* suficiente para el icono */
     padding: 6px 4px !important;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
     box-sizing: border-box;
+    font-size: 0; /* oculta el texto sin eliminar el icono */
+    overflow: hidden;
   }
-  /* Asegurar que el icono quede visible y centrado */
+  /* Asegurar que el icono quede visible y con tamaño legible */
   #nav-mobile li a i.material-icons {
-    float: none !important;
-    margin: 0 !important;
-    display: inline-block;
-    vertical-align: middle;
     font-size: 22px;
     line-height: 22px;
+    margin: 0 !important;
+    color: #FFF; /* contraste con la nav-wrapper */
   }
+}
+
+/* Para pantallas >= 1559px usamos el comportamiento desktop por defecto */
+@media (min-width: 1559px) {
+  #nav-mobile li a { font-size: 0.95rem; width: auto; padding: 0 12px; }
+  #nav-mobile li a i.material-icons { margin-right: 8px; font-size: 20px; color: inherit; }
 }
