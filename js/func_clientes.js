@@ -162,6 +162,9 @@ var renderFormDatosFacturacion = function(clientId){
 	html += '<div class="input-field">' +
 				'<button type="button" id="btn_save_fact" class="waves-effect waves-light btn green"><i class="material-icons left">save</i>Guardar</button>' +
 			'</div>';
+	html += '<div class="input-field">' +
+				'<button type="button" id="btn_cancel_fact" class="waves-effect waves-light btn red"><i class="material-icons left">cancel</i>Cancelar</button>' +
+			'</div>';
 	html += '</form>';
 	$('#frm_datos_facturacion').html(html);
 }
@@ -206,10 +209,10 @@ jQuery(document).on('click', '#btn_save_fact', function(e){
 	e.preventDefault();
 	var payload = {
 		id_cliente: $('#fact_id_cliente').val(),
-		titular: $('#fact_titular').val(),
-		direccion: $('#fact_direccion').val(),
-		localidad: $('#fact_localidad').val(),
-		provincia: $('#fact_provincia').val(),
+		titular: $('#fact_titular').val().toUpperCase(),
+		direccion: $('#fact_direccion').val().toUpperCase(),
+		localidad: $('#fact_localidad').val().toUpperCase(),
+		provincia: $('#fact_provincia').val().toUpperCase(),
 		cp: $('#fact_cp').val(),
 		cif: $('#fact_cif').val(),
 		num_cuenta: $('#fact_num_cuenta').val(),
@@ -282,6 +285,11 @@ jQuery(document).on('click', '#btn_new_fact', function(e){
 	var cid = $(this).data('id') || $('#id_cli').val();
 	if(!cid){ modalError('ERROR','ID cliente no disponible',false); return; }
 	renderFormDatosFacturacion(cid);
+});
+
+jQuery(document).on('click', '#btn_cancel_fact', function(e){
+	e.preventDefault();
+	$('#frm_datos_facturacion').empty();
 });
 
 // Eliminar registro de datos de facturación (botón borrar por fila)
