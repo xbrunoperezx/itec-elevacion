@@ -107,7 +107,7 @@ $(document).ready(function() {
 	});
 
 	// Escuchar el evento de click en los elementos del menú
-	jQuery(document).on('click', '#nav-mobile li', function() {
+	jQuery(document).on('click', '#nav-desktop li', function() {
 			var tipo = $(this).attr('id');
 			var filtros = {
 				filtro_total : 15
@@ -160,7 +160,7 @@ $(document).ready(function() {
   });
 
 	// Forzamos que cargue la lista de clientes al cargar la página
-	$('#nav-mobile li:first').click();
+	$('#nav-desktop li:first').click();
 
 	// Botones de ocultar los filtros
 	$("#btnToggle_cli").click(function(){
@@ -319,7 +319,6 @@ $(document).on('click', '#error_confirm', function(e){
 // Cambia el título al hacer click en el menú de navegación desktop
 $(document).on('click', '#nav-desktop li', function(e) {
   var text = $(this).find("a").attr("href").split("#")[1].trim();
-  console.log(text);
     if (text) {
     $('#title_nav').text(text);
   }
