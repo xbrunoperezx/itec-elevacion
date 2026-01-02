@@ -43,26 +43,54 @@
                 dataType: "json",
                 success: function(response){ //el response es el objeto que vi en POSTMAN la respuesta en JSON
                     //aqui llega la respuesta el JSON
+
+                    // 1º  ----pinto en consola-----
                     //console.log(response)
+
+                    //2º  ----muestro un parrafo en el contenedor del div creado  por la id resultado.----
                     //$('#resultado').html('<p>Hola, el js funciona </p>')
-                    let cliente= response.resultados[0];
 
-                    let html= `
+                    //3º  --- ahora filtro  que cliente  quiero mostrar en  la  posicion----
+                    //let cliente= response.resultados[0];
 
-                        <p> 
-                            <strong>Nombre:</strong> ${cliente.nombre}<br>
-                            <strong>direccion:</strong> ${cliente.direccion}
-                        </p>    
-                    `;
+                    //--- aqui elijo que datos quiero mostrar/pintar llamando a cliente siempre---
+                    //let html= `
 
-                    $('#resultado').html(html)
+                        //<p> 
+                            //<strong>Nombre:</strong> ${cliente.nombre}<br>
+                            //<strong>direccion:</strong> ${cliente.direccion}
+                        //</p>    
+                    //`;
 
+                    //---muestro los dos clientes en parrafos con su nombre y direccion
+                    //$('#resultado').html(html)
 
+                    
+                    //4º  ---creamos un acumulador para no sobrescribir cada vuelta el cliente---
+                    let html = "";
+                    //recorremos el array "response.resultados" con cada cliente
+                    response.resultados.forEach(function(cliente){
+                         
+                        //con el acumulador creado vamos añadiendo al html cada iteraccion del bucle un cliente 
+                        html += `
+                            <div class= "card-panel">
+                                <p>
+                                    <strong>Nombre: </strong> ${cliente.nombre}<br>
+                                    <strong>Direccion: </strong> ${cliente.Direccion}<br>
+                                </p>   
+                           
+                            </div>          
 
+                        
+                        `;
+                    });
+                    
+                    $('#resultado').html(html);
                 }
                
-
+              //cierre de ajax
             })
+          //cierre de la funcion de carga   
         })
 
     </script>
