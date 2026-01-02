@@ -36,6 +36,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
         $_SESSION['user'] = $username;
         // Establece la cookie de sesión
         setcookie("session", "autenticado", time() + 7200);  
+        setcookie("user_id", mysqli_fetch_assoc($result)['id'], time() + 7200);  
         // Devolvemos un mensaje de éxito
         echo 'success';
     } else {

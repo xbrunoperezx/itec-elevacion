@@ -192,7 +192,7 @@ var renderFormHistorial = function(clientId){
 	html += '<input type="hidden" id="hist_id_cliente" value="' + clientId + '">';
 	html += '<div class="input-field"><textarea id="hist_comentario" class="materialize-textarea" name="comentario"></textarea><label for="hist_comentario">Comentario</label></div>';
 	html += '<div class="input-field">' +
-				'<button type="button" id="btn_save_hist" class="waves-effect waves-light btn green"><i class="material-icons left">save</i>Guardar</button>&nbsp;' +
+				'<button type="button" id="btn_save_hist" class="waves-effect waves-light btn green"><i class="material-icons left">add</i>Crear</button>&nbsp;' +
 				'<button type="button" id="btn_cancel_hist" class="waves-effect waves-light btn red"><i class="material-icons left">cancel</i>Cancelar</button>' +
 			'</div>';
 	html += '</form>';
