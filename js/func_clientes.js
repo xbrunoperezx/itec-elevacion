@@ -399,13 +399,13 @@ var openCliente = function(seccion, cual, id){
 			    '</div>' +
 
 								'<div id="tab4_cli" class="col s12">' + 
-								'<div class="row">' +
-									'<a id="btn_new_fact" class="btn-floating btn-small waves-effect waves-light orange" title="Nuevos datos">' +
+								'<div class="right input-field">' +
+									'<button type="button" id="btn_new_fact" class="btn-floating btn-small waves-effect waves-light orange" title="Nuevos datos">' +
 										'<i class="material-icons">add</i>' +
-									'</a>' +
-									'<a id="btn_refresh_fact" data-id="' + item.id + '" class="btn-floating btn-small waves-effect waves-light blue" title="Actualizar">' +
+									'</button>' +
+									'<button type="button" id="btn_refresh_fact" data-id="' + item.id + '" class="btn-floating btn-small waves-effect waves-light blue" title="Actualizar">' +
 										'<i class="material-icons">refresh</i>' +
-									'</a>' +
+									'</button>' +
 								'</div>' +
 								'<table id="table_cli_fact" class="striped">' +
 									'<thead><tr><th>Datos Facturación</th></tr></thead>' +
