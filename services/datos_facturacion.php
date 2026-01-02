@@ -47,8 +47,8 @@ if($id!=""){
 
     // Bucle a través de cada fila de resultados y almacenamiento de datos en el array
     while ($row = mysqli_fetch_assoc($result)) {
-        if (isset($formaspago[$row['id_forma_pago']])) {
-        $row['forma_pago'] = $formaspago[$row['id_forma_pago']];
+        if (isset($formaspago[$row['id_formas_pago']])) {
+        $row['forma_pago'] = $formaspago[$row['id_formas_pago']];
         }else{
         $row['forma_pago'] = "-";
         }
