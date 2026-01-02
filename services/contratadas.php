@@ -33,13 +33,13 @@ if (!$link) {
     }
 
 // Consulta para obtener la información de las formas de pago
-    $formapago_sql = "SELECT * FROM formapago";
+    $formapago_sql = "SELECT * FROM formas_pago";
     $formapago_result = mysqli_query($link, $formapago_sql);
     // Inicialización de un array para almacenar los datos de las formas de pago
     $formapago = array();
     // Bucle a través de cada fila de resultados de las formas de pago y almacenamiento de datos en el array
     while ($row = mysqli_fetch_assoc($formapago_result)) {
-        $formapago[$row["id"]] = $row["formapago"];
+        $formapago[$row["id"]] = $row["forma_pago"];
     }
 
 // Consulta para obtener la información de los usuarios
