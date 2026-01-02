@@ -158,6 +158,7 @@ var renderFormDatosFacturacion = function(clientId){
 	html += '<div class="input-field"><input type="text" id="fact_cp" name="cp"><label for="fact_cp">C.P.</label></div>';
 	html += '<div class="input-field"><input type="text" id="fact_cif" name="cif"><label for="fact_cif">CIF</label></div>';
 	html += '<div class="input-field"><input type="text" id="fact_num_cuenta" name="num_cuenta"><label for="fact_num_cuenta">Núm. cuenta</label></div>';
+	html += '<div class="input-field"><textarea id="fact_observaciones" class="materialize-textarea" name="observaciones"></textarea><label for="fact_observaciones">Observaciones</label></div>';
 	html += '<div class="input-field">' +
 				'<button type="button" id="btn_save_fact" class="waves-effect waves-light btn green"><i class="material-icons left">save</i>Guardar</button>' +
 			'</div>';
@@ -176,7 +177,8 @@ jQuery(document).on('click', '#btn_save_fact', function(e){
 		provincia: $('#fact_provincia').val(),
 		cp: $('#fact_cp').val(),
 		cif: $('#fact_cif').val(),
-		num_cuenta: $('#fact_num_cuenta').val()
+		num_cuenta: $('#fact_num_cuenta').val(),
+		observaciones: $('#fact_observaciones').val()
 	};
 	// pequeña validación
 	if(!payload.id_cliente){ modalError('ERROR','ID cliente no disponible',false); return; }
@@ -189,6 +191,7 @@ jQuery(document).on('click', '#btn_save_fact', function(e){
 				// limpiar formulario y recargar tabla
 				$('#form_datos_fact')[0].reset();
 				readDatosFacturacion(payload.id_cliente);
+				$('#frm_datos_facturacion').empty();
 			}else{
 				modalError('ERROR','No se pudo guardar: ' + data, false);
 			}
