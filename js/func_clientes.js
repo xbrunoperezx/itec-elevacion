@@ -165,6 +165,41 @@ var renderFormDatosFacturacion = function(clientId){
 	html += '</form>';
 	$('#frm_datos_facturacion').html(html);
 }
+j// Validación auxiliar: validar IBAN / número de cuenta
+function isValidIBAN(iban){
+	if(!iban) return false;
+	var s = iban.replace(/[^A-Za-z0-9]/g,'').toUpperCase();
+	if(!/^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}$/.test(s)) return false;
+	// move first 4 chars to the end
+	s = s.slice(4) + s.slice(0,4);
+	// expand letters to numbers (A=10 ... Z=35)
+	var expanded = '';
+	for(var i=0;i<s.length;i++){
+		var ch = s.charAt(i);
+		if(ch >= 'A' && ch <= 'Z'){
+			expanded += (ch.charCodeAt(0) - 55);
+		}else{
+			expanded += ch;
+		}
+	}
+	// compute mod 97 iteratively
+	var remainder = 0;
+	for(var j=0;j<expanded.length;j++){
+		remainder = (remainder * 10 + parseInt(expanded.charAt(j), 10)) % 97;
+	}
+	return remainder === 1;
+}
+
+function isValidAccountNumber(acct){
+	if(!acct) return false;
+	var s = String(acct).replace(/[^A-Za-z0-9]/g,'').toUpperCase();
+	// if looks like IBAN (starts with 2 letters and 2 digits) validate IBAN
+	if(/^[A-Z]{2}[0-9]{2}/.test(s)){
+		return isValidIBAN(s);
+	}
+	// otherwise validate as numeric account (8-34 digits)
+	return (/^[0-9]{8,34}$/.test(s));
+}
 
 // Envío del formulario para crear nuevos datos de facturación
 jQuery(document).on('click', '#btn_save_fact', function(e){
@@ -180,16 +215,37 @@ jQuery(document).on('click', '#btn_save_fact', function(e){
 		num_cuenta: $('#fact_num_cuenta').val(),
 		observaciones: $('#fact_observaciones').val()
 	};
-	// pequeña validación
-	if(!payload.id_cliente){ modalError('ERROR','ID cliente no disponible',false); return; }
+		// validación mejorada
+		payload.id_cliente = parseInt(payload.id_cliente, 10) || 0;
+		payload.titular = (payload.titular || '').trim();
+		payload.direccion = (payload.direccion || '').trim();
+		payload.localidad = (payload.localidad || '').trim();
+		payload.cp = (payload.cp || '').trim();
+		payload.cif = (payload.cif || '').trim();
+		payload.num_cuenta = (payload.num_cuenta || '').trim();
+
+		var errors = [];
+		if(payload.id_cliente <= 0) errors.push('ID cliente no válido');
+		if(!payload.titular) errors.push('Titular requerido');
+		if(!payload.direccion) errors.push('Dirección requerida');
+		if(!payload.localidad) errors.push('Localidad requerida');
+		// Código postal: 5 dígitos (España)
+		if(!/^[0-9]{5}$/.test(payload.cp)) errors.push('C.P. inválido (5 dígitos)');
+		// CIF/NIF básico: longitud razonable (validación completa opcional)
+		if(payload.cif.length < 4 || payload.cif.length > 20) errors.push('CIF/NIF inválido');
+		// Número de cuenta: aceptar IBAN o BBAN (comprobación IBAN incluida)
+		if(!isValidAccountNumber(payload.num_cuenta)) errors.push('Núm. cuenta inválido (IBAN o 8-34 dígitos)');
+
+		if(errors.length){
+			modalError('ERROR','Corrige los siguientes errores:\n' + errors.join('\n'), false);
+			return;
+		}
 	$.ajax({
 		url: 'services/datos_facturacion_new.php',
 		type: 'POST',
 		data: payload,
 		success: function(data){
 			if(typeof data === 'string' && data.trim() === 'OK'){
-				// limpiar formulario y recargar tabla
-				$('#form_datos_fact')[0].reset();
 				readDatosFacturacion(payload.id_cliente);
 				$('#frm_datos_facturacion').empty();
 			}else{
