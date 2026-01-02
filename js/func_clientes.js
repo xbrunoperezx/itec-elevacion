@@ -129,10 +129,10 @@ var readDatosFacturacion = function(id){
 				tr += '' + row['fis_cp'] + ' ';
 				tr += '' + row['fis_localidad'] + ' ';
 				tr += '(' + row['fis_provincia'] + ')<br>';
-				tr += 'Observaciones: ' + row['observaciones'] + '<br>&nbsp;';
+				tr += '<b>Observaciones:</b> ' + row['observaciones'] + '<br>&nbsp;';
 				tr += '</td>';
-				tr += '<td>Tarifa:<br>' + row['tarifa'] + '<br>Forma de pago:<br>' + row['forma_pago'] + '</td>';
-				tr += '<td>Núm. cuenta:<br>' + row['num_cuenta'] + '</td>';
+				tr += '<td><b>Tarifa:</b><br>' + row['tarifa'] + '<br><b>Forma de pago:</b><br>' + row['forma_pago'] + '</td>';
+				tr += '<td><b>Núm. cuenta:</b><br>' + row['num_cuenta'] + '</td>';
 				tr += '<td><a seccion="cli" tipo="frm_edit_fac" data-id="' + row['id'] + '" class="editar_cli_fac btn-floating btn-small waves-effect waves-light red" title="Eliminar datos"><i class="material-icons">delete_forever</i></a></td>';
 				tr += '</tr>';
 				$("#table_cli_fact").append(tr);
@@ -145,6 +145,59 @@ var readDatosFacturacion = function(id){
 		}
 	});
 }
+
+// Renderiza el pequeño formulario para añadir nuevos datos de facturación
+var renderFormDatosFacturacion = function(clientId){
+	var html = '';
+	html += '<form id="form_datos_fact">';
+	html += '<input type="hidden" id="fact_id_cliente" value="' + clientId + '">';
+	html += '<div class="input-field"><input type="text" id="fact_titular" name="titular"><label for="fact_titular">Titular</label></div>';
+	html += '<div class="input-field"><input type="text" id="fact_direccion" name="direccion"><label for="fact_direccion">Dirección</label></div>';
+	html += '<div class="input-field"><input type="text" id="fact_localidad" name="localidad"><label for="fact_localidad">Localidad</label></div>';
+	html += '<div class="input-field"><input type="text" id="fact_provincia" name="provincia"><label for="fact_provincia">Provincia</label></div>';
+	html += '<div class="input-field"><input type="text" id="fact_cp" name="cp"><label for="fact_cp">C.P.</label></div>';
+	html += '<div class="input-field"><input type="text" id="fact_cif" name="cif"><label for="fact_cif">CIF</label></div>';
+	html += '<div class="input-field"><input type="text" id="fact_num_cuenta" name="num_cuenta"><label for="fact_num_cuenta">Núm. cuenta</label></div>';
+	html += '<div class="input-field">' +
+				'<button type="button" id="btn_save_fact" class="waves-effect waves-light btn green"><i class="material-icons left">save</i>Guardar</button>' +
+			'</div>';
+	html += '</form>';
+	$('#frm_datos_facturacion').html(html);
+}
+
+// Envío del formulario para crear nuevos datos de facturación
+jQuery(document).on('click', '#btn_save_fact', function(e){
+	e.preventDefault();
+	var payload = {
+		id_cliente: $('#fact_id_cliente').val(),
+		titular: $('#fact_titular').val(),
+		direccion: $('#fact_direccion').val(),
+		localidad: $('#fact_localidad').val(),
+		provincia: $('#fact_provincia').val(),
+		cp: $('#fact_cp').val(),
+		cif: $('#fact_cif').val(),
+		num_cuenta: $('#fact_num_cuenta').val()
+	};
+	// pequeña validación
+	if(!payload.id_cliente){ modalError('ERROR','ID cliente no disponible',false); return; }
+	$.ajax({
+		url: 'services/datos_facturacion_new.php',
+		type: 'POST',
+		data: payload,
+		success: function(data){
+			if(typeof data === 'string' && data.trim() === 'OK'){
+				// limpiar formulario y recargar tabla
+				$('#form_datos_fact')[0].reset();
+				readDatosFacturacion(payload.id_cliente);
+			}else{
+				modalError('ERROR','No se pudo guardar: ' + data, false);
+			}
+		},
+		error: function(xhr, status, error){
+			modalError('ERROR','Error en la petición: ' + error, false);
+		}
+	});
+});
 
 // Filtros de cliente
 jQuery(document).on("keydown", "#tab_cli [id*=filtro_cli]", function(e){
@@ -164,12 +217,20 @@ jQuery(document).on("click", "#btn_refresh_fact", function(e){
 	if(cid) readDatosFacturacion(cid);
 });
 
+// Mostrar el formulario de nuevos datos al pulsar el botón "Nuevo" en facturación
+jQuery(document).on('click', '#btn_new_fact', function(e){
+	e.preventDefault();
+	var cid = $(this).data('id') || $('#id_cli').val();
+	if(!cid){ modalError('ERROR','ID cliente no disponible',false); return; }
+	renderFormDatosFacturacion(cid);
+});
+
 // Eliminar registro de datos de facturación (botón borrar por fila)
 jQuery(document).on("click", ".editar_cli_fac", function(e){
 	e.preventDefault();
 	var rowId = $(this).data('id');
 	if(!rowId) return;
-	modalConfirm("Eliminar datos facturación", "¿Estás seguro de que quieres eliminar este registro?", false, "Eliminar", "Cancelar", "delete_forever", "cancel", function(){
+	modalConfirm("Eliminar datos facturación", "¿Estás seguro de que quieres eliminar estos datos de facturación?", false, "Eliminar", "Cancelar", "delete_forever", "cancel", function(){
 		$.ajax({
 			url: 'services/datos_facturacion_delete.php',
 			type: 'POST',
@@ -435,7 +496,7 @@ var openCliente = function(seccion, cual, id){
 				'<table id="table_cli_fact" class="highlight">' +
 				'</table>' +
 				'<div id="resultados_facturacion" class="right-align"></div>' +
-				
+				'<div id="frm_datos_facturacion" class="left-align"></div>' +				
 				'</div>' +
 
 			    '<div id="tab5_cli" class="col s12">' + 
@@ -458,7 +519,7 @@ var openCliente = function(seccion, cual, id){
 					dismissible: false
 				});
 				$("#modal_"+seccion).modal("open");
-				// cargar datos de facturación del cliente y asignar id al botón recargar
+				// cargar datos de facturación del cliente, asignar id al botón recargar y renderizar formulario de nuevos datos
 				readDatosFacturacion(item.id);
 			},
 			error: function(xhr, status, error) {
