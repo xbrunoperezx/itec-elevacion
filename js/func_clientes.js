@@ -119,12 +119,6 @@ var readDatosFacturacion = function(id){
 				$("#resultados_facturacion").html('No hay datos');
 				return;
 			}
-			// generar encabezados a partir de las keys del primer registro
-			var keys = ["Datos Facturación", ""];
-			var thead = '<tr>';
-			keys.forEach(function(k){ thead += '<th>' + k + '</th>'; });
-			thead += '</tr>';
-			$("#table_cli_fact thead").html(thead);
 
 			var total = 0;
 			datos.forEach(function(row){
@@ -136,7 +130,7 @@ var readDatosFacturacion = function(id){
 				tr += '(' + row['fis_provincia'] + ')<br>';
 				tr += '' + row['observaciones'] + '';
 				tr += '</td></tr>';
-				$("#table_cli_fact tbody").append(tr);
+				$("#table_cli_fact").append(tr);
 				total++;
 			});
 			$("#resultados_facturacion").html('Total: ' + total);
@@ -400,16 +394,14 @@ var openCliente = function(seccion, cual, id){
 
 								'<div id="tab4_cli" class="col s12">' + 
 								'<div class="right input-field">' +
-									'<button type="button" id="btn_new_fact" class="btn-floating btn-small waves-effect waves-light orange" title="Nuevos datos">' +
+									'<button type="button" id="btn_new_fact" class="btn-floating waves-effect waves-light orange" title="Nuevos datos">' +
 										'<i class="material-icons">add</i>' +
-									'</button>' +
-									'<button type="button" id="btn_refresh_fact" data-id="' + item.id + '" class="btn-floating btn-small waves-effect waves-light blue" title="Actualizar">' +
+									'</button>&nbsp;' +
+									'<button type="button" id="btn_refresh_fact" data-id="' + item.id + '" class="btn-floating waves-effect waves-light blue" title="Actualizar">' +
 										'<i class="material-icons">refresh</i>' +
 									'</button>' +
 								'</div>' +
-								'<table id="table_cli_fact" class="striped">' +
-									'<thead><tr><th>Datos Facturación</th></tr></thead>' +
-									'<tbody></tbody>' +
+								'<table id="table_cli_fact" class="highlight">' +
 								'</table>' +
 								'<div id="resultados_facturacion" class="right-align"></div>' +
 								'</div>' +
