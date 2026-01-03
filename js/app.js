@@ -186,7 +186,7 @@ function modalError(title, message, dismiss, btnText, btnIcon, successCallback) 
   // Asegurarse que dismiss sea booleano
   var dismissible = (typeof dismiss === 'boolean') ? dismiss : false;
   $('#error-title').text(title);
-  $('#error-message').text(message);
+  $('#error-message').html(message);
 
   // textos por defecto si no se pasan
   var btnTextFinal = (typeof btnText === 'string' && btnText.length>0) ? btnText : 'Aceptar';
