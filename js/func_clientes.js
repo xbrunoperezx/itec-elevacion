@@ -340,7 +340,7 @@ jQuery(document).on('click', '#btn_save_fact', function(e){
 		if(!isValidAccountNumber(payload.num_cuenta)) errors.push('Núm. cuenta inválido (IBAN o 8-34 dígitos)');
 
 		if(errors.length){
-			modalError('ERROR','Corrige los siguientes errores:\n' + errors.join('\n'), false);
+			modalError('ERROR','Corrige los siguientes errores:<br>' + errors.join('<br>'), false);
 			return;
 		}
 	$.ajax({
