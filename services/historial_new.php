@@ -24,7 +24,7 @@ if($comentario === ''){
     exit;
 }
 
-$sql = "INSERT INTO historial (id_cliente, id_usuario, comentario) VALUES (%d, %d, '%s')";
+$sql = "INSERT INTO clientes_historial (id_cliente, id_usuario, comentario) VALUES (%d, %d, '%s')";
 $sql = sprintf($sql, $id_cliente, $id_usuario, $comentario);
 $res = mysqli_query($link, $sql);
 if($res){

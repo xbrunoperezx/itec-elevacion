@@ -32,7 +32,7 @@ while ($row = mysqli_fetch_assoc($usuarios_result)) {
     $usuarios[$row["id"]] = $row["user"];
 }
 
-$sql = "SELECT * FROM historial WHERE id_cliente = %d ORDER BY id DESC LIMIT %d";
+$sql = "SELECT * FROM clientes_historial WHERE id_cliente = %d ORDER BY id DESC LIMIT %d";
 $sql = sprintf($sql, $filtro_id, $lim);
 $res = mysqli_query($link, $sql);
 $resultados = array();
