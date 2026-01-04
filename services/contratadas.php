@@ -54,7 +54,7 @@ if (!$link) {
 
 if($id==""){
     // Define la consulta SQL
-    $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.informe, con.tipo, con.id_informe, con.estado, con.num_control, con.observaciones AS con_observaciones, con.id_factura, con.nocobrar, con.precio, con.id_formapago AS con_id_formapago, con.id_tarifa AS con_id_tarifa, con.comunicada, con.enviada_cobrar, con.comunicada_aquien, con.comunicada_como, con.contratada_como FROM clientes c JOIN contratadas con ON c.id = con.id_cliente";
+    $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.tipo, con.estado, con.num_control, con.observaciones AS con_observaciones, con.id_factura, con.nocobrar, con.precio, con.id_formapago AS con_id_formapago, con.id_tarifa AS con_id_tarifa, con.comunicada, con.enviada_cobrar, con.comunicada_aquien, con.comunicada_como, con.contratada_como FROM clientes c JOIN contratadas con ON c.id = con.id_cliente";
 
     $where = array();
     if (!empty($_POST['filtro_rae'])) {
@@ -69,9 +69,6 @@ if($id==""){
     if (!empty($_POST['filtro_nombre'])) {
         $where[] = "c.nombre LIKE '%{$_POST['filtro_nombre']}%'";
     }
-    if (!empty($_POST['filtro_num_informe'])) {
-        $where[] = "con.informe = '{$_POST['filtro_informe']}'";
-    }
     if (!empty($_POST['filtro_fecha_inicio'])) {
         $where[] = "c.vencimiento >= '{$_POST['filtro_fecha_inicio']}'";
     }
@@ -83,7 +80,7 @@ if($id==""){
     }
     $sql .= " ORDER BY id DESC LIMIT 0,{$lim}";
 }else{
-    $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.informe, con.tipo, con.id_informe, con.estado, con.num_control, con.observaciones AS con_observaciones, con.id_factura, con.nocobrar, con.precio, con.id_formapago AS con_id_formapago, con.id_tarifa AS con_id_tarifa, con.comunicada, con.enviada_cobrar, con.comunicada_aquien, con.comunicada_como, con.contratada_como FROM clientes c JOIN contratadas con ON c.id = con.id_cliente WHERE con.id=$id";
+    $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.tipo, con.estado, con.num_control, con.observaciones AS con_observaciones, con.id_factura, con.nocobrar, con.precio, con.id_formapago AS con_id_formapago, con.id_tarifa AS con_id_tarifa, con.comunicada, con.enviada_cobrar, con.comunicada_aquien, con.comunicada_como, con.contratada_como FROM clientes c JOIN contratadas con ON c.id = con.id_cliente WHERE con.id=$id";
 }
 
 // Ejecuta la consulta
@@ -121,7 +118,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     }
     $contratada = array();
     foreach (array_keys($row) as $key) {
-        if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","informe","tipo","id_informe","estado","num_control","con_observaciones","id_factura","nocobrar","precio","con_id_formapago","con_id_tarifa","comunicada","enviada_cobrar","comunicada_aquien","comunicada_como","contratada_como"])) {
+        if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","tipo","estado","num_control","con_observaciones","id_factura","nocobrar","precio","con_id_formapago","con_id_tarifa","comunicada","enviada_cobrar","comunicada_aquien","comunicada_como","contratada_como"])) {
             if($key=="comunicada"){
                 if($row[$key]!="0000-00-00"){
                     $row[$key] = $row[$key];
