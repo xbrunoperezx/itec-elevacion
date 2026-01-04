@@ -31,13 +31,7 @@ var readContratadas = function(id, totalParams){
 		      	}
 		        tableRow += "</td>" +
 		        "<td class='ancho50'>" + item.cliente.contratada.num_control + "</td>" +
-		        "<td class='ancho50'>";
-		        if(item.cliente.contratada.informe>0){
-		        	tableRow += item.cliente.contratada.informe;
-		        }else{
-		        	tableRow += "-";
-		        }
-		        tableRow += "</td>" +
+		        "<td class='ancho50'>-</td>" +
 		        "<td class='ancho75'>" + item.cliente.rae + "</td>" +
 		        "<td class='ancho50'>" +
 		          "<a seccion='con' tipo='frm_editcon' data-id='" + item.cliente.contratada.con_id + "' class='editar_con btn-floating btn-small waves-effect waves-light green' title='Editar contratada'>" +
@@ -223,7 +217,11 @@ var openContratada = function(seccion, cual, id){
 				      '<input type="date" id="fecha" name="fecha" value="' + item.cliente.contratada.fecha + '">' +
 				      '<label for="fecha" class="active">Fecha contratada</label>' +
 				    '</div>' +		
-						'<div class="input-field anchoFrm2">' +
+				    '<div class="input-field anchoFrm4">' +
+				      '<input type="text" id="num_control" name="num_control" value="' + item.cliente.contratada.num_control + '">' +
+				      '<label for="num_control" class="active">Número de Solicitud</label>' +
+				    '</div>' +	
+					'<div class="input-field anchoFrm2">' +
 				      '<input type="text" id="id_usuarios" name="id_usuarios" value="' + item.cliente.contratada.id_usuarios + '" disabled>' +
 				      '<label for="id_usuarios" class="active">Contratada por</label>' +
 				    '</div>' +			
@@ -244,15 +242,7 @@ var openContratada = function(seccion, cual, id){
 				    '</div>' +    
 			    '</div>' +	
 
-			    '<div id="tab3_con" class="col s12">' + 
-				    '<div class="input-field anchoFrm4">' +
-				      '<input type="text" id="num_control" name="num_control" value="' + item.cliente.contratada.num_control + '">' +
-				      '<label for="num_control" class="active">Número de Solicitud</label>' +
-				    '</div>' +			    
-				    '<div class="input-field anchoFrm4">' +
-				      '<input type="text" id="informe" name="informe" value="' + item.cliente.contratada.informe + '">' +
-				      '<label for="informe" class="active">Número de informe</label>' +
-				    '</div>' +	
+			    '<div id="tab3_con" class="col s12">' + 	    
 				    '<div class="input-field anchoFrm4">' +
 				      '<select id="tipo" name="tipo">';
 				      	if(item.cliente.contratada.tipo==1){
@@ -323,19 +313,14 @@ var openContratada = function(seccion, cual, id){
 				      '<label for="con_id_tarifa" class="active">Tarifa</label>' +
 				    '</div>' +			
 			    '</div>' +	
-
 			    '<div id="tab5_con" class="col s12">' + 
 				    '<div class="input-field">' +
 				      '<input type="text" id="id" name="id" value="' + item.cliente.contratada.con_id + '" disabled>' +
 				      '<label for="id" class="active">ID Contratada BBDD</label>' +
-				    '</div>' +    
+				    '</div>' +     
 				    '<div class="input-field">' +
-				      '<input type="text" id="id_informe" name="id_informe" value="' + item.cliente.contratada.id_informe + '" disabled>' +
-				      '<label for="id_informe" class="active">ID Informe BBDD</label>' +
-				    '</div>' +    
-				    '<div class="input-field">' +
-				      '<input type="text" id="con_id_formapago" name="con_id_formapago" value="' + item.cliente.contratada.con_id_formapago + '" disabled>' +
-				      '<label for="con_id_formapago" class="active">ID Forma pago BBDD</label>' +
+				      '<input type="text" id="con_id_formas_pago" name="con_id_formas_pago" value="' + item.cliente.contratada.con_id_formas_pago + '" disabled>' +
+				      '<label for="con_id_formas_pago" class="active">ID Forma pago BBDD</label>' +
 				    '</div>' +   
 				    '<div class="input-field">' +
 				      '<input type="text" id="id_tipo" name="id_tipo" value="' + item.cliente.contratada.tipo + '" disabled>' +
