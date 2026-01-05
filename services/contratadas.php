@@ -12,6 +12,13 @@ if(isset($_POST["filtro_id"])){
     $id = "";
 }
 
+// filtro por id_cliente en contratadas
+if(isset($_POST["filtro_id_cliente"])){
+    $filtro_id_cliente = intval($_POST["filtro_id_cliente"]);
+}else{
+    $filtro_id_cliente = "";
+}
+
 include("conn_bbdd.php");
 // $link = mysqli_connect("89.46.111.188", "Sql1396152", "5i4w182228", "Sql1396152_2");
 // mysqli_query($link, "SET SESSION sql_mode='ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'");
@@ -52,7 +59,10 @@ if (!$link) {
         $usuarios[$row["id"]] = $row["name"];
     }
 
-if($id==""){
+// Si viene filtro por id_cliente, filtrar por con.id_cliente
+if($filtro_id_cliente!=""){
+    $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.tipo, con.estado, con.num_control, con.observaciones AS con_observaciones, con.nocobrar, con.precio, con.id_formas_pago AS con_id_formas_pago, con.id_tarifa AS con_id_tarifa, con.comunicada, con.enviada_cobrar, con.comunicada_aquien, con.comunicada_como, con.contratada_como FROM clientes c JOIN contratadas con ON c.id = con.id_cliente WHERE con.id_cliente=" . $filtro_id_cliente;
+}else if($id==""){
     // Define la consulta SQL
     $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.tipo, con.estado, con.num_control, con.observaciones AS con_observaciones, con.nocobrar, con.precio, con.id_formas_pago AS con_id_formas_pago, con.id_tarifa AS con_id_tarifa, con.comunicada, con.enviada_cobrar, con.comunicada_aquien, con.comunicada_como, con.contratada_como FROM clientes c JOIN contratadas con ON c.id = con.id_cliente";
 

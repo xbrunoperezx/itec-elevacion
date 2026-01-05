@@ -190,7 +190,7 @@ var readContratadasClientes = function(id){
 	$.ajax({
 		url: 'services/contratadas.php',
 		type: 'POST',
-		data: { filtro_id: id },
+		data: { filtro_id_cliente: id },
 		success: function(data) {
 			// vaciamos la tabla y mostramos estado
 			$("#table_con").empty();
