@@ -194,9 +194,9 @@ var readContratadasClientes = function(id){
 		success: function(data) {
 			// vaciamos la tabla y mostramos estado
 			$("#table_cli_con tbody").empty();
-			$("#resultados_con").html('Cargando...');
+			$("#resultados_cli_con").html('Cargando...');
 			if(typeof data === 'string' && data.trim() === 'KO'){
-				$("#resultados_con").html('No hay datos');
+				$("#resultados_cli_con").html('No hay datos');
 				return;
 			}
 			var parsed = JSON.parse(data);
@@ -315,7 +315,7 @@ var renderFormDatosFacturacion = function(clientId){
 	html += '<div class="input-field"><input type="text" id="fact_cif" name="cif"><label for="fact_cif">CIF</label></div>';
 	html += '<div class="input-field"><input type="text" id="fact_num_cuenta" name="num_cuenta"><label for="fact_num_cuenta">Núm. cuenta</label></div>';
 	html += '<div class="input-field"><textarea id="fact_observaciones" class="materialize-textarea" name="observaciones"></textarea><label for="fact_observaciones">Observaciones</label></div>';
-	html += '<div class="input-field">' +
+	html += '<div class="input-field botonesFormEdit">' +
 				'<button type="button" id="btn_save_fact" class="waves-effect waves-light btn green"><i class="material-icons left">add</i>Crear</button>&nbsp;' +
 				'<button type="button" id="btn_cancel_fact" class="waves-effect waves-light btn red"><i class="material-icons left">cancel</i>Cancelar</button>' +
 			'</div>';
@@ -708,7 +708,7 @@ var openCliente = function(seccion, cual, id){
 			    '</div>' +
 
 				'<div id="tab4_cli" class="col s12">' + 
-				'<div class="right input-field">' +
+				'<div class="right input-field botonesFormEdit">' +
 					'<button type="button" id="btn_new_fact" class="btn-floating waves-effect waves-light orange" title="Nuevos datos">' +
 						'<i class="material-icons">add</i>' +
 					'</button>&nbsp;' +
@@ -722,7 +722,7 @@ var openCliente = function(seccion, cual, id){
 				'<div id="frm_datos_facturacion" class="left-align"></div>' +				
 				'</div>' +
 				'<div id="tab5_cli" class="col s12">' +
-					'<div class="right input-field">' +
+					'<div class="right input-field botonesFormEdit">' +
 						'<button type="button" id="btn_refresh_con" data-id="' + item.id + '" class="btn-floating waves-effect waves-light blue" title="Actualizar">' +
 							'<i class="material-icons">refresh</i>' +
 						'</button>' +
@@ -741,7 +741,7 @@ var openCliente = function(seccion, cual, id){
 					'<div id="resultados_cli_con" class="right-align"></div>' +
 				'</div>' +
 				'<div id="tab6_cli" class="col s12">' +
-					'<div class="right input-field">' +
+					'<div class="right input-field botonesFormEdit">' +
 						'<button type="button" id="btn_new_hist" data-id="' + item.id + '" class="btn-floating waves-effect waves-light orange" title="Nuevo comentario">' +
 							'<i class="material-icons">add</i>' +
 						'</button>&nbsp;' +

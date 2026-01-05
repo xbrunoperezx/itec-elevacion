@@ -222,7 +222,7 @@ var openContratada = function(seccion, cual, id){
 				      '<label for="num_control" class="active">Número de Solicitud</label>' +
 				    '</div>' +	
 					'<div class="input-field anchoFrm2">' +
-				      '<input type="text" id="id_usuarios" name="id_usuarios" value="' + item.cliente.contratada.id_usuarios + '" disabled>' +
+				      '<input type="text" id="id_usuarios" name="id_usuarios" value="' + item.cliente.contratada.usuario + '" disabled>' +
 				      '<label for="id_usuarios" class="active">Contratada por</label>' +
 				    '</div>' +			
 						'<div class="input-field anchoFrm2">' +
