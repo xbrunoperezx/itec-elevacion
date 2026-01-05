@@ -132,7 +132,7 @@ var readDatosFacturacion = function(id){
 				tr += '<b>Observaciones:</b> ' + row['observaciones'] + '<br>&nbsp;';
 				tr += '</td>';
 				tr += '<td><b>Tarifa:</b><br>' + row['tarifa'] + '<br><b>Forma de pago:</b><br>' + row['forma_pago'] + '</td>';
-				tr += '<td><b>Núm. cuenta:</b><br>' + row['num_cuenta'] + '</td>';
+				tr += '<td><b>Núm. cuenta:</b><br>' + row['num_cuenta'] + '<br><b>CIF:</b><br>' + row['cif'] + '</td>';
 				tr += '<td><a seccion="cli" tipo="frm_edit_fac" data-id="' + row['id'] + '" class="editar_cli_fac btn-floating btn-small waves-effect waves-light red" title="Eliminar datos"><i class="material-icons">delete_forever</i></a></td>';
 				tr += '</tr>';
 				$("#table_cli_fact").append(tr);
@@ -717,6 +717,14 @@ var openCliente = function(seccion, cual, id){
 					'</button>' +
 				'</div>' +
 				'<table id="table_cli_fact" class="highlight">' +
+				'<thead>' +
+				'<tr>' +
+				'<th>Dirección</th>' +
+				'<th>Facturación</th>' +
+				'<th>Núm cuenta / CIF</th>' +
+				'</tr>' +
+				'</thead>' +
+				'<tbody></tbody>' +
 				'</table>' +
 				'<div id="resultados_facturacion" class="right-align"></div>' +
 				'<div id="frm_datos_facturacion" class="left-align"></div>' +				
