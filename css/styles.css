@@ -172,7 +172,7 @@ width: 50%;
 }
 
 table tbody tr:hover {
-  background-color: #fbbaba!important;
+  background-color: #bafbbd!important;
 }
 
 table td{
@@ -255,4 +255,7 @@ i.left{
 
 .modalEditar i{
   padding-top: 12px;
+}
+#title_nav{
+  padding-left: 20px;
 }
