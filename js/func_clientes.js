@@ -556,14 +556,14 @@ var openCliente = function(seccion, cual, id){
 					$("#modal_"+seccion).find(".modal_txt_title").text(title);
 					$("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
 					$("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
-										var frm_tabs = '<ul class="tabs modalEditar">' + 
-								'<li class="tab col s2"><a class="active tablink1" href="#tab1_cli">Ascensor</a></li>' + 
-								'<li class="tab col s2"><a class="tablink2" href="#tab2_cli">Datos</a></li>' + 
-								'<li class="tab col s2"><a class="tablink3" href="#tab3_cli">Contratación</a></li>' + 
-								'<li class="tab col s2"><a class="tablink4" href="#tab4_cli">Facturación</a></li>' + 
-								'<li class="tab col s2"><a class="tablink5" href="#tab5_cli">Historial</a></li>' + 
-								'<li class="tab col s2"><a class="tablink6" href="#tab6_cli"><i class="material-icons left">settings</i></a></li>' + 
-							'</ul>';
+					var frm_tabs = '<ul class="tabs modalEditar">' + 
+						'<li class="tab col s2"><a class="active tablink1" href="#tab1_cli"><i class="material-icons left">code</i></a></li>' + 
+						'<li class="tab col s2"><a class="tablink2" href="#tab2_cli"><i class="material-icons left">location_on</i></a></li>' + 
+						'<li class="tab col s2"><a class="tablink3" href="#tab3_cli"><i class="material-icons left">account_box</i></a></li>' + 
+						'<li class="tab col s2"><a class="tablink4" href="#tab4_cli"><i class="material-icons left">euro_symbol</i></a></li>' + 
+						'<li class="tab col s2"><a class="tablink5" href="#tab5_cli"><i class="material-icons left">message</i></a></li>' + 
+						'<li class="tab col s2"><a class="tablink6" href="#tab6_cli"><i class="material-icons left">settings</i></a></li>' + 
+					'</ul>';
 					var frm_render = '<form id="cliente_frm_editar">' +
 			    '<div id="tab1_cli" class="active col s12">' + 
 			    '<div class="input-field anchoFrm4">' +
@@ -721,10 +721,10 @@ var openCliente = function(seccion, cual, id){
 				$("#modal_"+seccion).find(".modal_txt_title").text(title);
 				$("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
 				$("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
-				var frm_tabs = '<ul class="tabs">' + 
-				'<li class="tab col s3"><a class="active tablink1" href="#tab1_cli">Ascensor</a></li>' + 
-				'<li class="tab col s3"><a class="tablink2" href="#tab2_cli">Datos</a></li>' + 
-				'<li class="tab col s3"><a class="tablink3" href="#tab3_cli">Contratación</a></li>' + 
+				var frm_tabs = '<ul class="tabs modalEditar">' + 
+				'<li class="tab col s3"><a class="active tablink1" href="#tab1_cli"><i class="material-icons left">code</i></a></li>' + 
+				'<li class="tab col s3"><a class="tablink2" href="#tab2_cli"><i class="material-icons left">location_on</i></a></li>' + 
+				'<li class="tab col s3"><a class="tablink3" href="#tab3_cli"><i class="material-icons left">account_box</i></a></li>' + 
 				'</ul>';
 				var frm_render = '<form id="cliente_frm_nuevo">' +
 				'<div id="tab1_cli" class="active col s12">' + 
