@@ -248,3 +248,10 @@ div#export-content{
 .row{
   padding-bottom: 0px;;
 }
+i.left{
+  margin-right: 0px
+}
+
+.modalEditar i{
+  padding-top: 12px;
+}
