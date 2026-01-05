@@ -207,7 +207,7 @@ var readContratadasClientes = function(id){
 			}
 			var total = 0;
 			datos.forEach(function(row){
-				var contratada = row['contratada'] || {};
+				var contratada = row["cliente"]["contratada"] || {};
 				var fecha = contratada['fecha'] || '';
 				var num_control = contratada['num_control'] || '';
 				var usuario = contratada['usuario'] || '';
