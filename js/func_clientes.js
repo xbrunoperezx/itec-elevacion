@@ -193,7 +193,7 @@ var readContratadasClientes = function(id){
 		data: { filtro_id_cliente: id },
 		success: function(data) {
 			// vaciamos la tabla y mostramos estado
-			$("#table_con").empty();
+			$("#table_cli_con").empty();
 			$("#resultados_con").html('Cargando...');
 			if(typeof data === 'string' && data.trim() === 'KO'){
 				$("#resultados_con").html('No hay datos');
@@ -220,7 +220,7 @@ var readContratadasClientes = function(id){
 				tr += '<td>' + (estado || '') + '</td>';
 				tr += '</tr>';
 
-				$("#table_con").append(tr);
+				$("#table_cli_con").append(tr);
 				total++;
 			});
 			$("#resultados_con").html('Total: ' + total);
@@ -724,7 +724,7 @@ var openCliente = function(seccion, cual, id){
 							'<i class="material-icons">refresh</i>' +
 						'</button>' +
 					'</div>' +
-					'<table id="table_con" class="highlight"></table>' +
+					'<table id="table_cli_con" class="highlight"></table>' +
 					'<div id="resultados_con" class="right-align"></div>' +
 				'</div>' +
 				'<div id="tab6_cli" class="col s12">' +
