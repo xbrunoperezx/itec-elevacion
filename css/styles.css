@@ -245,3 +245,6 @@ div#export-content{
 }
 .hidden-row{display: none !important;}
 /* End of contextual menu styles */
+.row{
+  padding-bottom: 0px;;
+}
