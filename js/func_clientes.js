@@ -561,8 +561,9 @@ var openCliente = function(seccion, cual, id){
 						'<li class="tab col s2"><a class="tablink2" href="#tab2_cli"><i class="material-icons left">location_on</i></a></li>' + 
 						'<li class="tab col s2"><a class="tablink3" href="#tab3_cli"><i class="material-icons left">account_box</i></a></li>' + 
 						'<li class="tab col s2"><a class="tablink4" href="#tab4_cli"><i class="material-icons left">euro_symbol</i></a></li>' + 
-						'<li class="tab col s2"><a class="tablink5" href="#tab5_cli"><i class="material-icons left">message</i></a></li>' + 
-						'<li class="tab col s2"><a class="tablink6" href="#tab6_cli"><i class="material-icons left">settings</i></a></li>' + 
+						'<li class="tab col s2"><a class="tablink5" href="#tab5_cli"><i class="material-icons left">history</i></a></li>' + 
+						'<li class="tab col s2"><a class="tablink6" href="#tab6_cli"><i class="material-icons left">message</i></a></li>' + 
+						'<li class="tab col s2"><a class="tablink7" href="#tab7_cli"><i class="material-icons left">settings</i></a></li>' + 
 					'</ul>';
 					var frm_render = '<form id="cliente_frm_editar">' +
 			    '<div id="tab1_cli" class="active col s12">' + 
@@ -667,6 +668,8 @@ var openCliente = function(seccion, cual, id){
 				'<div id="frm_datos_facturacion" class="left-align"></div>' +				
 				'</div>' +
 				'<div id="tab5_cli" class="col s12">' +
+				'</div>' +
+				'<div id="tab6_cli" class="col s12">' +
 					'<div class="right input-field">' +
 						'<button type="button" id="btn_new_hist" data-id="' + item.id + '" class="btn-floating waves-effect waves-light orange" title="Nuevo comentario">' +
 							'<i class="material-icons">add</i>' +
@@ -679,7 +682,7 @@ var openCliente = function(seccion, cual, id){
 					'<div id="resultados_historial" class="right-align"></div>' +
 					'<div id="frm_historial" class="left-align"></div>' +
 				'</div>' +
-				'<div id="tab6_cli" class="col s12">' + 
+				'<div id="tab7_cli" class="col s12">' + 
 						'<div class="input-field">' +
 							'<input type="text" id="id_cli" name="id_cli" value="' + item.id + '" disabled>' +
 							'<label for="id_cli" class="active">ID Cliente BBDD</label>' +
