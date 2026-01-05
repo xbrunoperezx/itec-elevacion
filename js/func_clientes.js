@@ -23,7 +23,7 @@ var readClientes = function(id, totalParams){
 		      var tableRow = "<tr>" +
 		        "<td class='ancho50'>";
 		        if(item.contratada==0){
-		          tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Contratar inspección'>" +
+		          tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange contratarInspeccion' title='Contratar inspección' data-id='" + item.id + "'>" +
 		            "<i class='material-icons'>assignment_turned_in</i>" +
 		          "</a>";
 		        }else{
@@ -186,15 +186,15 @@ var readHistorial = function(id){
 }
 
 var readContratadasClientes = function(id){
+	// vaciamos la tabla y mostramos estado
+	$("#table_cli_con tbody").empty();
+	$("#resultados_cli_con").html('Cargando...');
 	// Realizar la petición HTTP a la API
 	$.ajax({
 		url: 'services/contratadas.php',
 		type: 'POST',
 		data: { filtro_id_cliente: id },
 		success: function(data) {
-			// vaciamos la tabla y mostramos estado
-			$("#table_cli_con tbody").empty();
-			$("#resultados_cli_con").html('Cargando...');
 			if(typeof data === 'string' && data.trim() === 'KO'){
 				$("#resultados_cli_con").html('No hay datos');
 				return;

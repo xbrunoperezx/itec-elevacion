@@ -268,6 +268,79 @@ function modalConfirm(title, message, dismiss, confirmText, cancelText, confirmI
   $('#modal_confirm').modal('open');
 }
 
+// Modal que solicita inputs al usuario y devuelve los valores en el callback
+// modalInput(title, htmlForm, dismiss, acceptText, cancelText, acceptIcon, cancelIcon, acceptCallback, cancelCallback)
+function modalInput(title, htmlForm, dismiss, acceptText, cancelText, acceptIcon, cancelIcon, acceptCallback, cancelCallback){
+  var dismissible = (typeof dismiss === 'boolean') ? dismiss : false;
+  $('#confirm-title').text(title);
+  // insertar HTML del formulario dentro del modal (usar html para permitir inputs)
+  $('#confirm-message').html(htmlForm);
+
+  // textos por defecto
+  var acceptBtnText = (typeof acceptText === 'string' && acceptText.length>0) ? acceptText : 'Aceptar';
+  var cancelBtnText = (typeof cancelText === 'string' && cancelText.length>0) ? cancelText : 'Cancelar';
+
+  if ($('#save_confirm').length) {
+    $('#save_confirm').html('<i class="material-icons left">' + (acceptIcon || 'check') + '</i>' + acceptBtnText);
+  }
+  if ($('#save_cancel').length) {
+    $('#save_cancel').html('<i class="material-icons left">' + (cancelIcon || 'clear') + '</i>' + cancelBtnText);
+  }
+
+  // helper para leer valores de inputs dentro del modal
+  function collectInputs($modal){
+    var vals = {};
+    $modal.find('input,select,textarea').each(function(){
+      var $el = $(this);
+      var key = $el.attr('name') || $el.attr('id');
+      if(!key) return;
+      if($el.is(':checkbox')){
+        vals[key] = $el.is(':checked') ? 1 : 0;
+      }else if($el.is(':radio')){
+        if($el.is(':checked')) vals[key] = $el.val();
+      }else{
+        vals[key] = $el.val();
+      }
+    });
+    return vals;
+  }
+
+  // guardar callbacks envueltos para que el handler existente (save_confirm/save_cancel) los ejecute
+  if (typeof acceptCallback === 'function'){
+    $('#modal_confirm').data('confirmCallback', function(){
+      var vals = collectInputs($('#modal_confirm'));
+      acceptCallback(vals);
+    });
+  }else{
+    $('#modal_confirm').removeData('confirmCallback');
+  }
+  if (typeof cancelCallback === 'function'){
+    $('#modal_confirm').data('confirmCancelCallback', function(){
+      cancelCallback();
+    });
+  }else{
+    $('#modal_confirm').removeData('confirmCancelCallback');
+  }
+
+  // abrir modal reutilizando la misma lógica de modalConfirm
+  $('#modal_confirm').modal({
+    dismissible: dismissible,
+    onCloseEnd: function(){
+      var $modal = $('#modal_confirm');
+      var cancelCb = $modal.data('confirmCancelCallback');
+      if (cancelCb && typeof cancelCb === 'function'){
+        $modal.removeData('confirmCancelCallback');
+        $modal.removeData('confirmCallback');
+        cancelCb();
+        return;
+      }
+      $modal.removeData('confirmCallback');
+      $modal.removeData('confirmCancelCallback');
+    }
+  });
+  $('#modal_confirm').modal('open');
+}
+
 // Handlers globales para modal de confirmación
 $(document).on('click', '#save_confirm', function(e){
   e.preventDefault();
