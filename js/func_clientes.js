@@ -561,8 +561,8 @@ var openCliente = function(seccion, cual, id){
 								'<li class="tab col s2"><a class="tablink2" href="#tab2_cli">Datos</a></li>' + 
 								'<li class="tab col s2"><a class="tablink3" href="#tab3_cli">Contratación</a></li>' + 
 								'<li class="tab col s2"><a class="tablink4" href="#tab4_cli">Facturación</a></li>' + 
-								'<li class="tab col s2"><a class="tablink5" href="#tab5_cli">Otros</a></li>' + 
-								'<li class="tab col s2"><a class="tablink6" href="#tab6_cli">Historial</a></li>' + 
+								'<li class="tab col s2"><a class="tablink5" href="#tab5_cli">Historial</a></li>' + 
+								'<li class="tab col s2"><a class="tablink6" href="#tab6_cli">Otros</a></li>' + 
 							'</ul>';
 					var frm_render = '<form id="cliente_frm_editar">' +
 			    '<div id="tab1_cli" class="active col s12">' + 
@@ -666,32 +666,29 @@ var openCliente = function(seccion, cual, id){
 				'<div id="resultados_facturacion" class="right-align"></div>' +
 				'<div id="frm_datos_facturacion" class="left-align"></div>' +				
 				'</div>' +
-
-								'<div id="tab5_cli" class="col s12">' + 
-										'<div class="input-field">' +
-											'<input type="text" id="id_cli" name="id_cli" value="' + item.id + '" disabled>' +
-											'<label for="id_cli" class="active">ID Cliente BBDD</label>' +
-										'</div>' +    
-										'<div class="input-field">' +
-											'<input type="text" id="mantenedor_cli" name="mantenedor_cli" value="' + item.id_mantenedor + '" disabled>' +
-											'<label for="mantenedor_cli" class="active">ID Mantenedor BBDD</label>' +
-										'</div>' +   
-								'</div>' +
-
-								'<div id="tab6_cli" class="col s12">' +
-									'<div class="right input-field">' +
-										'<button type="button" id="btn_new_hist" data-id="' + item.id + '" class="btn-floating waves-effect waves-light orange" title="Nuevo comentario">' +
-											'<i class="material-icons">add</i>' +
-										'</button>&nbsp;' +
-										'<button type="button" id="btn_refresh_hist" data-id="' + item.id + '" class="btn-floating waves-effect waves-light blue" title="Actualizar">' +
-											'<i class="material-icons">refresh</i>' +
-										'</button>' +
-									'</div>' +
-									'<table id="table_historial" class="highlight"></table>' +
-									'<div id="resultados_historial" class="right-align"></div>' +
-									'<div id="frm_historial" class="left-align"></div>' +
-								'</div>' +
-
+				'<div id="tab5_cli" class="col s12">' +
+					'<div class="right input-field">' +
+						'<button type="button" id="btn_new_hist" data-id="' + item.id + '" class="btn-floating waves-effect waves-light orange" title="Nuevo comentario">' +
+							'<i class="material-icons">add</i>' +
+						'</button>&nbsp;' +
+						'<button type="button" id="btn_refresh_hist" data-id="' + item.id + '" class="btn-floating waves-effect waves-light blue" title="Actualizar">' +
+							'<i class="material-icons">refresh</i>' +
+						'</button>' +
+					'</div>' +
+					'<table id="table_historial" class="highlight"></table>' +
+					'<div id="resultados_historial" class="right-align"></div>' +
+					'<div id="frm_historial" class="left-align"></div>' +
+				'</div>' +
+				'<div id="tab6_cli" class="col s12">' + 
+						'<div class="input-field">' +
+							'<input type="text" id="id_cli" name="id_cli" value="' + item.id + '" disabled>' +
+							'<label for="id_cli" class="active">ID Cliente BBDD</label>' +
+						'</div>' +    
+						'<div class="input-field">' +
+							'<input type="text" id="mantenedor_cli" name="mantenedor_cli" value="' + item.id_mantenedor + '" disabled>' +
+							'<label for="mantenedor_cli" class="active">ID Mantenedor BBDD</label>' +
+						'</div>' +   
+				'</div>' +
 				  '</form>';
 				$("#modal_"+seccion).find(".contentTabs").html(frm_tabs);
 				$("#modal_"+seccion).find(".contentForm").html(frm_render);
