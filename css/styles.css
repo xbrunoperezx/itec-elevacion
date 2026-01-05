@@ -246,7 +246,8 @@ div#export-content{
 .hidden-row{display: none !important;}
 /* End of contextual menu styles */
 .row{
-  padding-bottom: 0px;;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
 }
 i.left{
   margin-right: 0px
