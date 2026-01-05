@@ -102,7 +102,7 @@ var readClientes = function(id, totalParams){
 
 var readDatosFacturacion = function(id){
 	// vaciamos la tabla
-	$("#table_cli_fact").empty();
+	$("#table_cli_fact tbody").empty();
 	$("#resultados_facturacion").html('Cargando...');
 	$.ajax({
 		url: 'services/datos_facturacion.php',
@@ -135,7 +135,7 @@ var readDatosFacturacion = function(id){
 				tr += '<td><b>Núm. cuenta:</b><br>' + row['num_cuenta'] + '<br><b>CIF:</b><br>' + row['cif'] + '</td>';
 				tr += '<td><a seccion="cli" tipo="frm_edit_fac" data-id="' + row['id'] + '" class="editar_cli_fac btn-floating btn-small waves-effect waves-light red" title="Eliminar datos"><i class="material-icons">delete_forever</i></a></td>';
 				tr += '</tr>';
-				$("#table_cli_fact").append(tr);
+				$("#table_cli_fact tbody").append(tr);
 				total++;
 			});
 			$("#resultados_facturacion").html('Total: ' + total);
