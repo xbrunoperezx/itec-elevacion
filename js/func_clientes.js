@@ -185,12 +185,12 @@ var readHistorial = function(id){
 	});
 }
 
-readContratadasClientes = function(id){
+var readContratadasClientes = function(id){
 	// Realizar la petición HTTP a la API
 	$.ajax({
 		url: 'services/contratadas.php',
 		type: 'POST',
-		data: { filtro_id_cliente: id },
+		data: { filtro_id: id },
 		success: function(data) {
 			// vaciamos la tabla y mostramos estado
 			$("#table_con").empty();
@@ -294,6 +294,11 @@ jQuery(document).on('click', '#btn_refresh_hist', function(e){
 	if(cid) readHistorial(cid);
 });
 
+jQuery(document).on('click', '#btn_refresh_con', function(e){
+	e.preventDefault();
+	var cid = $(this).data('id');
+	if(cid) readContratadasClientes(cid);
+});
 // Renderiza el pequeño formulario para añadir nuevos datos de facturación
 var renderFormDatosFacturacion = function(clientId){
 	var html = '';
