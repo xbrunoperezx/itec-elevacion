@@ -130,9 +130,9 @@ while ($row = mysqli_fetch_assoc($result)) {
             }
             if($key=="id_usuarios"){
                 if($usuarios[$row[$key]]!=null){
-                    $row[$key] = $usuarios[$row[$key]];
+                    $row["usuario"] = $usuarios[$row[$key]];
                 }else{
-                    $row[$key] = "-";
+                    $row["usuario"] = "-";
                 }
             }
             $contratada[$key] = $row[$key];

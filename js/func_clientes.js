@@ -185,6 +185,52 @@ var readHistorial = function(id){
 	});
 }
 
+readContratadasClientes = function(id){
+	// Realizar la petición HTTP a la API
+	$.ajax({
+		url: 'services/contratadas.php',
+		type: 'POST',
+		data: { filtro_id_cliente: id },
+		success: function(data) {
+			// vaciamos la tabla y mostramos estado
+			$("#table_con").empty();
+			$("#resultados_con").html('Cargando...');
+			if(typeof data === 'string' && data.trim() === 'KO'){
+				$("#resultados_con").html('No hay datos');
+				return;
+			}
+			var parsed = JSON.parse(data);
+			var datos = parsed["resultados"] || [];
+			if(!datos || datos.length === 0){
+				$("#resultados_con").html('No hay datos');
+				return;
+			}
+			var total = 0;
+			datos.forEach(function(row){
+				var contratada = row['contratada'] || {};
+				var fecha = contratada['fecha'] || '';
+				var num_control = contratada['num_control'] || '';
+				var usuario = contratada['usuario'] || '';
+				var estado = contratada['estado'] || '';
+
+				var tr = '<tr>';
+				tr += '<td>' + (fecha || '') + '</td>';
+				tr += '<td>' + (num_control || '') + '</td>';
+				tr += '<td>' + (usuario || '') + '</td>';
+				tr += '<td>' + (estado || '') + '</td>';
+				tr += '</tr>';
+
+				$("#table_con").append(tr);
+				total++;
+			});
+			$("#resultados_con").html('Total: ' + total);
+		},
+		error: function(xhr, status, error) {
+			$("#resultados_con").html('Error: ' + error);
+		}
+	});
+}
+
 // Renderiza el formulario para añadir un comentario al historial
 var renderFormHistorial = function(clientId){
 	var html = '';
@@ -668,6 +714,13 @@ var openCliente = function(seccion, cual, id){
 				'<div id="frm_datos_facturacion" class="left-align"></div>' +				
 				'</div>' +
 				'<div id="tab5_cli" class="col s12">' +
+					'<div class="right input-field">' +
+						'<button type="button" id="btn_refresh_con" data-id="' + item.id + '" class="btn-floating waves-effect waves-light blue" title="Actualizar">' +
+							'<i class="material-icons">refresh</i>' +
+						'</button>' +
+					'</div>' +
+					'<table id="table_con" class="highlight"></table>' +
+					'<div id="resultados_con" class="right-align"></div>' +
 				'</div>' +
 				'<div id="tab6_cli" class="col s12">' +
 					'<div class="right input-field">' +
@@ -705,6 +758,8 @@ var openCliente = function(seccion, cual, id){
 				readDatosFacturacion(item.id);
 				// cargar historial de comentarios
 				readHistorial(item.id);
+				// cargar contratadas de este cliente
+				readContratadasClientes(item.id);
 			},
 			error: function(xhr, status, error) {
 				// Mostrar un mensaje de error en el centro de la pantalla
