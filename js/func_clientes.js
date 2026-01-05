@@ -202,7 +202,7 @@ var readContratadasClientes = function(id){
 			var parsed = JSON.parse(data);
 			var datos = parsed["resultados"] || [];
 			if(!datos || datos.length === 0){
-				$("#resultados_con").html('No hay datos');
+				$("#resultados_cli_con").html('No hay datos');
 				return;
 			}
 			var total = 0;
