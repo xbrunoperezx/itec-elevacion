@@ -139,11 +139,9 @@ while ($row = mysqli_fetch_assoc($result)) {
                 }
             }
             if($key=="id_usuarios"){
-                if($usuarios[$row[$key]]!=null){
-                    $row["usuario"] = $usuarios[$row[$key]];
-                }else{
-                    $row["usuario"] = "-";
-                }
+                // Mantener el id numérico en 'id_usuarios', pero añadir el nombre en 'usuario'
+                $usuario_nombre = (isset($usuarios[$row[$key]]) && $usuarios[$row[$key]] != null) ? $usuarios[$row[$key]] : '-';
+                $contratada['usuario'] = $usuario_nombre;
             }
             $contratada[$key] = $row[$key];
         }
