@@ -92,7 +92,6 @@ div.modal#modal_export {
 
 div#resultados_cli, div#resultados_con, div#resultados_pri, div#resultados_seg, #table_cli_fact{
   margin: 10px;
-  background-color: #FDFFFC;
   padding: 10px;
 }
 
