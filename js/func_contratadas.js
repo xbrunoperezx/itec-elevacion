@@ -229,10 +229,8 @@ var openContratada = function(seccion, cual, id){
 				      '<input type="text" id="estado_actual" name="estado_actual" value="';
 
 							if(item.cliente.contratada.estado==0) frm_render  += 'Inicial';
-							if(item.cliente.contratada.estado==1) frm_render  += 'Enviada a Inspección';
-							if(item.cliente.contratada.estado==2) frm_render  += 'Inspección Realizada';
-							if(item.cliente.contratada.estado==3) frm_render  += 'Enviada a facturación';
-
+							if(item.cliente.contratada.estado==1) frm_render  += 'Abierta';
+							if(item.cliente.contratada.estado==2) frm_render  += 'Finalizada';
 				      frm_render  += '" disabled>' +
 				      '<label for="estado_actual" class="active">Estado</label>' +
 				    '</div>' +		

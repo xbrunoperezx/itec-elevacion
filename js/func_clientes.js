@@ -212,6 +212,9 @@ var readContratadasClientes = function(id){
 				var num_control = contratada['num_control'] || '';
 				var usuario = contratada['usuario'] || '';
 				var estado = contratada['estado'] || '';
+				estado = (estado==0) ? 'Inicial' : estado;
+				estado = (estado==1) ? 'Abierta' : estado;
+				estado = (estado==2) ? 'Finalizada' : estado;
 
 				var tr = '<tr>';
 				tr += '<td>' + (fecha || '') + '</td>';
@@ -223,10 +226,10 @@ var readContratadasClientes = function(id){
 				$("#table_cli_con").append(tr);
 				total++;
 			});
-			$("#resultados_con").html('Total: ' + total);
+			$("#resultados_cli_con").html('Total: ' + total);
 		},
 		error: function(xhr, status, error) {
-			$("#resultados_con").html('Error: ' + error);
+			$("#resultados_cli_con").html('Error: ' + error);
 		}
 	});
 }
@@ -725,7 +728,7 @@ var openCliente = function(seccion, cual, id){
 						'</button>' +
 					'</div>' +
 					'<table id="table_cli_con" class="highlight"></table>' +
-					'<div id="resultados_con" class="right-align"></div>' +
+					'<div id="resultados_cli_con" class="right-align"></div>' +
 				'</div>' +
 				'<div id="tab6_cli" class="col s12">' +
 					'<div class="right input-field">' +
