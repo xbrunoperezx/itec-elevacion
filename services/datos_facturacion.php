@@ -63,8 +63,8 @@ if($id!="" || $id_cliente!=""){
         }else{
         $row['forma_pago'] = "-";
         }
-        if (isset($tarifas[$row['id_tarifas']])) {
-        $row['tarifa'] = $tarifas[$row['id_tarifas']];
+        if (isset($tarifas[$row['id_tarifa']])) {
+        $row['tarifa'] = $tarifas[$row['id_tarifa']];
         }else{
         $row['tarifa'] = "-";
         }
