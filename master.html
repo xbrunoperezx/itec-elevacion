@@ -126,13 +126,32 @@
                
               //cierre de ajax
             })
-          //cierre de la funcion de carga   
+           
+          //funcion comprobar que funciona el boton y muestra el ID(VER)
           $(document).on('click', '.ver-cliente', function(e){
             e.preventDefault();
 
             let id=$(this).data('id');
             console.log('ver cliente con ID: ', id)
           });
+          //funcion comprobar que funciona el boton y muestra el ID(EDITAR)
+          $(document).on('click', '.editar-cliente', function(e){
+            e.preventDefault();
+
+            let id= $(this).data('id');
+            console.log('editar cliente con  ID:' , id)
+          });
+          //funcion comprobar que funciona el boton y muestra el ID(ELIMINAR)
+          $(document).on('click', '.eliminar-cliente', function(e){
+            e.preventDefault();
+
+            let id=$(this).data('id');
+            console.log('eliminando cliente con ID: ', id)
+          });
+        
+        
+        
+          //cierre de la funcion de carga  
         })
 
         
