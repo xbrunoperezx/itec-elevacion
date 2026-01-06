@@ -109,6 +109,7 @@
                                     
                                     <a href="#" class="btn-small red eliminar-cliente" data-id="${cliente.id}">
                                         <i class="materialize-icons">Borrar</i>
+                                    </a>    
 
                                     
                                 </td>
@@ -126,7 +127,7 @@
               //cierre de ajax
             })
           //cierre de la funcion de carga   
-          $(document).on('click', 'ver-cliente', function(e){
+          $(document).on('click', '.ver-cliente', function(e){
             e.preventDefault();
 
             let id=$(this).data('id');
