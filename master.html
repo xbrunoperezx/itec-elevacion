@@ -25,6 +25,21 @@
         <h5>Clientes</h5>
     </div>
 
+    <!--Creamos el "contenedor" donde pintaremos la tabla con el JS-->
+    <table class="none">
+        <thead>
+            <tr>
+                <td>#</td>
+                <td>Nombre</td>
+                <td>Direccion</td>
+            </tr>
+        </thead>
+
+        <tbody id="tabla-clientes"> <!--el pincel con el que pintaremos ahroa sera "tabla-clientes"-->
+            <!--aqui con este id es en el que con la funcion en JS isnertaremos todos los clientes-->
+        </tbody>
+    </table>
+
 
     
     <!--Scrip de peticion back via ajax-->
@@ -74,21 +89,17 @@
                          
                         //con el acumulador creado vamos añadiendo al html cada iteraccion del bucle un cliente 
                         html += `
-                            <div class= "card-panel">
-                                <h5><strong> cliente nº </strong>${contador}</h5> 
-                                <p>
-                                    <strong> Nombre: </strong> ${cliente.nombre}<br>
-                                    <strong> Direccion: </strong> ${cliente.direccion}<br>
-                                </p>   
-                           
-                            </div>          
-
-                        
+                            
+                                <td>${contador}</td> 
+                                <td>${cliente.nombre}</td>
+                                <td>${cliente.direccion}</td>
+                                 
                         `;
+
                         contador ++;
                     });
                     
-                    $('#resultado').html(html);
+                    $('#tabla-clientes').html(html);
                 }
                
               //cierre de ajax
