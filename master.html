@@ -43,10 +43,29 @@
         </tbody>
     </table>
 
+    <!--Creamos al estructura completa del modal-->
+    <div id="modal-cliente" class="modal">
+        <div class="modal-content">
+            <h4>Detalles del cliente</h4>
+
+            <p><strong>Nombre:</strong><span id="m-nombre"></span></p>
+            <p><strong>Direccion:</strong><span id="m-direccion"></span></p>
+            <p><strong>Localidad:</strong><span id="m-localidad"></span></p>
+            <p><strong>CP:</strong><span id="m-cp"></span></p>
+
+        </div>
+
+        <div class="modal-footer">
+            <a href="#!" class="modal-close btn grey">Cerrar</a>
+        </div>
+    </div>
+
 
     
     <!--Scrip de peticion back via ajax-->
     <script>
+        //creamos una variable acessible desde cualquier punto del programa
+        let clientesGlobal=[];
         $(document).ready(function(){  //cargamos la web (el JS) nada mas acceder a la Url
             $.ajax({ //aqui hacemos la peticion de los datos al back (ajax no recarga la pagina)
                 //donde lo llamo 
@@ -84,6 +103,8 @@
                     //$('#resultado').html(html)
 
                     
+                    //guardamos  el array de clientes traidos del back, en la variable local
+                    clientesGlobal=response.resultados;
                     //4º  ---creamos un acumulador para no sobrescribir cada vuelta el cliente---
                     let html = "";
                     let contador = 1;
@@ -126,14 +147,29 @@
                
               //cierre de ajax
             })
-           
+
+          //inicializamos el modal, por que si no no existe
+          $('.modal').modal();
+
+          //------------------------------------------------------------
           //funcion comprobar que funciona el boton y muestra el ID(VER)
           $(document).on('click', '.ver-cliente', function(e){
             e.preventDefault();
 
             let id=$(this).data('id');
-            console.log('ver cliente con ID: ', id)
+            
+            let cliente=clientesGlobal.find(c => c.id == id);
+            //ahora pintamos los datos del modal cogiendo la id que creamos en el html
+            $('#m-nombre').text(cliente.nombre);
+            $('#m-direccion').text(cliente.direccion);
+            $('#m-localidad').text(cliente.localidad);
+            $('#m-cp').text(cliente.cp);
+
+            //abrimos el modal con el id creado arriba en el html
+            $('#modal-cliente').modal('open');
           });
+
+          //--------------------------------------------------------------
           //funcion comprobar que funciona el boton y muestra el ID(EDITAR)
           $(document).on('click', '.editar-cliente', function(e){
             e.preventDefault();
@@ -141,6 +177,8 @@
             let id= $(this).data('id');
             console.log('editar cliente con  ID:' , id)
           });
+
+          //----------------------------------------------------------------
           //funcion comprobar que funciona el boton y muestra el ID(ELIMINAR)
           $(document).on('click', '.eliminar-cliente', function(e){
             e.preventDefault();
@@ -151,7 +189,7 @@
         
         
         
-          //cierre de la funcion de carga  
+          //cierre de la funcion de carga $(document).rea..
         })
 
         
