@@ -68,12 +68,14 @@
                     
                     //4º  ---creamos un acumulador para no sobrescribir cada vuelta el cliente---
                     let html = "";
+                    let contador = 1;
                     //recorremos el array "response.resultados" con cada cliente
                     response.resultados.forEach(function(cliente){
                          
                         //con el acumulador creado vamos añadiendo al html cada iteraccion del bucle un cliente 
                         html += `
                             <div class= "card-panel">
+                                <h1>Numero</h1> ${contador}
                                 <p>
                                     <strong>Nombre: </strong> ${cliente.nombre}<br>
                                     <strong>Direccion: </strong> ${cliente.direccion}<br>
@@ -83,6 +85,7 @@
 
                         
                         `;
+                        contador ++;
                     });
                     
                     $('#resultado').html(html);
@@ -93,6 +96,7 @@
           //cierre de la funcion de carga   
         })
 
+        
     </script>
 </body>
 </html>
