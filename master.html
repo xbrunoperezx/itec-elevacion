@@ -99,7 +99,7 @@
                                 <td>${cliente.localidad}</td>
                                 <td>${cliente.cp}</td>
                                 <td>
-                                    <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}">
+                                    <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}"> 
                                         <i class="material-icons">Ver</i>
                                     </a>
                                     
@@ -126,6 +126,13 @@
               //cierre de ajax
             })
           //cierre de la funcion de carga   
+        })
+
+        $(document).on('click', 'ver-cliente', function(e){
+            e.preventDefault();
+
+            let id=$(this).data('id');
+            console.log('ver cliente con ID: ', id)
         })
 
         
