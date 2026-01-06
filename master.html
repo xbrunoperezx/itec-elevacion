@@ -34,6 +34,7 @@
                 <td>Direccion</td>
                 <td>Localidad</td>
                 <td>Cp</td>
+                <td>Acciones</td>
             </tr>
         </thead>
 
@@ -97,13 +98,29 @@
                                 <td>${cliente.direccion}</td>
                                 <td>${cliente.localidad}</td>
                                 <td>${cliente.cp}</td>
+                                <td>
+                                    <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}">
+                                        <i class="material-icons">Ver</i>
+                                    </a>
+                                    
+                                    <a href="#" class="btn-small orange editar-cliente" data-id="${cliente-id}">
+                                        <i class="materialize-icons">Editar</i>
+                                    </a>
+                                    
+                                    <a href="#" class="btn-small red eliminar-cliente" data-id="${cliente.id}">
+                                        <i class="materialize-icons">Borrar</i>
+
+                                    
+                                </td>
+
+
                             </tr>     
                         `;
 
                         contador ++;
                     });
                     
-                    $('#tabla-clientes').html(html);
+                    $('#tabla-clientes').html(html); // este es el pincel de js con el que mostramos en pantalla los resultados
                 }
                
               //cierre de ajax
