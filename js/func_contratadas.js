@@ -19,17 +19,7 @@ var readContratadas = function(id, totalParams){
 		    $.each(datos, function(index, item) {
 		      // Construir la fila de la tabla con los datos
 		      var tableRow = "<tr>" +
-		        "<td class='ancho50'>";
-		        if(item.cliente.contratada.estado==0){
-		          tableRow += "<a class='btn-floating btn-small waves-effect waves-light green' title='Enviar a inspección'>" +
-		            "<i class='material-icons'>phone_android</i>" +
-		          "</a>";
-		      	}else{
-		          tableRow += "<a class='disabled btn-floating btn-small waves-effect waves-light green' title='Enviada a inspección'>" +
-		            "<i class='material-icons'>phone_android</i>" +
-		          "</a>";
-		      	}
-		        tableRow += "</td>" +
+		        "<td class='ancho50'>&nbsp;</td>" +
 		        "<td class='ancho50'>" + item.cliente.contratada.num_control + "</td>" +
 		        "<td class='ancho50'>-</td>" +
 		        "<td class='ancho75'>" + item.cliente.rae + "</td>" +
