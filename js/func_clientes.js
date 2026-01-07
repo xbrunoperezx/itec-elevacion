@@ -462,21 +462,19 @@ jQuery(document).on("click", ".editar_cli_fac", function(e){
 	}, function(){ /* cancel */ });
 });
 
-// Contratar cliente: abre modalConfirm para crear nueva contratacion
-jQuery(document).on("click", "#btn_create_cli_con, .btn_create_cli_con_menu", function(e){
-	e.preventDefault();
-	var cid = $(this).data('id');
-	// puedes usar cid si necesitas en el callback
+
+var contratarCliente = function(clientId, whereFrom){
+	// abrir modalConfirm para crear nueva contratacion
 	modalConfirm("Contratar cliente", "Se creará una nueva contratación en la base de datos con fecha de hoy", true, "Crear", "Cancelar", "add", "cancel", function(){
 		$.ajax({
 			url: 'services/contratadas_save.php',
 			type: 'POST',
-			data: { id_cliente: cid },
+			data: { id_cliente: clientId },
 			success: function(data){
 				if(typeof data === 'string' && data.trim() === 'OK'){
 					$('#modal_confirm').modal('close');
 					// refrescar listado de clientes
-					$('#btn_refresh_cli_con').click();
+					if(whereFrom=="form") $('#btn_refresh_cli_con').click();
 				}else{
 					modalError('ERROR','No se pudo crear la contratación: ' + data, false);
 				}
@@ -487,7 +485,14 @@ jQuery(document).on("click", "#btn_create_cli_con, .btn_create_cli_con_menu", fu
 		});
 	}, function(){
 		console.log("hizo click en cancelar");
-	});
+	});	
+}
+
+// Contratar cliente: abre modalConfirm para crear nueva contratacion
+jQuery(document).on("click", "#btn_create_cli_con", function(e){
+	e.preventDefault();
+	var cid = $(this).data('id');
+	if(cid) contratarCliente(cid, "form");	
 });
 
 jQuery(document).on("click", "#filtrar_cli", function() {
@@ -542,7 +547,7 @@ jQuery(document).on("click", ".more_cli", function(e){
     var itemId = $btn.data('id');
     var offset = $btn.offset();
 
-    var menu = jQuery("<div class='row-menu'><ul><li class='row-menu-hide'>Ocultar fila</li><li class='row-menu-cancel btn_create_cli_con_menu' data-id='" + itemId + "'>Contratar</li><li class='row-menu-cancel'>Cancelar</li></ul></div>");
+    var menu = jQuery("<div class='row-menu'><ul><li class='row-menu-hide'>Ocultar fila</li><li class='row-menu-contratar' data-id='" + itemId + "'>Contratar</li><li class='row-menu-cancel'>Cancelar</li></ul></div>");
 
     // añadirlo oculto para medir y posicionar correctamente (alineado a la derecha del icono)
     menu.css({ visibility: 'hidden', top: 0, left: 0 });
@@ -591,6 +596,14 @@ jQuery(document).on("click", ".more_cli", function(e){
         ev.stopPropagation();
         menu.remove();
     });
+
+	// contratar desde el menú
+	menu.on('click', '.row-menu-contratar', function(ev){
+		ev.stopPropagation();
+		var cid = jQuery(this).data('id');
+		if(cid) contratarCliente(cid, "menu");
+		menu.remove();
+	});
 
     // cerrar si se hace click fuera
     setTimeout(function(){
