@@ -43,7 +43,7 @@
         </tbody>
     </table>
 
-    <!--Creamos al estructura completa del modal-->
+    <!--Creamos al estructura completa del modal/ventana emergente-->
     <div id="modal-cliente" class="modal">
         <div class="modal-content">
             <h4>Detalles del cliente</h4>
@@ -64,7 +64,7 @@
     
     <!--Scrip de peticion back via ajax-->
     <script>
-        //creamos una variable acessible desde cualquier punto del programa
+        //creamos una variable acessible desde cualquier punto del programa que en ella recogeremos el array de clientes del back
         let clientesGlobal=[];
         $(document).ready(function(){  //cargamos la web (el JS) nada mas acceder a la Url
             $.ajax({ //aqui hacemos la peticion de los datos al back (ajax no recarga la pagina)
@@ -156,16 +156,27 @@
           $(document).on('click', '.ver-cliente', function(e){
             e.preventDefault();
 
-            let id=$(this).data('id');
+            let id=$(this).data('id'); //esto era solo para mostrar el id con un console.log que habia echo
             
+          /* 1º manera de recorrer clientes y buscar por id
+          let clienteEncontrado = null;
+            clientesGlobal.forEach(function(cliente){
+                if(cliente.id ==id){
+                    clienteEncontrado=cliente;
+                }
+            });
+          */
+            
+          // 2º manera de hacerlo mas limpio con .find
             let cliente=clientesGlobal.find(c => c.id == id);
+
             //ahora pintamos los datos del modal cogiendo la id que creamos en el html
             $('#m-nombre').text(cliente.nombre);
             $('#m-direccion').text(cliente.direccion);
             $('#m-localidad').text(cliente.localidad);
             $('#m-cp').text(cliente.cp);
 
-            //abrimos el modal con el id creado arriba en el html
+            //abrimos el modal con el id creado arriba en el html en el div general
             $('#modal-cliente').modal('open');
           });
 
@@ -183,8 +194,13 @@
           $(document).on('click', '.eliminar-cliente', function(e){
             e.preventDefault();
 
-            let id=$(this).data('id');
-            console.log('eliminando cliente con ID: ', id)
+            let id=$(this).data('id');//comprobamos que el data-id coincide
+
+            // creamos una condicional para que no borremos por error que nos aparezca un mensaje de confirmacion
+            if(confirm('¿Seguro que quieres eliminar este cliente?')){
+                console.log('CONFIRMANDO -> eliminar cliente con ID :', id)
+            }else
+            console.log('Cancelado ', )
           });
         
         
