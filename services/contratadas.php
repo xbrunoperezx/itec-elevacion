@@ -123,7 +123,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                 }
             }
             if($key=="vencimiento"){
-                if($row[$key]!="0000-00-00"){
+                if($row[$key]!="0000-00-00" AND $row[$key]!="" AND $row[$key]!=null){
                     $row[$key] = date("d-m-Y", strtotime($row[$key]));
                 }else{
                     $row[$key] = "-";
@@ -136,7 +136,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     foreach (array_keys($row) as $key) {
         if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","estado","num_control","con_observaciones","nocobrar","precio","con_id_formas_pago","con_id_tarifa","comunicada","enviada_cobrar","comunicada_aquien","comunicada_como","contratada_como"])) {
             if($key=="comunicada"){
-                if($row[$key]!="0000-00-00"){
+                if($row[$key]!="0000-00-00" AND $row[$key]!="" AND $row[$key]!=null){
                     $row[$key] = $row[$key];
                     $contratada["comunicada_dmy"] = date("d-m-Y", strtotime($row[$key]));
                 }else{
