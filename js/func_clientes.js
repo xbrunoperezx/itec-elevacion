@@ -463,7 +463,7 @@ jQuery(document).on("click", ".editar_cli_fac", function(e){
 });
 
 // Contratar cliente: abre modalConfirm para crear nueva contratacion
-jQuery(document).on("click", "#btn_create_cli_con", function(e){
+jQuery(document).on("click", "#btn_create_cli_con, #btn_create_cli_con_menu", function(e){
 	e.preventDefault();
 	var cid = $(this).data('id');
 	// puedes usar cid si necesitas en el callback
@@ -542,7 +542,7 @@ jQuery(document).on("click", ".more_cli", function(e){
     var itemId = $btn.data('id');
     var offset = $btn.offset();
 
-    var menu = jQuery("<div class='row-menu'><ul><li class='row-menu-hide'>Ocultar fila</li><li class='row-menu-cancel'>Cancelar</li></ul></div>");
+    var menu = jQuery("<div class='row-menu'><ul><li class='row-menu-hide'>Ocultar fila</li><li class='row-menu-cancel' data-id='" + itemId + "' id='btn_create_cli_con_menu'>Contratar</li><li class='row-menu-cancel'>Cancelar</li></ul></div>");
 
     // añadirlo oculto para medir y posicionar correctamente (alineado a la derecha del icono)
     menu.css({ visibility: 'hidden', top: 0, left: 0 });
