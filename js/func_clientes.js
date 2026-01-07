@@ -473,7 +473,7 @@ jQuery(document).on("click", ".editar_cli_fac", function(e){
 });
 
 // Contratar cliente: abre modalConfirm para crear nueva contratacion
-jQuery(document).on("click", ".contratarCliente", function(e){
+jQuery(document).on("click", "#btn_create_cli_con", function(e){
 	e.preventDefault();
 	var cid = $(this).data('id');
 	// puedes usar cid si necesitas en el callback
@@ -759,6 +759,9 @@ var openCliente = function(seccion, cual, id){
 				'</div>' +
 				'<div id="tab5_cli" class="col s12">' +
 					'<div class="right input-field botonesFormEdit">' +
+						'<button type="button" id="btn_create_cli_con" data-id="' + item.id + '" class="btn-floating waves-effect waves-light blue" title="Contratar">' +
+							'<i class="material-icons">assignment_turned_in</i>' +
+						'</button>' +
 						'<button type="button" id="btn_refresh_con" data-id="' + item.id + '" class="btn-floating waves-effect waves-light blue" title="Actualizar">' +
 							'<i class="material-icons">refresh</i>' +
 						'</button>' +

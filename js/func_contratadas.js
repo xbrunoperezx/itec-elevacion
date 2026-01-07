@@ -241,24 +241,6 @@ var openContratada = function(seccion, cual, id){
 			    '</div>' +	
 
 			    '<div id="tab3_con" class="col s12">' + 	    
-				    '<div class="input-field anchoFrm4">' +
-				      '<select id="tipo" name="tipo">';
-				      	if(item.cliente.contratada.tipo==1){
-				      		frm_render += '<option value="1" selected>Primera inspección</option>';
-				      		frm_render += '<option value="2">Segunda inspección</option>';
-				      		frm_render += '<option value="3">Tercera inspección</option>';
-				      	}else if(item.cliente.contratada.tipo==2){
-									frm_render += '<option value="1">Primera inspección</option>';
-									frm_render += '<option value="2" selected>Segunda inspección</option>';
-									frm_render += '<option value="3">Tercera inspección</option>';
-				      	}else if(item.cliente.contratada.tipo==3){
-									frm_render += '<option value="1">Primera inspección</option>';
-									frm_render += '<option value="2">Segunda inspección</option>';
-									frm_render += '<option value="3" selected>Tercera inspección</option>';
-				      	}
-				      frm_render+='</select>' + 
-				      '<label for="tipo">¿Tipo de inspección?</label>' +
-				    '</div><br>' +				
 				    '<div class="input-field anchoFrm4">';
 				    if(item.vencimiento!="0000-00-00"){
 				    	frm_render+='<input type="date" id="comunicada" name="comunicada" value="' + item.cliente.contratada.comunicada + '">';
