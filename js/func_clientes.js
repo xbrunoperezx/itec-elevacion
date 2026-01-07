@@ -287,7 +287,7 @@ jQuery(document).on('click', '#btn_refresh_hist', function(e){
 	if(cid) readHistorial(cid);
 });
 
-jQuery(document).on('click', '#btn_refresh_con', function(e){
+jQuery(document).on('click', '#btn_refresh_cli_con', function(e){
 	e.preventDefault();
 	var cid = $(this).data('id');
 	if(cid) readContratadasClientes(cid);
@@ -476,7 +476,7 @@ jQuery(document).on("click", "#btn_create_cli_con", function(e){
 				if(typeof data === 'string' && data.trim() === 'OK'){
 					$('#modal_confirm').modal('close');
 					// refrescar listado de clientes
-					$('#filtrar_cli').click();
+					$('#btn_refresh_cli_con').click();
 				}else{
 					modalError('ERROR','No se pudo crear la contratación: ' + data, false);
 				}
@@ -752,7 +752,7 @@ var openCliente = function(seccion, cual, id){
 						'<button type="button" id="btn_create_cli_con" data-id="' + item.id + '" class="btn-floating waves-effect waves-light orange" title="Contratar">' +
 							'<i class="material-icons">assignment_turned_in</i>' +
 						'</button>&nbsp;' +
-						'<button type="button" id="btn_refresh_con" data-id="' + item.id + '" class="btn-floating waves-effect waves-light blue" title="Actualizar">' +
+						'<button type="button" id="btn_refresh_cli_con" data-id="' + item.id + '" class="btn-floating waves-effect waves-light blue" title="Actualizar">' +
 							'<i class="material-icons">refresh</i>' +
 						'</button>' +
 					'</div>' +
