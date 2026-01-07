@@ -21,17 +21,7 @@ var readClientes = function(id, totalParams){
 		    $.each(datos, function(index, item) {
 		      // Construir la fila de la tabla con los datos
 		      var tableRow = "<tr>" +
-		        "<td class='ancho50'>";
-		        if(item.contratada==0){
-		          tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange contratarCliente' title='Contratar inspección' data-id='" + item.id + "'>" +
-		            "<i class='material-icons'>assignment_turned_in</i>" +
-		          "</a>";
-		        }else{
-		          tableRow += "<a class='disabled btn-floating btn-small waves-effect waves-light grey' title='Contratada'>" +
-		            "<i class='material-icons'>assignment_turned_in</i>" +
-		          "</a>";
-		        }
-		        tableRow += "</td>" +
+		        "<td class='ancho50'>&nbsp;</td>" +
 		        "<td class='ancho75'>" + item.rae + "</td>" +
 		        "<td class='ancho50'>" +
 		          "<a seccion='cli' tipo='frm_editcli' data-id='" + item.id + "' class='editar_cli btn-floating btn-small waves-effect waves-light green' title='Editar cliente'>" +
@@ -759,9 +749,9 @@ var openCliente = function(seccion, cual, id){
 				'</div>' +
 				'<div id="tab5_cli" class="col s12">' +
 					'<div class="right input-field botonesFormEdit">' +
-						'<button type="button" id="btn_create_cli_con" data-id="' + item.id + '" class="btn-floating waves-effect waves-light blue" title="Contratar">' +
+						'<button type="button" id="btn_create_cli_con" data-id="' + item.id + '" class="btn-floating waves-effect waves-light orange" title="Contratar">' +
 							'<i class="material-icons">assignment_turned_in</i>' +
-						'</button>' +
+						'</button>&nbsp;' +
 						'<button type="button" id="btn_refresh_con" data-id="' + item.id + '" class="btn-floating waves-effect waves-light blue" title="Actualizar">' +
 							'<i class="material-icons">refresh</i>' +
 						'</button>' +
