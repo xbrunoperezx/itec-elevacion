@@ -1,4 +1,10 @@
 <?php
+
+// Comprobar cookie de sesión 'user_id'
+if (!isset($_COOKIE['user_id'])) {
+    echo "KO: sesión ha expirado";
+    exit;
+}
 // Elimina un registro de datos_facturacion por id
 if(isset($_POST['id'])){
     $id = intval($_POST['id']);

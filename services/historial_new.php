@@ -1,5 +1,11 @@
 <?php
 
+// Comprobar cookie de sesión 'user_id'
+if (!isset($_COOKIE['user_id'])) {
+    echo "KO: sesión ha expirado";
+    exit;
+}
+
 include("conn_bbdd.php");
 
 // Verifica si la conexión es exitosa

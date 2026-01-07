@@ -1,5 +1,11 @@
 <?php
 
+// Comprobar cookie de sesión 'user_id'
+if (!isset($_COOKIE['user_id'])) {
+  echo "KO: sesión ha expirado";
+  exit;
+}
+
 $id = isset($_POST['id']) ? $_POST['id'] : '';
 $rae = isset($_POST['rae']) ? $_POST['rae'] : '';
 $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : '';

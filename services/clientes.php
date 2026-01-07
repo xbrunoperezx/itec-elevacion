@@ -1,5 +1,11 @@
 <?php
 
+// Comprobar cookie de sesión 'user_id'
+if (!isset($_COOKIE['user_id'])) {
+  echo "KO: sesión ha expirado";
+  exit;
+}
+
 if(isset($_POST["filtro_total"])){
 	$lim = $_POST["filtro_total"];
 }else{

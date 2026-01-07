@@ -1,9 +1,15 @@
 <?php
 
+// Comprobar cookie de sesión 'user_id'
+if (!isset($_COOKIE['user_id'])) {
+    echo "KO: sesión ha expirado";
+    exit;
+}
+
 $id = isset($_POST['id']) ? $_POST['id'] : '';
 $id_cliente = isset($_POST['id_cliente']) ? $_POST['id_cliente'] : '';
 $fecha = isset($_POST['fecha']) ? $_POST['fecha'] : '';
-$id_usuarios = isset($_POST['id_usuarios']) ? $_POST['id_usuarios'] : '';
+$id_usuarios = isset($_COOKIE['user_id']) ? $_COOKIE['user_id'] : (isset($_POST['id_usuarios']) ? $_POST['id_usuarios'] : '');
 $tipo = isset($_POST['tipo']) ? $_POST['tipo'] : '';
 $estado = isset($_POST['estado']) ? $_POST['estado'] : '';
 $num_control = isset($_POST['num_control']) ? $_POST['num_control'] : '';
@@ -41,10 +47,9 @@ if(isset($_POST['id']) && $_POST['id'] !== ''){
     }
 }else{
     // Preparar valores por defecto para la inserción
-    $fecha_ins = ($fecha_val=='' || $fecha_val==null) ? '0000-00-00' : $fecha_val;
-    $comunicada_ins = ($comunicada_val=='' || $comunicada_val==null) ? '0000-00-00' : $comunicada_val;
-    $enviada_ins = ($enviada_cobrar_val=='' || $enviada_cobrar_val==null) ? '0000-00-00' : $enviada_cobrar_val;
-
+    // Usar la fecha actual para nuevas contratadas
+    $fecha_ins = date('Y-m-d');
+    
     $sql = "INSERT INTO contratadas (id_cliente,fecha,id_usuarios,estado,num_control) VALUES ('{$id_cliente}','{$fecha_ins}','{$id_usuarios}',0,0)";
 
     if (mysqli_query($link, $sql)) {
