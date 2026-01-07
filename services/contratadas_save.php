@@ -45,7 +45,7 @@ if(isset($_POST['id']) && $_POST['id'] !== ''){
     $comunicada_ins = ($comunicada_val=='' || $comunicada_val==null) ? '0000-00-00' : $comunicada_val;
     $enviada_ins = ($enviada_cobrar_val=='' || $enviada_cobrar_val==null) ? '0000-00-00' : $enviada_cobrar_val;
 
-    $sql = "INSERT INTO contratadas (id_cliente,fecha,id_usuarios,tipo,estado,num_control,observaciones,nocobrar,precio,id_formas_pago,id_tarifa,comunicada,enviada_cobrar,comunicada_aquien,comunicada_como,contratada_como) VALUES ('{$id_cliente}','{$fecha_ins}','{$id_usuarios}','{$tipo}','{$estado}','{$num_control}','{$observaciones}','{$nocobrar}','{$precio}','{$id_formas_pago}','{$id_tarifa}','{$comunicada_ins}','{$enviada_ins}','{$comunicada_aquien}','{$comunicada_como}','{$contratada_como}')";
+    $sql = "INSERT INTO contratadas (id_cliente,fecha,id_usuarios,estado,num_control) VALUES ('{$id_cliente}','{$fecha_ins}','{$id_usuarios}',0,0)";
 
     if (mysqli_query($link, $sql)) {
         echo "OK";

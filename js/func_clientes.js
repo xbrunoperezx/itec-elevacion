@@ -23,7 +23,7 @@ var readClientes = function(id, totalParams){
 		      var tableRow = "<tr>" +
 		        "<td class='ancho50'>";
 		        if(item.contratada==0){
-		          tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange contratarInspeccion' title='Contratar inspección' data-id='" + item.id + "'>" +
+		          tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange contratarCliente' title='Contratar inspección' data-id='" + item.id + "'>" +
 		            "<i class='material-icons'>assignment_turned_in</i>" +
 		          "</a>";
 		        }else{
@@ -470,6 +470,36 @@ jQuery(document).on("click", ".editar_cli_fac", function(e){
 			}
 		});
 	}, function(){ /* cancel */ });
+});
+
+// Contratar cliente: abre modalConfirm para crear nueva contratacion
+jQuery(document).on("click", ".contratarCliente", function(e){
+	e.preventDefault();
+	var cid = $(this).data('id');
+	// puedes usar cid si necesitas en el callback
+	modalConfirm("Contratar cliente", "Se creará una nueva contratación en la base de datos", true, "Crear", "Cancelar", "add", "cancel", function(){
+		// obtener id usuario actual desde cookie
+		var userId = getCookieITEC('user_id') || '';
+		$.ajax({
+			url: 'services/contratadas_save.php',
+			type: 'POST',
+			data: { id_cliente: cid, id_usuarios: userId },
+			success: function(data){
+				if(typeof data === 'string' && data.trim() === 'OK'){
+					$('#modal_confirm').modal('close');
+					// refrescar listado de clientes
+					$('#filtrar_cli').click();
+				}else{
+					modalError('ERROR','No se pudo crear la contratación: ' + data, false);
+				}
+			},
+			error: function(xhr,status,error){
+				modalError('ERROR','Error en la petición: ' + error, false);
+			}
+		});
+	}, function(){
+		console.log("hizo click en cancelar");
+	});
 });
 
 jQuery(document).on("click", "#filtrar_cli", function() {
