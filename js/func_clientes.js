@@ -477,13 +477,11 @@ jQuery(document).on("click", ".contratarCliente", function(e){
 	e.preventDefault();
 	var cid = $(this).data('id');
 	// puedes usar cid si necesitas en el callback
-	modalConfirm("Contratar cliente", "Se creará una nueva contratación en la base de datos", true, "Crear", "Cancelar", "add", "cancel", function(){
-		// obtener id usuario actual desde cookie
-		var userId = getCookieITEC('user_id') || '';
+	modalConfirm("Contratar cliente", "Se creará una nueva contratación en la base de datos con fecha de hoy", true, "Crear", "Cancelar", "add", "cancel", function(){
 		$.ajax({
 			url: 'services/contratadas_save.php',
 			type: 'POST',
-			data: { id_cliente: cid, id_usuarios: userId },
+			data: { id_cliente: cid },
 			success: function(data){
 				if(typeof data === 'string' && data.trim() === 'OK'){
 					$('#modal_confirm').modal('close');
