@@ -207,19 +207,6 @@ var openContratada = function(seccion, cual, id){
 				      '<input type="date" id="fecha" name="fecha" value="' + item.cliente.contratada.fecha + '">' +
 				      '<label for="fecha" class="active">Fecha contratada</label>' +
 				    '</div>' +	
-					'<div class="input-field anchoFrm4">' +
-					'<select id="tipo" name="tipo">';
-					tipos_inspeccion = new Array("Inicial", "Primera inspección", "Segunda inspección", "Tercera inspección");
-				      	for (let clave in tipos_inspeccion){
-					      	if(item.cliente.contratada.tipo==clave){
-								frm_render += '<option value="'+ clave +'" selected>'+ tipos_inspeccion[clave] +'</option>';
-							}else{
-								frm_render += '<option value="'+ clave +'">'+ tipos_inspeccion[clave] +'</option>';				      	
-							}	
-						};
-				      frm_render+='</select>' +	
-				      '<label for="tipo" class="active">Tipo</label>' +
-				    '</div>' +		
 				    '<div class="input-field anchoFrm4">' +
 				      '<input type="text" id="num_control" name="num_control" value="' + item.cliente.contratada.num_control + '">' +
 				      '<label for="num_control" class="active">Número de Solicitud</label>' +
