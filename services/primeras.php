@@ -52,7 +52,7 @@ if (!$link) {
     }
 
 // Columnas usadas en las consultas (definidas aquí para usarlas en ambos casos)
-$columnas = array('inf.*','cli.id AS cli_id','cli.rae','cli.nombre','cli.direccion','cli.localidad','cli.municipio','cli.cp','cli.provincia','cli.id_campo','cli.id_mantenedor','cli.id_administrador','cli.quien_contrata','cli.telefono','cli.telefono2','cli.email','cli.tiene_datos','cli.vencimiento','cli.cada','cli.contratada','cli.observaciones AS cli_observaciones','con.id AS con_id','con.id_cliente','con.fecha AS con_fecha','con.id_usuarios','con.estado AS con_estado','con.num_control','con.observaciones AS con_observaciones','con.nocobrar','con.enviada_cobrar');
+$columnas = array('inf.*','cli.id AS cli_id','cli.rae','cli.nombre','cli.direccion','cli.localidad','cli.municipio','cli.cp','cli.provincia','cli.id_campo','cli.id_mantenedor','cli.id_administrador','cli.quien_contrata','cli.telefono','cli.telefono2','cli.email','cli.tiene_datos','cli.vencimiento','cli.cada','cli.contratada','cli.observaciones AS cli_observaciones','con.id AS con_id','con.id_cliente','con.fecha AS con_fecha','con.estado AS con_estado','con.num_control','con.observaciones AS con_observaciones','con.nocobrar','con.enviada_cobrar');
 
 $columnas = implode(',', $columnas);
 
@@ -152,7 +152,7 @@ while ($row = mysqli_fetch_assoc($result)) {
             $row[$key] = "-";
             $informe[$key."_dmy"] = "-";
         }
-        if($key=="fecha" ){
+        if($key=="fecha"){
           $informe["fecha_y"] =  date("Y", strtotime($row[$key]));
         }  
       }
@@ -164,7 +164,7 @@ while ($row = mysqli_fetch_assoc($result)) {
         if($row[$key]==4) $informe["resultado_f"] = "DM";
       }
       if($key=="id_usuarios"){
-        $user_array = explode("-", $usuarios[$row[$key]]);
+        $user_array = explode("-", $usuarios[intval($row[$key])]);
         $informe["usuario"] = $user_array[1];
         $informe["usuario_ab"] = $user_array[0];
       }    
@@ -174,37 +174,30 @@ while ($row = mysqli_fetch_assoc($result)) {
 
   $cliente = array();
   foreach (array_keys($row) as $key) {
-      if (in_array($key, ["cli_id","rae","nombre","direccion","localidad","municipio","cp","provincia","id_campo","id_mantenedor","id_administrador","quien_contrata","telefono","telefono2","email","tiene_datos","vencimiento","cada","contratada","cli_observaciones"])) {
-          if($key=="id_mantenedor"){
-              if(isset($mantenedores[$row[$key]])){
-                  $cliente['mantenedor'] = $mantenedores[$row[$key]];
-              }else{
-                  $cliente['mantenedor'] = "-";
-                  $row[$key] = "-";
-              }
+    if (in_array($key, ["cli_id","rae","nombre","direccion","localidad","municipio","cp","provincia","id_campo","id_mantenedor","id_administrador","quien_contrata","telefono","telefono2","email","tiene_datos","vencimiento","cada","contratada","cli_observaciones"])) {
+      if($key=="id_mantenedor"){
+          if(isset($mantenedores[$row[$key]])){
+              $cliente['mantenedor'] = $mantenedores[$row[$key]];
+          }else{
+              $cliente['mantenedor'] = "-";
+              $row[$key] = "-";
           }
-          if($key=="vencimiento"){
-              if($row[$key]!="0000-00-00" AND $row[$key]!="" AND $row[$key]!=null){
-                  $row[$key] = date("d-m-Y", strtotime($row[$key]));
-              }else{
-                  $row[$key] = "-";
-              }
-          }
-          $cliente[$key] = $row[$key];
       }
+      if($key=="vencimiento"){
+          if($row[$key]!="0000-00-00" AND $row[$key]!="" AND $row[$key]!=null){
+              $row[$key] = date("d-m-Y", strtotime($row[$key]));
+          }else{
+              $row[$key] = "-";
+          }
+      }
+      $cliente[$key] = $row[$key];
+    }
   }
   $contratada = array();
   foreach (array_keys($row) as $key) {
-      if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","tipo","estado","num_control","con_observaciones","nocobrar","enviada_cobrar"])) {
-          if($key=="id_usuarios"){
-              if($usuarios[$row[$key]]!=null){
-                  $row[$key] = $usuarios[$row[$key]];
-              }else{
-                  $row[$key] = "-";
-              }
-          }
-          $contratada[$key] = $row[$key];
-      }
+    if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","tipo","estado","num_control","con_observaciones","nocobrar","enviada_cobrar"])) {
+      $contratada[$key] = $row[$key];
+    }
   }
   // Construir el objeto de salida con la estructura solicitada
   $item = array();
