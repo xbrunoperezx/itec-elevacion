@@ -142,13 +142,17 @@ while ($row = mysqli_fetch_assoc($result)) {
             }
             if($key=="estado"){
                 if($row[$key]==0){
-                    $contratada['estado_f'] = "Inicial";
+                    $contratada['estado_f'] = "I";
+                    $contratada['estado_fc'] = "Inicial";
                 }else if($row[$key]==1){
-                    $contratada['estado_f'] = "Abierta";
+                    $contratada['estado_f'] = "A";
+                    $contratada['estado_fc'] = "Abierta";
                 }else if($row[$key]==2){
-                    $contratada['estado_f'] = "Finalizada";
+                    $contratada['estado_f'] = "F";
+                    $contratada['estado_fc'] = "Finalizada";
                 }else{
                     $contratada['estado_f'] = "-";
+                    $contratada['estado_fc'] = "-";
                 }
             }
             $contratada[$key] = $row[$key];

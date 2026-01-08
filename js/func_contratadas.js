@@ -300,7 +300,7 @@ var openContratada = function(seccion, cual, id){
 				      '<label for="id_usuarios" class="active">Contratada por</label>' +
 				    '</div>' +			
 						'<div class="input-field anchoFrm2">' +
-				      '<input type="text" id="estado_actual" name="estado_actual" value="' + item.cliente.contratada.estado_f + '" disabled>' +
+				      '<input type="text" id="estado_actual" name="estado_actual" value="' + item.cliente.contratada.estado_fc + '" disabled>' +
 				      '<label for="estado_actual" class="active">Estado</label>' +
 				    '</div>' +		
 				    '<div class="input-field">' +
