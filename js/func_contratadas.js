@@ -101,7 +101,7 @@ var readInformesContratada = function(id){
 						html += "<a class='disabled btn-floating btn-small waves-effect waves-light orange disabled' title=''><i class='material-icons'>comment</i></a>";
 					}
 
-					tableRow += "&nbsp;";
+					html += "&nbsp;";
 					// Icono localización Google Maps
 					if(row.gps_latitud != "" && row.gps_longitud != ""){
 						html += "<a class='btn-floating btn-small waves-effect waves-light blue' title='Ver en Google Maps\nLat: " + row.gps_latitud + "\nLon: "+row.gps_longitud + "' href='http://maps.google.com/?q=" + row.gps_latitud + ","+row.gps_longitud + "' target='_blank'><i class='material-icons'>gps_fixed</i></a>";
