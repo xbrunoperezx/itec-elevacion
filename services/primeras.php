@@ -98,7 +98,7 @@ if($id==""){
   if($_POST['filtro_pendientes']=="true"){
     $where_clause .= ' AND resultado=0';
   }
-  $columnas = array('inf.*','cli.id AS cli_id','cli.rae','cli.nombre','cli.direccion','cli.localidad','cli.municipio','cli.cp','cli.provincia','cli.id_campo','cli.id_mantenedor','cli.id_administrador','cli.quien_contrata','cli.telefono','cli.telefono2','cli.email','cli.tiene_datos','cli.vencimiento','cli.cada','cli.contratada','cli.observaciones AS cli_observaciones','con.id AS con_id','con.id_cliente','con.fecha AS con_fecha','con.id_usuarios','con.informe','con.tipo','con.id_informe','con.estado AS con_estado','con.num_control','con.observaciones AS con_observaciones','con.id_factura','con.nocobrar','con.precio','con.id_formapago AS con_id_formapago','con.enviada_cobrar');
+  $columnas = array('inf.*','cli.id AS cli_id','cli.rae','cli.nombre','cli.direccion','cli.localidad','cli.municipio','cli.cp','cli.provincia','cli.id_campo','cli.id_mantenedor','cli.id_administrador','cli.quien_contrata','cli.telefono','cli.telefono2','cli.email','cli.tiene_datos','cli.vencimiento','cli.cada','cli.contratada','cli.observaciones AS cli_observaciones','con.id AS con_id','con.id_cliente','con.fecha AS con_fecha','con.id_usuarios','con.tipo','con.estado AS con_estado','con.num_control','con.observaciones AS con_observaciones','con.id_factura','con.nocobrar','con.precio','con.id_formapago AS con_id_formapago','con.enviada_cobrar');
 
   $columnas = implode(',', $columnas);
   $sql = "SELECT {$columnas} FROM informes inf";
@@ -198,7 +198,7 @@ while ($row = mysqli_fetch_assoc($result)) {
   }
   $contratada = array();
   foreach (array_keys($row) as $key) {
-      if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","informe","tipo","id_informe","estado","num_control","con_observaciones","id_factura","nocobrar","precio","con_id_formapago","enviada_cobrar"])) {
+      if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","tipo","estado","num_control","con_observaciones","id_factura","nocobrar","precio","con_id_formapago","enviada_cobrar"])) {
           if($key=="id_usuarios"){
               if($usuarios[$row[$key]]!=null){
                   $row[$key] = $usuarios[$row[$key]];
