@@ -17,11 +17,7 @@ $nocobrar = isset($_POST['nocobrar']) ? $_POST['nocobrar'] : '';
 $precio = isset($_POST['precio']) ? $_POST['precio'] : '';
 $id_formas_pago = isset($_POST['id_formas_pago']) ? $_POST['id_formas_pago'] : '';
 $id_tarifa = isset($_POST['id_tarifa']) ? $_POST['id_tarifa'] : '';
-$comunicada = isset($_POST['comunicada']) ? $_POST['comunicada'] : '';
 $enviada_cobrar = isset($_POST['enviada_cobrar']) ? $_POST['enviada_cobrar'] : '';
-$comunicada_aquien = isset($_POST['comunicada_aquien']) ? $_POST['comunicada_aquien'] : '';
-$comunicada_como = isset($_POST['comunicada_como']) ? $_POST['comunicada_como'] : '';
-$contratada_como = isset($_POST['contratada_como']) ? $_POST['contratada_como'] : '';
 
 include("conn_bbdd.php");
 
@@ -32,13 +28,11 @@ if (!$link) {
 
 // Normalizar fechas: usar '0000-00-00' si vacío
 $fecha_val = ($fecha === '' || $fecha === null) ? '0000-00-00' : $fecha;
-$comunicada_val = ($comunicada === '' || $comunicada === null) ? '0000-00-00' : $comunicada;
 $enviada_cobrar_val = ($enviada_cobrar === '' || $enviada_cobrar === null) ? '0000-00-00' : $enviada_cobrar;
 
 // Si se proporciona un id no vacío, hacemos UPDATE, si no hacemos INSERT
 if(isset($_POST['id']) && $_POST['id'] !== ''){
-    $sql = "UPDATE contratadas SET id_cliente='{$id_cliente}', fecha='{$fecha_val}', id_usuarios='{$id_usuarios}', estado='{$estado}', num_control='{$num_control}', observaciones='{$observaciones}', nocobrar='{$nocobrar}', precio='{$precio}', id_formas_pago='{$id_formas_pago}', id_tarifa='{$id_tarifa}', comunicada='{$comunicada_val}', enviada_cobrar='{$enviada_cobrar_val}', comunicada_aquien='{$comunicada_aquien}', comunicada_como='{$comunicada_como}', contratada_como='{$contratada_como}' WHERE id='{$id}'";
-
+    $sql = "UPDATE contratadas SET id_cliente='{$id_cliente}', fecha='{$fecha_val}', id_usuarios='{$id_usuarios}', estado='{$estado}', num_control='{$num_control}', observaciones='{$observaciones}', nocobrar='{$nocobrar}', precio='{$precio}', id_formas_pago='{$id_formas_pago}', id_tarifa='{$id_tarifa}', enviada_cobrar='{$enviada_cobrar_val}' WHERE id='{$id}'";
     if (mysqli_query($link, $sql)) {
         echo "OK";
     } else {
