@@ -76,7 +76,7 @@ var readInformesContratada = function(id){
 	$.ajax({
 		url: 'services/primeras.php',
 		type: 'POST',
-		data: { filtro_id: id },
+		data: { filtro_id_contratada: id },
 		success: function(data){
 			try{ var parsed = JSON.parse(data); }catch(e){ container.html('Error parseando respuesta'); return; }
 			var datos = parsed['resultados'] || [];

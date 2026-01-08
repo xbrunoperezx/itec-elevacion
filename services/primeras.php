@@ -20,6 +20,7 @@ foreach ($__post_defaults as $k => $v) {
 
 $lim = $_POST["filtro_total"];
 $id = intval($_POST["filtro_id"]);
+$id_contratada = intval($_POST["filtro_id_contratada"]);
 
 include("conn_bbdd.php");
 // $link = mysqli_connect("89.46.111.188", "Sql1396152", "5i4w182228", "Sql1396152_2");
@@ -58,6 +59,11 @@ $columnas = implode(',', $columnas);
 
 if($id <= 0){
   $filters = [
+    'filtro_id_contratada' => [
+      'column' => 'inf.id_contratada',
+      'value' => $_POST['filtro_id_contratada'],
+      'operator' => '='
+    ],
     'filtro_direccion' => [
       'column' => 'cli.direccion',
       'value' => "%".$_POST['filtro_direccion']."%",
