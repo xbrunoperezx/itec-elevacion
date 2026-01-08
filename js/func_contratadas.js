@@ -85,7 +85,7 @@ var readInformesContratada = function(id){
 				return;
 			}
 			var html = '<div class="right input-field botonesFormEdit"><button type="button" id="btn_refresh_informes" data-id="'+id+'" class="btn-floating waves-effect waves-light blue" title="Actualizar"><i class="material-icons">refresh</i></button></div>';
-			html += '<table class="highlight" id="table_informes_con"><thead><tr><th>Informe</th><th>Fecha</th><th>Hora</th><th>Resultado</th><th>Próxima</th><th>Industria</th><th>Acude</th><th>Observaciones</th></tr></thead><tbody>';
+			html += '<table class="highlight" id="table_informes_con"><thead><tr><th>Informe</th><th>Fecha</th><th>Hora</th><th>Resultado</th><th>Próxima</th><th>Industria</th><th>Observaciones</th></tr></thead><tbody>';
 			datos.forEach(function(row){
 				var hora = (row.hora_ini||'') + (row.hora_fin ? (' - '+row.hora_fin) : '');
 				html += '<tr>'+
@@ -135,7 +135,6 @@ var readInformesContratada = function(id){
 					'</td>'+
 					'<td>'+row.proxima_dmy+'</td>'+
 					'<td>'+row.industria_dmy+'</td>'+
-					'<td>'+row.acude+'</td>'+
 					'<td>'+row.observaciones+'</td>'+
 					'</tr>';
 			});

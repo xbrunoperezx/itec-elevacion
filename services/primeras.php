@@ -202,6 +202,9 @@ while ($row = mysqli_fetch_assoc($result)) {
   $item['fecha_modificacion'] = isset($row['fecha_modificacion']) ? $row['fecha_modificacion'] : null;
   $item['comentarios_mod'] = isset($row['comentarios_mod']) ? $row['comentarios_mod'] : null;
   $item['id_revision'] = isset($row['id_revision']) ? $row['id_revision'] : null;
+  $item['comunicada'] = isset($row['comunicada']) ? $row['comunicada'] : "-";
+  $item['comunicada_aquien'] = isset($row['comunicada_aquien']) ? $row['comunicada_aquien'] : "";
+  $item['comunicada_como'] = isset($row['comunicada_como']) ? $row['comunicada_como'] : "";
 
   if($item['fecha']!=null) $item['fecha_dmy'] = date("d-m-Y", strtotime($item['fecha']));
   if($item['fecha']!=null) $item['fecha_y'] = date("Y", strtotime($item['fecha']));
