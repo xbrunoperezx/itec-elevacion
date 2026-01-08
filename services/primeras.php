@@ -239,6 +239,22 @@ while ($row = mysqli_fetch_assoc($result)) {
   $item['comentarios_mod'] = isset($row['comentarios_mod']) ? $row['comentarios_mod'] : null;
   $item['id_revision'] = isset($row['id_revision']) ? $row['id_revision'] : null;
 
+  if($item['fecha']!=null) $item['fecha_dmy'] = date("d-m-Y", strtotime($item['fecha']));
+  if($item['industria']!=null) $item['industria_dmy'] = date("d-m-Y", strtotime($item['industria']));
+  if($item['resultado']==0) $item['resultado_f'] = "-";
+  if($item['resultado']==1) $item['resultado_f'] = "F";
+  if($item['resultado']==2) $item['resultado_f'] = "FL";
+  if($item['resultado']==3) $item['resultado_f'] = "DG";
+  if($item['resultado']==4) $item['resultado_f'] = "DM";
+  if($item['id_usuarios']!=null && isset($usuarios[$item['id_usuarios']])){
+      $user_array = explode("-", $usuarios[$item['id_usuarios']]);
+      $item['usuario'] = $user_array[1];
+      $item['usuario_ab'] = $user_array[0];
+  }else{
+      $item['usuario'] = "-";
+      $item['usuario_ab'] = "-";
+  }
+
   // Contratada: preferir alias de consulta si existen
   $contratada_obj = array();
   $contratada_obj['id'] = isset($row['con_id']) ? (string)$row['con_id'] : (isset($row['id_contratada']) ? (string)$row['id_contratada'] : null);

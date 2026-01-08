@@ -20,22 +20,22 @@ var readInformes = function(id, totalParams){
 				// Construir la fila de la tabla con los datos
 				var tableRow = "<tr>" +
 				"<td class='ancho50'>&nbsp;</td>" + 
-				"<td class='ancho50'>" + item.informe.primera.fecha_y + "</td>" + 
-				"<td class='ancho75'>" + item.contratada.informe + "</td>" +
-				"<td class='ancho75'>" + item.cliente.rae + "</td>" + 
+				"<td class='ancho50'>" + item.fecha_dmy + "</td>" + 
+				"<td class='ancho75'>" + item.informe + "</td>" +
+				"<td class='ancho75'>" + item.contratada.cliente.rae + "</td>" + 
 				"<td class='ancho50'>" +
-					"<a seccion='pri' tipo='frm_editpri' data-id='" + item.informe.id + "' class='editar_pri btn-floating btn-small waves-effect waves-light green' title='Editar informe'>" +
+					"<a seccion='pri' tipo='frm_editpri' data-id='" + item.id + "' class='editar_pri btn-floating btn-small waves-effect waves-light green' title='Editar informe'>" +
 					"<i class='material-icons'>edit</i>" +
 					"</a>" +
 				"</td>" +
-				"<td><span class='main-text'>" + item.cliente.nombre + "</span><br><span class='secondary-text'>" + item.cliente.direccion + " ( " + item.cliente.cp + " - " + item.cliente.localidad + " )</span></td>" +
-				"<td class='ancho200'>" + item.cliente.mantenedor + "</td>" +
+				"<td><span class='main-text'>" + item.contratada.cliente.nombre + "</span><br><span class='secondary-text'>" + item.contratada.cliente.direccion + " ( " + item.contratada.cliente.cp + " - " + item.contratada.cliente.localidad + " )</span></td>" +
+				"<td class='ancho200'>" + item.contratada.cliente.mantenedor + "</td>" +
 				"<td class='ancho150'>";
 
 				// Icono comunicada
-				if(item.contratada.comunicada_dmy != "-"){
+				if(item.comunicada != "-"){
 					tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Comunicada el día " + 
-					item.contratada.comunicada_dmy + " a " + item.contratada.comunicada_aquien + ", " + item.contratada.comunicada_como + 
+					item.comunicada + " a " + item.comunicada_aquien + ", " + item.comunicada_como + 
 					"'><i class='material-icons'>comment</i></a>";
 				}else{
 					tableRow += "<a class='disabled btn-floating btn-small waves-effect waves-light orange disabled' title=''><i class='material-icons'>comment</i></a>";
@@ -44,8 +44,8 @@ var readInformes = function(id, totalParams){
 				tableRow += "&nbsp;";
 
 				// Icono localización Google Maps
-				if(item.informe.primera.latitud != "" && item.informe.primera.longitud != ""){
-					tableRow += "<a class='btn-floating btn-small waves-effect waves-light blue' title='Ver en Google Maps\nLat: " + item.informe.primera.latitud + "\nLon: "+item.informe.primera.longitud + "' href='http://maps.google.com/?q=" + item.informe.primera.latitud + ","+item.informe.primera.longitud + "' target='_blank'><i class='material-icons'>gps_fixed</i></a>";
+				if(item.gps_latitud != "" && item.gps_longitud != ""){
+					tableRow += "<a class='btn-floating btn-small waves-effect waves-light blue' title='Ver en Google Maps\nLat: " + item.gps_latitud + "\nLon: "+item.gps_longitud + "' href='http://maps.google.com/?q=" + item.gps_latitud + ","+item.gps_longitud + "' target='_blank'><i class='material-icons'>gps_fixed</i></a>";
 				}else{
 					tableRow += "<a class='disabled btn-floating btn-small waves-effect waves-light blue disabled' title='Ver en Google Maps'><i class='material-icons'>gps_fixed</i></a>";
 				}	
@@ -53,43 +53,43 @@ var readInformes = function(id, totalParams){
 				tableRow += "&nbsp;";
 
 				// Icono hora
-				if(item.informe.primera.hora_ini != "" && item.informe.primera.hora_fin != ""){
-					tableRow += "<a class='btn-floating btn-small waves-effect waves-light green' title='Hora inicio: "+item.informe.primera.hora_ini+"h\nHora fin: "+item.informe.primera.hora_fin+"h'><i class='material-icons'>access_time</i></a>";
+				if(item.hora_ini != "" && item.hora_fin != ""){
+					tableRow += "<a class='btn-floating btn-small waves-effect waves-light green' title='Hora inicio: "+item.hora_ini+"h\nHora fin: "+item.hora_fin+"h'><i class='material-icons'>access_time</i></a>";
 				}
-				if(item.informe.primera.hora_ini != "" && item.informe.primera.hora_fin == ""){
-					tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Hora inicio: "+item.informe.primera.hora_ini+"h\n¡Inspección en curso!'><i class='material-icons'>access_time</i></a>";
+				if(item.hora_ini != "" && item.hora_fin == ""){
+					tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Hora inicio: "+item.hora_ini+"h\n¡Inspección en curso!'><i class='material-icons'>access_time</i></a>";
 				}	
-				if(item.informe.primera.hora_ini == "" && item.informe.primera.hora_fin == ""){
+				if(item.hora_ini == "" && item.hora_fin == ""){
 					tableRow += "<a class='disabled btn-floating btn-small waves-effect waves-light red' title='Sin comenzar...'><i class='material-icons'>access_time</i></a>";
 				}	        
 				tableRow += "</td>" + 
-				"<td class='ancho150'>" + item.informe.primera.fecha_dmy + "</td>" +
+				"<td class='ancho150'>" + item.fecha + "</td>" +
 				"<td class='ancho100'>" +
-					"<a class='btn-floating btn-small waves-effect waves-light grey' title='Inspector: " + item.informe.primera.usuario + "'>" +
-					item.informe.primera.usuario_ab +
+					"<a class='btn-floating btn-small waves-effect waves-light grey' title='Inspector: " + item.usuario + "'>" +
+					item.usuario_ab +
 					"</a>&nbsp;" +
 					"<a class='btn-floating btn-small waves-effect waves-light ";
-					if(item.informe.primera.resultado_f=="-") tableRow += "grey disabled' title='Sin hacer'>";
-					if(item.informe.primera.resultado_f=="F") tableRow += "green' title='Favorable'>";
-					if(item.informe.primera.resultado_f=="FL") tableRow += "green' title='Favorable (defectos leves)'>";
-					if(item.informe.primera.resultado_f=="DG") tableRow += "red' title='Desfavorable (defectos graves)'>";
-					if(item.informe.primera.resultado_f=="DM") tableRow += "red' title='Desfavorable (defectos muy graves)'>";
-					tableRow += item.informe.primera.resultado_f +"</a>" +
+					if(item.resultado_f=="-") tableRow += "grey disabled' title='Sin hacer'>";
+					if(item.resultado_f=="F") tableRow += "green' title='Favorable'>";
+					if(item.resultado_f=="FL") tableRow += "green' title='Favorable (defectos leves)'>";
+					if(item.resultado_f=="DG") tableRow += "red' title='Desfavorable (defectos graves)'>";
+					if(item.resultado_f=="DM") tableRow += "red' title='Desfavorable (defectos muy graves)'>";
+					tableRow += item.resultado_f +"</a>" +
 				"</td>" +
-				"<td class='ancho150'>" + item.informe.primera.industria_dmy + "</td>" +
+				"<td class='ancho150'>" + item.industria_dmy + "</td>" +
 				"<td class='ancho150'>";
-				if(item.informe.primera.resultado>0){	
-					tableRow += "<a seccion='pri' tipo='sheet_pri' data-id='" + item.informe.id + "' class='sheet_pri btn-floating btn-small waves-effect waves-light grey darken-1' title='Hoja de campo'>" +
+				if(item.resultado>0){	
+					tableRow += "<a seccion='pri' tipo='sheet_pri' data-id='" + item.id + "' class='sheet_pri btn-floating btn-small waves-effect waves-light grey darken-1' title='Hoja de campo'>" +
 						"<i class='material-icons'>assignment</i>" +
 					"</a>&nbsp;" +
-					"<a seccion='pri' tipo='print_pri' data-id='" + item.informe.id + "' class='print_pri btn-floating btn-small waves-effect waves-light light-blue darken-2' title='Generar informe'>" +
+					"<a seccion='pri' tipo='print_pri' data-id='" + item.id + "' class='print_pri btn-floating btn-small waves-effect waves-light light-blue darken-2' title='Generar informe'>" +
 						"<i class='material-icons'>picture_as_pdf</i>" +
 					"</a>";
 				}else{
-					tableRow += "<a seccion='pri' tipo='sheet_pri' data-id='" + item.informe.id + "' class='disabled sheet_pri btn-floating btn-small waves-effect waves-light grey darken-1' title='Hoja de campo'>" +
+					tableRow += "<a seccion='pri' tipo='sheet_pri' data-id='" + item.id + "' class='disabled sheet_pri btn-floating btn-small waves-effect waves-light grey darken-1' title='Hoja de campo'>" +
 						"<i class='material-icons'>assignment</i>" +
 					"</a>&nbsp;" +
-					"<a seccion='pri' tipo='print_pri' data-id='" + item.informe.id + "' class='disabled print_pri btn-floating btn-small waves-effect waves-light light-blue darken-2' title='Generar informe'>" +
+					"<a seccion='pri' tipo='print_pri' data-id='" + item.id + "' class='disabled print_pri btn-floating btn-small waves-effect waves-light light-blue darken-2' title='Generar informe'>" +
 						"<i class='material-icons'>picture_as_pdf</i>" +
 					"</a>";		        	
 				}
