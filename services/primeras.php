@@ -151,14 +151,14 @@ while ($row = mysqli_fetch_assoc($result)) {
   foreach (array_keys($row) as $key) {
     if (in_array($key, ["fecha","id_usuarios","hora_ini","hora_fin","industria","observaciones_check","resultado","latitud","longitud","enviada_cliente","esmodificacion","fecha_modificacion","comentarios_mod","id_revision","observaciones","acude","proxima"])) {
       if($key=="fecha" || $key=="industria"){
-        if($row[$key]!="0000-00-00"){
+        if($row[$key]!="0000-00-00" AND $row[$key]!="" AND $row[$key]!=null){
             $row[$key] = $row[$key];
             $primera[$key."_dmy"] = date("d-m-Y", strtotime($row[$key]));
         }else{
             $row[$key] = "-";
             $primera[$key."_dmy"] = "-";
         }
-        if($key=="fecha"){
+        if($key=="fecha" ){
           $primera["fecha_y"] =  date("Y", strtotime($row[$key]));
         }  
       }
@@ -190,7 +190,7 @@ while ($row = mysqli_fetch_assoc($result)) {
               }
           }
           if($key=="vencimiento"){
-              if($row[$key]!="0000-00-00"){
+              if($row[$key]!="0000-00-00" AND $row[$key]!="" AND $row[$key]!=null){
                   $row[$key] = date("d-m-Y", strtotime($row[$key]));
               }else{
                   $row[$key] = "-";
