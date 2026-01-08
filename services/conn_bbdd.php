@@ -4,7 +4,7 @@ try{
         "ikw4cos008ksg4w4g04cso4k", 
         "mysql",
         "LELGRzf6r3yJoSzmYzvcgZK59KjxCYdGgc6q4dTjXLbxbtTlW2xKbHa6WgwTetXf", 
-        "itec_elevacion"
+        "itec_elevacion_dev"
     );
 
     if (!$link) {
