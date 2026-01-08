@@ -35,10 +35,10 @@ var readContratadas = function(id, totalParams){
 		        "<td class='ancho150'>" + item.cliente.vencimiento + "</td>" +
 		        "<td class='ancho100'>";
 					"<a class='btn-floating btn-small waves-effect waves-light ";
-					if(item.estado=="0") tableRow += "grey disabled' title='Inicial'>";
-					if(item.estado=="1") tableRow += "orange' title='Abierta'>";
-					if(item.estado=="2") tableRow += "green' title='Finalizada'>";
-					tableRow += item.estado_f +"</a>" +
+					if(item.cliente.contratada.estado=="0") tableRow += "grey disabled' title='Inicial'>";
+					if(item.cliente.contratada.estado=="1") tableRow += "orange' title='Abierta'>";
+					if(item.cliente.contratada.estado=="2") tableRow += "green' title='Finalizada'>";
+					tableRow += item.cliente.contratada.estado_f +"</a>" +
 				"</td>" + 
 				"<td class='ancho50'>" +
 					"<a class='more_con btn-floating btn-small waves-effect waves-light red' title='Más' data-id='" + item.cliente.contratada.con_id + "'>" +
