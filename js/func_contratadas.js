@@ -95,12 +95,12 @@ var readInformesContratada = function(id){
 				var acude = row.acude || '';
 				var obs = row.observaciones || '';
 				html += '<tr>'+
-								'<td>'+fecha+'</td>'+
-								'<td>'+hora+'</td>'+
-								'<td>'+resf+'</td>'+
-								'<td>'+acude+'</td>'+
-								'<td>'+obs+'</td>'+
-								'</tr>';
+					'<td>'+fecha+'</td>'+
+					'<td>'+hora+'</td>'+
+					'<td>'+resf+'</td>'+
+					'<td>'+acude+'</td>'+
+					'<td>'+obs+'</td>'+
+					'</tr>';
 			});
 			html += '</tbody></table>';
 			container.html(html);
