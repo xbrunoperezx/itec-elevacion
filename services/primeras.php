@@ -148,52 +148,6 @@ $informes = array();
 // Bucle a través de cada fila de resultados y almacenamiento de datos en el array
 while ($row = mysqli_fetch_assoc($result)) {
 
-  $informe = array();
-  foreach (array_keys($row) as $key) {
-    if (in_array($key, ["id","id_contratada","id_usuarios","fecha","id_usuarios","hora_ini","hora_fin","industria","observaciones_check","resultado","gps_latitud","gps_longitud","enviada_cliente","esmodificacion","fecha_modificacion","comentarios_mod","id_revision","observaciones","acude","proxima","plazo", "legislacion","comunicada", "comunicada_aquien", "comunicada_como"])) {
-      if($key=="fecha" || $key=="industria" || $key=="comunicada" || $key=="proxima" || $key=="fecha_modificacion" || $key=="enviada_cliente"){
-        if($row[$key]!="0000-00-00" AND $row[$key]!="" AND $row[$key]!=null){
-            $row[$key] = $row[$key];
-            $informe[$key."_dmy"] = date("d-m-Y", strtotime($row[$key]));
-        }else{
-            $row[$key] = "-";
-            $informe[$key."_dmy"] = "-";
-        }
-        if($key=="fecha"){
-          $informe["fecha_y"] =  date("Y", strtotime($row[$key]));
-        }  
-      }
-      if($key=="resultado"){
-        if($row[$key]==0){
-          $informe["resultado_f"] = "-";
-          $informe["resultado_fc"] = "-";
-        }
-        if($row[$key]==1){
-          $informe["resultado_f"] = "F";
-          $informe["resultado_fc"] = "Favorable";
-        }
-        if($row[$key]==2){
-          $informe["resultado_f"] = "FL";
-          $informe["resultado_fc"] = "Defectos leves";
-        }
-        if($row[$key]==3){
-          $informe["resultado_f"] = "DG";
-          $informe["resultado_fc"] = "Defectos graves";
-        }
-        if($row[$key]==4){
-          $informe["resultado_f"] = "DM";
-          $informe["resultado_fc"] = "Defectos muy graves";
-        }
-      }
-      if($key=="id_usuarios"){
-        $user_array = explode("-", $usuarios[intval($row[$key])]);
-        $informe["usuario"] = $user_array[1];
-        $informe["usuario_ab"] = $user_array[0];
-      }    
-      $informe[$key] = $row[$key];
-    }
-  }
-
   $cliente = array();
   foreach (array_keys($row) as $key) {
     if (in_array($key, ["cli_id","rae","nombre","direccion","localidad","municipio","cp","provincia","id_campo","id_mantenedor","id_administrador","quien_contrata","telefono","telefono2","email","tiene_datos","vencimiento","cada","contratada","cli_observaciones"])) {
@@ -261,6 +215,11 @@ while ($row = mysqli_fetch_assoc($result)) {
   if($item['resultado']==2) $item['resultado_f'] = "FL";
   if($item['resultado']==3) $item['resultado_f'] = "DG";
   if($item['resultado']==4) $item['resultado_f'] = "DM";
+  if($item['resultado']==0) $item['resultado_fc'] = "-";
+  if($item['resultado']==1) $item['resultado_fc'] = "Favorable";
+  if($item['resultado']==2) $item['resultado_fc'] = "Defectos leves";
+  if($item['resultado']==3) $item['resultado_fc'] = "Defectos graves";
+  if($item['resultado']==4) $item['resultado_fc'] = "Defectos muy graves";  
   if($item['id_usuarios']!=null && isset($usuarios[$item['id_usuarios']])){
       $user_array = explode("-", $usuarios[$item['id_usuarios']]);
       $item['usuario'] = $user_array[1];
