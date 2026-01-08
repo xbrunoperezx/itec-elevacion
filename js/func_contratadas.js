@@ -91,8 +91,48 @@ var readInformesContratada = function(id){
 				html += '<tr>'+
 					'<td>'+row.informe+'</td>'+
 					'<td>'+row.fecha+'</td>'+
-					'<td>'+hora+'</td>'+
-					'<td>'+row.resultado_fc+'</td>'+
+					'<td>';
+					// Icono comunicada
+					if(row.comunicada != "-"){
+						html += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Comunicada el día " + 
+						row.comunicada + " a " + row.comunicada_aquien + ", " + row.comunicada_como + 
+						"'><i class='material-icons'>comment</i></a>";
+					}else{
+						html += "<a class='disabled btn-floating btn-small waves-effect waves-light orange disabled' title=''><i class='material-icons'>comment</i></a>";
+					}
+
+					tableRow += "&nbsp;";
+					// Icono localización Google Maps
+					if(row.gps_latitud != "" && row.gps_longitud != ""){
+						html += "<a class='btn-floating btn-small waves-effect waves-light blue' title='Ver en Google Maps\nLat: " + row.gps_latitud + "\nLon: "+row.gps_longitud + "' href='http://maps.google.com/?q=" + row.gps_latitud + ","+row.gps_longitud + "' target='_blank'><i class='material-icons'>gps_fixed</i></a>";
+					}else{
+						html += "<a class='disabled btn-floating btn-small waves-effect waves-light blue disabled' title='Ver en Google Maps'><i class='material-icons'>gps_fixed</i></a>";
+					}	
+
+					html += "&nbsp;";
+					// Icono hora
+					if(row.hora_ini != "" && row.hora_fin != ""){
+						html += "<a class='btn-floating btn-small waves-effect waves-light green' title='Hora inicio: "+row.hora_ini+"h\nHora fin: "+row.hora_fin+"h'><i class='material-icons'>access_time</i></a>";
+					}
+					if(row.hora_ini != "" && row.hora_fin == ""){
+						html += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Hora inicio: "+row.hora_ini+"h\n¡Inspección en curso!'><i class='material-icons'>access_time</i></a>";
+					}	
+					if(row.hora_ini == "" && row.hora_fin == ""){
+						html += "<a class='disabled btn-floating btn-small waves-effect waves-light red' title='Sin comenzar...'><i class='material-icons'>access_time</i></a>";
+					}	        
+					html += '</td>'+
+					'<td>';
+					"<a class='btn-floating btn-small waves-effect waves-light grey' title='Inspector: " + row.usuario + "'>" +
+					row.usuario_ab +
+					"</a>&nbsp;" +
+					"<a class='btn-floating btn-small waves-effect waves-light ";
+					if(row.resultado_f=="-") html += "grey disabled' title='Sin hacer'>";
+					if(row.resultado_f=="F") html += "green' title='Favorable'>";
+					if(row.resultado_f=="FL") html += "green' title='Favorable (defectos leves)'>";
+					if(row.resultado_f=="DG") html += "red' title='Desfavorable (defectos graves)'>";
+					if(row.resultado_f=="DM") html += "red' title='Desfavorable (defectos muy graves)'>";
+					html += row.resultado_f +"</a>" +
+					'</td>'+
 					'<td>'+row.proxima_dmy+'</td>'+
 					'<td>'+row.industria_dmy+'</td>'+
 					'<td>'+row.acude+'</td>'+
