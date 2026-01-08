@@ -143,38 +143,32 @@ while ($row = mysqli_fetch_assoc($result)) {
 
   $informe = array();
   foreach (array_keys($row) as $key) {
-    if (in_array($key, ["id","id_contratada","destino","num_viviendas","num_paradas","puesta_marcha","insp_anterior","plazo","legislacion"])) {
-      $informe[$key] = $row[$key];
-    }
-  }
-  $primera = array();
-  foreach (array_keys($row) as $key) {
-    if (in_array($key, ["fecha","id_usuarios","hora_ini","hora_fin","industria","observaciones_check","resultado","latitud","longitud","enviada_cliente","esmodificacion","fecha_modificacion","comentarios_mod","id_revision","observaciones","acude","proxima"])) {
-      if($key=="fecha" || $key=="industria"){
+    if (in_array($key, ["id","id_contratada","id_usuarios","fecha","id_usuarios","hora_ini","hora_fin","industria","observaciones_check","resultado","gps_latitud","gps_longitud","enviada_cliente","esmodificacion","fecha_modificacion","comentarios_mod","id_revision","observaciones","acude","proxima","plazo", "legislacion","comunicada", "comunicada_aquien", "comunicada_como"])) {
+      if($key=="fecha" || $key=="industria" || $key=="comunicada" || $key=="proxima" || $key=="fecha_modificacion" || $key=="enviada_cliente"){
         if($row[$key]!="0000-00-00" AND $row[$key]!="" AND $row[$key]!=null){
             $row[$key] = $row[$key];
-            $primera[$key."_dmy"] = date("d-m-Y", strtotime($row[$key]));
+            $informe[$key."_dmy"] = date("d-m-Y", strtotime($row[$key]));
         }else{
             $row[$key] = "-";
-            $primera[$key."_dmy"] = "-";
+            $informe[$key."_dmy"] = "-";
         }
         if($key=="fecha" ){
-          $primera["fecha_y"] =  date("Y", strtotime($row[$key]));
+          $informe["fecha_y"] =  date("Y", strtotime($row[$key]));
         }  
       }
       if($key=="resultado"){
-        if($row[$key]==0) $primera["resultado_f"] = "-";
-        if($row[$key]==1) $primera["resultado_f"] = "F";
-        if($row[$key]==2) $primera["resultado_f"] = "FL";
-        if($row[$key]==3) $primera["resultado_f"] = "DG";
-        if($row[$key]==4) $primera["resultado_f"] = "DM";
+        if($row[$key]==0) $informe["resultado_f"] = "-";
+        if($row[$key]==1) $informe["resultado_f"] = "F";
+        if($row[$key]==2) $informe["resultado_f"] = "FL";
+        if($row[$key]==3) $informe["resultado_f"] = "DG";
+        if($row[$key]==4) $informe["resultado_f"] = "DM";
       }
       if($key=="id_usuarios"){
         $user_array = explode("-", $usuarios[$row[$key]]);
-        $primera["usuario"] = $user_array[1];
-        $primera["usuario_ab"] = $user_array[0];
+        $informe["usuario"] = $user_array[1];
+        $informe["usuario_ab"] = $user_array[0];
       }    
-      $primera[$key] = $row[$key];
+      $informe[$key] = $row[$key];
     }
   }
 
