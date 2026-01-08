@@ -56,7 +56,7 @@ $columnas = array('inf.*','cli.id AS cli_id','cli.rae','cli.nombre','cli.direcci
 
 $columnas = implode(',', $columnas);
 
-if($id==""){
+if($id <= 0){
   $filters = [
     'filtro_direccion' => [
       'column' => 'cli.direccion',
@@ -120,6 +120,20 @@ if($id==""){
 
 // Ejecuta la consulta
 $result = mysqli_query($link, $sql);
+// Comprobar errores en la consulta y devolver información útil para depuración
+if($result === false){
+  $err = mysqli_error($link);
+  // Cerrar conexión
+  mysqli_close($link);
+  // Devolver respuesta vacía con información de error (no mostrar en producción)
+  $retorno = array();
+  $retorno["resultados"] = array();
+  $retorno["mantenedores"] = $mantenedores;
+  $retorno["error"] = $err;
+  $retorno["sql"] = $sql;
+  echo json_encode($retorno);
+  exit;
+}
 
 // Inicialización de un array para almacenar los datos
 $informes = array();
