@@ -136,7 +136,7 @@ var readInformesContratada = function(id){
 					'<td>'+row.proxima_dmy+'</td>'+
 					'<td>'+row.industria_dmy+'</td>'+
 					'<td>'+row.observaciones+'</td>'+
-					'<td><i class="material-icons">open_in_new</i></td>'+
+					'<td><a class="btn-floating btn-small waves-effect waves-light grey" title="Abrir en otra pestaña"><i class="material-icons">open_in_new</i></a></td>'+
 					'</tr>';
 			});
 			html += '</tbody></table>';
