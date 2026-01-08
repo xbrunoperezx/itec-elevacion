@@ -164,11 +164,26 @@ while ($row = mysqli_fetch_assoc($result)) {
         }  
       }
       if($key=="resultado"){
-        if($row[$key]==0) $informe["resultado_f"] = "-";
-        if($row[$key]==1) $informe["resultado_f"] = "F";
-        if($row[$key]==2) $informe["resultado_f"] = "FL";
-        if($row[$key]==3) $informe["resultado_f"] = "DG";
-        if($row[$key]==4) $informe["resultado_f"] = "DM";
+        if($row[$key]==0){
+          $informe["resultado_f"] = "-";
+          $informe["resultado_fc"] = "-";
+        }
+        if($row[$key]==1){
+          $informe["resultado_f"] = "F";
+          $informe["resultado_fc"] = "Favorable";
+        }
+        if($row[$key]==2){
+          $informe["resultado_f"] = "FL";
+          $informe["resultado_fc"] = "Defectos leves";
+        }
+        if($row[$key]==3){
+          $informe["resultado_f"] = "DG";
+          $informe["resultado_fc"] = "Defectos graves";
+        }
+        if($row[$key]==4){
+          $informe["resultado_f"] = "DM";
+          $informe["resultado_fc"] = "Defectos muy graves";
+        }
       }
       if($key=="id_usuarios"){
         $user_array = explode("-", $usuarios[intval($row[$key])]);

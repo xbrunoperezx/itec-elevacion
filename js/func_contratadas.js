@@ -85,21 +85,16 @@ var readInformesContratada = function(id){
 				return;
 			}
 			var html = '<div class="right input-field botonesFormEdit"><button type="button" id="btn_refresh_informes" data-id="'+id+'" class="btn-floating waves-effect waves-light blue" title="Actualizar"><i class="material-icons">refresh</i></button></div>';
-			html += '<table class="highlight" id="table_informes_con"><thead><tr><th>Fecha</th><th>Hora</th><th>Resultado</th><th>Acude</th><th>Observaciones</th></tr></thead><tbody>';
+			html += '<table class="highlight" id="table_informes_con"><thead><tr><th>Informe</th><th>Fecha</th><th>Hora</th><th>Resultado</th><th>Acude</th><th>Observaciones</th></tr></thead><tbody>';
 			datos.forEach(function(row){
-				var fecha = row.fecha || '';
 				var hora = (row.hora_ini||'') + (row.hora_fin ? (' - '+row.hora_fin) : '');
-				var res = row.resultado;
-				var resf = '-';
-				if(res==1) resf='F'; if(res==2) resf='FL'; if(res==3) resf='DG'; if(res==4) resf='DM';
-				var acude = row.acude || '';
-				var obs = row.observaciones || '';
 				html += '<tr>'+
-					'<td>'+fecha+'</td>'+
+					'<td>'+row.informe+'</td>'+
+					'<td>'+row.fecha+'</td>'+
 					'<td>'+hora+'</td>'+
-					'<td>'+resf+'</td>'+
-					'<td>'+acude+'</td>'+
-					'<td>'+obs+'</td>'+
+					'<td>'+row.resultado_fc+'</td>'+
+					'<td>'+row.acude+'</td>'+
+					'<td>'+row.observaciones+'</td>'+
 					'</tr>';
 			});
 			html += '</tbody></table>';
