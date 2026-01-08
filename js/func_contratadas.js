@@ -35,7 +35,7 @@ var readContratadas = function(id, totalParams){
 		        "<td class='ancho150'>" + item.cliente.vencimiento + "</td>" +
 		        "<td class='ancho100'>"+
 					"<a class='btn-floating btn-small waves-effect waves-light ";
-					if(item.cliente.contratada.estado=="0") tableRow += "grey disabled' title='Inicial'>";
+					if(item.cliente.contratada.estado=="0") tableRow += "grey' title='Inicial'>";
 					if(item.cliente.contratada.estado=="1") tableRow += "orange' title='Abierta'>";
 					if(item.cliente.contratada.estado=="2") tableRow += "green' title='Finalizada'>";
 					tableRow += item.cliente.contratada.estado_f +"</a>" +
