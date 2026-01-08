@@ -40,11 +40,11 @@ var readContratadas = function(id, totalParams){
 		        	tableRow += "<a class='disabled btn-floating btn-small waves-effect waves-light orange' title='Comunicada el día " + item.cliente.contratada.comunicada_dmy + "'><i class='material-icons'>comment</i></a>";
 		        }
 		        tableRow += "</td>" + 
-		        "<td class='ancho50'>" +
-		          "<a class='btn-floating btn-small waves-effect waves-light red' title='Más'>" +
-		            "<i class='material-icons'>more_vert</i>" +
-		          "</a>" +
-		        "</td>" +
+								"<td class='ancho50'>" +
+									"<a class='more_con btn-floating btn-small waves-effect waves-light red' title='Más' data-id='" + item.cliente.contratada.con_id + "'>" +
+										"<i class='material-icons'>more_vert</i>" +
+									"</a>" +
+								"</td>" +
 		      "</tr>";
 
 		      // Agregar la fila a la tabla
@@ -303,3 +303,68 @@ var openContratada = function(seccion, cual, id){
 		});				
 	}
 }
+
+// Menú contextual para cada fila de contratadas (ocultar fila / cancelar)
+jQuery(document).on("click", ".more_con", function(e){
+		e.preventDefault();
+		// cerrar cualquier menú abierto
+		jQuery('.row-menu').remove();
+
+		var $btn = jQuery(this);
+		var itemId = $btn.data('id');
+		var offset = $btn.offset();
+
+		var menu = jQuery("<div class='row-menu'><ul><li class='row-menu-hide'>Ocultar fila</li><li class='row-menu-cancel'>Cancelar</li></ul></div>");
+
+		// añadirlo oculto para medir y posicionar correctamente (alineado a la derecha del icono)
+		menu.css({ visibility: 'hidden', top: 0, left: 0 });
+		jQuery('body').append(menu);
+
+		// medir dimensiones y ventana
+		var menuW = menu.outerWidth();
+		var menuH = menu.outerHeight();
+		var winW = jQuery(window).width();
+		var winTop = jQuery(window).scrollTop();
+
+		// calcular izquierda para alinear a la derecha del botón
+		var desiredLeft = offset.left + $btn.outerWidth() - menuW;
+		if (desiredLeft + menuW > winW - 6) {
+				desiredLeft = winW - menuW - 6;
+		}
+		if (desiredLeft < 6) {
+				desiredLeft = 6;
+		}
+
+		// calcular top (por defecto debajo del botón)
+		var desiredTop = offset.top + $btn.outerHeight() + 6;
+		if (desiredTop + menuH > winTop + jQuery(window).height()) {
+				desiredTop = offset.top - menuH - 6;
+				if (desiredTop < winTop + 6) desiredTop = winTop + 6;
+		}
+
+		menu.css({ top: desiredTop + 'px', left: desiredLeft + 'px', visibility: 'visible' });
+
+		// acción ocultar
+		menu.on('click', '.row-menu-hide', function(ev){
+				ev.stopPropagation();
+				var $tr = $btn.closest('tr');
+				$tr.addClass('hidden-row');
+				menu.remove();
+		});
+
+		// cancelar
+		menu.on('click', '.row-menu-cancel', function(ev){
+				ev.stopPropagation();
+				menu.remove();
+		});
+
+		// cerrar si se hace click fuera
+		setTimeout(function(){
+			jQuery(document).on('click.rowMenuClose', function(ev){
+				if(jQuery(ev.target).closest('.row-menu').length===0 && jQuery(ev.target).closest('.more_con').length===0){
+					jQuery('.row-menu').remove();
+					jQuery(document).off('click.rowMenuClose');
+				}
+			});
+		}, 10);
+});
