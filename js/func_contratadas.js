@@ -69,6 +69,53 @@ var readContratadas = function(id, totalParams){
 	});
 }
 
+// Cargar listado de informes para una contratada en la pestaña Inspección
+var readInformesContratada = function(id){
+	var container = jQuery('#tab3_con');
+	container.html('Cargando...');
+	$.ajax({
+		url: 'services/primeras.php',
+		type: 'POST',
+		data: { filtro_id: id },
+		success: function(data){
+			try{ var parsed = JSON.parse(data); }catch(e){ container.html('Error parseando respuesta'); return; }
+			var datos = parsed['resultados'] || [];
+			if(!datos || datos.length===0){
+				container.html('No hay informes');
+				return;
+			}
+			var html = '<div class="right input-field botonesFormEdit"><button type="button" id="btn_refresh_informes" data-id="'+id+'" class="btn-floating waves-effect waves-light blue" title="Actualizar"><i class="material-icons">refresh</i></button></div>';
+			html += '<table class="highlight" id="table_informes_con"><thead><tr><th>Fecha</th><th>Hora</th><th>Resultado</th><th>Acude</th><th>Observaciones</th></tr></thead><tbody>';
+			datos.forEach(function(row){
+				var fecha = row.fecha || '';
+				var hora = (row.hora_ini||'') + (row.hora_fin ? (' - '+row.hora_fin) : '');
+				var res = row.resultado;
+				var resf = '-';
+				if(res==1) resf='F'; if(res==2) resf='FL'; if(res==3) resf='DG'; if(res==4) resf='DM';
+				var acude = row.acude || '';
+				var obs = row.observaciones || '';
+				html += '<tr>'+
+								'<td>'+fecha+'</td>'+
+								'<td>'+hora+'</td>'+
+								'<td>'+resf+'</td>'+
+								'<td>'+acude+'</td>'+
+								'<td>'+obs+'</td>'+
+								'</tr>';
+			});
+			html += '</tbody></table>';
+			container.html(html);
+		},
+		error: function(xhr,status,error){ container.html('Error: '+error); }
+	});
+};
+
+// Handler para botón actualizar informes
+jQuery(document).on('click', '#btn_refresh_informes', function(e){
+	e.preventDefault();
+	var id = jQuery(this).data('id');
+	if(id) readInformesContratada(id);
+});
+
 
 // Filtros de contratada
 jQuery(document).on("keydown", "#tab_con [id*=filtro_con]", function(e){
@@ -293,6 +340,10 @@ var openContratada = function(seccion, cual, id){
 				  $("#modal_"+seccion).modal({
 						dismissible: false
 					});
+					// Cargar lista de informes (pestaña Inspección)
+					if(item && item.cliente && item.cliente.contratada && item.cliente.contratada.con_id){
+						readInformesContratada(item.cliente.contratada.con_id);
+					}
 					$("#modal_"+seccion).modal("open");		
 			},
 			error: function(xhr, status, error) {

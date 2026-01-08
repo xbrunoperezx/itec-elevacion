@@ -21,7 +21,7 @@ var readInformes = function(id, totalParams){
 				var tableRow = "<tr>" +
 				"<td class='ancho50'>&nbsp;</td>" + 
 				"<td class='ancho50'>" + item.fecha_y + "</td>" + 
-				"<td class='ancho75'>" + item.informe + "</td>" +
+				"<td class='ancho100'>" + item.informe + "</td>" +
 				"<td class='ancho75'>" + item.contratada.cliente.rae + "</td>" + 
 				"<td class='ancho50'>" +
 					"<a seccion='pri' tipo='frm_editpri' data-id='" + item.id + "' class='editar_pri btn-floating btn-small waves-effect waves-light green' title='Editar informe'>" +
