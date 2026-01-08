@@ -209,7 +209,7 @@ var openContratada = function(seccion, cual, id){
 				    '</div>' +	
 					'<div class="input-field anchoFrm4">' +
 					'<select id="tipo" name="tipo">';
-					tipos_inspeccion = new Array("Primera inspección", "Segunda inspección", "Tercera inspección");
+					tipos_inspeccion = new Array("Inicial", "Primera inspección", "Segunda inspección", "Tercera inspección");
 				      	for (let clave in tipos_inspeccion){
 					      	if(item.cliente.contratada.tipo==clave){
 								frm_render += '<option value="'+ clave +'" selected>'+ tipos_inspeccion[clave] +'</option>';
