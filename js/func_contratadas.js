@@ -33,7 +33,7 @@ var readContratadas = function(id, totalParams){
 		        "<td>" + item.cliente.localidad + "</td>" +
 		        "<td class='ancho200'>" + item.cliente.mantenedor + "</td>" +
 		        "<td class='ancho150'>" + item.cliente.vencimiento + "</td>" +
-		        "<td class='ancho100'>";
+		        "<td class='ancho100'>"+
 					"<a class='btn-floating btn-small waves-effect waves-light ";
 					if(item.cliente.contratada.estado=="0") tableRow += "grey disabled' title='Inicial'>";
 					if(item.cliente.contratada.estado=="1") tableRow += "orange' title='Abierta'>";
