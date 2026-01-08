@@ -34,17 +34,17 @@ var readContratadas = function(id, totalParams){
 		        "<td class='ancho200'>" + item.cliente.mantenedor + "</td>" +
 		        "<td class='ancho150'>" + item.cliente.vencimiento + "</td>" +
 		        "<td class='ancho100'>";
-		        if(item.cliente.contratada.comunicada_dmy != "-"){
-							tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Comunicada el día " + item.cliente.contratada.comunicada_dmy + "'><i class='material-icons'>comment</i></a>";
-		        }else{
-		        	tableRow += "<a class='disabled btn-floating btn-small waves-effect waves-light orange' title='Comunicada el día " + item.cliente.contratada.comunicada_dmy + "'><i class='material-icons'>comment</i></a>";
-		        }
+					"<a class='btn-floating btn-small waves-effect waves-light ";
+					if(item.estado=="0") tableRow += "grey disabled' title='Inicial'>";
+					if(item.estado=="1") tableRow += "orange' title='Abierta'>";
+					if(item.estado=="2") tableRow += "green' title='Finalizada'>";
+					tableRow += item.estado_f +"</a>" +
 		        tableRow += "</td>" + 
-								"<td class='ancho50'>" +
-									"<a class='more_con btn-floating btn-small waves-effect waves-light red' title='Más' data-id='" + item.cliente.contratada.con_id + "'>" +
-										"<i class='material-icons'>more_vert</i>" +
-									"</a>" +
-								"</td>" +
+					"<td class='ancho50'>" +
+						"<a class='more_con btn-floating btn-small waves-effect waves-light red' title='Más' data-id='" + item.cliente.contratada.con_id + "'>" +
+							"<i class='material-icons'>more_vert</i>" +
+						"</a>" +
+					"</td>" +
 		      "</tr>";
 
 		      // Agregar la fila a la tabla
@@ -85,7 +85,7 @@ var readInformesContratada = function(id){
 				return;
 			}
 			var html = '<div class="right input-field botonesFormEdit"><button type="button" id="btn_refresh_informes" data-id="'+id+'" class="btn-floating waves-effect waves-light blue" title="Actualizar"><i class="material-icons">refresh</i></button></div>';
-			html += '<table class="highlight" id="table_informes_con"><thead><tr><th>Informe</th><th>Fecha</th><th>Hora</th><th>Resultado</th><th>Acude</th><th>Observaciones</th></tr></thead><tbody>';
+			html += '<table class="highlight" id="table_informes_con"><thead><tr><th>Informe</th><th>Fecha</th><th>Hora</th><th>Resultado</th><th>Próxima</th><th>Industria</th><th>Acude</th><th>Observaciones</th></tr></thead><tbody>';
 			datos.forEach(function(row){
 				var hora = (row.hora_ini||'') + (row.hora_fin ? (' - '+row.hora_fin) : '');
 				html += '<tr>'+
@@ -93,6 +93,8 @@ var readInformesContratada = function(id){
 					'<td>'+row.fecha+'</td>'+
 					'<td>'+hora+'</td>'+
 					'<td>'+row.resultado_fc+'</td>'+
+					'<td>'+row.proxima_dmy+'</td>'+
+					'<td>'+row.industria_dmy+'</td>'+
 					'<td>'+row.acude+'</td>'+
 					'<td>'+row.observaciones+'</td>'+
 					'</tr>';
@@ -258,12 +260,7 @@ var openContratada = function(seccion, cual, id){
 				      '<label for="id_usuarios" class="active">Contratada por</label>' +
 				    '</div>' +			
 						'<div class="input-field anchoFrm2">' +
-				      '<input type="text" id="estado_actual" name="estado_actual" value="';
-
-							if(item.cliente.contratada.estado==0) frm_render  += 'Inicial';
-							if(item.cliente.contratada.estado==1) frm_render  += 'Abierta';
-							if(item.cliente.contratada.estado==2) frm_render  += 'Finalizada';
-				      frm_render  += '" disabled>' +
+				      '<input type="text" id="estado_actual" name="estado_actual" value="' + item.cliente.contratada.estado_f + '" disabled>' +
 				      '<label for="estado_actual" class="active">Estado</label>' +
 				    '</div>' +		
 				    '<div class="input-field">' +

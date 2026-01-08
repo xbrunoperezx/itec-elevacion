@@ -210,6 +210,11 @@ while ($row = mysqli_fetch_assoc($result)) {
   }else{
     $item['industria_dmy'] = "-";
   }
+  if($item['proxima']!=null){
+    $item['proxima_dmy'] = date("d-m-Y", strtotime($item['proxima']));
+  }else{
+    $item['proxima_dmy'] = "-";
+  }
   if($item['resultado']==0) $item['resultado_f'] = "-";
   if($item['resultado']==1) $item['resultado_f'] = "F";
   if($item['resultado']==2) $item['resultado_f'] = "FL";

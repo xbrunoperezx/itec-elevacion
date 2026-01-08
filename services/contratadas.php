@@ -140,6 +140,17 @@ while ($row = mysqli_fetch_assoc($result)) {
                 $usuario_nombre = (isset($usuarios[$row[$key]]) && $usuarios[$row[$key]] != null) ? $usuarios[$row[$key]] : '-';
                 $contratada['usuario'] = $usuario_nombre;
             }
+            if($key=="estado"){
+                if($row[$key]==0){
+                    $contratada['estado_f'] = "Inicial";
+                }else if($row[$key]==1){
+                    $contratada['estado_f'] = "Abierta";
+                }else if($row[$key]==2){
+                    $contratada['estado_f'] = "Finalizada";
+                }else{
+                    $contratada['estado_f'] = "-";
+                }
+            }
             $contratada[$key] = $row[$key];
         }
     }
