@@ -203,6 +203,7 @@ while ($row = mysqli_fetch_assoc($result)) {
   $item['comentarios_mod'] = isset($row['comentarios_mod']) ? $row['comentarios_mod'] : null;
   $item['id_revision'] = isset($row['id_revision']) ? $row['id_revision'] : null;
   $item['comunicada'] = isset($row['comunicada']) ? $row['comunicada'] : "-";
+  $item['comunicada_dmy'] = isset($row['comunicada']) && $row['comunicada'] != "0000-00-00" ? date("d-m-Y", strtotime($row['comunicada'])) : "-";
   $item['comunicada_aquien'] = isset($row['comunicada_aquien']) ? $row['comunicada_aquien'] : "";
   $item['comunicada_como'] = isset($row['comunicada_como']) ? $row['comunicada_como'] : "";
 

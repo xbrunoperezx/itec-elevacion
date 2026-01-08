@@ -90,12 +90,12 @@ var readInformesContratada = function(id){
 				var hora = (row.hora_ini||'') + (row.hora_fin ? (' - '+row.hora_fin) : '');
 				html += '<tr>'+
 					'<td>'+row.informe+'</td>'+
-					'<td>'+row.fecha+'</td>'+
+					'<td>'+row.fecha_dmy+'</td>'+
 					'<td>';
 					// Icono comunicada
 					if(row.comunicada != "-"){
 						html += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Comunicada el día " + 
-						row.comunicada + " a " + row.comunicada_aquien + ", " + row.comunicada_como + 
+						row.comunicada_dmy + " a " + row.comunicada_aquien + ", " + row.comunicada_como + 
 						"'><i class='material-icons'>comment</i></a>";
 					}else{
 						html += "<a class='disabled btn-floating btn-small waves-effect waves-light orange disabled' title=''><i class='material-icons'>comment</i></a>";
