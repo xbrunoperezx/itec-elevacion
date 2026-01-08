@@ -4,6 +4,7 @@
 $__post_defaults = [
   'filtro_total' => 15,
   'filtro_id' => '',
+  'filtro_id_contratada' => '',
   'filtro_direccion' => '',
   'filtro_nombre' => '',
   'filtro_rae' => '',
@@ -20,7 +21,7 @@ foreach ($__post_defaults as $k => $v) {
 
 $lim = $_POST["filtro_total"];
 $id = intval($_POST["filtro_id"]);
-$id_contratada = intval($_POST["filtro_id_contratada"]);
+$id_contratada = isset($_POST["filtro_id_contratada"]) ? intval($_POST["filtro_id_contratada"]) : '';
 
 include("conn_bbdd.php");
 // $link = mysqli_connect("89.46.111.188", "Sql1396152", "5i4w182228", "Sql1396152_2");
