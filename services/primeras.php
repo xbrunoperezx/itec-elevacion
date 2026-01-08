@@ -240,7 +240,12 @@ while ($row = mysqli_fetch_assoc($result)) {
   $item['id_revision'] = isset($row['id_revision']) ? $row['id_revision'] : null;
 
   if($item['fecha']!=null) $item['fecha_dmy'] = date("d-m-Y", strtotime($item['fecha']));
-  if($item['industria']!=null) $item['industria_dmy'] = date("d-m-Y", strtotime($item['industria']));
+  if($item['fecha']!=null) $item['fecha_y'] = date("Y", strtotime($item['fecha']));
+  if($item['industria']!=null){
+    $item['industria_dmy'] = date("d-m-Y", strtotime($item['industria']));
+  }else{
+    $item['industria_dmy'] = "-";
+  }
   if($item['resultado']==0) $item['resultado_f'] = "-";
   if($item['resultado']==1) $item['resultado_f'] = "F";
   if($item['resultado']==2) $item['resultado_f'] = "FL";

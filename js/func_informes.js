@@ -20,7 +20,7 @@ var readInformes = function(id, totalParams){
 				// Construir la fila de la tabla con los datos
 				var tableRow = "<tr>" +
 				"<td class='ancho50'>&nbsp;</td>" + 
-				"<td class='ancho50'>" + item.fecha_dmy + "</td>" + 
+				"<td class='ancho50'>" + item.fecha_y + "</td>" + 
 				"<td class='ancho75'>" + item.informe + "</td>" +
 				"<td class='ancho75'>" + item.contratada.cliente.rae + "</td>" + 
 				"<td class='ancho50'>" +
@@ -63,7 +63,7 @@ var readInformes = function(id, totalParams){
 					tableRow += "<a class='disabled btn-floating btn-small waves-effect waves-light red' title='Sin comenzar...'><i class='material-icons'>access_time</i></a>";
 				}	        
 				tableRow += "</td>" + 
-				"<td class='ancho150'>" + item.fecha + "</td>" +
+				"<td class='ancho150'>" + item.fecha_dmy + "</td>" +
 				"<td class='ancho100'>" +
 					"<a class='btn-floating btn-small waves-effect waves-light grey' title='Inspector: " + item.usuario + "'>" +
 					item.usuario_ab +
