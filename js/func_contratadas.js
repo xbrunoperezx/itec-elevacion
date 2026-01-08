@@ -17,8 +17,8 @@ var readContratadas = function(id, totalParams){
 		    });
 		    var totalResultados = 0;
 		    $.each(datos, function(index, item) {
-		      // Construir la fila de la tabla con los datos
-		      var tableRow = "<tr>" +
+		      	// Construir la fila de la tabla con los datos
+		      	var tableRow = "<tr>" +
 		        "<td class='ancho50'>&nbsp;</td>" +
 		        "<td class='ancho50'>" + item.cliente.contratada.num_control + "</td>" +
 		        "<td class='ancho50'>-</td>" +
