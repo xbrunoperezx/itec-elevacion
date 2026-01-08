@@ -39,12 +39,12 @@ var readContratadas = function(id, totalParams){
 					if(item.estado=="1") tableRow += "orange' title='Abierta'>";
 					if(item.estado=="2") tableRow += "green' title='Finalizada'>";
 					tableRow += item.estado_f +"</a>" +
-		        tableRow += "</td>" + 
-					"<td class='ancho50'>" +
-						"<a class='more_con btn-floating btn-small waves-effect waves-light red' title='Más' data-id='" + item.cliente.contratada.con_id + "'>" +
-							"<i class='material-icons'>more_vert</i>" +
-						"</a>" +
-					"</td>" +
+				"</td>" + 
+				"<td class='ancho50'>" +
+					"<a class='more_con btn-floating btn-small waves-effect waves-light red' title='Más' data-id='" + item.cliente.contratada.con_id + "'>" +
+						"<i class='material-icons'>more_vert</i>" +
+					"</a>" +
+				"</td>" +
 		      "</tr>";
 
 		      // Agregar la fila a la tabla
