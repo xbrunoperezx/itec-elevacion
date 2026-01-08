@@ -121,7 +121,7 @@ var readInformesContratada = function(id){
 						html += "<a class='disabled btn-floating btn-small waves-effect waves-light red' title='Sin comenzar...'><i class='material-icons'>access_time</i></a>";
 					}	        
 					html += '</td>'+
-					'<td>';
+					'<td>' +
 					"<a class='btn-floating btn-small waves-effect waves-light grey' title='Inspector: " + row.usuario + "'>" +
 					row.usuario_ab +
 					"</a>&nbsp;" +
