@@ -50,7 +50,7 @@ if(isset($_POST['id']) && $_POST['id'] !== ''){
     // Usar la fecha actual para nuevas contratadas
     $fecha_ins = date('Y-m-d');
     
-    $sql = "INSERT INTO contratadas (id_cliente,fecha,id_usuarios,estado,num_control) VALUES ('{$id_cliente}','{$fecha_ins}','{$id_usuarios}',0,0)";
+    $sql = "INSERT INTO contratadas (id_cliente,fecha,id_usuarios,tipo,estado,num_control) VALUES ('{$id_cliente}','{$fecha_ins}','{$id_usuarios}','{$tipo}',0,0)";
 
     if (mysqli_query($link, $sql)) {
         echo "OK";
