@@ -231,22 +231,6 @@ var openContratada = function(seccion, cual, id){
 			    '</div>' +	
 
 			    '<div id="tab3_con" class="col s12">' + 	    
-				    '<div class="input-field anchoFrm4">';
-				    if(item.vencimiento!="0000-00-00"){
-				    	frm_render+='<input type="date" id="comunicada" name="comunicada" value="' + item.cliente.contratada.comunicada + '">';
-						}else{
-							frm_render+='<input type="date" id="comunicada" name="comunicada">';
-						}
-					      frm_render+='<label for="comunicada" class="active">Fecha comunicación</label>' +
-					  '</div>' +
-				    '<div class="input-field anchoFrm2">' +
-				      '<input type="text" id="comunicada_aquien" name="comunicada_aquien" value="' + item.cliente.contratada.comunicada_aquien + '">' +
-				      '<label for="comunicada_aquien" class="active">¿A quién?</label>' +
-				    '</div>' +
-				    '<div class="input-field anchoFrm2">' +
-				      '<input type="text" id="comunicada_como" name="comunicada_como" value="' + item.cliente.contratada.comunicada_como + '">' +
-				      '<label for="comunicada_como" class="active">¿Cómo se comunicó?</label>' +
-				    '</div>' +      
 			    '</div>' +	
 
 			    '<div id="tab4_con" class="col s12">' + 

@@ -98,7 +98,7 @@ if($id==""){
   if($_POST['filtro_pendientes']=="true"){
     $where_clause .= ' AND resultado=0';
   }
-  $columnas = array('inf.*','cli.id AS cli_id','cli.rae','cli.nombre','cli.direccion','cli.localidad','cli.municipio','cli.cp','cli.provincia','cli.id_campo','cli.id_mantenedor','cli.id_administrador','cli.quien_contrata','cli.telefono','cli.telefono2','cli.email','cli.tiene_datos','cli.id_tarifa AS cli_id_tarifa','cli.id_formapago AS cli_id_formapago','cli.vencimiento','cli.cada','cli.contratada','cli.observaciones AS cli_observaciones','con.id AS con_id','con.id_cliente','con.fecha AS con_fecha','con.id_usuarios','con.informe','con.tipo','con.id_informe','con.estado AS con_estado','con.num_control','con.observaciones AS con_observaciones','con.id_factura','con.nocobrar','con.precio','con.id_formapago AS con_id_formapago','con.id_tarifa AS con_id_tarifa','con.comunicada','con.enviada_cobrar','con.comunicada_aquien','con.comunicada_como','con.contratada_como');
+  $columnas = array('inf.*','cli.id AS cli_id','cli.rae','cli.nombre','cli.direccion','cli.localidad','cli.municipio','cli.cp','cli.provincia','cli.id_campo','cli.id_mantenedor','cli.id_administrador','cli.quien_contrata','cli.telefono','cli.telefono2','cli.email','cli.tiene_datos','cli.vencimiento','cli.cada','cli.contratada','cli.observaciones AS cli_observaciones','con.id AS con_id','con.id_cliente','con.fecha AS con_fecha','con.id_usuarios','con.informe','con.tipo','con.id_informe','con.estado AS con_estado','con.num_control','con.observaciones AS con_observaciones','con.id_factura','con.nocobrar','con.precio','con.id_formapago AS con_id_formapago','con.enviada_cobrar');
 
   $columnas = implode(',', $columnas);
   $sql = "SELECT {$columnas} FROM informes inf";
@@ -177,7 +177,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
   $cliente = array();
   foreach (array_keys($row) as $key) {
-      if (in_array($key, ["cli_id","rae","nombre","direccion","localidad","municipio","cp","provincia","id_campo","id_mantenedor","id_administrador","quien_contrata","telefono","telefono2","email","tiene_datos","cli_id_tarifa","cli_id_formapago","vencimiento","cada","contratada","cli_observaciones"])) {
+      if (in_array($key, ["cli_id","rae","nombre","direccion","localidad","municipio","cp","provincia","id_campo","id_mantenedor","id_administrador","quien_contrata","telefono","telefono2","email","tiene_datos","vencimiento","cada","contratada","cli_observaciones"])) {
           if($key=="id_mantenedor"){
               if(isset($mantenedores[$row[$key]])){
                   $cliente['mantenedor'] = $mantenedores[$row[$key]];
@@ -198,16 +198,7 @@ while ($row = mysqli_fetch_assoc($result)) {
   }
   $contratada = array();
   foreach (array_keys($row) as $key) {
-      if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","informe","tipo","id_informe","estado","num_control","con_observaciones","id_factura","nocobrar","precio","con_id_formapago","con_id_tarifa","comunicada","enviada_cobrar","comunicada_aquien","comunicada_como","contratada_como"])) {
-          if($key=="comunicada"){
-              if($row[$key]!="0000-00-00"){
-                  $row[$key] = $row[$key];
-                  $contratada["comunicada_dmy"] = date("d-m-Y", strtotime($row[$key]));
-              }else{
-                  $row[$key] = "-";
-                  $contratada["comunicada_dmy"] = "-";
-              }
-          }
+      if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","informe","tipo","id_informe","estado","num_control","con_observaciones","id_factura","nocobrar","precio","con_id_formapago","enviada_cobrar"])) {
           if($key=="id_usuarios"){
               if($usuarios[$row[$key]]!=null){
                   $row[$key] = $usuarios[$row[$key]];
