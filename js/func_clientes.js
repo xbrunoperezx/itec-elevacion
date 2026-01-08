@@ -211,6 +211,7 @@ var readContratadasClientes = function(id){
 				tr += '<td>' + (num_control || '') + '</td>';
 				tr += '<td>' + (usuario || '') + '</td>';
 				tr += '<td>' + (estado || '') + '</td>';
+				tr += '<td><a class="btn-floating btn-small waves-effect waves-light grey" title="Abrir en otra pestaña"><i class="material-icons">open_in_new</i></a></td>';
 				tr += '</tr>';
 
 				$("#table_cli_con tbody").append(tr);
@@ -776,6 +777,7 @@ var openCliente = function(seccion, cual, id){
 					'<th>Núm. Control</th>' +
 					'<th>Usuario</th>' +
 					'<th>Estado</th>' +
+					'<th>Opciones</th>' +
 					'</tr>' +
 					'</thead>' +
 					'<tbody></tbody>' +
