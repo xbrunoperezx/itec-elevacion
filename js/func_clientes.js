@@ -777,7 +777,7 @@ var openCliente = function(seccion, cual, id){
 					'<th>Núm. Control</th>' +
 					'<th>Usuario</th>' +
 					'<th>Estado</th>' +
-					'<th>Opciones</th>' +
+					'<th></th>' +
 					'</tr>' +
 					'</thead>' +
 					'<tbody></tbody>' +
