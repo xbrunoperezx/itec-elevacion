@@ -54,7 +54,7 @@ if (!$link) {
     }
 
 // Columnas usadas en las consultas (definidas aquí para usarlas en ambos casos)
-$columnas = array('inf.*','cli.id AS cli_id','cli.rae','cli.nombre','cli.direccion','cli.localidad','cli.municipio','cli.cp','cli.provincia','cli.id_campo','cli.id_mantenedor','cli.id_administrador','cli.quien_contrata','cli.telefono','cli.telefono2','cli.email','cli.tiene_datos','cli.vencimiento','cli.cada','cli.contratada','cli.observaciones AS cli_observaciones','con.id AS con_id','con.id_cliente','con.fecha AS con_fecha','con.estado AS con_estado','con.num_control','con.observaciones AS con_observaciones','con.nocobrar','con.enviada_cobrar');
+$columnas = array('inf.*','cli.id AS cli_id','cli.rae','cli.nombre','cli.direccion','cli.localidad','cli.municipio','cli.cp','cli.provincia','cli.id_campo','cli.id_mantenedor','cli.id_administrador','cli.quien_contrata','cli.telefono','cli.telefono2','cli.email','cli.tiene_datos','cli.vencimiento','cli.cada','cli.contratada','cli.observaciones AS cli_observaciones','con.id AS con_id','con.id_cliente','con.fecha AS con_fecha','con.estado AS con_estado','con.num_control','con.observaciones AS con_observaciones');
 
 $columnas = implode(',', $columnas);
 
@@ -171,7 +171,7 @@ while ($row = mysqli_fetch_assoc($result)) {
   }
   $contratada = array();
   foreach (array_keys($row) as $key) {
-    if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","tipo","estado","num_control","con_observaciones","nocobrar","enviada_cobrar"])) {
+    if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","tipo","estado","num_control","con_observaciones"])) {
       $contratada[$key] = $row[$key];
     }
   }
@@ -247,8 +247,6 @@ while ($row = mysqli_fetch_assoc($result)) {
   $contratada_obj['estado'] = isset($row['con_estado']) ? $row['con_estado'] : (isset($row['con_estado']) ? $row['con_estado'] : null);
   $contratada_obj['num_control'] = isset($row['num_control']) ? $row['num_control'] : null;
   $contratada_obj['observaciones'] = isset($row['con_observaciones']) ? $row['con_observaciones'] : null;
-  $contratada_obj['enviada_cobrar'] = isset($row['enviada_cobrar']) ? $row['enviada_cobrar'] : null;
-  $contratada_obj['nocobrar'] = isset($row['nocobrar']) ? $row['nocobrar'] : 0;
 
   // Cliente dentro de contratada: mapear campos quitando prefijo si existe
   $cliente_obj = array();
