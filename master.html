@@ -198,10 +198,26 @@
 
             // creamos una condicional para que no borremos por error que nos aparezca un mensaje de confirmacion
             if(confirm('¿Seguro que quieres eliminar este cliente?')){
-                console.log('CONFIRMANDO -> eliminar cliente con ID :', id)
-            }else
-            console.log('Cancelado ', )
-          });
+                $.ajax({
+                    type: "POST",
+                    url: "services/clientes_delete.php",
+                    data: { id: id},
+                    dataType: "json",
+                    success: function(response){
+                      if(response.success){
+                        alert(response.message);
+                        location.reload();
+                      } else {
+                        alert(response. message);
+                      }
+                    }
+                });
+            } else {
+                console.log("Cancelado");
+            }
+         });       
+           
+          
         
         
         
