@@ -325,22 +325,6 @@ var openContratada = function(seccion, cual, id){
 				      frm_render+='</select>' + 
 				      '<label for="nocobrar">¿Facturar?</label>' +
 				    '</div><br>' +		
-				    '<div class="input-field anchoFrm4">' +
-				      '<input type="text" id="precio" name="precio" value="' + item.cliente.contratada.precio + '">' +
-				      '<label for="precio" class="active">Precio de la inspección</label>' +
-				    '</div>' +
-				    '<div class="input-field anchoFrm2">' +
-							'<select id="con_id_formapago" name="con_id_formapago">';
-				      	for (let clave in formas_pago){
-					      	if(item.cliente.contratada.con_id_formapago==clave){
-					      		frm_render += '<option value="'+ clave +'" selected>'+ formas_pago[clave] +'</option>';
-					      	}else{
-					      		frm_render += '<option value="'+ clave +'">'+ formas_pago[clave] +'</option>';
-					      	}
-				      	};
-				      frm_render+='</select>' + 
-				      '<label for="con_id_formapago">Forma de pago</label>' +
-				    '</div><br>' +  
 				    '<div class="input-field anchoFrm2">' +
 				      '<input type="text" id="con_id_tarifa" name="con_id_tarifa" value="' + item.cliente.contratada.con_id_tarifa + '">' +
 				      '<label for="con_id_tarifa" class="active">Tarifa</label>' +
@@ -351,14 +335,6 @@ var openContratada = function(seccion, cual, id){
 				      '<input type="text" id="id" name="id" value="' + item.cliente.contratada.con_id + '" disabled>' +
 				      '<label for="id" class="active">ID Contratada BBDD</label>' +
 				    '</div>' +     
-				    '<div class="input-field">' +
-				      '<input type="text" id="con_id_formas_pago" name="con_id_formas_pago" value="' + item.cliente.contratada.con_id_formas_pago + '" disabled>' +
-				      '<label for="con_id_formas_pago" class="active">ID Forma pago BBDD</label>' +
-				    '</div>' +   
-				    '<div class="input-field">' +
-				      '<input type="text" id="id_tipo" name="id_tipo" value="' + item.cliente.contratada.tipo + '" disabled>' +
-				      '<label for="id_tipo" class="active">ID Tipo inspección BBDD</label>' +
-				    '</div>' +   
 			    '</div>' +	
 
  					'</form>';
