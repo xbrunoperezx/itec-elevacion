@@ -2,14 +2,17 @@
 include("conn_bbdd.php");
 
 // respuesta por defecto
-$response[
+$response(
     "success" => false,
     "message" => "Error desconocido"
-];
+
+);
+    
+
 
 // comprobamos que nos llega el ID
 if (!isset($_POST['id'])){
-    $response= ["message"]= "ID no recibido";
+    $response ["message"]= "ID no recibido";
     echo json_encode($response);
     exit;
 }
@@ -23,10 +26,10 @@ $sql= "DELETE FROM clientes WHERE id= $id";
 
 // ejecutamos al consulta query
 if(mysqli_query($link, $sql)) {
-    $response= ["success"] = true;
-    $response= ["message"] = "Cliente eliminado correctamente";
+    $response["success"] = true;
+    $response["message"] = "Cliente eliminado correctamente";
 } else {
-    $response= ["messagge"] ="Error al eliminar cliente";
+    $response["messagge"] = "Error al eliminar cliente";
 }
 
 // cerramos la conexion con la DB
