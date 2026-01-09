@@ -67,10 +67,10 @@ if (!$link) {
 
 // Si viene filtro por id_cliente, filtrar por con.id_cliente
 if($filtro_id_cliente!=""){
-    $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.estado, con.num_control, con.observaciones AS con_observaciones, con.nocobrar, con.enviada_cobrar FROM clientes c JOIN contratadas con ON c.id = con.id_cliente WHERE con.id_cliente=" . $filtro_id_cliente;
+    $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.estado, con.num_control, con.observaciones AS con_observaciones FROM clientes c JOIN contratadas con ON c.id = con.id_cliente WHERE con.id_cliente=" . $filtro_id_cliente;
 }else if($id==""){
     // Define la consulta SQL
-    $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.estado, con.num_control, con.observaciones AS con_observaciones, con.nocobrar, con.enviada_cobrar FROM clientes c JOIN contratadas con ON c.id = con.id_cliente";
+    $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.estado, con.num_control, con.observaciones AS con_observaciones FROM clientes c JOIN contratadas con ON c.id = con.id_cliente";
 
     $where = array();
     if (!empty($_POST['filtro_rae'])) {
@@ -96,7 +96,7 @@ if($filtro_id_cliente!=""){
     }
     $sql .= " ORDER BY id DESC LIMIT 0,{$lim}";
 }else{
-    $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.estado, con.num_control, con.observaciones AS con_observaciones, con.nocobrar, con.enviada_cobrar FROM clientes c JOIN contratadas con ON c.id = con.id_cliente WHERE con.id=$id";
+    $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.estado, con.num_control, con.observaciones AS con_observaciones FROM clientes c JOIN contratadas con ON c.id = con.id_cliente WHERE con.id=$id";
 }
 
 // Ejecuta la consulta
@@ -134,7 +134,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     }
     $contratada = array();
     foreach (array_keys($row) as $key) {
-        if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","estado","num_control","con_observaciones","nocobrar","enviada_cobrar"])) {
+        if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","estado","num_control","con_observaciones"])) {
             if($key=="id_usuarios"){
                 // Mantener el id numérico en 'id_usuarios', pero añadir el nombre en 'usuario'
                 $usuario_nombre = (isset($usuarios[$row[$key]]) && $usuarios[$row[$key]] != null) ? $usuarios[$row[$key]] : '-';
