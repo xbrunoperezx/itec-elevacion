@@ -189,6 +189,39 @@ var openInforme = function(seccion, cual, id){
 			    	"data" : item
 			    });
 				console.log(item);
+				var title = "Editar informe " + item.informe + "| ";
+			    title+= " - RAE: "+item.contratada.cliente.rae;
+					$("#modal_"+seccion).find(".modal_txt_title").text(title);
+					$("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
+					$("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
+					var frm_tabs = '<ul class="tabs modalEditar">' + 
+						'<li class="tab col s3"><a class="tablink1" href="#tab1_con" title="Datos"><i class="material-icons left">home</i></a></li>' + 
+						'<li class="tab col s3"><a class="active tablink2" href="#tab2_con" title="Contratación"><i class="material-icons left">business</i></a></a></li>' + 
+						'<li class="tab col s3"><a class="tablink3" href="#tab3_con" title="Inspección"><i class="material-icons left">assignment</i></a></a></li>' + 
+						'<li class="tab col s3"><a class="tablink4" href="#tab4_con" title="Otros"><i class="material-icons left">settings</i></a></a></li>' + 
+					'</ul>';
+					var frm_render = '<form id="informe_frm_editar">' + 
+
+					'<div id="tab1_con" class="col s12">' + 
+			    	'</div>' +	
+
+					'<div id="tab2_con" class="active col s12">' +  
+			    	'</div>' +	
+
+					'<div id="tab3_con" class="col s12">' + 	    
+					'</div>' +	
+			    	'<div id="tab4_con" class="col s12">' + 
+			    	'</div>' +	
+
+ 					'</form>';
+				  $("#modal_"+seccion).find(".contentTabs").html(frm_tabs);
+				  $("#modal_"+seccion).find(".contentForm").html(frm_render);
+				  $("#modal_"+seccion).find('.tabs').tabs();
+				  $("#modal_"+seccion).modal({
+						dismissible: false
+					});
+					// Abrir modal
+					$("#modal_"+seccion).modal("open");		
 			},
 			error: function(xhr, status, error) {
 				// Mostrar un mensaje de error en el centro de la pantalla
