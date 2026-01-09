@@ -189,7 +189,7 @@ var openInforme = function(seccion, cual, id){
 			    	"data" : item
 			    });
 				console.log(item);
-				var title = "&nbsp;Editar informe " + item.informe + "| RAE: "+item.contratada.cliente.rae;
+				var title = " Editar informe " + item.informe + "| RAE: "+item.contratada.cliente.rae;
 					$("#modal_"+seccion).find(".modal_txt_title").text(title);
 					$("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
 					$("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");

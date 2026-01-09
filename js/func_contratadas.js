@@ -232,7 +232,7 @@ var openContratada = function(seccion, cual, id){
 		    		"data" : item
 		    	});
 			    formas_pago = JSON.parse(data)["formas_pago"];
-			    var title = "&nbsp;Editar contratada";
+			    var title = " Editar contratada";
 			    title+= " - RAE: "+item.cliente.rae;
 					$("#modal_"+seccion).find(".modal_txt_title").text(title);
 					$("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
