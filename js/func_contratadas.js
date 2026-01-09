@@ -313,22 +313,6 @@ var openContratada = function(seccion, cual, id){
 			    '</div>' +	
 
 			    '<div id="tab4_con" class="col s12">' + 
-				    '<div class="input-field anchoFrm4">' +
-				      '<select id="nocobrar" name="nocobrar">';
-				      	if(item.cliente.contratada.nocobrar==0){
-				      		frm_render += '<option value="0" selected>Facturar</option>';
-				      		frm_render += '<option value="1">No cobrar</option>';
-				      	}else if(item.cliente.contratada.nocobrar==1){
-									frm_render += '<option value="0">Facturar</option>';
-									frm_render += '<option value="1" selected>No cobrar</option>';
-				      	}
-				      frm_render+='</select>' + 
-				      '<label for="nocobrar">¿Facturar?</label>' +
-				    '</div><br>' +		
-				    '<div class="input-field anchoFrm2">' +
-				      '<input type="text" id="con_id_tarifa" name="con_id_tarifa" value="' + item.cliente.contratada.con_id_tarifa + '">' +
-				      '<label for="con_id_tarifa" class="active">Tarifa</label>' +
-				    '</div>' +			
 			    '</div>' +	
 			    '<div id="tab5_con" class="col s12">' + 
 				    '<div class="input-field">' +
@@ -341,9 +325,6 @@ var openContratada = function(seccion, cual, id){
 				  $("#modal_"+seccion).find(".contentTabs").html(frm_tabs);
 				  $("#modal_"+seccion).find(".contentForm").html(frm_render);
 				  $('select#mantenedor_con').formSelect();
-				  $('select#tipo').formSelect();
-				  $('select#nocobrar').formSelect();
-				  $('select#con_id_formapago').formSelect();
 				  $("#modal_"+seccion).find('.tabs').tabs();
 				  $("#modal_"+seccion).modal({
 						dismissible: false
