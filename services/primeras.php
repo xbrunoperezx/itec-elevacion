@@ -198,6 +198,7 @@ while ($row = mysqli_fetch_assoc($result)) {
   $item['gps_latitud'] = isset($row['latitud']) ? $row['latitud'] : (isset($row['gps_latitud']) ? $row['gps_latitud'] : null);
   $item['gps_longitud'] = isset($row['longitud']) ? $row['longitud'] : (isset($row['gps_longitud']) ? $row['gps_longitud'] : null);
   $item['enviada_cliente'] = isset($row['enviada_cliente']) ? $row['enviada_cliente'] : null;
+  $item['enviada_cliente_dmy'] = isset($row['enviada_cliente']) && $row['enviada_cliente'] != "0000-00-00" ? date("d-m-Y", strtotime($row['enviada_cliente'])) : null;
   $item['esmodificacion'] = isset($row['esmodificacion']) ? $row['esmodificacion'] : 0;
   $item['fecha_modificacion'] = isset($row['fecha_modificacion']) ? $row['fecha_modificacion'] : null;
   $item['comentarios_mod'] = isset($row['comentarios_mod']) ? $row['comentarios_mod'] : null;

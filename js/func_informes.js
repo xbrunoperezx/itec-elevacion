@@ -80,7 +80,7 @@ var readInformes = function(id, totalParams){
 				"<td class='ancho150'>";
 				if(item.resultado>0){	
 					if(item.enviada_cliente!=null && item.enviada_cliente!=""){
-						tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Enviada al cliente el día " + item.enviada_cliente + "'><i class='material-icons'>send</i></a>&nbsp;";
+						tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Enviada al cliente el día " + item.enviada_cliente_dmy + "'><i class='material-icons'>send</i></a>&nbsp;";
 					}else{
 						tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange disabled' title='Pendiente de envío al cliente'><i class='material-icons'>send</i></a>&nbsp;";
 					}

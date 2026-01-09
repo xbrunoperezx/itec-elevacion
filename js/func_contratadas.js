@@ -138,7 +138,7 @@ var readInformesContratada = function(id){
 					'<td>'+row.observaciones+'</td>'+
 					'<td>';
 					if(row.enviada_cliente!=null && row.enviada_cliente!=""){
-						html += '<a class="btn-floating btn-small waves-effect waves-light orange" title="Enviada al cliente el día ' + row.enviada_cliente + '"><i class="material-icons">send</i></a>&nbsp;';
+						html += '<a class="btn-floating btn-small waves-effect waves-light orange" title="Enviada al cliente el día ' + row.enviada_cliente_dmy + '"><i class="material-icons">send</i></a>&nbsp;';
 					}else{
 						html += '<a class="btn-floating btn-small waves-effect waves-light orange disabled" title="Pendiente de envío al cliente"><i class="material-icons">send</i></a>&nbsp;';
 					}
