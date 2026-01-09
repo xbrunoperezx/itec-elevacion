@@ -643,7 +643,7 @@ var openCliente = function(seccion, cual, id){
 					$("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
 					$("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
 					var frm_tabs = '<ul class="tabs modalEditar">' + 
-						'<li class="tab col s2"><a class="active tablink1" href="#tab1_cli" title="Ascensor"><i class="material-icons left">code</i></a></li>' + 
+						'<li class="tab col s2"><a class="active tablink1" href="#tab1_cli" title="Ascensor"><i class="material-icons left">home</i></a></li>' + 
 						'<li class="tab col s2"><a class="tablink2" href="#tab2_cli" title="Ubicación"><i class="material-icons left">location_on</i></a></li>' + 
 						'<li class="tab col s2"><a class="tablink3" href="#tab3_cli" title="Contratación"><i class="material-icons left">account_box</i></a></li>' + 
 						'<li class="tab col s2"><a class="tablink4" href="#tab4_cli" title="Datos Facturación"><i class="material-icons left">euro_symbol</i></a></li>' + 
