@@ -79,6 +79,11 @@ var readInformes = function(id, totalParams){
 				"<td class='ancho150'>" + item.industria_dmy + "</td>" +
 				"<td class='ancho150'>";
 				if(item.resultado>0){	
+					if(item.enviada_cliente!=null && item.enviada_cliente!=""){
+						tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Enviada al cliente el día " + item.enviada_cliente + "'><i class='material-icons'>send</i></a>";
+					}else{
+						tableRow += "<a class='btn-floating btn-small waves-effect waves-light gray' title='Pendiente de envío al cliente'><i class='material-icons'>send</i></a>";
+					}
 					tableRow += "<a seccion='pri' tipo='sheet_pri' data-id='" + item.id + "' class='sheet_pri btn-floating btn-small waves-effect waves-light grey darken-1' title='Hoja de campo'>" +
 						"<i class='material-icons'>assignment</i>" +
 					"</a>&nbsp;" +
