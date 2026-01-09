@@ -2,7 +2,7 @@
 include("conn_bbdd.php");
 
 // respuesta por defecto
-$response(
+$response = array(
     "success" => false,
     "message" => "Error desconocido"
 
