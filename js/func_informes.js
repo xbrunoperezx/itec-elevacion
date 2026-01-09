@@ -194,24 +194,41 @@ var openInforme = function(seccion, cual, id){
 					$("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
 					$("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
 					var frm_tabs = '<ul class="tabs modalEditar">' + 
-						'<li class="tab col s3"><a class="tablink1" href="#tab1_con" title="Datos"><i class="material-icons left">home</i></a></li>' + 
-						'<li class="tab col s3"><a class="active tablink2" href="#tab2_con" title="Contratación"><i class="material-icons left">business</i></a></a></li>' + 
-						'<li class="tab col s3"><a class="tablink3" href="#tab3_con" title="Inspección"><i class="material-icons left">assignment</i></a></a></li>' + 
-						'<li class="tab col s3"><a class="tablink4" href="#tab4_con" title="Otros"><i class="material-icons left">settings</i></a></a></li>' + 
+						'<li class="tab col s3"><a class="tablink1" href="#tab1_pri" title="Datos"><i class="material-icons left">looks_one</i></a></li>' + 
+						'<li class="tab col s3"><a class="active tablink2" href="#tab2_pri" title="Instalación"><i class="material-icons left">business</i></a></a></li>' + 
+						'<li class="tab col s3"><a class="tablink3" href="#tab3_pri" title="Ascensor"><i class="material-icons left">code</i></a></a></li>' + 
+						'<li class="tab col s3"><a class="tablink4" href="#tab4_pri" title="Mediciones realizadas"><i class="material-icons left">assignment</i></a></a></li>' + 
+						'<li class="tab col s3"><a class="tablink5" href="#tab5_pri" title="Checking"><i class="material-icons left">assignment_returned</i></a></a></li>' + 
+						'<li class="tab col s3"><a class="tablink6" href="#tab6_pri" title="Defectos detectados"><i class="material-icons left">assignment_late</i></a></a></li>' + 
+						'<li class="tab col s3"><a class="tablink7" href="#tab7_pri" title="Equipos"><i class="material-icons left">business_center</i></a></a></li>' + 
+						'<li class="tab col s3"><a class="tablink8" href="#tab8_pri" title="Resultado"><i class="material-icons left">assignment_turned_in</i></a></a></li>' + 
+						'<li class="tab col s3"><a class="tablink9" href="#tab9_pri" title="Firma"><i class="material-icons left">edit</i></a></a></li>' + 
+						'<li class="tab col s3"><a class="tablink10" href="#tab10_pri" title="Fotos"><i class="material-icons left">photo_camera</i></a></a></li>' + 
+						'<li class="tab col s3"><a class="tablink11" href="#tab11_pri" title="Otros"><i class="material-icons left">settings</i></a></a></li>' + 
 					'</ul>';
 					var frm_render = '<form id="informe_frm_editar">' + 
-
-					'<div id="tab1_con" class="col s12">' + 
-			    	'</div>' +	
-
-					'<div id="tab2_con" class="active col s12">' +  
-			    	'</div>' +	
-
-					'<div id="tab3_con" class="col s12">' + 	    
-					'</div>' +	
-			    	'<div id="tab4_con" class="col s12">' + 
-			    	'</div>' +	
-
+						'<div id="tab1_pri" class="col s12">' + 
+						'</div>' +	
+						'<div id="tab2_pri" class="active col s12">' +  
+						'</div>' +	
+						'<div id="tab3_pri" class="col s12">' + 	    
+						'</div>' +	
+						'<div id="tab4_pri" class="col s12">' + 
+						'</div>' +	
+						'<div id="tab5_pri" class="col s12">' + 
+						'</div>' +	
+						'<div id="tab6_pri" class="col s12">' + 
+						'</div>' +	
+						'<div id="tab7_pri" class="col s12">' + 
+						'</div>' +	
+						'<div id="tab8_pri" class="col s12">' + 
+						'</div>' +	
+						'<div id="tab9_pri" class="col s12">' + 
+						'</div>' +	
+						'<div id="tab10_pri" class="col s12">' + 
+						'</div>' +	
+						'<div id="tab11_pri" class="col s12">' + 
+						'</div>' +	
  					'</form>';
 				  $("#modal_"+seccion).find(".contentTabs").html(frm_tabs);
 				  $("#modal_"+seccion).find(".contentForm").html(frm_render);
