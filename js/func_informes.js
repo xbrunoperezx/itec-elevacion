@@ -91,6 +91,9 @@ var readInformes = function(id, totalParams){
 						"<i class='material-icons'>picture_as_pdf</i>" +
 					"</a>";
 				}else{
+					tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange disabled' title='Pendiente de envío al cliente'>" +
+						"<i class='material-icons'>send</i>" +
+					"</a>&nbsp;";
 					tableRow += "<a seccion='pri' tipo='sheet_pri' data-id='" + item.id + "' class='disabled sheet_pri btn-floating btn-small waves-effect waves-light grey darken-1' title='Hoja de campo'>" +
 						"<i class='material-icons'>assignment</i>" +
 					"</a>&nbsp;" +
@@ -166,6 +169,33 @@ jQuery(document).on("click", "#filtrar_pri", function() {
     modalError("ERROR","Hay que introducir un número mínimo de resultados esperados! Para ello introduce un valor en el campo registros, dentro del módulo de filtros.", false);
   }
 });
+
+var openInforme = function(seccion, cual, id){
+	if(cual=="frm_editpri"){
+		// Realizar la petición HTTP a la API
+		var totalParams = {
+			filtro_id : id
+		}
+		$.ajax({
+			url: 'services/primeras.php',
+			type: 'POST',
+			data: totalParams,
+			success: function(data) {
+				// Recorrer los datos devueltos por la consulta
+				var item = JSON.parse(data)["resultados"][0];
+				dataLayer.push({
+			    	"event" : "service",
+			    	"type" : "get_pri",
+			    	"data" : item
+			    });
+				console.log(item);
+			},
+			error: function(xhr, status, error) {
+				// Mostrar un mensaje de error en el centro de la pantalla
+				$('#app-content div#error').html(error);
+				$('#app-content div#error').show();
+			}			
+	}
 
 // Limpiar filtros de contratadas
 jQuery(document).on("click", "#filtrar_pri_clear", function() {

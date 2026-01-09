@@ -78,6 +78,15 @@ $(document).ready(function() {
 	});
 	$(".modal").modal();
 
+	// Click en editar contratada
+	$(document.body).on("click", ".editar_pri", function(){
+		var tipo = $(this).attr("tipo");
+		var id = $(this).attr("data-id");
+		var sec = $(this).attr("seccion");
+		openModal(sec, tipo, id);	
+	});
+	$(".modal").modal();
+
 	// funcion de abrir popups en funcion de la seccion y formulario (también recibe el id)
 	window.openModal = function(seccion, cual, id){
 		$("#modal_"+seccion).find(".modal_txt_title").empty();
@@ -89,6 +98,9 @@ $(document).ready(function() {
 		if(seccion=="con"){
 			openContratada(seccion, cual, id);
 		}
+    if(seccion=="pri"){
+      openInforme(seccion, cual, id);
+    }
 	}
 
 	// Click en los elementos del menú superior
