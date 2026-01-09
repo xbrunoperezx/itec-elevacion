@@ -262,7 +262,3 @@ i.left{
   margin-top: 0px;
   margin-bottom: 0px;
 }
-.select-wrapper+label {
-    top: 0px;
-    font-size: 1rem;
-}
