@@ -136,7 +136,9 @@ var readInformesContratada = function(id){
 					'<td>'+row.proxima_dmy+'</td>'+
 					'<td>'+row.industria_dmy+'</td>'+
 					'<td>'+row.observaciones+'</td>'+
-					'<td><a class="btn-floating btn-small waves-effect waves-light grey" title="Abrir en otra pestaña"><i class="material-icons">open_in_new</i></a></td>'+
+					'<td>'+
+					'<a class="btn-floating btn-small waves-effect waves-light grey" title="Abrir en otra pestaña"><i class="material-icons">open_in_new</i></a>'+
+					'</td>'+
 					'</tr>';
 			});
 			html += '</tbody></table>';
@@ -234,8 +236,7 @@ var openContratada = function(seccion, cual, id){
 		        '<li class="tab col s3"><a class="tablink1" href="#tab1_con">Cliente</a></li>' + 
 		        '<li class="tab col s3"><a class="active tablink2" href="#tab2_con">Contratación</a></li>' + 
 		        '<li class="tab col s3"><a class="tablink3" href="#tab3_con">Inspección</a></li>' + 
-		        '<li class="tab col s3"><a class="tablink4" href="#tab4_con">Facturación</a></li>' + 
-		        '<li class="tab col s3"><a class="tablink5" href="#tab5_con">Otros</a></li>' + 
+		        '<li class="tab col s3"><a class="tablink4" href="#tab4_con">Otros</a></li>' + 
 		      '</ul>';
 					var frm_render = '<form id="contratada_frm_editar">' + 
 
@@ -311,10 +312,7 @@ var openContratada = function(seccion, cual, id){
 
 			    '<div id="tab3_con" class="col s12">' + 	    
 			    '</div>' +	
-
 			    '<div id="tab4_con" class="col s12">' + 
-			    '</div>' +	
-			    '<div id="tab5_con" class="col s12">' + 
 				    '<div class="input-field">' +
 				      '<input type="text" id="id" name="id" value="' + item.cliente.contratada.con_id + '" disabled>' +
 				      '<label for="id" class="active">ID Contratada BBDD</label>' +
