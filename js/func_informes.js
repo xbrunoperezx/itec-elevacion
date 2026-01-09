@@ -195,7 +195,9 @@ var openInforme = function(seccion, cual, id){
 				$('#app-content div#error').html(error);
 				$('#app-content div#error').show();
 			}			
-	}
+		});
+	};
+}
 
 // Limpiar filtros de contratadas
 jQuery(document).on("click", "#filtrar_pri_clear", function() {
