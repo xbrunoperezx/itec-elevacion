@@ -637,7 +637,7 @@ var openCliente = function(seccion, cual, id){
 		    		"data" : item
 		    	});
 			    mantenedores = JSON.parse(data)["mantenedores"];
-			    var title = "Editar cliente";
+			    var title = "&nbsp;Editar cliente";
 			    title+= " - RAE: "+item.rae;
 					$("#modal_"+seccion).find(".modal_txt_title").text(title);
 					$("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
