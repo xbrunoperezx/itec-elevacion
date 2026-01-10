@@ -1,0 +1,264 @@
+body {
+  background-color: #FDFFFC;
+}
+
+.nav-wrapper {
+  background-color: #2519ff;
+  font-size: 0.9em;
+  }
+
+a {
+  color: #315C2B;
+}
+
+.brand-logo {
+  color: #60712F;
+}
+
+.container {
+  background-color: #EEEEEE;
+}
+
+li.active{
+  background-color: #6B9080;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #EEEEEE;
+}
+
+.modal-footer{
+  background-color: #EEEEEE!important;
+}
+
+.modal .modal-content{
+  padding:  0px;
+}
+
+.footer-copyright {
+  text-align: center;
+  line-height: 60px;
+}
+
+#loading-logo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+#app-content{
+  width: 100%;
+}
+
+#app-content div.tab-content {
+   width: 100%;
+   padding: 15px 15px 15px 15px;
+}
+
+div.container{
+  width: 100%;
+  max-width: 100%;
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+.header-row {
+  background-color: #e0e0e0;
+}
+
+.main-text {
+  font-weight: bold;
+}
+
+.secondary-text {
+  color: gray;
+  font-size: smaller;
+}
+
+div.modal#modal_error, div.modal#modal_confirm {
+  margin-top: 40px;
+  width: 400px;
+}
+
+div.modal#modal_export {
+  width: 600px;
+}
+
+div#resultados_cli, div#resultados_con, div#resultados_pri, div#resultados_seg, #table_cli_fact{
+  margin: 10px;
+  padding: 10px;
+}
+
+/* Resultado contadores de facturación: texto más pequeño */
+#table_cli_fact{
+  font-size: 0.80em;
+}
+#table_cli_fact td{
+  vertical-align: top;
+}
+
+.brand-logo{
+  margin-right: 10px;
+}
+
+.contentForm{
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+  min-height: 400px;
+}
+.tabs{
+  background-color: #EEEEEE;
+}
+
+.tabs .tab a {
+  background-color: #DDDDDD;
+  color: #333;
+}
+.tabs .tab a.active {
+  background-color: #DF533C!important;
+  color: #FFF!important;
+}
+
+.tabs .tab a:hover {
+  background-color: #CCC!important;
+  color: #333!important;
+}
+.indicator{
+  display: none;
+}
+
+/* label color */
+.input-field label {
+ color: #000!important;
+}
+/* label focus color */
+.input-field input[type=text]:focus + label, .input-field input[type=number]:focus + label{
+ color: #000!important;
+}
+/* label underline focus color */
+.input-field input[type=text]:focus, .input-field input[type=number]:focus {
+ border-bottom: 1px solid #000!important;
+ box-shadow: 0 1px 0 0 #000!important;
+}
+/* valid color */
+.input-field input[type=text].valid {
+ border-bottom: 1px solid #000!important;
+ box-shadow: 0 1px 0 0 #000!important;
+}
+/* invalid color */
+.input-field input[type=text].invalid {
+ border-bottom: 1px solid #000!important;
+ box-shadow: 0 1px 0 0 #000!important;
+}
+/* icon prefix focus color */
+.input-field .prefix.active {
+ color: #000!important;
+}
+
+.anchoFrm4{
+width: 25%;
+}
+.anchoFrm2{
+width: 50%;
+}
+
+table tbody tr:hover {
+  background-color: #bafbbd!important;
+}
+
+table td{
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.ancho50{
+  width: 50px;
+}
+.ancho75{
+  width: 75px;
+}
+.ancho100{
+  width: 100px;
+}
+.ancho150{
+  width: 150px;
+}
+.ancho200{
+  width:200px;
+}
+.ancho400{
+  width:400px;
+}
+
+.logo_itec{
+  padding: 5px;
+  margin: 5px;
+}
+
+.dropdown-content{
+  max-height: 200px;
+}
+
+#modal_error_icon, #modal_export_icon, #modal_edit_icon, #modal_confirm_icon{
+  padding-top: 10px;
+  padding-bottom: 6px;
+  padding-left: 10px;
+}
+
+div#export-content{
+  padding: 20px;
+}
+
+/* Contextual menu for table rows */
+.row-menu{
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 9999;
+  min-width: 140px;
+}
+.row-menu ul{
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+}
+.row-menu ul li{
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+.row-menu ul li:hover{
+  background-color: #f2f2f2;
+}
+.hidden-row{display: none !important;}
+/* End of contextual menu styles */
+.row{
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+i.left{
+  margin-right: 0px
+}
+
+.modalEditar i{
+  padding-top: 12px;
+}
+#title_nav{
+  padding-left: 20px;
+}
+.botonesFormEdit{
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
