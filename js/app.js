@@ -119,12 +119,16 @@ $(document).ready(function() {
 	});
 
 	// Escuchar el evento de click en los elementos del menú
-	jQuery(document).on('click', '#nav-desktop li', function() {
-			var tipo = $(this).attr('id');
-			var filtros = {
-				filtro_total : 15
-			};
-			readTable(tipo, filtros);
+	jQuery(document).on('click', '#nav-desktop li', function(e) {
+    var text = $(this).find("a").attr("href").split("#")[1].trim();
+      if (text) {
+      $('#title_nav').text(text);
+    }
+    var tipo = $(this).attr('id');
+    var filtros = {
+      filtro_total : 15
+    };
+    readTable(tipo, filtros);
 	});
 
 	// funcion que realiza las consultas a la API
@@ -399,14 +403,6 @@ $(document).on('click', '#error_confirm', function(e){
     return;
   }
   $modal.removeData('errorCallback');
-});
-
-// Cambia el título al hacer click en el menú de navegación desktop
-$(document).on('click', '#nav-desktop li', function(e) {
-  var text = $(this).find("a").attr("href").split("#")[1].trim();
-    if (text) {
-    $('#title_nav').text(text);
-  }
 });
 
 // ordenar resultados
