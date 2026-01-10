@@ -37,7 +37,7 @@ if($id==0){
   if (count($where) > 0) {
     $sql .= " WHERE " . implode(" AND ", $where);
   }
-  $sql .= " ORDER BY id DESC LIMIT 0,{$lim}";
+  $sql .= " ORDER BY id ASC LIMIT 0,{$lim}";
 }else{
   $sql = "SELECT * FROM usuarios WHERE id={$id}";
 }
