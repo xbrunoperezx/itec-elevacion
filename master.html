@@ -236,6 +236,38 @@
           });
 
           //----------------------------------------------------------------
+          //FUNCION para guardar cambios de ese cliente que hemos editado(BOTON GUARDAR)
+          $('#guardar-cambios').on('click', function(){  
+
+            // construimos el objeto que guarda los datos para logo enviarlo por ajax
+            // que es lo que espera PHP por $_POST
+            let datos ={
+                id: $('#edit-id').val(),
+                nombre: $('#edit-nombre').val(),
+                direccion: $('#edit-direccion').val(),
+                localidad: $('#edit.localidad').val(),
+                cp: $('#edit.cp').val()
+            };
+
+            $.ajax({
+                url: 'services/clientes_update.php',
+                type: 'POST',
+                data: datos,
+                dataType: 'json',
+                success: function(response){
+                    if(response.success){
+                        alert(response.message);
+                        $('#modal-editar-cliente').modal('close'); //cerramos el modal/ventana por que ya se guardo cliente
+                        location.reload();//recarga la pagina y vuelve a pedir los 15 clientes
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            });
+          });
+
+
+          //----------------------------------------------------------------
           //FUNCION comprobar que funciona el boton y muestra el ID(ELIMINAR)
           $(document).on('click', '.eliminar-cliente', function(e){
             e.preventDefault();
