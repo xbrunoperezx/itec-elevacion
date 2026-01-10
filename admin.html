@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="robots" content="noindex, nofollow">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+    <link rel="manifest" href="img/site.webmanifest">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <title>Administrador - SGASTUR</title>
+  </head>
+  <body>
+
+    <nav>
+      <div class="nav-wrapper">
+        <div class="right" style="display:inline-flex;align-items:center;gap:8px;">
+          <img class="logo_itec" src="img/logo_itec.png" height="50">
+        </div>
+        <ul id="nav-desktop-adm" class="left">
+          <li id="usu_adm" class="active"><a href="#Usuarios">Usuarios</a></li>
+          <li id="man_adm"><a href="#Mantenedores">Mantenedores</a></li>
+          <li id="leg_adm"><a href="#Legislacion">Legislación</a></li>
+          <li id="rev_adm"><a href="#Revisiones">Revisiones</a></li>
+          <li id="his_adm"><a href="#Historial">Historial Versiones</a></li>
+          <li id="tar_adm"><a href="#Tarifas">Tarifas</a></li>
+        </ul>
+        <div id="title_nav" class="left">Administrador</div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="section">
+        <div id="Usuarios" class="tab-content">Contenido - Usuarios</div>
+        <div id="Mantenedores" class="tab-content" style="display:none;">Contenido - Mantenedores</div>
+        <div id="Legislacion" class="tab-content" style="display:none;">Contenido - Legislación</div>
+        <div id="Revisiones" class="tab-content" style="display:none;">Contenido - Revisiones</div>
+        <div id="Historial" class="tab-content" style="display:none;">Contenido - Historial Versiones</div>
+        <div id="Tarifas" class="tab-content" style="display:none;">Contenido - Tarifas</div>
+      </div>
+    </div>
+
+    <script src="js/app_admin.js"></script>
+
+  </body>
+</html>
