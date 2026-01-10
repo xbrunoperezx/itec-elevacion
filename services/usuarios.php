@@ -46,22 +46,7 @@ $result = mysqli_query($link, $sql);
 
 $resultados = array();
 while ($row = mysqli_fetch_assoc($result)) {
-    // Aseguramos solo los campos esperados
-    $usuario = array(
-      'id' => $row['id'],
-      'user' => $row['user'],
-      'password' => $row['password'],
-      'name' => $row['name'],
-      'extension' => $row['extension'],
-      'pphone' => $row['pphone'],
-      'oficina' => $row['oficina'],
-      'imagen' => $row['imagen'],
-      'puesto' => $row['puesto'],
-      'tipo' => $row['tipo'],
-      'abrev' => $row['abrev'],
-      'equipos' => $row['equipos']
-    );
-    $resultados[] = $usuario;
+    $resultados[] = $row;
 }
 
 mysqli_close($link);
