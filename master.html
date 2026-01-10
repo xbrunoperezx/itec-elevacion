@@ -43,6 +43,7 @@
         </tbody>
     </table>
 
+    <!--           MODAL DE VER CLIENTE             -->
     <!--Creamos al estructura completa del modal/ventana emergente-->
     <div id="modal-cliente" class="modal">
         <div class="modal-content">
@@ -59,6 +60,41 @@
             <a href="#!" class="modal-close btn grey">Cerrar</a>
         </div>
     </div>
+
+    <!--          MODAL EDITAR CLIENTE-->
+    <!--creamos la estructura completa del modal/ventana emergente -->
+    <div id="modal-editar-cliente" class="modal">
+        <div class="modal-content">
+            <h4>Editar cliente</h4>
+
+            <input type="hiden" id="edit-id">
+
+            <div class="input-field">
+                <input type="text" id="edit-nombre">
+                <label for="edit-nombre">Nombre</label>
+            </div>
+
+            <div class="input-field">
+                <input type="text" id="edit-direccion">
+                <label for="edit-direccion">Dirección</label>
+            </div>
+
+            <div class="input-field">
+                <input type="text" id="edit-localidad">
+                <label for="edit-localidad">Localidad</label>
+            </div>
+
+            <div class="inpu-field">
+                <input type="text" id="edit-cp">
+                <label for="edit-cp">CP</label>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <a href="#!" class="btn-green" id="guardar-cambios">Guardar</a>
+            <a href="#!" class="modal-close btn grey">Cancelar</a>
+        </div>
+    </div>          
 
 
     
@@ -152,7 +188,7 @@
           $('.modal').modal();
 
           //------------------------------------------------------------
-          //funcion comprobar que funciona el boton y muestra el ID(VER)
+          //FUNCION comprobar que funciona el boton y muestra el ID(VER)
           $(document).on('click', '.ver-cliente', function(e){
             e.preventDefault();
 
@@ -181,16 +217,26 @@
           });
 
           //--------------------------------------------------------------
-          //funcion comprobar que funciona el boton y muestra el ID(EDITAR)
+          //FUNCION comprobar que funciona el boton y muestra el ID(EDITAR/UPDATE)
           $(document).on('click', '.editar-cliente', function(e){
             e.preventDefault();
 
-            let id= $(this).data('id');
-            console.log('editar cliente con  ID:' , id)
+            let id= $(this).data('id');// saber que boton e pulsado
+            let cliente= clientesGlobal.find(c => c.id == id);
+
+            $('#edit-id').val(cliente.id);
+            $('#edit-nombre').val(cliente.nombre);
+            $('#edit-direccion').val(cliente.direccion);
+            $('#edit-locaclidad').val(cliente.localidad);
+            $('#edit-cp').val(cliente.cp);
+
+            M.updateTextFields();//para mover las etiquetas de label si esta vacio o no el input
+            $('#modal-editar-cliente').modal('open');
+           
           });
 
           //----------------------------------------------------------------
-          //funcion comprobar que funciona el boton y muestra el ID(ELIMINAR)
+          //FUNCION comprobar que funciona el boton y muestra el ID(ELIMINAR)
           $(document).on('click', '.eliminar-cliente', function(e){
             e.preventDefault();
 
