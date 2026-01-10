@@ -12,11 +12,11 @@ $response= array(
 //comprobamos que no falte nada de los formularios
 if(
     !isset($_POST['id']) ||
-    !isset($_post['nombre']) ||
+    !isset($_POST['nombre']) ||
     !isset($_POST['direccion']) ||
     !isset($_POST['localidad']) ||
     !isset($_POST['cp'])
-) else {
+) {
     $response['message'] = "Datos incompletos";
     echo json_encode($response); // si falta algo enviamos mensaje formato json a ajax
     exit;
@@ -36,9 +36,9 @@ $cp= mysqli_real_escape_string($link, $_POST['cp']) ;
 $sql= "
     UPDATE clientes
     Set nombre='$nombre',
-        direccion='$_direccion',
-        localidad='$_localidad',
-        cp='$_cp'
+        direccion='$direccion',
+        localidad='$localidad',
+        cp='$cp'
     WHERE id=$id    
 ";
 
@@ -48,7 +48,7 @@ if(mysqli_query($link, $sql)) {
     $response["success"]= true;
     $response["message"]= "Cliente actualizado correctamente";
 } else {
-    $response["menssage"]= "Error al actualizar cliente";
+    $response["message"]= "Error al actualizar cliente";
 }
 
 
