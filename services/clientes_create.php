@@ -37,7 +37,7 @@ if(mysqli_query($link, $sql)){
     $response['success']= true;
     $response['message']= "Cliente creado correctamente";
 } else {
-    $reponse['message']= "Error al crear cliente";
+    $response['message']= "Error al crear cliente";
 }
 
 //cerramos conexion
