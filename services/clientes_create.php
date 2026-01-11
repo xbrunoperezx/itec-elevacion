@@ -13,7 +13,7 @@ if (
     empty($_POST['localidad']) ||
     empty($_POST['cp'])
 ) {
-    $response['message'] = "Todos los campos son obligatorios",
+    $response['message'] = "Todos los campos son obligatorios";
     echo json_encode($response);
     exit;
 }
