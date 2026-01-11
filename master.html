@@ -310,10 +310,32 @@
           //FUNCION para crear un nuevo cliente (BOTON CREAR CLIENTE)
           $('#crear-cliente').on('click', function(){
             
-            let datos= {
+                let datos= {
+                    nombre: $('#create-nombre').val(),
+                    direccion: $('#create-direccion').val(),
+                    localidad: $('#create-localidad').val(),
+                    cp: $('#create-cp').val()
+                };
 
-            }
-          })
+                $.ajax({
+                    url:'services/clientes_create.php',
+                    type: 'POST',
+                    data: datos,
+                    dataType: 'json',
+                    success: function(response){
+                        if(response.success){
+                            alert(response.message)
+                            $('#modal-create-cliente').modal('close');
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+
+                    }
+
+
+                });
+            });
         
 
 
@@ -343,7 +365,7 @@
             } else {
                 console.log("Cancelado");
             }
-         });       
+          });       
            
           
         
