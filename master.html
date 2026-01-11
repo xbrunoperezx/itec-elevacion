@@ -25,6 +25,11 @@
         <h5>Clientes</h5>
     </div>
 
+    <!--Creamos el boton para crear un nuevo cliente-->
+    <a href="#!" class="btn green moda-trigger" data-target="modal-crear-cliente">
+        Nuevo cliente
+    </a>
+
     <!--Creamos el "contenedor" donde pintaremos la tabla con el JS-->
     <table class="none">
         <thead>
@@ -94,7 +99,41 @@
             <a href="#!" class="btn-green" id="guardar-cambios">Guardar</a>
             <a href="#!" class="modal-close btn grey">Cancelar</a>
         </div>
-    </div>          
+    </div>   
+    
+    <!--          MODAL CREAR CLIENTE-->
+    <!--cREAMOS LA ESTRUCTURA DEL MODA/VENTANA EMERGENTE PARA EL  CREAR CLIENTE-->
+    
+    <div id="modal-crear-cliente" class="modal">
+        <div class="modal-content">
+            <h4>Nuevo cliente</h4>
+
+            <div class="input-field">
+                <input type="text" id="create-nombre">
+                <label for="create-nombre">Nombre</label>
+            </div>
+
+            <div class="input-field">
+                <input type="text" id="create-direccion">
+                <label for="create-direccion">Dirección</label>
+            </div>
+
+            <div class="input-field">
+                <input type="text" id="create-localidad">
+                <label for="create-localidad">Localidad</label>
+            </div>
+
+            <div class="input-field">
+                <input type="text" id="create-cp">
+                <label for="create-cp">CP</label>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <a href="#!" class="btn green" id="crear-cliente">Crear</a>
+            <a href="#!" class="modal-close btn grey">Cancelar</a>
+        </div>
+    </div>
 
 
     
@@ -296,7 +335,8 @@
          });       
            
           
-        
+          //-----------------------------------------------------------------
+          //FUNCION 
         
         
           //cierre de la funcion de carga $(document).rea..
