@@ -26,7 +26,7 @@
     </div>
 
     <!--Creamos el boton para crear un nuevo cliente-->
-    <a href="#!" class="btn green moda-trigger" data-target="modal-crear-cliente">
+    <a href="#!" class="btn green modal-trigger" data-target="modal-crear-cliente">
         Nuevo cliente
     </a>
 
@@ -306,6 +306,17 @@
           });
 
 
+          //-----------------------------------------------------------------
+          //FUNCION para crear un nuevo cliente (BOTON CREAR CLIENTE)
+          $('#crear-cliente').on('click', function(){
+            
+            let datos= {
+
+            }
+          })
+        
+
+
           //----------------------------------------------------------------
           //FUNCION comprobar que funciona el boton y muestra el ID(ELIMINAR)
           $(document).on('click', '.eliminar-cliente', function(e){
@@ -335,12 +346,10 @@
          });       
            
           
-          //-----------------------------------------------------------------
-          //FUNCION 
         
         
-          //cierre de la funcion de carga $(document).rea..
-        })
+         //cierre de la funcion de carga $(document).rea..
+        });
 
         
 
