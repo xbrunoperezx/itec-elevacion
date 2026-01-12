@@ -11,6 +11,7 @@ if (
     empty($_POST['nombre']) ||
     empty($_POST['direccion']) ||
     empty($_POST['localidad']) ||
+    empty($_POST['municipio']) ||
     empty($_POST['cp'])
 ) {
     $response['message'] = "Todos los campos son obligatorios";
@@ -22,13 +23,14 @@ if (
 $nombre= mysqli_real_escape_string($link, $_POST['nombre']);
 $direccion= mysqli_real_escape_string($link, $_POST['direccion']);
 $localidad= mysqli_real_escape_string($link, $_POST['localidad']);
+$municipio= mysqli_real_escape_string($link, $_POST['municipio']);
 $cp= mysqli_real_escape_string($link, $_POST['cp']);
 
 
 //la consulta de INSERT para nuevo cliente
 $sql= "
-    INSERT INTO clientes(nombre, direccion, localidad, cp)
-    VALUES('$nombre', '$direccion', '$localidad', '$cp')
+    INSERT INTO clientes(nombre, direccion, localidad, municipio, cp)
+    VALUES('$nombre', '$direccion', '$localidad', '$municipio' '$cp')
 
 ";
 
