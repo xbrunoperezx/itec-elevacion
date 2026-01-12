@@ -104,7 +104,7 @@
     <!--          MODAL CREAR CLIENTE-->
     <!--cREAMOS LA ESTRUCTURA DEL MODA/VENTANA EMERGENTE PARA EL  CREAR CLIENTE-->
     
-    <div id="modal-create-cliente" class="modal">
+    <div id="modal-crear-cliente" class="modal">
         <div class="modal-content">
             <h4>Nuevo cliente</h4>
 
@@ -331,7 +331,7 @@
                     success: function(response){
                         if(response.success){
                             alert(response.message)
-                            $('#modal-create-cliente').modal('close');
+                            $('#modal-crear-cliente').modal('close');
                             location.reload();
                         } else {
                             alert(response.message);
