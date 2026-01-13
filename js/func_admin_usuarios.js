@@ -111,6 +111,17 @@ jQuery(document).on('keydown', '#Usuarios [id*=filtro_usuarios]', function(e){
     }
 });
 
+// Limpiar filtros de usuarios
+jQuery(document).on('click', '#filtrar_usuarios_clear', function() {
+  jQuery(this).addClass('hide');
+  var $parent = jQuery(this).closest('#Usuarios');
+  $parent.find('#filtro_usuarios_nombre').val('');
+  $parent.find('#filtro_usuarios_email').val('');
+  $parent.find('#filtro_usuarios_total').val('15');
+  $parent.find('label').not(':eq(0)').removeClass('active');
+  $parent.find('#filtrar_usuarios').click();
+});
+
 // Menú contextual para cada fila de usuarios (ocultar visualmente la fila / cancelar)
 jQuery(document).on('click', '.more_usr', function(e){
     e.preventDefault();
