@@ -96,6 +96,16 @@ $(function(){
   });
 });
 
+// Permitir pulsar Enter en los campos de filtro para ejecutar la búsqueda
+jQuery(document).on('keydown', '#Usuarios [id*=filtro_usuarios]', function(e){
+    // Mostrar botón limpiar cuando se escribe
+    jQuery('#filtrar_usuarios_clear').removeClass('hide');
+    if (e.key === 'Enter' || e.which === 13 || e.keyCode === 13) {
+        e.preventDefault();
+        jQuery(this).closest('#Usuarios').find('#filtrar_usuarios').click();
+    }
+});
+
 // Menú contextual para cada fila de usuarios (ocultar visualmente la fila / cancelar)
 jQuery(document).on('click', '.more_usr', function(e){
     e.preventDefault();

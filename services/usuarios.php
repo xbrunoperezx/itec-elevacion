@@ -34,6 +34,9 @@ if($id==0){
   if (!empty($_POST['filtro_name'])) {
     $where[] = "`name` LIKE '%{$_POST['filtro_name']}%'";
   }
+  if (!empty($_POST['filtro_email'])) {
+    $where[] = "`email` LIKE '%{$_POST['filtro_email']}%'";
+  }
   if (count($where) > 0) {
     $sql .= " WHERE " . implode(" AND ", $where);
   }
