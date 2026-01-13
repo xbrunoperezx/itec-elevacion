@@ -100,6 +100,58 @@
       </div>
     </div>
 
+  <!-- Estructura del Modal (copiado de index.html) -->
+  <div id="modal_cli" class="modal">
+    <div class="modal-content">
+      <div class="red white-text row valign-wrapper">
+          &nbsp;&nbsp;<i class='left material-icons'>people</i><h6 class="modal_txt_title">Título del Modal</h6>
+      </div>
+    </div>
+    <div class="contentTabs"></div>
+    <div class="contentForm"></div>
+    <div class="modal-footer">
+      <a href="#!" class="modal_txt_btn_left left waves-effect waves-light btn green accent-4" id="cli_save"><i class="material-icons left">save</i>Guardar</a>
+      <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn red accent-4" id="cli_exit">Salir</a>
+    </div>
+  </div>
+  
+  <div id="modal_error" class="modal">
+    <div class="modal-content">
+      <div class="valign-wrapper tituloModal red white-text">
+        <i class='left material-icons white-text' id="modal_error_icon">warning</i><h6 id="error-title"></h6>
+      </div>
+      <p id="error-message" class="center"></p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="right waves-effect waves-light btn red accent-4" id="error_confirm"><i class='material-icons left'>check</i>Aceptar</a>
+    </div>
+  </div>
+
+  <div id="modal_confirm" class="modal">
+    <div class="modal-content">
+      <div class="valign-wrapper tituloModal red white-text">
+        <i class='left material-icons white-text' id="modal_confirm_icon">save</i><h6 id="confirm-title"></h6>
+      </div>
+      <p id="confirm-message" class="center"></p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="left waves-effect waves-light btn green accent-4" id="save_confirm"><i class="material-icons left">check</i>Aceptar</a>
+      <a href="#!" class="right waves-effect waves-light btn modal-close red accent-4" id="save_cancel"><i class="material-icons left">clear</i>Cancelar</a>
+    </div>
+  </div>
+
+  <div id="modal_export" class="modal">
+    <div class="modal-content">
+      <div class="valign-wrapper tituloModal green white-text">
+        <i class='left material-icons white-text' id="modal_export_icon">import_export</i><h6 id="export-title"></h6>
+      </div>
+      <div id="export-content"></div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="right modal-close waves-effect waves-light btn green accent-4"><i class='material-icons left'>exit_to_app</i>Cerrar</a>
+    </div>
+  </div>
+
     <script src="js/app_admin.js"></script>
     <script src="js/func_admin_usuarios.js"></script>
   </body>
