@@ -58,14 +58,14 @@ function readUsuarios(){
       var nombreUsr = item.name || item.nombre || '';
       var email = item.email || item.mail || '';
 
-      var tr = "<tr>";
+      var tr = "<tr class='alto50'>";
       tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho75'>" + id + "</td>";
       tr += "<td class='ancho50'>" +
             "<a seccion='usu' tipo='frm_editusu' data-id='"+id+"' class='editar_usr btn-floating btn-small waves-effect waves-light green' title='Editar usuario'><i class='material-icons'>edit</i></a>&nbsp;" +
             "</td>";
-      tr += "<td><span class='main-text'>" + usuario + "</span><br><span class='secondary-text'></span></td>";
-      tr += "<td class='ancho200'>" + nombreUsr + "</td>";
+      tr += "<td><span class='main-text'>" + nombreUsr + "</span><br><span class='secondary-text'></span></td>";
+      tr += "<td class='ancho200'>" + usuario + "</td>";
       tr += "<td class='ancho150'>" + email + "</td>";
       tr += "<td class='ancho150'>" +
             "<a class='btn-floating btn-small waves-effect waves-light black' title='Enviar email' href='mailto:"+email+"'><i class='material-icons'>email</i></a>&nbsp;" +
@@ -88,4 +88,63 @@ function readUsuarios(){
 // Inicializar la pestaña Usuarios al cargar la página
 $(function(){
   if($('#Usuarios').length) readUsuarios();
+
+  // Click en el botón filtrar: refresca la lista con los filtros actuales
+  $(document).on('click', '#filtrar_usuarios', function(e){
+    e.preventDefault();
+    readUsuarios();
+  });
+});
+
+// Menú contextual para cada fila de usuarios (ocultar visualmente la fila / cancelar)
+jQuery(document).on('click', '.more_usr', function(e){
+    e.preventDefault();
+    jQuery('.row-menu').remove();
+
+    var $btn = jQuery(this);
+    var itemId = $btn.data('id');
+    var offset = $btn.offset();
+
+    var menu = jQuery("<div class='row-menu'><ul><li class='row-menu-hide'>Ocultar fila</li><li class='row-menu-cancel'>Cancelar</li></ul></div>");
+
+    menu.css({ visibility: 'hidden', top: 0, left: 0 });
+    jQuery('body').append(menu);
+
+    var menuW = menu.outerWidth();
+    var menuH = menu.outerHeight();
+    var winW = jQuery(window).width();
+    var winTop = jQuery(window).scrollTop();
+
+    var desiredLeft = offset.left + $btn.outerWidth() - menuW;
+    if (desiredLeft + menuW > winW - 6) desiredLeft = winW - menuW - 6;
+    if (desiredLeft < 6) desiredLeft = 6;
+
+    var desiredTop = offset.top + $btn.outerHeight() + 6;
+    if (desiredTop + menuH > winTop + jQuery(window).height()) {
+        desiredTop = offset.top - menuH - 6;
+        if (desiredTop < winTop + 6) desiredTop = winTop + 6;
+    }
+
+    menu.css({ top: desiredTop + 'px', left: desiredLeft + 'px', visibility: 'visible' });
+
+    menu.on('click', '.row-menu-hide', function(ev){
+        ev.stopPropagation();
+        var $tr = $btn.closest('tr');
+        $tr.addClass('hidden-row');
+        menu.remove();
+    });
+
+    menu.on('click', '.row-menu-cancel', function(ev){
+        ev.stopPropagation();
+        menu.remove();
+    });
+
+    setTimeout(function(){
+      jQuery(document).on('click.rowMenuCloseUsr', function(ev){
+        if(jQuery(ev.target).closest('.row-menu').length===0 && jQuery(ev.target).closest('.more_usr').length===0){
+          jQuery('.row-menu').remove();
+          jQuery(document).off('click.rowMenuCloseUsr');
+        }
+      });
+    }, 10);
 });
