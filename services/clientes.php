@@ -82,12 +82,19 @@ while ($row= mysqli_fetch_assoc($result)) {
     }else{
       $row['mantenedor'] = "-";
     }
-    if($row['vencimiento']=="0000-00-00"){
+
+    if (
+      empty($row['vencimiento']) ||
+      $row['vencimiento'] === "0000-00-00"
+    ) {
       $row['vencimiento_dmy'] = "-";
-    }else{
-      $row['vencimiento_dmy'] = date("d-m-Y", strtotime($row['vencimiento']));
+    } else {
+      $row['vencimiento_dmy'] = date(
+        "d-m-y",
+        strtotime($row['vencimiento'])
+      );
     }
-    $resultados[] = $row;
+    $resultados[]= $row;
 }
 
 // Cierre de la conexión a la base de datos
