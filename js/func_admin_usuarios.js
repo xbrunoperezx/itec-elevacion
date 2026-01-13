@@ -57,6 +57,9 @@ function readUsuarios(){
       var usuario = item.user || item.usuario || '';
       var nombreUsr = item.name || item.nombre || '';
       var email = item.email || item.mail || '';
+      var puesto = item.puesto || '';
+      var tipo = item.tipo || '';
+      var abrev = item.abrev || '';
 
       var tr = "<tr class='alto50'>";
       tr += "<td class='ancho50'>&nbsp;</td>";
@@ -67,6 +70,9 @@ function readUsuarios(){
       tr += "<td>" + nombreUsr + "</td>";
       tr += "<td class='ancho200'><span class='main-text'>" + usuario + "</span></td>";
       tr += "<td class='ancho200'>" + email + "</td>";
+      tr += "<td class='ancho150'>" + puesto + "</td>";
+      tr += "<td class='ancho100'>" + tipo + "</td>";
+      tr += "<td class='ancho50'><a class='btn-floating btn-small waves-effect waves-light grey' title='" + usuario + "'>" + abrev + "</a></td>";
       tr += "<td class='ancho150'>" +
             "<a class='btn-floating btn-small waves-effect waves-light black' title='Enviar email' href='mailto:"+email+"'><i class='material-icons'>email</i></a>&nbsp;" +
             "</td>";
