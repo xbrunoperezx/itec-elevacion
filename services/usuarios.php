@@ -49,7 +49,15 @@ $result = mysqli_query($link, $sql);
 
 $resultados = array();
 while ($row = mysqli_fetch_assoc($result)) {
-    $resultados[] = $row;
+  // si el campo 'equipos' existe y contiene JSON, decodificarlo para devolverlo como estructura JSON
+  if (isset($row['equipos']) && $row['equipos'] !== null && $row['equipos'] !== '') {
+    $decoded = json_decode($row['equipos'], true);
+    if (json_last_error() === JSON_ERROR_NONE) {
+      $row['equipos'] = $decoded;
+    }
+    // si falla el decode, dejamos el valor tal cual (string)
+  }
+  $resultados[] = $row;
 }
 
 mysqli_close($link);

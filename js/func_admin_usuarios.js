@@ -56,7 +56,7 @@ function readUsuarios(){
       var id = item.id || '';
       var usuario = item.user || item.usuario || '';
       var nombreUsr = item.name || item.nombre || '';
-      var email = item.email || item.mail || '';
+      var email = item.email || '';
       var puesto = item.puesto || '';
       var tipo = item.tipo || '';
       var abrev = item.abrev || '';

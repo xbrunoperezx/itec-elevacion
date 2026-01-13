@@ -65,9 +65,7 @@ var readInformes = function(id, totalParams){
 				tableRow += "</td>" + 
 				"<td class='ancho150'>" + item.fecha_dmy + "</td>" +
 				"<td class='ancho100'>" +
-					"<a class='btn-floating btn-small waves-effect waves-light grey' title='Inspector: " + item.usuario + "'>" +
-					item.usuario_ab +
-					"</a>&nbsp;" +
+					"<a class='btn-floating btn-small waves-effect waves-light grey' title='Inspector: " + item.usuario + "'>" + item.usuario_ab + "</a>&nbsp;" +
 					"<a class='btn-floating btn-small waves-effect waves-light ";
 					if(item.resultado_f=="-") tableRow += "grey disabled' title='Sin hacer'>";
 					if(item.resultado_f=="F") tableRow += "green' title='Favorable'>";
