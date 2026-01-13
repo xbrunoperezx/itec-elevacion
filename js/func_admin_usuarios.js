@@ -60,6 +60,7 @@ function readUsuarios(){
       var puesto = item.puesto || '';
       var tipo = item.tipo || '';
       var abrev = item.abrev || '';
+      var equipos = item.equipos || {};
 
       var tr = "<tr class='alto50'>";
       tr += "<td class='ancho50'>&nbsp;</td>";
@@ -73,9 +74,15 @@ function readUsuarios(){
       tr += "<td class='ancho200'>" + email + "</td>";
       tr += "<td class='ancho200'>" + puesto + "</td>";
       tr += "<td class='ancho100'>" + tipo + "</td>";
-      tr += "<td class='ancho150'>" +
-            "<a class='btn-floating btn-small waves-effect waves-light black' title='Enviar email' href='mailto:"+email+"'><i class='material-icons'>email</i></a>&nbsp;" +
-            "</td>";
+      tr += "<td class='ancho150'><a class='btn-floating btn-small waves-effect waves-light black' title='Enviar email' href='mailto:"+email+"'><i class='material-icons'>email</i></a>&nbsp;";
+      if(Object.keys(equipos).length > 0){
+        tr += "<a class='btn-floating btn-small waves-effect waves-light red' title='";
+        for(var eqId in equipos){
+          tr += "Equipo: " + equipos[eqId] + " (ID: " + eqId + ")\n";
+        }
+        tr += "'><i class='material-icons'>business_center</i></a>";
+      }
+      tr += "</td>";
       tr += "<td class='ancho50'>" +
             "<a class='more_usr btn-floating btn-small waves-effect waves-light red' title='Más' data-id='"+id+"'><i class='material-icons'>more_vert</i></a>" +
             "</td>";
