@@ -66,7 +66,7 @@ function readUsuarios(){
             "</td>";
       tr += "<td><span class='main-text'>" + nombreUsr + "</span><br><span class='secondary-text'></span></td>";
       tr += "<td class='ancho200'>" + usuario + "</td>";
-      tr += "<td class='ancho150'>" + email + "</td>";
+      tr += "<td class='ancho200'>" + email + "</td>";
       tr += "<td class='ancho150'>" +
             "<a class='btn-floating btn-small waves-effect waves-light black' title='Enviar email' href='mailto:"+email+"'><i class='material-icons'>email</i></a>&nbsp;" +
             "</td>";
@@ -92,7 +92,12 @@ $(function(){
   // Click en el botón filtrar: refresca la lista con los filtros actuales
   $(document).on('click', '#filtrar_usuarios', function(e){
     e.preventDefault();
-    readUsuarios();
+    var total = parseInt($('#filtro_usuarios_total').val(), 10) || 0;
+    if (total >= 1) {
+      readUsuarios();
+    } else {
+      modalError('ERROR', 'Hay que introducir un número mínimo de resultados esperados! Para ello introduce un valor en el campo registros.', false);
+    }
   });
 });
 
