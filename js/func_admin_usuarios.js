@@ -64,9 +64,9 @@ function readUsuarios(){
       var tr = "<tr class='alto50'>";
       tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho75'>" + id + "</td>";
-      tr += "<td class='ancho50'>" +
-            "<a class='btn-floating btn-small waves-effect waves-light grey' title='" + usuario + "'>" + abrev + "</a>&nbsp;" +
+      tr += "<td class='ancho100'>" +
             "<a seccion='usu' tipo='frm_editusu' data-id='"+id+"' class='editar_usr btn-floating btn-small waves-effect waves-light green' title='Editar usuario'><i class='material-icons'>edit</i></a>&nbsp;" +
+            "<a class='btn-floating btn-small waves-effect waves-light grey' title='" + usuario + "'>" + abrev + "</a>" +
             "</td>";
       tr += "<td>" + nombreUsr + "</td>";
       tr += "<td class='ancho200'><span class='main-text'>" + usuario + "</span></td>";
