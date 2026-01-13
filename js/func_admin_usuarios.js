@@ -65,6 +65,7 @@ function readUsuarios(){
       tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho75'>" + id + "</td>";
       tr += "<td class='ancho50'>" +
+            "<a class='btn-floating btn-small waves-effect waves-light grey' title='" + usuario + "'>" + abrev + "</a>&nbsp;" +
             "<a seccion='usu' tipo='frm_editusu' data-id='"+id+"' class='editar_usr btn-floating btn-small waves-effect waves-light green' title='Editar usuario'><i class='material-icons'>edit</i></a>&nbsp;" +
             "</td>";
       tr += "<td>" + nombreUsr + "</td>";
@@ -72,7 +73,6 @@ function readUsuarios(){
       tr += "<td class='ancho200'>" + email + "</td>";
       tr += "<td class='ancho150'>" + puesto + "</td>";
       tr += "<td class='ancho100'>" + tipo + "</td>";
-      tr += "<td class='ancho50'><a class='btn-floating btn-small waves-effect waves-light grey' title='" + usuario + "'>" + abrev + "</a></td>";
       tr += "<td class='ancho150'>" +
             "<a class='btn-floating btn-small waves-effect waves-light black' title='Enviar email' href='mailto:"+email+"'><i class='material-icons'>email</i></a>&nbsp;" +
             "</td>";
