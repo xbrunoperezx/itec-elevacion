@@ -39,8 +39,10 @@ function readUsuarios(){
   // leer filtros desde el formulario en admin.html
   var total = parseInt($('#filtro_usuarios_total').val(),10) || 15;
   var nombre = ($('#filtro_usuarios_nombre').val() || '').trim();
+  var email = ($('#filtro_usuarios_email').val() || '').trim();
   var filtros = { filtro_total: total };
   if(nombre) filtros.filtro_name = nombre;
+  if(email) filtros.filtro_email = email;
 
   // estado inicial en la interfaz
   $('#table_usuarios tbody').empty();
@@ -67,7 +69,6 @@ function readUsuarios(){
       tr += "<td class='ancho150'>" + email + "</td>";
       tr += "<td class='ancho150'>" +
             "<a class='btn-floating btn-small waves-effect waves-light black' title='Enviar email' href='mailto:"+email+"'><i class='material-icons'>email</i></a>&nbsp;" +
-            "<a class='borrar_usr btn-floating btn-small waves-effect waves-light red' title='Eliminar usuario' data-id='"+id+"'><i class='material-icons'>delete_forever</i></a>" +
             "</td>";
       tr += "<td class='ancho50'>" +
             "<a class='more_usr btn-floating btn-small waves-effect waves-light red' title='Más' data-id='"+id+"'><i class='material-icons'>more_vert</i></a>" +
