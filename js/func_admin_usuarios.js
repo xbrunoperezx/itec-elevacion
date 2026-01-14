@@ -58,9 +58,9 @@ function readUsuarios(){
       var nombreUsr = item.name || item.nombre || '';
       var email = item.email || '';
       if(email !== ''){
-        email = "<a class='btn-floating btn-small waves-effect waves-light black' title='Enviar email' href='mailto:"+email+"'><i class='material-icons'>email</i></a>";
+        emailIcon = "<a class='btn-floating btn-small waves-effect waves-light black' title='Enviar email' href='mailto:"+email+"'><i class='material-icons'>email</i></a>";
       }else{
-        email = '';
+        emailIcon = '';
       }
       var puesto = item.puesto || '';
       var tipo = item.tipo || '';
@@ -69,7 +69,7 @@ function readUsuarios(){
       if(tipo === 'admin'){
         tipoIcon = "<a class='btn-floating btn-small waves-effect waves-light black' title='Administrador'><i class='material-icons'>settings</i></a>";
       } else if(tipo === 'inspector'){
-        tipoIcon = "<a class='btn-floating btn-small waves-effect waves-light light-green accent-3' title='Inspector'><i class='material-icons'>assignment_ind</i></a>";
+        tipoIcon = "<a class='btn-floating btn-small waves-effect waves-light green' title='Inspector'><i class='material-icons'>assignment_ind</i></a>";
       } else if(tipo === 'auxiliar'){
         tipoIcon = "<a class='btn-floating btn-small waves-effect waves-light blue darken-2' title='Auxiliar'><i class='material-icons'>person</i></a>";
       } else {
@@ -89,7 +89,7 @@ function readUsuarios(){
       tr += "<td class='ancho200'>" + email + "</td>";
       tr += "<td class='ancho50'>" + tipoIcon + "</td>";
       tr += "<td class='ancho200'>" + puesto + "</td>";
-      tr += "<td class='ancho150'>" + email + "&nbsp;";
+      tr += "<td class='ancho150'>" + emailIcon + "&nbsp;";
       if(Object.keys(equipos).length > 0){
         tr += "<a class='btn-floating btn-small waves-effect waves-light red' title='";
         for(var eqId in equipos){
