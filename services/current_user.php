@@ -17,7 +17,7 @@ if (isset($_SESSION['user_id']) && intval($_SESSION['user_id'])>0) {
   exit;
 }
 
-$sql = "SELECT id, user, name, email, tipo, abrev, puestos, equipos FROM usuarios WHERE id = {$id} LIMIT 1";
+$sql = "SELECT * FROM usuarios WHERE id = {$id} LIMIT 1";
 $res = mysqli_query($link, $sql);
 if(!$res){ echo json_encode(["error"=> mysqli_error($link)]); exit; }
 $row = mysqli_fetch_assoc($res);
