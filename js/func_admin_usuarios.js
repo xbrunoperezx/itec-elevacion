@@ -57,16 +57,21 @@ function readUsuarios(){
       var usuario = item.user || item.usuario || '';
       var nombreUsr = item.name || item.nombre || '';
       var email = item.email || '';
+      if(email !== ''){
+        email = "<a class='btn-floating btn-small waves-effect waves-light black' title='Enviar email' href='mailto:"+email+"'><i class='material-icons'>email</i></a>";
+      }else{
+        email = '';
+      }
       var puesto = item.puesto || '';
       var tipo = item.tipo || '';
       var abrev = item.abrev || '';
       var tipoIcon = '';
       if(tipo === 'admin'){
-        tipoIcon = "<a class='btn-floating btn-small waves-effect waves-light red' title='Administrador'><i class='material-icons'>settings</i></a>";
+        tipoIcon = "<a class='btn-floating btn-small waves-effect waves-light black' title='Administrador'><i class='material-icons'>settings</i></a>";
       } else if(tipo === 'inspector'){
-        tipoIcon = "<a class='btn-floating btn-small waves-effect waves-light blue' title='Inspector'><i class='material-icons'>assignment_ind</i></a>";
+        tipoIcon = "<a class='btn-floating btn-small waves-effect waves-light light-green accent-3' title='Inspector'><i class='material-icons'>assignment_ind</i></a>";
       } else if(tipo === 'auxiliar'){
-        tipoIcon = "<a class='btn-floating btn-small waves-effect waves-light amber darken-2' title='Auxiliar'><i class='material-icons'>person</i></a>";
+        tipoIcon = "<a class='btn-floating btn-small waves-effect waves-light blue darken-2' title='Auxiliar'><i class='material-icons'>person</i></a>";
       } else {
         tipoIcon = tipo; // fallback: mostrar texto si no coincide
       }
@@ -84,7 +89,7 @@ function readUsuarios(){
       tr += "<td class='ancho200'>" + email + "</td>";
       tr += "<td class='ancho50'>" + tipoIcon + "</td>";
       tr += "<td class='ancho200'>" + puesto + "</td>";
-      tr += "<td class='ancho150'><a class='btn-floating btn-small waves-effect waves-light black' title='Enviar email' href='mailto:"+email+"'><i class='material-icons'>email</i></a>&nbsp;";
+      tr += "<td class='ancho150'>" + email + "&nbsp;";
       if(Object.keys(equipos).length > 0){
         tr += "<a class='btn-floating btn-small waves-effect waves-light red' title='";
         for(var eqId in equipos){
@@ -94,7 +99,7 @@ function readUsuarios(){
       }
       tr += "</td>";
       tr += "<td class='ancho50'>" +
-            "<a class='more_usr btn-floating btn-small waves-effect waves-light red' title='Más' data-id='"+id+"'><i class='material-icons'>more_vert</i></a>" +
+            "<a class='more_usr btn-floating btn-small waves-effect waves-light red' title='Más' data-id='"+id+"' data-tipo='"+tipo+"'><i class='material-icons'>more_vert</i></a>" +
             "</td>";
       tr += "</tr>";
 
@@ -154,7 +159,13 @@ jQuery(document).on('click', '.more_usr', function(e){
     var itemId = $btn.data('id');
     var offset = $btn.offset();
 
-    var menu = jQuery("<div class='row-menu'><ul><li class='row-menu-hide'>Ocultar fila</li><li class='row-menu-cancel'>Cancelar</li></ul></div>");
+    var itemTipo = $btn.data('tipo');
+    var menuHtml = "<div class='row-menu'><ul><li class='row-menu-hide'>Ocultar fila</li>";
+    if (itemTipo !== 'admin'){
+      menuHtml += "<li class='row-menu-delete'>Eliminar</li>";
+    }
+    menuHtml += "<li class='row-menu-cancel'>Cancelar</li></ul></div>";
+    var menu = jQuery(menuHtml);
 
     menu.css({ visibility: 'hidden', top: 0, left: 0 });
     jQuery('body').append(menu);
@@ -181,6 +192,38 @@ jQuery(document).on('click', '.more_usr', function(e){
         var $tr = $btn.closest('tr');
         $tr.addClass('hidden-row');
         menu.remove();
+    });
+
+    menu.on('click', '.row-menu-delete', function(ev){
+        ev.stopPropagation();
+        modalConfirm(
+          "Eliminar usuario",
+          "¿Eliminar usuario? Esta acción es irreversible.",
+          false,
+          "Eliminar",
+          "Cancelar",
+          "delete_forever",
+          "cancel",
+          function(){
+            $.post('services/usuarios_delete.php', { id: itemId })
+              .done(function(resp){
+                if($.trim(resp) === 'OK'){
+                  $btn.closest('tr').remove();
+                } else {
+                  modalError('Error', 'Error al eliminar: ' + resp, false, 'Cerrar', 'error');
+                }
+              })
+              .fail(function(){
+                modalError('Error', 'Error de red al intentar eliminar.', false, 'Cerrar', 'error');
+              })
+              .always(function(){
+                menu.remove();
+              });
+          },
+          function(){
+            menu.remove();
+          }
+        );
     });
 
     menu.on('click', '.row-menu-cancel', function(ev){
