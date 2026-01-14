@@ -308,9 +308,7 @@ var openUsuario = function(seccion, cual, id){
           '</div>' +
         '</form>';
 
-        $("#modal_"+seccion).find(".contentTabs").html(frm_tabs);
 				$("#modal_"+seccion).find(".contentForm").html(frm);
-				$("#modal_"+seccion).find('.tabs').tabs();
         var $selTipo = $("#modal_"+seccion).find('select#tipo_usr');
         if($selTipo.length){
           if(typeof $.fn.formSelect === 'function'){
