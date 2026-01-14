@@ -62,9 +62,9 @@ function readEquipos(){
       tr += "<td class='ancho30'>" + id + "</td>";
       tr += "<td class='ancho50'>" + codigo + "</td>";
       tr += "<td class='ancho30'><a seccion='equ' tipo='frm_editequ' data-id='"+id+"' class='editar_equi btn-floating btn-small waves-effect waves-light green' title='Editar equipo'><i class='material-icons'>edit</i></a></td>";
-      tr += "<td>" + nombreEq + "</td>";
+      tr += "<td><b>" + nombreEq + "</b></td>";
       tr += "<td class='ancho150'>" + marca + "</td>";
-      tr += "<td class='ancho150'>" + modelo + "</td>";
+      tr += "<td class='ancho200'>" + modelo + "</td>";
       tr += "<td class='ancho150'>" + numSerieItem + "</td>";
       tr += "<td class='ancho150'>" + ultima + "</td>";
       tr += "<td class='ancho150'>" + prox + "</td>";
@@ -242,12 +242,12 @@ var openEquipo = function(seccion, cual, id){
           '</div>' +
           '<div class="row">' +
             '<div class="input-field anchoFrm4 left">' +
-              '<input type="text" id="ultima_calibracion_equ" name="ultima_calibracion" value="'+ (item.ultima_calibracion || '') +'" autocomplete="off">' +
-              '<label for="ultima_calibracion_equ" class="active">Última calibración (YYYY-MM-DD)</label>' +
+              '<input type="date" id="ultima_calibracion_equ" name="ultima_calibracion" value="'+ (item.ultima_calibracion || '') +'" autocomplete="off">' +
+              '<label for="ultima_calibracion_equ" class="active">Última calibración</label>' +
             '</div>' +
             '<div class="input-field anchoFrm4 inline">' +
-              '<input type="text" id="prox_calibracion_equ" name="prox_calibracion" value="'+ (item.prox_calibracion || '') +'" autocomplete="off">' +
-              '<label for="prox_calibracion_equ" class="active">Próxima calibración (YYYY-MM-DD)</label>' +
+              '<input type="date" id="prox_calibracion_equ" name="prox_calibracion" value="'+ (item.prox_calibracion || '') +'" autocomplete="off">' +
+              '<label for="prox_calibracion_equ" class="active">Próxima calibración</label>' +
             '</div>' +
           '</div>' +
           '<div class="input-field" style="display:none;">' +
