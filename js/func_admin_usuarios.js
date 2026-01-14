@@ -161,7 +161,7 @@ var openUsuario = function(seccion, cual, id){
       data: totalParams,
       success: function(data){
         var item = JSON.parse(data).resultados[0];
-        var title = "Editar usuario - " + (item.user || '');
+        var title = " Editar usuario - " + (item.user || '');
         $("#modal_"+seccion).find(".modal_txt_title").text(title);
         $("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
         $("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
@@ -169,46 +169,46 @@ var openUsuario = function(seccion, cual, id){
         var frm = '<form id="usuario_frm_editar">' +
           '<div class="row">' +
             '<div class="input-field anchoFrm4 left">' +
-              '<input type="text" id="user_usr" name="user" value="'+ (item.user || '') +'">' +
+              '<input type="text" id="user_usr" name="user" value="'+ (item.user || '') +'" autocomplete="off">' +
               '<label for="user_usr" class="active">Usuario</label>' +
             '</div>' +
-            '<div class="input-field anchoFrm4 right">' +
-              '<input type="password" id="password_usr" name="password" value="">' +
-              '<label for="password_usr">Contraseña (dejar en blanco para no cambiar)</label>' +
+            '<div class="input-field anchoFrm4 inline">' +
+              '<input type="password" id="password_usr" name="password" value="" autocomplete="off">' +
+              '<label for="password_usr">Contraseña</label>' +
             '</div>' +
           '</div>' +
           '<div class="input-field">' +
-            '<input type="text" id="name_usr" name="name" value="'+ (item.name || '') +'">' +
+            '<input type="text" id="name_usr" name="name" value="'+ (item.name || '') +'" autocomplete="off">' +
             '<label for="name_usr" class="active">Nombre</label>' +
           '</div>' +
           '<div class="input-field">' +
-            '<input type="text" id="email_usr" name="email" value="'+ (item.email || '') +'">' +
+            '<input type="text" id="email_usr" name="email" value="'+ (item.email || '') +'" autocomplete="off">' +
             '<label for="email_usr" class="active">Email</label>' +
           '</div>' +
           '<div class="row">' +
             '<div class="input-field anchoFrm4 left">' +
-              '<input type="text" id="extension_usr" name="extension" value="'+ (item.extension || '') +'">' +
+              '<input type="text" id="extension_usr" name="extension" value="'+ (item.extension || '') +'" autocomplete="off">' +
               '<label for="extension_usr" class="active">Extensión</label>' +
             '</div>' +
-            '<div class="input-field anchoFrm4 right">' +
-              '<input type="text" id="pphone_usr" name="pphone" value="'+ (item.pphone || '') +'">' +
+            '<div class="input-field anchoFrm4 inline">' +
+              '<input type="text" id="pphone_usr" name="pphone" value="'+ (item.pphone || '') +'" autocomplete="off">' +
               '<label for="pphone_usr" class="active">Teléfono</label>' +
+            '</div>' +
+            '<div class="input-field anchoFrm4 inline">' +
+            '<input type="text" id="oficina_usr" name="oficina" value="'+ (item.oficina || '') +'" autocomplete="off">' +
+            '<label for="oficina_usr" class="active">Oficina</label>' +
             '</div>' +
           '</div>' +
           '<div class="input-field">' +
-            '<input type="text" id="oficina_usr" name="oficina" value="'+ (item.oficina || '') +'">' +
-            '<label for="oficina_usr" class="active">Oficina</label>' +
-          '</div>' +
-          '<div class="input-field">' +
-            '<input type="text" id="puesto_usr" name="puesto" value="'+ (item.puesto || '') +'">' +
+            '<input type="text" id="puesto_usr" name="puesto" value="'+ (item.puesto || '') +'" autocomplete="off">' +
             '<label for="puesto_usr" class="active">Puesto</label>' +
           '</div>' +
           '<div class="row">' +
             '<div class="input-field anchoFrm4 left">' +
-              '<input type="text" id="abrev_usr" name="abrev" value="'+ (item.abrev || '') +'">' +
+              '<input type="text" id="abrev_usr" name="abrev" value="'+ (item.abrev || '') +'" autocomplete="off">' +
               '<label for="abrev_usr" class="active">Abreviatura</label>' +
             '</div>' +
-            '<div class="input-field anchoFrm4 right">' +
+            '<div class="input-field anchoFrm4 inline">' +
               '<select id="tipo_usr" name="tipo">' +
                 '<option value="admin" '+ ((item.tipo==='admin')? 'selected':'') +'>admin</option>' +
                 '<option value="inspector" '+ ((item.tipo==='inspector')? 'selected':'') +'>inspector</option>' +
