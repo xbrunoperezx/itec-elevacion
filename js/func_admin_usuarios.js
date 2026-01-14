@@ -270,7 +270,7 @@ var openUsuario = function(seccion, cual, id){
       data: totalParams,
       success: function(data){
         var item = JSON.parse(data).resultados[0];
-        var title = " Editar usuario - " + (item.user || '');
+        var title = " Editar usuario: " + (item.name || '');
         $("#modal_"+seccion).find(".modal_txt_title").text(title);
         $("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
         $("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
