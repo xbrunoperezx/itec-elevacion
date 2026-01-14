@@ -51,6 +51,8 @@ function readEquipos(){
       var id = item.id || '';
       var codigo = item.codigo || '';
       var nombreEq = item.nombre || '';
+      var marca = item.marca || '';
+      var modelo = item.modelo || '';
       var numSerieItem = item.num_serie || '';
       var ultima = item.ultima_calibracion_dmy || '';
       var prox = item.prox_calibracion_dmy || '';
@@ -59,8 +61,10 @@ function readEquipos(){
       tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho30'>" + id + "</td>";
       tr += "<td class='ancho50'>" + codigo + "</td>";
-      tr += "<td class='ancho30'><a seccion='equ' tipo='frm_editequ' data-id='"+id+"' class='editar_equi btn-floating btn-small waves-effect waves-light green' title='Editar equipo'><i class='material-icons'>edit</i></a>&nbsp;</td>";
-      tr += "<td><span class='main-text'>" + nombreEq + "</span></td>";
+      tr += "<td class='ancho30'><a seccion='equ' tipo='frm_editequ' data-id='"+id+"' class='editar_equi btn-floating btn-small waves-effect waves-light green' title='Editar equipo'><i class='material-icons'>edit</i></a></td>";
+      tr += "<td>" + nombreEq + "</td>";
+      tr += "<td class='ancho150'>" + marca + "</td>";
+      tr += "<td class='ancho150'>" + modelo + "</td>";
       tr += "<td class='ancho150'>" + numSerieItem + "</td>";
       tr += "<td class='ancho150'>" + ultima + "</td>";
       tr += "<td class='ancho150'>" + prox + "</td>";
