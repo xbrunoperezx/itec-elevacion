@@ -268,3 +268,7 @@ i.left{
   margin-top: 0px;
   margin-bottom: 0px;
 }
+
+.modal_txt_title{
+  padding-left: 8px;
+}

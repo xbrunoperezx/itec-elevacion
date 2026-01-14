@@ -280,3 +280,7 @@ i.left{
 .select-wrapper+label{
   top: 0px;
 }
+
+.modal_txt_title{
+  padding-left: 8px;
+}
