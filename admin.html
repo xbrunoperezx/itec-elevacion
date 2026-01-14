@@ -94,7 +94,58 @@
         </div>
         <div id="Mantenedores" class="tab-content" style="display:none;">Contenido - Mantenedores</div>
         <div id="Legislacion" class="tab-content" style="display:none;">Contenido - Legislación</div>
-        <div id="Revisiones" class="tab-content" style="display:none;">Contenido - Revisiones</div>
+        <div id="Revisiones" class="tab-content" style="display:none;">
+          <div class="row">
+              <div class="input-field col ancho75">
+                  <input type="number" id="filtro_revisiones_total" value="15">
+                  <label for="filtro_revisiones_total">Registros</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_revisiones_nombre">
+                  <label for="filtro_revisiones_nombre">Revisión</label>
+              </div>
+              <div class="input-field col s1">
+                  <button class="btn-floating waves-effect waves-light red" id="filtrar_revisiones" title='Filtrar'>
+                      <i class="material-icons">search</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light grey hide" id="filtrar_revisiones_clear" title='Limpiar'>
+                      <i class="material-icons">clear</i>
+                  </button>
+              </div>
+              <div class="right input-field col s2">
+                  <button class="btn-floating waves-effect waves-light orange" id="add_revisiones" title='Crear nuevo cliente'>
+                    <i class="material-icons">add</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light black" id="imprimir_revisiones" title='Generar PDF'>
+                    <i class="material-icons">print</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light green" id="exportar_revisiones" title='Exportar a XLS (Excel)'>
+                    <i class="material-icons">import_export</i>
+                  </button>
+              </div>
+          </div>
+          <table class="highlight" id="table_revisiones">
+            <thead>
+              <tr class="header-row">
+                <th>&nbsp;</th>
+                <th class="orderBy">ID<span class="direct"></span></th>
+                <th class="orderBy">Código<span class="direct"></span></th>
+                <th class="orderBy">&nbsp;<span class="direct"></span></th>
+                <th class="orderBy">Nombre<span class="direct"></span></th>
+                <th class="orderBy">Marca<span class="direct"></span></th>
+                <th class="orderBy">Modelo<span class="direct"></span></th>
+                <th class="orderBy">Núm Serie<span class="direct"></span></th>
+                <th class="orderBy">Calibración<span class="direct"></span></th>
+                <th class="orderBy">Próxima<span class="direct"></span></th>
+                <th>Opciones<span class="direct"></span></th>
+                <th>&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+          <div id="resultados_equipos"></div>
+        </div>
         <div id="Equipos" class="tab-content" style="display:none;">
           <div class="row">
               <div class="input-field col ancho75">
@@ -152,7 +203,36 @@
           <div id="resultados_equipos"></div>
         </div>
         <div id="Historial" class="tab-content" style="display:none;">Contenido - Historial Versiones</div>
-        <div id="CamposInformes" class="tab-content" style="display:none;">Contenido - Campos informes</div>
+        <div id="CamposInformes" class="tab-content" style="display:none;">
+          <div class="row">
+              <div class="input-field col ancho75">
+                  <input type="number" id="filtro_campos_total" value="15">
+                  <label for="filtro_campos_total">Registros</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_campos_nombre">
+                  <label for="filtro_campos_nombre">Nombre</label>
+              </div>
+              <div class="input-field col s1">
+                  <button class="btn-floating waves-effect waves-light red" id="filtrar_campos" title='Filtrar'>
+                      <i class="material-icons">search</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light grey hide" id="filtrar_campos_clear" title='Limpiar'>
+                      <i class="material-icons">clear</i>
+                  </button>
+              </div>
+              <div class="right input-field col s2">
+                  <button class="btn-floating waves-effect waves-light orange" id="add_campos" title='Crear nuevo cliente'>
+                    <i class="material-icons">add</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light black" id="imprimir_campos" title='Generar PDF'>
+                    <i class="material-icons">print</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light green" id="exportar_campos" title='Exportar a XLS (Excel)'>
+                    <i class="material-icons">import_export</i>
+                  </button>
+              </div>
+        </div>
         <div id="Tarifas" class="tab-content" style="display:none;">Contenido - Tarifas</div>
       </div>
     </div>
@@ -223,5 +303,6 @@
     <script src="js/app_admin.js"></script>
     <script src="js/func_admin_usuarios.js"></script>
     <script src="js/func_admin_equipos.js"></script>
+    <script src="js/func_admin_campos.js"></script>
   </body>
 </html>

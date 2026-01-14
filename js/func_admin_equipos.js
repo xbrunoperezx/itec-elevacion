@@ -360,12 +360,12 @@ var openEquipo = function(seccion, cual, id){
       '</div>' +
       '<div class="row">' +
         '<div class="input-field anchoFrm4 left">' +
-          '<input type="text" id="ultima_calibracion_equ" name="ultima_calibracion" value="" autocomplete="off">' +
-          '<label for="ultima_calibracion_equ">Última calibración (YYYY-MM-DD)</label>' +
+          '<input type="date" id="ultima_calibracion_equ" name="ultima_calibracion" value="" autocomplete="off">' +
+          '<label for="ultima_calibracion_equ">Última calibración</label>' +
         '</div>' +
         '<div class="input-field anchoFrm4 inline">' +
-          '<input type="text" id="prox_calibracion_equ" name="prox_calibracion" value="" autocomplete="off">' +
-          '<label for="prox_calibracion_equ">Próxima calibración (YYYY-MM-DD)</label>' +
+          '<input type="date" id="prox_calibracion_equ" name="prox_calibracion" value="" autocomplete="off">' +
+          '<label for="prox_calibracion_equ">Próxima calibración</label>' +
         '</div>' +
       '</div>' +
     '</form>';
