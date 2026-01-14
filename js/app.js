@@ -414,3 +414,61 @@ function comparer(index) {
 }
 
 function getCellValue(row, index){ return $(row).children("td").eq(index).text(); }
+
+// Menú contextual en el elemento #nav_account: opciones rápidas (Cerrar sesión)
+jQuery(document).on('click', '#nav_account', function(e){
+  e.preventDefault();
+  jQuery('.row-menu').remove();
+
+  var $btn = jQuery(this);
+  var offset = $btn.offset();
+  var menu = jQuery("<div class='row-menu'><ul><li class='row-menu-logout'>Cerrar sesión</li><li class='row-menu-cancel'>Cancelar</li></ul></div>");
+
+  menu.css({ visibility: 'hidden', top: 0, left: 0 });
+  jQuery('body').append(menu);
+
+  var menuW = menu.outerWidth();
+  var menuH = menu.outerHeight();
+  var winW = jQuery(window).width();
+  var winTop = jQuery(window).scrollTop();
+
+  var desiredLeft = offset.left + $btn.outerWidth() - menuW;
+  if (desiredLeft + menuW > winW - 6) desiredLeft = winW - menuW - 6;
+  if (desiredLeft < 6) desiredLeft = 6;
+
+  var desiredTop = offset.top + $btn.outerHeight() + 6;
+  if (desiredTop + menuH > winTop + jQuery(window).height()) {
+      desiredTop = offset.top - menuH - 6;
+      if (desiredTop < winTop + 6) desiredTop = winTop + 6;
+  }
+
+  menu.css({ top: desiredTop + 'px', left: desiredLeft + 'px', visibility: 'visible' });
+
+  menu.on('click', '.row-menu-logout', function(ev){
+    ev.stopPropagation();
+    // llamar al endpoint para terminar sesión
+    jQuery.post('services/end_session.php')
+      .done(function(resp){
+        if($.trim(resp) === 'OK'){
+          window.location.href = 'login.html';
+        } else {
+          modalError('Error','Error cerrando sesión: ' + resp, false);
+        }
+      })
+      .fail(function(){
+        modalError('Error','Error de red al intentar cerrar sesión', false);
+      })
+      .always(function(){ menu.remove(); });
+  });
+
+  menu.on('click', '.row-menu-cancel', function(ev){ ev.stopPropagation(); menu.remove(); });
+
+  setTimeout(function(){
+    jQuery(document).on('click.rowMenuCloseNav', function(ev){
+      if(jQuery(ev.target).closest('.row-menu').length===0 && jQuery(ev.target).closest('#nav_account').length===0){
+        jQuery('.row-menu').remove();
+        jQuery(document).off('click.rowMenuCloseNav');
+      }
+    });
+  }, 10);
+});
