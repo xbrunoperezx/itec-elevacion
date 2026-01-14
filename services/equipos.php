@@ -51,10 +51,10 @@ while ($row = mysqli_fetch_assoc($result)) {
     }else{
       $row['ultima_calibracion_dmy'] = date("d-m-Y", strtotime($row['ultima_calibracion']));
     }  
-    if($row['proxima_calibracion']=="0000-00-00" || empty($row['proxima_calibracion'])){
-      $row['proxima_calibracion_dmy'] = "-";
+    if($row['prox_calibracion']=="0000-00-00" || empty($row['prox_calibracion'])){
+      $row['prox_calibracion_dmy'] = "-";
     }else{
-        $row['proxima_calibracion_dmy'] = date("d-m-Y", strtotime($row['proxima_calibracion']));
+        $row['prox_calibracion_dmy'] = date("d-m-Y", strtotime($row['prox_calibracion']));
     }
     $resultados[] = $row;
 }

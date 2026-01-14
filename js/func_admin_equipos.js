@@ -52,8 +52,8 @@ function readEquipos(){
       var codigo = item.codigo || '';
       var nombreEq = item.nombre || '';
       var numSerieItem = item.num_serie || '';
-      var ultima = item.ultima_calibracion || '';
-      var prox = item.prox_calibracion || '';
+      var ultima = item.ultima_calibracion_dmy || '';
+      var prox = item.prox_calibracion_dmy || '';
 
       var tr = "<tr class='alto50'>";
       tr += "<td class='ancho50'>&nbsp;</td>";
