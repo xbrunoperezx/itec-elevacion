@@ -74,7 +74,7 @@ function readEquipos(){
           }
           var today = new Date();
           today.setHours(0,0,0,0);
-          if (ultimaDate && ultimaDate > today) {
+          if (ultimaDate && ultimaDate <= today) {
             ultimaErrorIcon = " <i class='material-icons red-text' title='Fecha última calibración en el futuro'>error</i>";
           }
         } catch(e) {
