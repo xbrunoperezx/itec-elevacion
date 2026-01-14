@@ -90,7 +90,7 @@ div.modal#modal_export {
   width: 600px;
 }
 
-div#resultados_cli, div#resultados_con, div#resultados_pri, div#resultados_seg, #table_cli_fact{
+div#resultados_cli, div#resultados_con, div#resultados_pri, div#resultados_seg, div#resultados_equipos, #table_cli_fact{
   margin: 10px;
   padding: 10px;
 }

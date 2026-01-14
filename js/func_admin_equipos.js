@@ -195,7 +195,7 @@ var openEquipo = function(seccion, cual, id){
       type: 'POST',
       data: totalParams,
       success: function(data){
-        var item = (data && data.resultados && data.resultados.length>0) ? data.resultados[0] : {};
+        var item = JSON.parse(data).resultados[0];
         var title = " Editar equipo - " + (item.nombre || '');
         $("#modal_"+seccion).find(".modal_txt_title").text(title);
         $("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
