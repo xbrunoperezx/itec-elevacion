@@ -224,10 +224,34 @@ var saveUsuario = function() {
 
 // Click en guardar (botón común #usu_save). Solo actuar si el modal usuario está abierto
 $(document.body).on('click', '#usu_save', function(){
-    // validar que se haya seleccionado un tipo de usuario
-    var tipo = $('#modal_usu').find('#tipo_usr').val();
-    if (typeof tipo === 'undefined' || tipo === null || tipo === '' || tipo === '0' || tipo === 'none'){
-      modalError('ERROR', 'Debes seleccionar un tipo de usuario antes de guardar.', false, 'Cerrar', 'warning');
+    if (!$('#modal_usu').length || !$('#modal_usu').is(':visible')) return;
+
+    var $modal = $('#modal_usu');
+
+    // Validaciones: agrupar todas las comprobaciones (usuario, password, name, email, puesto, tipo)
+    var idVal = $modal.find('#id_usr').length ? ($modal.find('#id_usr').val() || '') : '';
+    var isNew = String(idVal).trim() === '';
+    var usuarioVal = ($modal.find('#user_usr').val() || '').trim();
+    var passwordVal = $modal.find('#password_usr').val() || '';
+    var nameVal = ($modal.find('#name_usr').val() || '').trim();
+    var emailVal = ($modal.find('#email_usr').val() || '').trim();
+    var puestoVal = ($modal.find('#puesto_usr').val() || '').trim();
+    var tipoVal = ($modal.find('#tipo_usr').val() || '').trim();
+
+    var errors = [];
+    if (usuarioVal.length <= 8) errors.push('El usuario debe tener más de 8 caracteres.');
+    if (isNew) {
+      if (passwordVal.length <= 6) errors.push('La contraseña debe tener más de 6 caracteres.');
+    } else {
+      if (passwordVal.length > 0 && passwordVal.length <= 6) errors.push('La contraseña debe tener más de 6 caracteres si se modifica.');
+    }
+    if (nameVal === '') errors.push('El nombre no puede estar vacío.');
+    if (emailVal === '') errors.push('El email no puede estar vacío.');
+    if (puestoVal === '') errors.push('El puesto no puede estar vacío.');
+    if (typeof tipoVal === 'undefined' || tipoVal === null || tipoVal === '' || tipoVal === '0' || tipoVal === 'none') errors.push('Debes seleccionar un tipo de usuario antes de guardar.');
+
+    if (errors.length) {
+      modalError('ERROR', errors.join('\n'), false, 'Cerrar', 'warning');
       return;
     }
 
