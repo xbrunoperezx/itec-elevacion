@@ -26,7 +26,7 @@ if (!$link) {
 
 // Base SQL
 if($id==0){
-  $sql = "SELECT * FROM campos";
+  $sql = "SELECT * FROM informe_campos";
   $where = array();
   if (!empty($_POST['filtro_abrev'])) {
     $where[] = "`abrev` LIKE '%" . mysqli_real_escape_string($link, $_POST['filtro_abrev']) . "%'";
@@ -39,7 +39,7 @@ if($id==0){
   }
   $sql .= " ORDER BY id ASC LIMIT 0,{$lim}";
 }else{
-  $sql = "SELECT * FROM campos WHERE id={$id}";
+  $sql = "SELECT * FROM informe_campos WHERE id={$id}";
 }
 
 $result = mysqli_query($link, $sql);

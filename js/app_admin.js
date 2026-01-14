@@ -287,6 +287,9 @@ function comparer(index) {
     if(seccion=="equ"){
       openEquipo(seccion, cual, id);
     }
+    if(seccion=="cam"){
+      openCampo(seccion, cual, id);
+    }
 	}
 
 function getCellValue(row, index){ return $(row).children("td").eq(index).text(); }

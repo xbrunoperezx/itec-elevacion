@@ -20,7 +20,7 @@ if (!$link) {
     exit;
 }
 
-$sql = "DELETE FROM campos WHERE id={$id} LIMIT 1";
+$sql = "DELETE FROM informe_campos WHERE id={$id} LIMIT 1";
 if(mysqli_query($link, $sql)){
     echo "OK";
 }else{
