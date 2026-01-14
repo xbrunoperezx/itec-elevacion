@@ -68,6 +68,7 @@ function readEquipos(){
       tr += "<td class='ancho150'>" + numSerieItem + "</td>";
       tr += "<td class='ancho150'>" + ultima + "</td>";
       tr += "<td class='ancho150'>" + prox + "</td>";
+      tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho50'>" +
             "<a class='more_equi btn-floating btn-small waves-effect waves-light red' title='Más' data-id='"+id+"'><i class='material-icons'>more_vert</i></a>" +
             "</td>";
