@@ -58,12 +58,12 @@ function readEquipos(){
       var tr = "<tr class='alto50'>";
       tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho30'>" + id + "</td>";
-      tr += "<td>" + codigo + "</td>";
-      tr += "<td class='ancho50'><a seccion='equ' tipo='frm_editequ' data-id='"+id+"' class='editar_equi btn-floating btn-small waves-effect waves-light green' title='Editar equipo'><i class='material-icons'>edit</i></a>&nbsp;</td>";
-      tr += "<td class='ancho200'><span class='main-text'>" + nombreEq + "</span></td>";
-      tr += "<td class='ancho200'>" + numSerieItem + "</td>";
-      tr += "<td class='ancho200'>" + ultima + "</td>";
-      tr += "<td class='ancho200'>" + prox + "</td>";
+      tr += "<td class='ancho50'>" + codigo + "</td>";
+      tr += "<td class='ancho30'><a seccion='equ' tipo='frm_editequ' data-id='"+id+"' class='editar_equi btn-floating btn-small waves-effect waves-light green' title='Editar equipo'><i class='material-icons'>edit</i></a>&nbsp;</td>";
+      tr += "<td><span class='main-text'>" + nombreEq + "</span></td>";
+      tr += "<td class='ancho150'>" + numSerieItem + "</td>";
+      tr += "<td class='ancho150'>" + ultima + "</td>";
+      tr += "<td class='ancho150'>" + prox + "</td>";
       tr += "<td class='ancho50'>" +
             "<a class='more_equi btn-floating btn-small waves-effect waves-light red' title='Más' data-id='"+id+"'><i class='material-icons'>more_vert</i></a>" +
             "</td>";
