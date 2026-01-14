@@ -80,11 +80,11 @@ function readUsuarios(){
       var tr = "<tr class='alto50'>";
       tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho75'>" + id + "</td>";
-      tr += "<td class='ancho100'>" +
+      tr += "<td class='ancho50'>" +
             "<a seccion='usu' tipo='frm_editusu' data-id='"+id+"' class='editar_usr btn-floating btn-small waves-effect waves-light green' title='Editar usuario'><i class='material-icons'>edit</i></a>&nbsp;" +
             "</td>";
       tr += "<td>" + nombreUsr + "</td>";
-      tr += "<td><a class='btn-floating btn-small waves-effect waves-light ";
+      tr += "<td class='ancho50'><a class='btn-floating btn-small waves-effect waves-light ";
       if(tipo=="admin"){
         tr += "black";
       }else if(tipo=="inspector"){
