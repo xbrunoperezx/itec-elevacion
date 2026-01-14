@@ -37,7 +37,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
         $_SESSION['user_id'] = $row['id'];
         // Establece la cookie de sesión (path '/') y la cookie user_id (path '/services' para compatibilidad)
         setcookie("session", "autenticado", time() + 7200, '/');
-        setcookie("user_id", $row[id], time() + 7200, '/services');
+        setcookie("user_id", $row['id'], time() + 7200, '/services');
         // Devolvemos un mensaje de éxito
         echo 'success';
     } else {
