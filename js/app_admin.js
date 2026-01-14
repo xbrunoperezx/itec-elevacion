@@ -276,4 +276,14 @@ function comparer(index) {
   };
 }
 
+	// funcion de abrir popups en funcion de la seccion y formulario (también recibe el id)
+	window.openModal = function(seccion, cual, id){
+		$("#modal_"+seccion).find(".modal_txt_title").empty();
+		$("#modal_"+seccion).find(".modal_txt_btn_left").empty();
+		$("#modal_"+seccion).find(".modal_txt_btn_right").empty();
+		if(seccion=="usu"){
+			openUsuario(seccion, cual, id);
+		}
+	}
+
 function getCellValue(row, index){ return $(row).children("td").eq(index).text(); }

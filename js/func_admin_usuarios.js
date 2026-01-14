@@ -137,7 +137,163 @@ $(function(){
       modalError('ERROR', 'Hay que introducir un número mínimo de resultados esperados! Para ello introduce un valor en el campo registros.', false);
     }
   });
+
+  // Click en crear nuevo usuario (abrir popup)
+  $(document).on('click', '#add_usuarios', function(e){
+    e.preventDefault();
+    window.openModal('usu', 'frm_newusu');
+  });
+
+  // Click en editar usuario: abrir modal de edición pasando el id
+  $(document).on('click', '.editar_usr', function(e){
+    e.preventDefault();
+    var id = $(this).data('id');
+    window.openModal('usu', 'frm_editusu', id);
+  });
 });
+
+var openUsuario = function(seccion, cual, id){
+  if(cual === 'frm_editusu'){
+    var totalParams = { filtro_id: id };
+    $.ajax({
+      url: 'services/usuarios.php',
+      type: 'POST',
+      data: totalParams,
+      success: function(data){
+        var item = JSON.parse(data).resultados[0];
+        var title = "Editar usuario - " + (item.user || '');
+        $("#modal_"+seccion).find(".modal_txt_title").text(title);
+        $("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
+        $("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
+
+        var frm = '<form id="usuario_frm_editar">' +
+          '<div class="input-field">' +
+            '<input type="text" id="user_usr" name="user" value="'+ (item.user || '') +'">' +
+            '<label for="user_usr" class="active">Usuario</label>' +
+          '</div>' +
+          '<div class="input-field">' +
+            '<input type="password" id="password_usr" name="password" value="">' +
+            '<label for="password_usr">Contraseña (dejar en blanco para no cambiar)</label>' +
+          '</div>' +
+          '<div class="input-field">' +
+            '<input type="text" id="name_usr" name="name" value="'+ (item.name || '') +'">' +
+            '<label for="name_usr" class="active">Nombre</label>' +
+          '</div>' +
+          '<div class="input-field">' +
+            '<input type="text" id="email_usr" name="email" value="'+ (item.email || '') +'">' +
+            '<label for="email_usr" class="active">Email</label>' +
+          '</div>' +
+          '<div class="input-field anchoFrm2">' +
+            '<input type="text" id="extension_usr" name="extension" value="'+ (item.extension || '') +'">' +
+            '<label for="extension_usr" class="active">Extensión</label>' +
+          '</div>' +
+          '<div class="input-field anchoFrm2">' +
+            '<input type="text" id="pphone_usr" name="pphone" value="'+ (item.pphone || '') +'">' +
+            '<label for="pphone_usr" class="active">Teléfono</label>' +
+          '</div>' +
+          '<div class="input-field">' +
+            '<input type="text" id="oficina_usr" name="oficina" value="'+ (item.oficina || '') +'">' +
+            '<label for="oficina_usr" class="active">Oficina</label>' +
+          '</div>' +
+          '<div class="input-field">' +
+            '<input type="text" id="puesto_usr" name="puesto" value="'+ (item.puesto || '') +'">' +
+            '<label for="puesto_usr" class="active">Puesto</label>' +
+          '</div>' +
+          '<div class="input-field">' +
+            '<select id="tipo_usr" name="tipo">' +
+              '<option value="admin" '+ ((item.tipo==='admin')? 'selected':'') +'>admin</option>' +
+              '<option value="inspector" '+ ((item.tipo==='inspector')? 'selected':'') +'>inspector</option>' +
+              '<option value="auxiliar" '+ ((item.tipo==='auxiliar')? 'selected':'') +'>auxiliar</option>' +
+            '</select>' +
+            '<label for="tipo_usr" class="active">Tipo</label>' +
+          '</div>' +
+          '<div class="input-field">' +
+            '<input type="text" id="abrev_usr" name="abrev" value="'+ (item.abrev || '') +'">' +
+            '<label for="abrev_usr" class="active">Abreviatura</label>' +
+          '</div>' +
+          '<div class="input-field">' +
+            '<textarea id="equipos_usr" name="equipos">'+ (typeof item.equipos === 'object' ? JSON.stringify(item.equipos) : (item.equipos || '')) +'</textarea>' +
+            '<label for="equipos_usr" class="active">Equipos (JSON)</label>' +
+          '</div>' +
+          '<div class="input-field" style="display:none;">' +
+            '<input type="text" id="id_usr" name="id" value="'+ (item.id || '') +'">' +
+          '</div>' +
+        '</form>';
+
+        $("#modal_"+seccion).find(".contentForm").html(frm);
+        $("#modal_"+seccion).find('select#tipo_usr').formSelect();
+        $("#modal_"+seccion).modal({ dismissible: false });
+        $("#modal_"+seccion).modal('open');
+        setTimeout(function(){ $('#user_usr').focus(); }, 200);
+      },
+      error: function(xhr,status,error){
+        modalError('ERROR','Error cargando usuario',false,'Cerrar','error');
+      }
+    });
+  } else if(cual === 'frm_newusu'){
+    var title = 'Nuevo usuario';
+    $("#modal_"+seccion).find(".modal_txt_title").text(title);
+    $("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
+    $("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
+
+    var frm = '<form id="usuario_frm_nuevo">' +
+      '<div class="input-field">' +
+        '<input type="text" id="user_usr" name="user" value="">' +
+        '<label for="user_usr">Usuario</label>' +
+      '</div>' +
+      '<div class="input-field">' +
+        '<input type="password" id="password_usr" name="password" value="">' +
+        '<label for="password_usr">Contraseña</label>' +
+      '</div>' +
+      '<div class="input-field">' +
+        '<input type="text" id="name_usr" name="name" value="">' +
+        '<label for="name_usr">Nombre</label>' +
+      '</div>' +
+      '<div class="input-field">' +
+        '<input type="text" id="email_usr" name="email" value="">' +
+        '<label for="email_usr">Email</label>' +
+      '</div>' +
+      '<div class="input-field anchoFrm2">' +
+        '<input type="text" id="extension_usr" name="extension" value="">' +
+        '<label for="extension_usr">Extensión</label>' +
+      '</div>' +
+      '<div class="input-field anchoFrm2">' +
+        '<input type="text" id="pphone_usr" name="pphone" value="">' +
+        '<label for="pphone_usr">Teléfono</label>' +
+      '</div>' +
+      '<div class="input-field">' +
+        '<input type="text" id="oficina_usr" name="oficina" value="">' +
+        '<label for="oficina_usr">Oficina</label>' +
+      '</div>' +
+      '<div class="input-field">' +
+        '<input type="text" id="puesto_usr" name="puesto" value="">' +
+        '<label for="puesto_usr">Puesto</label>' +
+      '</div>' +
+      '<div class="input-field">' +
+        '<select id="tipo_usr" name="tipo">' +
+          '<option value="admin">admin</option>' +
+          '<option value="inspector">inspector</option>' +
+          '<option value="auxiliar">auxiliar</option>' +
+        '</select>' +
+        '<label for="tipo_usr">Tipo</label>' +
+      '</div>' +
+      '<div class="input-field">' +
+        '<input type="text" id="abrev_usr" name="abrev" value="">' +
+        '<label for="abrev_usr">Abreviatura</label>' +
+      '</div>' +
+      '<div class="input-field">' +
+        '<textarea id="equipos_usr" name="equipos"></textarea>' +
+        '<label for="equipos_usr">Equipos (JSON)</label>' +
+      '</div>' +
+    '</form>';
+
+    $("#modal_"+seccion).find(".contentForm").html(frm);
+    $("#modal_"+seccion).find('select#tipo_usr').formSelect();
+    $("#modal_"+seccion).modal({ dismissible: false });
+    $("#modal_"+seccion).modal('open');
+    setTimeout(function(){ $('#user_usr').focus(); }, 200);
+  }
+};
 
 // Permitir pulsar Enter en los campos de filtro para ejecutar la búsqueda
 jQuery(document).on('keydown', '#Usuarios [id*=filtro_usuarios]', function(e){
