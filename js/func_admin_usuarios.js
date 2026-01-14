@@ -319,7 +319,6 @@ var openUsuario = function(seccion, cual, id){
         }
         $("#modal_"+seccion).modal({ dismissible: false });
         $("#modal_"+seccion).modal('open');
-        setTimeout(function(){ $('#user_usr').focus(); }, 200);
       },
       error: function(xhr,status,error){
         modalError('ERROR','Error cargando usuario',false,'Cerrar','error');

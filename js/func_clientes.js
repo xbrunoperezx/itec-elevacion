@@ -812,9 +812,7 @@ var openCliente = function(seccion, cual, id){
 				$("#modal_"+seccion).find(".contentForm").html(frm_render);
 				$("#modal_"+seccion).find('.tabs').tabs();
 				$('select#mantenedor_cli').formSelect();
-				$("#modal_"+seccion).modal({
-					dismissible: false
-				});
+				$("#modal_"+seccion).modal({dismissible: false});
 				$("#modal_"+seccion).modal("open");
 				// cargar datos de facturación del cliente, asignar id al botón recargar y renderizar formulario de nuevos datos
 				readDatosFacturacion(item.id);
