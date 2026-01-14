@@ -39,19 +39,26 @@ $puesto = mysqli_real_escape_string($link, $puesto);
 $tipo = mysqli_real_escape_string($link, $tipo);
 $abrev = mysqli_real_escape_string($link, $abrev);
 $equipos_raw = $equipos;
+$equipos_is_null = false;
 if(isset($equipos_raw) && trim($equipos_raw) !== ''){
   $decoded_equipos = json_decode($equipos_raw, true);
   if(json_last_error() !== JSON_ERROR_NONE){
-    echo "KO: equipos JSON inválido";
-    mysqli_close($link);
-    exit;
+    // Invalid JSON: store NULL as requested
+    $equipos_is_null = true;
+    $equipos = null;
+  } else {
+    // Normalizar JSON (mantener unicode)
+    $equipos = json_encode($decoded_equipos, JSON_UNESCAPED_UNICODE);
+    $equipos_is_null = false;
   }
-  // Normalizar JSON (mantener unicode)
-  $equipos = json_encode($decoded_equipos, JSON_UNESCAPED_UNICODE);
 } else {
-  $equipos = '';
+  // Empty -> store NULL
+  $equipos_is_null = true;
+  $equipos = null;
 }
-$equipos = mysqli_real_escape_string($link, $equipos);
+if(!$equipos_is_null){
+  $equipos = mysqli_real_escape_string($link, $equipos);
+}
 
 // Preparar hash de contraseña solo si se recibió
 $hasPassword = (isset($raw_password) && trim($raw_password) !== '');
@@ -83,7 +90,11 @@ if(isset($_POST['id']) && $_POST['id'] !== ''){
   $setParts[] = "`puesto`='{$puesto}'";
   $setParts[] = "`tipo`='{$tipo}'";
   $setParts[] = "`abrev`='{$abrev}'";
-  $setParts[] = "`equipos`='{$equipos}'";
+  if($equipos_is_null){
+    $setParts[] = "`equipos`=NULL";
+  } else {
+    $setParts[] = "`equipos`='{$equipos}'";
+  }
   $sql = "UPDATE `usuarios` SET " . implode(', ', $setParts) . " WHERE `id`={$id}";
 
   if (mysqli_query($link, $sql)) {
@@ -96,7 +107,13 @@ if(isset($_POST['id']) && $_POST['id'] !== ''){
   $cols = array('`user`','`password`');
   $vals = array("'{$user}'","'{$password_hashed}'");
   $cols = array_merge($cols, array('`name`','`email`','`extension`','`pphone`','`oficina`','`puesto`','`tipo`','`abrev`','`equipos`'));
-  $vals = array_merge($vals, array("'{$name}'","'{$email}'","'{$extension}'","'{$pphone}'","'{$oficina}'","'{$puesto}'","'{$tipo}'","'{$abrev}'","'{$equipos}'"));
+  $vals_extra = array("'{$name}'","'{$email}'","'{$extension}'","'{$pphone}'","'{$oficina}'","'{$puesto}'","'{$tipo}'","'{$abrev}'");
+  if($equipos_is_null){
+    $vals_extra[] = "NULL";
+  } else {
+    $vals_extra[] = "'{$equipos}'";
+  }
+  $vals = array_merge($vals, $vals_extra);
   $sql = "INSERT INTO `usuarios` (" . implode(',', $cols) . ") VALUES (" . implode(',', $vals) . ")";
 
   if (mysqli_query($link, $sql)) {
