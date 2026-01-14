@@ -38,6 +38,19 @@ $oficina = mysqli_real_escape_string($link, $oficina);
 $puesto = mysqli_real_escape_string($link, $puesto);
 $tipo = mysqli_real_escape_string($link, $tipo);
 $abrev = mysqli_real_escape_string($link, $abrev);
+$equipos_raw = $equipos;
+if(isset($equipos_raw) && trim($equipos_raw) !== ''){
+  $decoded_equipos = json_decode($equipos_raw, true);
+  if(json_last_error() !== JSON_ERROR_NONE){
+    echo "KO: equipos JSON inválido";
+    mysqli_close($link);
+    exit;
+  }
+  // Normalizar JSON (mantener unicode)
+  $equipos = json_encode($decoded_equipos, JSON_UNESCAPED_UNICODE);
+} else {
+  $equipos = '';
+}
 $equipos = mysqli_real_escape_string($link, $equipos);
 
 // Preparar hash de contraseña solo si se recibió
