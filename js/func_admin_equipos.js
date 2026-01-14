@@ -58,8 +58,8 @@ function readEquipos(){
       var tr = "<tr class='alto50'>";
       tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho30'>" + id + "</td>";
-      tr += "<td class='ancho50'><a seccion='equ' tipo='frm_editequ' data-id='"+id+"' class='editar_equi btn-floating btn-small waves-effect waves-light green' title='Editar equipo'><i class='material-icons'>edit</i></a>&nbsp;</td>";
       tr += "<td>" + codigo + "</td>";
+      tr += "<td class='ancho50'><a seccion='equ' tipo='frm_editequ' data-id='"+id+"' class='editar_equi btn-floating btn-small waves-effect waves-light green' title='Editar equipo'><i class='material-icons'>edit</i></a>&nbsp;</td>";
       tr += "<td class='ancho200'><span class='main-text'>" + nombreEq + "</span></td>";
       tr += "<td class='ancho200'>" + numSerieItem + "</td>";
       tr += "<td class='ancho200'>" + ultima + "</td>";
