@@ -239,7 +239,7 @@ $(document.body).on('click', '#usu_save', function(){
     var tipoVal = ($modal.find('#tipo_usr').val() || '').trim();
 
     var errors = [];
-    if (usuarioVal.length <= 8) errors.push('El usuario debe tener más de 8 caracteres.');
+    if (usuarioVal.length <= 4) errors.push('El usuario debe tener más de 4 caracteres.');
     if (isNew) {
       if (passwordVal.length <= 6) errors.push('La contraseña debe tener más de 6 caracteres.');
     } else {
@@ -251,7 +251,7 @@ $(document.body).on('click', '#usu_save', function(){
     if (typeof tipoVal === 'undefined' || tipoVal === null || tipoVal === '' || tipoVal === '0' || tipoVal === 'none') errors.push('Debes seleccionar un tipo de usuario antes de guardar.');
 
     if (errors.length) {
-      modalError('ERROR', errors.join('\n'), false, 'Cerrar', 'warning');
+      modalError('ERROR', errors.join('<br>'), false, 'Cerrar', 'warning');
       return;
     }
 
