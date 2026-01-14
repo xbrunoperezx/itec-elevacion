@@ -208,7 +208,8 @@ jQuery(document).on('click', '.more_usr', function(e){
             $.post('services/usuarios_delete.php', { id: itemId })
               .done(function(resp){
                 if($.trim(resp) === 'OK'){
-                  $btn.closest('tr').remove();
+                  // Forzar recarga de la lista mediante el botón filtrar
+                  $('#filtrar_usuarios').click();
                 } else {
                   modalError('Error', 'Error al eliminar: ' + resp, false, 'Cerrar', 'error');
                 }
