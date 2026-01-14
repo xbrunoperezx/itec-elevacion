@@ -288,3 +288,8 @@ i.left{
 .tituloModal i{
   padding-left: 8px;
 }
+
+#user_menu_nav{
+  padding-right:8px;
+  font-weight: bold;
+}
