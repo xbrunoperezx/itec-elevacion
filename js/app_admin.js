@@ -281,9 +281,12 @@ function comparer(index) {
 		$("#modal_"+seccion).find(".modal_txt_title").empty();
 		$("#modal_"+seccion).find(".modal_txt_btn_left").empty();
 		$("#modal_"+seccion).find(".modal_txt_btn_right").empty();
-		if(seccion=="usu"){
-			openUsuario(seccion, cual, id);
-		}
+    if(seccion=="usu"){
+      openUsuario(seccion, cual, id);
+    }
+    if(seccion=="equ"){
+      openEquipo(seccion, cual, id);
+    }
 	}
 
 function getCellValue(row, index){ return $(row).children("td").eq(index).text(); }
