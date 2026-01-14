@@ -31,12 +31,13 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
 
     // Verificamos si la consulta devuelve algún resultado
     if (mysqli_num_rows($result) > 0) {
-        // Almacenamos el nombre de usuario en una variable de sesión
-
+        // Obtener fila y almacenar datos en sesión
+        $row = mysqli_fetch_assoc($result);
         $_SESSION['user'] = $username;
-        // Establece la cookie de sesión
-        setcookie("session", "autenticado", time() + 7200);  
-        setcookie("user_id", mysqli_fetch_assoc($result)['id'], time() + 7200);  
+        $_SESSION['user_id'] = $row['id'];
+        // Establece la cookie de sesión (path '/') y la cookie user_id (path '/services' para compatibilidad)
+        setcookie("session", "autenticado", time() + 7200, '/');
+        setcookie("user_id", $row[id], time() + 7200, '/services');
         // Devolvemos un mensaje de éxito
         echo 'success';
     } else {

@@ -178,6 +178,9 @@ $(document).ready(function() {
 	// Forzamos que cargue la lista de clientes al cargar la página
 	$('#nav-desktop li:first').click();
 
+  // Cargar nombre de usuario en el nav
+  if (typeof loadUserMenu === 'function') loadUserMenu();
+
 	// Botones de ocultar los filtros
 	$("#btnToggle_cli").click(function(){
 		$("#sectionToggle_cli").toggle();
@@ -414,6 +417,24 @@ function comparer(index) {
 }
 
 function getCellValue(row, index){ return $(row).children("td").eq(index).text(); }
+
+// Cargar nombre de usuario en el menú superior
+function loadUserMenu(){
+  try{
+    jQuery.post('services/current_user.php')
+      .done(function(resp){
+        try{
+          var data = (typeof resp === 'string') ? JSON.parse(resp) : resp;
+          if(data && data.resultados && data.resultados.length>0){
+            var item = data.resultados[0];
+            var display = item.name || item.user || '';
+            jQuery('#user_menu_nav').text(display);
+          }
+        }catch(e){ console.warn('Error parseando usuario', e); }
+      })
+      .fail(function(){ console.warn('No se pudo cargar usuario'); });
+  }catch(e){ console.warn('loadUserMenu error', e); }
+}
 
 // Menú contextual en el elemento #nav_account: opciones rápidas (Cerrar sesión)
 jQuery(document).on('click', '#nav_account', function(e){
