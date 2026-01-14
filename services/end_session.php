@@ -11,8 +11,11 @@ if (ini_get("session.use_cookies")) {
 // destruir la sesión
 session_destroy();
 // eliminar cookies de aplicación
+// Intentar borrar cookies en la raíz y en la ruta /services (donde se crearon originalmente)
 setcookie('user_id', '', time() - 3600, '/');
 setcookie('session', '', time() - 3600, '/');
+setcookie('user_id', '', time() - 3600, '/services');
+setcookie('session', '', time() - 3600, '/services');
 // respuesta simple
 echo 'OK';
 exit;
