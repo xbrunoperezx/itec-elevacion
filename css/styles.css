@@ -281,3 +281,7 @@ i.left{
   padding-right:8px;
   font-weight: bold;
 }
+
+textarea{
+  margin-top: 8px;
+}

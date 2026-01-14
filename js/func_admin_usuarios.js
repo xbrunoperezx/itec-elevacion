@@ -222,15 +222,20 @@ var saveUsuario = function() {
 }; // end saveUsuario()
 
 
-// Click en guardar (botón común #cli_save). Solo actuar si el modal usuario está abierto
-$(document.body).on('click', '#cli_save', function(){
-  if($('#modal_usu').length && $('#modal_usu').is(':visible')){
+// Click en guardar (botón común #usu_save). Solo actuar si el modal usuario está abierto
+$(document.body).on('click', '#usu_save', function(){
+    // validar que se haya seleccionado un tipo de usuario
+    var tipo = $('#modal_usu').find('#tipo_usr').val();
+    if (typeof tipo === 'undefined' || tipo === null || tipo === '' || tipo === '0' || tipo === 'none'){
+      modalError('ERROR', 'Debes seleccionar un tipo de usuario antes de guardar.', false, 'Cerrar', 'warning');
+      return;
+    }
+
     modalConfirm("Guardar cambios en usuario", "¿Estás seguro de que quieres guardar los cambios?\n\n", false, "Guardar", "Cancelar", "save", "clear", function(){
       saveUsuario();
     }, function(){
       // cancel
     });
-  }
 });
 var openUsuario = function(seccion, cual, id){
   if(cual === 'frm_editusu'){
@@ -372,6 +377,7 @@ var openUsuario = function(seccion, cual, id){
         '</div>' +
         '<div class="input-field anchoFrm4 inline">' +
           '<select id="tipo_usr" name="tipo">' +
+            '<option value="none" selected>---</option>' +
             '<option value="admin">admin</option>' +
             '<option value="inspector">inspector</option>' +
             '<option value="auxiliar">auxiliar</option>' +
