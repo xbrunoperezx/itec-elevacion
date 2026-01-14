@@ -60,6 +60,16 @@ function readUsuarios(){
       var puesto = item.puesto || '';
       var tipo = item.tipo || '';
       var abrev = item.abrev || '';
+      var tipoIcon = '';
+      if(tipo === 'admin'){
+        tipoIcon = "<a class='btn-floating btn-small waves-effect waves-light red' title='Administrador'><i class='material-icons'>settings</i></a>";
+      } else if(tipo === 'inspector'){
+        tipoIcon = "<a class='btn-floating btn-small waves-effect waves-light blue' title='Inspector'><i class='material-icons'>assignment_ind</i></a>";
+      } else if(tipo === 'auxiliar'){
+        tipoIcon = "<a class='btn-floating btn-small waves-effect waves-light amber darken-2' title='Auxiliar'><i class='material-icons'>person</i></a>";
+      } else {
+        tipoIcon = tipo; // fallback: mostrar texto si no coincide
+      }
       var equipos = item.equipos || {};
 
       var tr = "<tr class='alto50'>";
@@ -73,12 +83,12 @@ function readUsuarios(){
       tr += "<td class='ancho200'><span class='main-text'>" + usuario + "</span></td>";
       tr += "<td class='ancho200'>" + email + "</td>";
       tr += "<td class='ancho200'>" + puesto + "</td>";
-      tr += "<td class='ancho100'>" + tipo + "</td>";
+      tr += "<td class='ancho100'>" + tipoIcon + "</td>";
       tr += "<td class='ancho150'><a class='btn-floating btn-small waves-effect waves-light black' title='Enviar email' href='mailto:"+email+"'><i class='material-icons'>email</i></a>&nbsp;";
       if(Object.keys(equipos).length > 0){
         tr += "<a class='btn-floating btn-small waves-effect waves-light red' title='";
         for(var eqId in equipos){
-          tr += "Equipo: " + equipos[eqId] + " (ID: " + eqId + ")\n";
+          tr += eqId + " - " + equipos[eqId] +"\n";
         }
         tr += "'><i class='material-icons'>business_center</i></a>";
       }
