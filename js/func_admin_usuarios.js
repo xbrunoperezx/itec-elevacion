@@ -187,24 +187,24 @@ var openUsuario = function(seccion, cual, id){
           '</div>' +
           '<div class="row">' +
             '<div class="input-field anchoFrm4 left">' +
-              '<input type="text" id="extension_usr" name="extension" value="'+ (item.extension || '') +'" autocomplete="off">' +
-              '<label for="extension_usr" class="active">Extensión</label>' +
-            '</div>' +
-            '<div class="input-field anchoFrm4 inline">' +
               '<input type="text" id="pphone_usr" name="pphone" value="'+ (item.pphone || '') +'" autocomplete="off">' +
               '<label for="pphone_usr" class="active">Teléfono</label>' +
+            '</div>' +
+            '<div class="input-field anchoFrm4 inline">' +
+              '<input type="text" id="extension_usr" name="extension" value="'+ (item.extension || '') +'" autocomplete="off">' +
+              '<label for="extension_usr" class="active">Extensión</label>' +
             '</div>' +
             '<div class="input-field anchoFrm4 inline">' +
             '<input type="text" id="oficina_usr" name="oficina" value="'+ (item.oficina || '') +'" autocomplete="off">' +
             '<label for="oficina_usr" class="active">Oficina</label>' +
             '</div>' +
           '</div>' +
-          '<div class="input-field">' +
-            '<input type="text" id="puesto_usr" name="puesto" value="'+ (item.puesto || '') +'" autocomplete="off">' +
-            '<label for="puesto_usr" class="active">Puesto</label>' +
-          '</div>' +
           '<div class="row">' +
             '<div class="input-field anchoFrm4 left">' +
+              '<input type="text" id="puesto_usr" name="puesto" value="'+ (item.puesto || '') +'" autocomplete="off">' +
+              '<label for="puesto_usr" class="active">Puesto</label>' +
+            '</div>' +
+            '<div class="input-field anchoFrm4 inline">' +
               '<input type="text" id="abrev_usr" name="abrev" value="'+ (item.abrev || '') +'" autocomplete="off">' +
               '<label for="abrev_usr" class="active">Abreviatura</label>' +
             '</div>' +
