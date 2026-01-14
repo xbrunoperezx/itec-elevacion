@@ -443,7 +443,7 @@ jQuery(document).on('click', '#nav_account', function(e){
 
   var $btn = jQuery(this);
   var offset = $btn.offset();
-  var menu = jQuery("<div class='row-menu'><ul><li class='row-menu-logout'>Cerrar sesión</li><li class='row-menu-cancel'>Cancelar</li></ul></div>");
+  var menu = jQuery("<div class='row-menu'><ul><li class='row-menu-logout'>Cerrar sesión</li><li class='row-menu-config'>Administración</li><li class='row-menu-cancel'>Cancelar</li></ul></div>");
 
   menu.css({ visibility: 'hidden', top: 0, left: 0 });
   jQuery('body').append(menu);
@@ -480,6 +480,12 @@ jQuery(document).on('click', '#nav_account', function(e){
         modalError('Error','Error de red al intentar cerrar sesión', false);
       })
       .always(function(){ menu.remove(); });
+  });
+
+  menu.on('click', '.row-menu-config', function(ev){
+    ev.stopPropagation();
+    window.open('admin.html', '_blank');
+    menu.remove();
   });
 
   menu.on('click', '.row-menu-cancel', function(ev){ ev.stopPropagation(); menu.remove(); });
