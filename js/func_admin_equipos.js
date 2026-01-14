@@ -54,8 +54,58 @@ function readEquipos(){
       var marca = item.marca || '';
       var modelo = item.modelo || '';
       var numSerieItem = item.num_serie || '';
-      var ultima = item.ultima_calibracion_dmy || '';
-      var prox = item.prox_calibracion_dmy || '';
+      var ultima = item.ultima_calibracion_dmy || item.ultima_calibracion || '';
+      var prox = item.prox_calibracion_dmy || item.prox_calibracion || '';
+      var ultimaErrorIcon = '';
+      if (ultima) {
+        try {
+          var ultimaDate = null;
+          var isoMatch = String(ultima).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+          if (isoMatch) {
+            ultimaDate = new Date(isoMatch[1] + '-' + isoMatch[2] + '-' + isoMatch[3] + 'T00:00:00');
+          } else {
+            var dmyMatch = String(ultima).match(/^(\d{2})[\/\-](\d{2})[\/\-](\d{4})$/);
+            if (dmyMatch) {
+              // dmy -> YYYY-MM-DD
+              ultimaDate = new Date(dmyMatch[3] + '-' + dmyMatch[2] + '-' + dmyMatch[1] + 'T00:00:00');
+            } else {
+              ultimaDate = new Date(ultima);
+            }
+          }
+          var today = new Date();
+          today.setHours(0,0,0,0);
+          if (ultimaDate && ultimaDate > today) {
+            ultimaErrorIcon = " <i class='material-icons red-text' title='Fecha última calibración en el futuro'>error</i>";
+          }
+        } catch(e) {
+          // ignore parse errors
+        }
+      }
+      var proxErrorIcon = '';
+      if (prox) {
+        try {
+          var proxDate = null;
+          var isoMatchP = String(prox).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+          if (isoMatchP) {
+            proxDate = new Date(isoMatchP[1] + '-' + isoMatchP[2] + '-' + isoMatchP[3] + 'T00:00:00');
+          } else {
+            var dmyMatchP = String(prox).match(/^(\d{2})[\/\-](\d{2})[\/\-](\d{4})$/);
+            if (dmyMatchP) {
+              proxDate = new Date(dmyMatchP[3] + '-' + dmyMatchP[2] + '-' + dmyMatchP[1] + 'T00:00:00');
+            } else {
+              proxDate = new Date(prox);
+            }
+          }
+          var todayCheck = new Date();
+          todayCheck.setHours(0,0,0,0);
+          // marcar error si la próxima calibración ya está vencida o es hoy
+          if (proxDate && proxDate <= todayCheck) {
+            proxErrorIcon = " <i class='material-icons red-text' title='Próxima calibración vencida o en día'>error</i>";
+          }
+        } catch(e) {
+          // ignore parse errors
+        }
+      }
 
       var tr = "<tr class='alto50'>";
       tr += "<td class='ancho50'>&nbsp;</td>";
@@ -66,8 +116,8 @@ function readEquipos(){
       tr += "<td class='ancho150'>" + marca + "</td>";
       tr += "<td class='ancho200'>" + modelo + "</td>";
       tr += "<td class='ancho150'>" + numSerieItem + "</td>";
-      tr += "<td class='ancho150'>" + ultima + "</td>";
-      tr += "<td class='ancho150'>" + prox + "</td>";
+      tr += "<td class='ancho150'>" + ultima + (ultimaErrorIcon || '') + "</td>";
+      tr += "<td class='ancho150'>" + prox + (proxErrorIcon || '') + "</td>";
       tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho50'>" +
             "<a class='more_equi btn-floating btn-small waves-effect waves-light red' title='Más' data-id='"+id+"'><i class='material-icons'>more_vert</i></a>" +
