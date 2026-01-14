@@ -277,6 +277,10 @@ i.left{
   margin-top: 0px;
 }
 
+.select-wrapper+label{
+  top: 0px!important;
+}
+
 .modal_txt_title{
   padding-left: 8px;
 }
