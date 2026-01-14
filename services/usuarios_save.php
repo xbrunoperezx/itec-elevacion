@@ -9,6 +9,7 @@ if (!isset($_COOKIE['user_id'])) {
 $id = isset($_POST['id']) ? $_POST['id'] : '';
 $user = isset($_POST['user']) ? $_POST['user'] : '';
 $password = isset($_POST['password']) ? $_POST['password'] : '';
+$raw_password = $password; // conservar valor original para hashear antes de escapar
 $name = isset($_POST['name']) ? $_POST['name'] : '';
 $email = isset($_POST['email']) ? $_POST['email'] : '';
 $extension = isset($_POST['extension']) ? $_POST['extension'] : '';
@@ -39,10 +40,38 @@ $tipo = mysqli_real_escape_string($link, $tipo);
 $abrev = mysqli_real_escape_string($link, $abrev);
 $equipos = mysqli_real_escape_string($link, $equipos);
 
+// Preparar hash de contraseña solo si se recibió
+$hasPassword = (isset($raw_password) && trim($raw_password) !== '');
+if($hasPassword){
+  $password_hashed = md5($raw_password);
+  $password_hashed = mysqli_real_escape_string($link, $password_hashed);
+}
+
+// Para el CREATE, si no se envía password por defecto usar '1234' hasheado
+if(!$hasPassword){
+  $password_hashed = md5('1234');
+  $password_hashed = mysqli_real_escape_string($link, $password_hashed);
+}
+
 // Si se proporciona un id no vacío, hacemos UPDATE, si no hacemos INSERT
 if(isset($_POST['id']) && $_POST['id'] !== ''){
   $id = intval($_POST['id']);
-  $sql = "UPDATE `usuarios` SET `user`='{$user}', `password`='{$password}', `name`='{$name}', `email`='{$email}', `extension`='{$extension}', `pphone`='{$pphone}', `oficina`='{$oficina}', `puesto`='{$puesto}', `tipo`='{$tipo}', `abrev`='{$abrev}', `equipos`='{$equipos}' WHERE `id`={$id}";
+  // Construir partes SET dinámicamente para no sobrescribir password si no se envía
+  $setParts = array();
+  $setParts[] = "`user`='{$user}'";
+  if($hasPassword){
+    $setParts[] = "`password`='{$password_hashed}'";
+  }
+  $setParts[] = "`name`='{$name}'";
+  $setParts[] = "`email`='{$email}'";
+  $setParts[] = "`extension`='{$extension}'";
+  $setParts[] = "`pphone`='{$pphone}'";
+  $setParts[] = "`oficina`='{$oficina}'";
+  $setParts[] = "`puesto`='{$puesto}'";
+  $setParts[] = "`tipo`='{$tipo}'";
+  $setParts[] = "`abrev`='{$abrev}'";
+  $setParts[] = "`equipos`='{$equipos}'";
+  $sql = "UPDATE `usuarios` SET " . implode(', ', $setParts) . " WHERE `id`={$id}";
 
   if (mysqli_query($link, $sql)) {
       echo "OK";
@@ -50,7 +79,12 @@ if(isset($_POST['id']) && $_POST['id'] !== ''){
       echo "Error al actualizar el usuario: " . mysqli_error($link);
   }
 } else {
-  $sql = "INSERT INTO `usuarios` (`user`,`password`,`name`,`email`,`extension`,`pphone`,`oficina`,`puesto`,`tipo`,`abrev`,`equipos`) VALUES ('{$user}','{$password}','{$name}','{$email}','{$extension}','{$pphone}','{$oficina}','{$puesto}','{$tipo}','{$abrev}','{$equipos}')";
+  // Construir INSERT dinámico: incluir siempre password (si no se envió, usamos el por defecto '1234' hasheado)
+  $cols = array('`user`','`password`');
+  $vals = array("'{$user}'","'{$password_hashed}'");
+  $cols = array_merge($cols, array('`name`','`email`','`extension`','`pphone`','`oficina`','`puesto`','`tipo`','`abrev`','`equipos`'));
+  $vals = array_merge($vals, array("'{$name}'","'{$email}'","'{$extension}'","'{$pphone}'","'{$oficina}'","'{$puesto}'","'{$tipo}'","'{$abrev}'","'{$equipos}'"));
+  $sql = "INSERT INTO `usuarios` (" . implode(',', $cols) . ") VALUES (" . implode(',', $vals) . ")";
 
   if (mysqli_query($link, $sql)) {
       echo "OK";
