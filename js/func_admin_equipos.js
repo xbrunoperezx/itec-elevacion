@@ -41,7 +41,7 @@ function readEquipos(){
   if(numSerie) filtros.filtro_num_serie = numSerie;
 
   $('#table_equipos tbody').empty();
-  $('#resultados_cli').html('Cargando...');
+  $('#resultados_equipos').html('Cargando...');
 
   EquiposAPI.list(filtros).done(function(res){
     var datos = (res && res.resultados) ? res.resultados : [];
@@ -73,9 +73,9 @@ function readEquipos(){
       totalResultados++;
     });
 
-    $('#resultados_cli').html('<span class="main-text">Total de resultados:</span> <span class="secondary-text">' + totalResultados + '</span>');
+    $('#resultados_equipos').html('<span class="main-text">Total de resultados:</span> <span class="secondary-text">' + totalResultados + '</span>');
   }).fail(function(){
-    $('#resultados_cli').html('Error cargando equipos');
+    $('#resultados_equipos').html('Error cargando equipos');
   });
 }
 
