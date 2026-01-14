@@ -181,6 +181,12 @@ table td{
   padding-bottom: 2px;
 }
 
+.ancho25{
+  width: 25px;
+}
+.ancho30{
+  width: 30px;
+}
 .ancho50{
   width: 50px;
 }
@@ -269,4 +275,8 @@ i.left{
 
 .input-field{
   margin-top: 0px;
+}
+
+.select-wrapper+label{
+  top: 0px;
 }

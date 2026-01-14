@@ -181,6 +181,12 @@ table td{
   padding-bottom: 2px;
 }
 
+.ancho25{
+  width: 25px;
+}
+.ancho30{
+  width: 30px;
+}
 .ancho50{
   width: 50px;
 }
