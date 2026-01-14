@@ -103,7 +103,7 @@ function readUsuarios(){
       tr += "<td class='ancho200'>" + puesto + "</td>";
       tr += "<td class='ancho150'>" + emailIcon + "&nbsp;";
       if(Object.keys(equipos).length > 0){
-        tr += "<a class='btn-floating btn-small waves-effect waves-light red' title='";
+        tr += "<a class='btn-floating btn-small waves-effect waves-light orange' title='";
         for(var eqId in equipos){
           tr += eqId + " - " + equipos[eqId] +"\n";
         }
@@ -382,7 +382,7 @@ var openUsuario = function(seccion, cual, id){
             '<option value="inspector">inspector</option>' +
             '<option value="auxiliar">auxiliar</option>' +
           '</select>' +
-          '<label for="tipo_usr">Tipo</label>' +
+          '<label for="tipo_usr" class="active">Tipo</label>' +
         '</div>' +
       '</div>' +
       '<div class="input-field">' +
