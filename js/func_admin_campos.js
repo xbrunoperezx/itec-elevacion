@@ -56,13 +56,12 @@ function readCampos(){
       var tr = "<tr class='alto50'>";
       tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho30'>" + id + "</td>";
-      tr += "<td class='ancho80'>" + id_revision + "</td>";
       tr += "<td class='ancho80'>" + tipo + "</td>";
-      tr += "<td class='ancho200'><b>" + nombreCp + "</b></td>";
-      tr += "<td class='ancho80'>" + abrev + "</td>";
-      tr += "<td class='ancho80'>" + unidad + "</td>";
       tr += "<td class='ancho30'><a seccion='camp' tipo='frm_editcamp' data-id='"+id+"' class='editar_camp btn-floating btn-small waves-effect waves-light green' title='Editar campo'><i class='material-icons'>edit</i></a></td>";
-      tr += "<td class='ancho50'>&nbsp;</td>";
+      tr += "<td class='ancho80'>" + nombreCp + "</td>";
+      tr += "<td class='ancho200'><b>" + abrev + "</b></td>";
+      tr += "<td class='ancho80'>" + unidad + "</td>";
+      tr += "<td class='ancho80'>" + id_revision + "</td>";
       tr += "<td class='ancho50'>" +
             "<a class='more_camp btn-floating btn-small waves-effect waves-light red' title='Más' data-id='"+id+"'><i class='material-icons'>more_vert</i></a>" +
             "</td>";
