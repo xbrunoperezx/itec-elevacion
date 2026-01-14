@@ -79,7 +79,7 @@ function readUsuarios(){
 
       var tr = "<tr class='alto50'>";
       tr += "<td class='ancho50'>&nbsp;</td>";
-      tr += "<td class='ancho75'>" + id + "</td>";
+      tr += "<td class='ancho50'>" + id + "</td>";
       tr += "<td class='ancho50'>" +
             "<a seccion='usu' tipo='frm_editusu' data-id='"+id+"' class='editar_usr btn-floating btn-small waves-effect waves-light green' title='Editar usuario'><i class='material-icons'>edit</i></a>&nbsp;" +
             "</td>";
@@ -167,13 +167,15 @@ var openUsuario = function(seccion, cual, id){
         $("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
 
         var frm = '<form id="usuario_frm_editar">' +
-          '<div class="input-field">' +
-            '<input type="text" id="user_usr" name="user" value="'+ (item.user || '') +'">' +
-            '<label for="user_usr" class="active">Usuario</label>' +
-          '</div>' +
-          '<div class="input-field">' +
-            '<input type="password" id="password_usr" name="password" value="">' +
-            '<label for="password_usr">Contraseña (dejar en blanco para no cambiar)</label>' +
+          '<div class="row">' +
+            '<div class="input-field anchoFrm2">' +
+              '<input type="text" id="user_usr" name="user" value="'+ (item.user || '') +'">' +
+              '<label for="user_usr" class="active">Usuario</label>' +
+            '</div>' +
+            '<div class="input-field anchoFrm2">' +
+              '<input type="password" id="password_usr" name="password" value="">' +
+              '<label for="password_usr">Contraseña (dejar en blanco para no cambiar)</label>' +
+            '</div>' +
           '</div>' +
           '<div class="input-field">' +
             '<input type="text" id="name_usr" name="name" value="'+ (item.name || '') +'">' +
@@ -183,13 +185,15 @@ var openUsuario = function(seccion, cual, id){
             '<input type="text" id="email_usr" name="email" value="'+ (item.email || '') +'">' +
             '<label for="email_usr" class="active">Email</label>' +
           '</div>' +
-          '<div class="input-field anchoFrm2">' +
-            '<input type="text" id="extension_usr" name="extension" value="'+ (item.extension || '') +'">' +
-            '<label for="extension_usr" class="active">Extensión</label>' +
-          '</div>' +
-          '<div class="input-field anchoFrm2">' +
-            '<input type="text" id="pphone_usr" name="pphone" value="'+ (item.pphone || '') +'">' +
-            '<label for="pphone_usr" class="active">Teléfono</label>' +
+          '<div class="row">' +
+            '<div class="input-field anchoFrm2">' +
+              '<input type="text" id="extension_usr" name="extension" value="'+ (item.extension || '') +'">' +
+              '<label for="extension_usr" class="active">Extensión</label>' +
+            '</div>' +
+            '<div class="input-field anchoFrm2">' +
+              '<input type="text" id="pphone_usr" name="pphone" value="'+ (item.pphone || '') +'">' +
+              '<label for="pphone_usr" class="active">Teléfono</label>' +
+            '</div>' +
           '</div>' +
           '<div class="input-field">' +
             '<input type="text" id="oficina_usr" name="oficina" value="'+ (item.oficina || '') +'">' +
@@ -199,17 +203,19 @@ var openUsuario = function(seccion, cual, id){
             '<input type="text" id="puesto_usr" name="puesto" value="'+ (item.puesto || '') +'">' +
             '<label for="puesto_usr" class="active">Puesto</label>' +
           '</div>' +
-          '<div class="input-field">' +
-            '<select id="tipo_usr" name="tipo">' +
-              '<option value="admin" '+ ((item.tipo==='admin')? 'selected':'') +'>admin</option>' +
-              '<option value="inspector" '+ ((item.tipo==='inspector')? 'selected':'') +'>inspector</option>' +
-              '<option value="auxiliar" '+ ((item.tipo==='auxiliar')? 'selected':'') +'>auxiliar</option>' +
-            '</select>' +
-            '<label for="tipo_usr" class="active">Tipo</label>' +
-          '</div>' +
-          '<div class="input-field">' +
-            '<input type="text" id="abrev_usr" name="abrev" value="'+ (item.abrev || '') +'">' +
-            '<label for="abrev_usr" class="active">Abreviatura</label>' +
+          '<div class="row">' +
+            '<div class="input-field anchoFrm2">' +
+              '<input type="text" id="abrev_usr" name="abrev" value="'+ (item.abrev || '') +'">' +
+              '<label for="abrev_usr" class="active">Abreviatura</label>' +
+            '</div>' +
+            '<div class="input-field anchoFrm2">' +
+              '<select id="tipo_usr" name="tipo">' +
+                '<option value="admin" '+ ((item.tipo==='admin')? 'selected':'') +'>admin</option>' +
+                '<option value="inspector" '+ ((item.tipo==='inspector')? 'selected':'') +'>inspector</option>' +
+                '<option value="auxiliar" '+ ((item.tipo==='auxiliar')? 'selected':'') +'>auxiliar</option>' +
+              '</select>' +
+              '<label for="tipo_usr" class="active">Tipo</label>' +
+            '</div>' +
           '</div>' +
           '<div class="input-field">' +
             '<textarea id="equipos_usr" name="equipos">'+ (typeof item.equipos === 'object' ? JSON.stringify(item.equipos) : (item.equipos || '')) +'</textarea>' +
