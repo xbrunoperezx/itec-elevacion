@@ -309,7 +309,14 @@ var openUsuario = function(seccion, cual, id){
         '</form>';
 
         $("#modal_"+seccion).find(".contentForm").html(frm);
-        $("#modal_"+seccion).find('select#tipo_usr').formSelect();
+        var $selTipo = $("#modal_"+seccion).find('select#tipo_usr');
+        if($selTipo.length){
+          if(typeof $.fn.formSelect === 'function'){
+            $selTipo.formSelect();
+          } else {
+            console.warn('formSelect no disponible: asegúrate de que Materialize.js está cargado');
+          }
+        }
         $("#modal_"+seccion).modal({ dismissible: false });
         $("#modal_"+seccion).modal('open');
         setTimeout(function(){ $('#user_usr').focus(); }, 200);
@@ -382,7 +389,14 @@ var openUsuario = function(seccion, cual, id){
     '</form>';
 
     $("#modal_"+seccion).find(".contentForm").html(frm);
-    $("#modal_"+seccion).find('select#tipo_usr').formSelect();
+    var $selTipoNew = $("#modal_"+seccion).find('select#tipo_usr');
+    if($selTipoNew.length){
+      if(typeof $.fn.formSelect === 'function'){
+        $selTipoNew.formSelect();
+      } else {
+        console.warn('formSelect no disponible: asegúrate de que Materialize.js está cargado');
+      }
+    }
     $("#modal_"+seccion).modal({ dismissible: false });
     $("#modal_"+seccion).modal('open');
     setTimeout(function(){ $('#user_usr').focus(); }, 200);
