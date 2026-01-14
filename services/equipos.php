@@ -46,7 +46,17 @@ $result = mysqli_query($link, $sql);
 
 $resultados = array();
 while ($row = mysqli_fetch_assoc($result)) {
-  $resultados[] = $row;
+    if($row['ultima_calibracion']=="0000-00-00" || empty($row['ultima_calibracion'])){
+      $row['ultima_calibracion_dmy'] = "-";
+    }else{
+      $row['ultima_calibracion_dmy'] = date("d-m-Y", strtotime($row['ultima_calibracion']));
+    }  
+    if($row['proxima_calibracion']=="0000-00-00" || empty($row['proxima_calibracion'])){
+      $row['proxima_calibracion_dmy'] = "-";
+    }else{
+        $row['proxima_calibracion_dmy'] = date("d-m-Y", strtotime($row['proxima_calibracion']));
+    }
+    $resultados[] = $row;
 }
 
 mysqli_close($link);
