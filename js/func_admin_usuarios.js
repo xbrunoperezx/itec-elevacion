@@ -168,11 +168,11 @@ var openUsuario = function(seccion, cual, id){
 
         var frm = '<form id="usuario_frm_editar">' +
           '<div class="row">' +
-            '<div class="input-field anchoFrm2">' +
+            '<div class="input-field anchoFrm4 left">' +
               '<input type="text" id="user_usr" name="user" value="'+ (item.user || '') +'">' +
               '<label for="user_usr" class="active">Usuario</label>' +
             '</div>' +
-            '<div class="input-field anchoFrm2">' +
+            '<div class="input-field anchoFrm4 right">' +
               '<input type="password" id="password_usr" name="password" value="">' +
               '<label for="password_usr">Contraseña (dejar en blanco para no cambiar)</label>' +
             '</div>' +
@@ -186,11 +186,11 @@ var openUsuario = function(seccion, cual, id){
             '<label for="email_usr" class="active">Email</label>' +
           '</div>' +
           '<div class="row">' +
-            '<div class="input-field anchoFrm2">' +
+            '<div class="input-field anchoFrm4 left">' +
               '<input type="text" id="extension_usr" name="extension" value="'+ (item.extension || '') +'">' +
               '<label for="extension_usr" class="active">Extensión</label>' +
             '</div>' +
-            '<div class="input-field anchoFrm2">' +
+            '<div class="input-field anchoFrm4 right">' +
               '<input type="text" id="pphone_usr" name="pphone" value="'+ (item.pphone || '') +'">' +
               '<label for="pphone_usr" class="active">Teléfono</label>' +
             '</div>' +
@@ -204,11 +204,11 @@ var openUsuario = function(seccion, cual, id){
             '<label for="puesto_usr" class="active">Puesto</label>' +
           '</div>' +
           '<div class="row">' +
-            '<div class="input-field anchoFrm2">' +
+            '<div class="input-field anchoFrm4 left">' +
               '<input type="text" id="abrev_usr" name="abrev" value="'+ (item.abrev || '') +'">' +
               '<label for="abrev_usr" class="active">Abreviatura</label>' +
             '</div>' +
-            '<div class="input-field anchoFrm2">' +
+            '<div class="input-field anchoFrm4 right">' +
               '<select id="tipo_usr" name="tipo">' +
                 '<option value="admin" '+ ((item.tipo==='admin')? 'selected':'') +'>admin</option>' +
                 '<option value="inspector" '+ ((item.tipo==='inspector')? 'selected':'') +'>inspector</option>' +
