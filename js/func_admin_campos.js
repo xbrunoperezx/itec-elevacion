@@ -122,37 +122,36 @@ var saveCampo = function() {
     unidad: unidad
   };
 
+  var apiCall;
   if (typeof id !== 'undefined' && id !== null && String(id).trim() !== '') {
-    campo.id = id;
+    // Editar campo existente
+    apiCall = CamposAPI.update(id, campo);
+  } else {
+    // Crear nuevo campo
+    apiCall = CamposAPI.create(campo);
   }
 
-  $.ajax({
-    url: 'services/campos_save.php',
-    type: 'POST',
-    data: campo,
-    success: function(data){
-      if (typeof data === 'string' && data.trim() === 'OK'){
-        $('#modal_confirm').modal('close');
-        $('#modal_camp').modal('close');
-        $('#filtrar_campos').click();
-        return;
-      }
-      var serverMsg = (typeof data === 'string') ? data : JSON.stringify(data);
-      modalError('ERROR', 'Error al guardar campo: ' + serverMsg, false, 'Cerrar', 'error', function(){
-        $('#modal_camp').modal('close');
-      });
-    },
-    error: function(xhr, status, error){
-      var msg = '';
-      if(xhr && xhr.responseText){
-        msg = xhr.status + ' ' + (xhr.statusText || '') + ': ' + xhr.responseText;
-      } else {
-        msg = status + ' - ' + error;
-      }
-      modalError('ERROR', 'Error en la petición al guardar campo. ' + msg, false, 'Cerrar', 'error', function(){
-        $('#modal_camp').modal('close');
-      });
+  apiCall.done(function(data){
+    if (typeof data === 'string' && data.trim() === 'OK'){
+      $('#modal_confirm').modal('close');
+      $('#modal_camp').modal('close');
+      $('#filtrar_campos').click();
+      return;
     }
+    var serverMsg = (typeof data === 'string') ? data : JSON.stringify(data);
+    modalError('ERROR', 'Error al guardar campo: ' + serverMsg, false, 'Cerrar', 'error', function(){
+      $('#modal_camp').modal('close');
+    });
+  }).fail(function(xhr, status, error){
+    var msg = '';
+    if(xhr && xhr.responseText){
+      msg = xhr.status + ' ' + (xhr.statusText || '') + ': ' + xhr.responseText;
+    } else {
+      msg = status + ' - ' + error;
+    }
+    modalError('ERROR', 'Error en la petición al guardar campo. ' + msg, false, 'Cerrar', 'error', function(){
+      $('#modal_camp').modal('close');
+    });
   });
 };
 
@@ -169,17 +168,17 @@ $(document.body).on('click', '#camp_save', function(){
 
 var openCampo = function(seccion, cual, id){
   if(cual === 'frm_editcamp'){
-    var totalParams = { filtro_id: id };
-    $.ajax({
-      url: 'services/campos.php',
-      type: 'POST',
-      data: totalParams,
-      success: function(data){
-        var item = JSON.parse(data).resultados[0];
-        var title = " Editar campo - " + (item.nombre || '');
-        $("#modal_"+seccion).find(".modal_txt_title").text(title);
-        $("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
-        $("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
+    CamposAPI.list({ filtro_id: id }).done(function(res){
+      var datos = (res && res.resultados) ? res.resultados : [];
+      if(datos.length === 0){
+        modalError('ERROR', 'No se encontró el campo', false, 'Cerrar', 'error');
+        return;
+      }
+      var item = datos[0];
+      var title = " Editar campo - " + (item.nombre || '');
+      $("#modal_"+seccion).find(".modal_txt_title").text(title);
+      $("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
+      $("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
 
         var frm = '<form id="campo_frm_editar">' +
           '<div class="row">' +
@@ -217,10 +216,8 @@ var openCampo = function(seccion, cual, id){
         $("#modal_"+seccion).find(".contentForm").html(frm);
         $("#modal_"+seccion).modal({ dismissible: false });
         $("#modal_"+seccion).modal('open');
-      },
-      error: function(){
-        modalError('ERROR','Error cargando campo',false,'Cerrar','error');
-      }
+    }).fail(function(){
+      modalError('ERROR','Error cargando campo',false,'Cerrar','error');
     });
   } else if(cual === 'frm_newcamp'){
     var title = 'Nuevo campo';
@@ -336,7 +333,7 @@ jQuery(document).on('click', '.more_camp', function(e){
           "delete_forever",
           "cancel",
           function(){
-            $.post('services/campos_delete.php', { id: itemId })
+            CamposAPI.remove(itemId)
               .done(function(resp){
                 if($.trim(resp) === 'OK'){
                   $('#filtrar_campos').click();
