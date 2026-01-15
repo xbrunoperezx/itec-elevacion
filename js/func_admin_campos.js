@@ -31,7 +31,7 @@ var CamposAPI = (function(){
   };
 })();
 
-// Render lista de campos en el contenedor #CamposInformes
+// Render lista de campos en el contenedor #Campos
 function readCampos(){
   var total = parseInt($('#filtro_campos_total').val(),10) || 15;
   var nombre = ($('#filtro_campos_nombre').val() || '').trim();
@@ -77,9 +77,9 @@ function readCampos(){
   });
 }
 
-// Inicializar la pestaña CamposInformes al cargar la página
+// Inicializar la pestaña Campos al cargar la página
 $(function(){
-  if($('#CamposInformes').length) readCampos();
+  if($('#Campos').length) readCampos();
 
   $(document).on('click', '#filtrar_campos', function(e){
     e.preventDefault();
@@ -263,18 +263,18 @@ var openCampo = function(seccion, cual, id){
 };
 
 // Permitir pulsar Enter en los campos de filtro para ejecutar la búsqueda
-jQuery(document).on('keydown', '#CamposInformes [id*=filtro_campos]', function(e){
+jQuery(document).on('keydown', '#Campos [id*=filtro_campos]', function(e){
     jQuery('#filtrar_campos_clear').removeClass('hide');
     if (e.key === 'Enter' || e.which === 13 || e.keyCode === 13) {
         e.preventDefault();
-        jQuery(this).closest('#CamposInformes').find('#filtrar_campos').click();
+        jQuery(this).closest('#Campos').find('#filtrar_campos').click();
     }
 });
 
 // Limpiar filtros de campos
 jQuery(document).on('click', '#filtrar_campos_clear', function() {
   jQuery(this).addClass('hide');
-  var $parent = jQuery(this).closest('#CamposInformes');
+  var $parent = jQuery(this).closest('#Campos');
   $parent.find('#filtro_campos_nombre').val('');
   $parent.find('#filtro_campos_total').val('15');
   $parent.find('label').not(':eq(0)').removeClass('active');
