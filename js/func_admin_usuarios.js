@@ -187,37 +187,36 @@ var saveUsuario = function() {
     equipos: equipos
   };
 
+  var apiCall;
   if (typeof id !== 'undefined' && id !== null && String(id).trim() !== '') {
-    usuario.id = id;
+    // Editar usuario existente
+    apiCall = UsuariosAPI.update(id, usuario);
+  } else {
+    // Crear nuevo usuario
+    apiCall = UsuariosAPI.create(usuario);
   }
 
-  $.ajax({
-    url: 'services/usuarios_save.php',
-    type: 'POST',
-    data: usuario,
-    success: function(data){
-      if (typeof data === 'string' && data.trim() === 'OK'){
-        $('#modal_confirm').modal('close');
-        $('#modal_usu').modal('close');
-        $('#filtrar_usuarios').click();
-        return;
-      }
-      var serverMsg = (typeof data === 'string') ? data : JSON.stringify(data);
-      modalError('ERROR', 'Error al guardar usuario: ' + serverMsg, false, 'Cerrar', 'error', function(){
-        $('#modal_usu').modal('close');
-      });
-    },
-    error: function(xhr, status, error){
-      var msg = '';
-      if(xhr && xhr.responseText){
-        msg = xhr.status + ' ' + (xhr.statusText || '') + ': ' + xhr.responseText;
-      } else {
-        msg = status + ' - ' + error;
-      }
-      modalError('ERROR', 'Error en la petición al guardar usuario. ' + msg, false, 'Cerrar', 'error', function(){
-        $('#modal_usu').modal('close');
-      });
+  apiCall.done(function(data){
+    if (typeof data === 'string' && data.trim() === 'OK'){
+      $('#modal_confirm').modal('close');
+      $('#modal_usu').modal('close');
+      $('#filtrar_usuarios').click();
+      return;
     }
+    var serverMsg = (typeof data === 'string') ? data : JSON.stringify(data);
+    modalError('ERROR', 'Error al guardar usuario: ' + serverMsg, false, 'Cerrar', 'error', function(){
+      $('#modal_usu').modal('close');
+    });
+  }).fail(function(xhr, status, error){
+    var msg = '';
+    if(xhr && xhr.responseText){
+      msg = xhr.status + ' ' + (xhr.statusText || '') + ': ' + xhr.responseText;
+    } else {
+      msg = status + ' - ' + error;
+    }
+    modalError('ERROR', 'Error en la petición al guardar usuario. ' + msg, false, 'Cerrar', 'error', function(){
+      $('#modal_usu').modal('close');
+    });
   });
 }; // end saveUsuario()
 
@@ -263,13 +262,13 @@ $(document.body).on('click', '#usu_save', function(){
 });
 var openUsuario = function(seccion, cual, id){
   if(cual === 'frm_editusu'){
-    var totalParams = { filtro_id: id };
-    $.ajax({
-      url: 'services/usuarios.php',
-      type: 'POST',
-      data: totalParams,
-      success: function(data){
-        var item = JSON.parse(data).resultados[0];
+    UsuariosAPI.list({ filtro_id: id }).done(function(res){
+      var datos = (res && res.resultados) ? res.resultados : [];
+      if(datos.length === 0){
+        modalError('ERROR', 'No se encontró el usuario', false, 'Cerrar', 'error');
+        return;
+      }
+      var item = datos[0];
         var title = " Editar usuario: " + (item.name || '');
         $("#modal_"+seccion).find(".modal_txt_title").text(title);
         $("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
@@ -346,10 +345,8 @@ var openUsuario = function(seccion, cual, id){
         }
         $("#modal_"+seccion).modal({ dismissible: false });
         $("#modal_"+seccion).modal('open');
-      },
-      error: function(xhr,status,error){
-        modalError('ERROR','Error cargando usuario',false,'Cerrar','error');
-      }
+    }).fail(function(xhr,status,error){
+      modalError('ERROR','Error cargando usuario',false,'Cerrar','error');
     });
   } else if(cual === 'frm_newusu'){
     var title = 'Nuevo usuario';
@@ -506,7 +503,7 @@ jQuery(document).on('click', '.more_usr', function(e){
           "delete_forever",
           "cancel",
           function(){
-            $.post('services/usuarios_delete.php', { id: itemId })
+            UsuariosAPI.remove(itemId)
               .done(function(resp){
                 if($.trim(resp) === 'OK'){
                   // Forzar recarga de la lista mediante el botón filtrar
