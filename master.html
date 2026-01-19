@@ -348,9 +348,48 @@
                     dataType: 'json',
                     success: function(response){
                         if(response.success){
-                            alert(response.message)
+                            alert(response.message);
+
+                            //aqui añadimos el nuevo cliente con el metodo .unshift lo añadimos al principio del array de clientesGlobal
+                            //si quisiesmos añadirlo al final seria con .push, pero por logica qeremos que se vea el primero
+                            clientesGlobal.unshift(response.cliente);
+
+                            //ahora solo vamos a pintar la nueva fila con los datos de ese cliente
+                            let cliente= response.cliente;
+
+                            let nuevaFila= `
+                                 <tr data-id="${cliente.id}>
+                                    <td>${cliente.nombre}</td>
+                                    <td>${cliente.direccion}</td>
+                                    <td>${cliente.localidad}</td>
+                                    <td>${cliente.municipio}</td>
+                                    <td>${cliente.cp}</td>
+                                    <td>
+                                        <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}"> 
+                                            i class="material-icons">Ver</i>
+                                        </a>
+                                    
+                                        <a href="#" class="btn-small orange editar-cliente" data-id="${cliente.id}">
+                                            <i class="materialize-icons">Editar</i>
+                                        </a>
+                                    
+                                        <a href="#" class="btn-small red eliminar-cliente" data-id="${cliente.id}">
+                                            <i class="materialize-icons">Borrar</i>
+                                        </a>    
+                                    </td>
+                                </tr> 
+                            `;
+
+                            //para que los neuvos datos aparezcan insertados enla primera fila .prepend
+                            $('#tabla-clientes').prepend(nuevaFila);
+
+                            //ahora limpiamos el formulario
+                            $('#modal-crear-cliente input').val('');
+
+
+                            //cerramos el modal
                             $('#modal-crear-cliente').modal('close');
-                            location.reload();
+                           
                         } else {
                             alert(response.message);
                         }
