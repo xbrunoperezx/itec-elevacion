@@ -36,8 +36,22 @@ $sql= "
 
 //ejecutamos la query/consulta  si todo va bien el cliente se actualiza y js recibe success: true si no da el error
 if(mysqli_query($link, $sql)){
+
+    //nuevo cliente
+    $idNuevo= mysqli_insert_id($link)
+
     $response['success']= true;
     $response['message']= "Cliente creado correctamente";
+
+    //devolvemos el cliente completo al front (Los datos del nuevo cliente creado)
+    $response['cliente']= array(
+        "id"=> $idNuevo,
+        "nombre"=> $nombre,
+        "direccion"=> $direccion,
+        "localidad"=> $localidad,
+        "municipio"=> $municipio,
+        "cp"=> $cp
+    );
 } else {
     $response['message']= "Error al crear cliente";
 }
