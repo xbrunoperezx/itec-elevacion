@@ -193,7 +193,7 @@
                          
                         //con el acumulador creado vamos añadiendo al html cada iteraccion del bucle un cliente 
                         html += `
-                            <tr>
+                            <tr data-id="${cliente.id}>
                                 <td>${contador}</td> 
                                 <td>${cliente.nombre}</td>
                                 <td>${cliente.direccion}</td>
@@ -345,35 +345,40 @@
         
 
 
-          //----------------------------------------------------------------
-          //FUNCION comprobar que funciona el boton y muestra el ID(ELIMINAR)
-          $(document).on('click', '.eliminar-cliente', function(e){
-            e.preventDefault();
+            //----------------------------------------------------------------
+            //FUNCION comprobar que funciona el boton y muestra el ID(ELIMINAR)
+            $(document).on('click', '.eliminar-cliente', function(e){
+                e.preventDefault();
 
-            let id=$(this).data('id');//comprobamos que el data-id coincide
+                let id=$(this).data('id');//comprobamos que el data-id coincide
 
-            // creamos una condicional para que no borremos por error que nos aparezca un mensaje de confirmacion
-            if(confirm('¿Seguro que quieres eliminar este cliente?')){
-                $.ajax({
-                    type: "POST",
-                    url: "services/clientes_delete.php",
-                    data: { id: id},
-                    dataType: "json",
-                    success: function(response){
-                      if(response.success){
-                        alert(response.message);
-                        location.reload();
-                      } else {
-                        alert(response. message);
-                      }
-                    }
-                });
-            } else {
-                console.log("Cancelado");
-            }
-          });       
+                // creamos una condicional para que no borremos por error que nos aparezca un mensaje de confirmacion
+                if(confirm('¿Seguro que quieres eliminar este cliente?')){
+                    $.ajax({
+                        type: "POST",
+                        url: "services/clientes_delete.php",
+                        data: { id: id},
+                        dataType: "json",
+                        success: function(response){
+                            if(response.success){
+                                //sobreescribimos el array de clientes paraque solo mantenga los que no queremos borrar
+                                clientesGlobal= clientesGlobal.filter(c=> c.id != id);
+
+                                //ahora buscamos la fila de ese cliente "<tr>" que tenga ese data-id y es la que eliminamos
+                                $(`tr[data-id="${id}"]`).remove();  
+                                
+                                alert(response.message);
+                            } else {
+                                alert(response.message);
+                            }
+                        }
+                      
+                    });
+                }
            
-          
+            });       
+           
+         
         
         
          //cierre de la funcion de carga $(document).rea..
