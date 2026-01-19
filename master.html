@@ -300,12 +300,30 @@
                 dataType: 'json',
                 success: function(response){
                     if(response.success){
-                        alert(response.message);
-                        $('#modal-editar-cliente').modal('close'); //cerramos el modal/ventana por que ya se guardo cliente
-                        location.reload();//recarga la pagina y vuelve a pedir los 15 clientes
-                    } else {
-                        alert(response.message);
-                    }
+                        
+                        //buscamos el cliente en el array global que  sea igual que el que acabo de editar
+                        clientesGlobal= clientesGlobal.find(c=> c.id == datos.id);
+
+                        //actualizamos con los nuevos datos del cliente para que no sea la de antes (Desfasada)
+                        cliente.nombre= datos.nombre;
+                        cliente.direccion= datos.direccion;
+                        cliente.localidad= datos.localidad;
+                        cliente.cp= datos.cp;
+
+                        //buscamos la fila en la tabla del cliente que editamos
+                        let fila= $(`tr[data-id= "${datos.id}"]`);
+
+                        //actualizamos ahora solo la fila que editamos
+                        fila.find('td').eq(1).text(cliente.nombre);
+                        fila.find('td').eq(2).text(cliente.direccion);
+                        fila.find('td').eq(3).text(cliente.localidad);
+                        fila.find('td').eq(4).text(cliente.cp);
+
+                        //cerramos el modal/ventana por que ya se guardo cliente
+                        $('#modal-editar-cliente').modal('close'); 
+                    }    
+            
+                    
                 }
             });
           });
