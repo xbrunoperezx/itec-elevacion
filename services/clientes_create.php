@@ -25,7 +25,7 @@ $nombre= mysqli_real_escape_string($link, $_POST['nombre']);
 $direccion= mysqli_real_escape_string($link, $_POST['direccion']);
 $localidad= mysqli_real_escape_string($link, $_POST['localidad']);
 $municipio= mysqli_real_escape_string($link, $_POST['municipio']);
-$mantenedor= mysqli_real_escape_string($link, $_POST['mantenedor'])
+$mantenedor= mysqli_real_escape_string($link, $_POST['mantenedor']);
 $cp= mysqli_real_escape_string($link, $_POST['cp']);
 
 
