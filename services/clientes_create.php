@@ -32,7 +32,7 @@ $cp= mysqli_real_escape_string($link, $_POST['cp']);
 //la consulta de INSERT para nuevo cliente
 $sql= "
     INSERT INTO clientes(nombre, direccion, localidad, municipio, cp, id_mantenedor)
-    VALUES('$nombre', '$direccion', '$localidad', '$municipio' ,'$cp', $id_mantenedor)
+    VALUES('$nombre', '$direccion', '$localidad', '$municipio' ,'$cp', $mantenedor)
 
 ";
 
