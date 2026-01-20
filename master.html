@@ -193,7 +193,7 @@
                          
                         //con el acumulador creado vamos añadiendo al html cada iteraccion del bucle un cliente 
                         html += `
-                            <tr data-id="${cliente.id}>
+                            <tr data-id="${cliente.id}">
                                 <td>${contador}</td> 
                                 <td>${cliente.nombre}</td>
                                 <td>${cliente.direccion}</td>
@@ -302,7 +302,7 @@
                     if(response.success){
                         
                         //buscamos el cliente en el array global que  sea igual que el que acabo de editar
-                        clientesGlobal= clientesGlobal.find(c=> c.id == datos.id);
+                        cliente= clientesGlobal.find(c=> c.id == datos.id);
 
                         //actualizamos con los nuevos datos del cliente para que no sea la de antes (Desfasada)
                         cliente.nombre= datos.nombre;
@@ -358,7 +358,7 @@
                             let cliente= response.cliente;
 
                             let nuevaFila= `
-                                 <tr data-id="${cliente.id}>
+                                 <tr data-id="${cliente.id}">
                                     <td>Nuevo</td>
                                     <td>${cliente.nombre}</td>
                                     <td>${cliente.direccion}</td>
