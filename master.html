@@ -359,10 +359,10 @@
 
                             let nuevaFila= `
                                  <tr data-id="${cliente.id}>
+                                    <td>Nuevo</td>
                                     <td>${cliente.nombre}</td>
                                     <td>${cliente.direccion}</td>
                                     <td>${cliente.localidad}</td>
-                                    <td>${cliente.municipio}</td>
                                     <td>${cliente.cp}</td>
                                     <td>
                                         <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}"> 
@@ -385,6 +385,7 @@
 
                             //ahora limpiamos el formulario
                             $('#modal-crear-cliente input').val('');
+                            M.updateTextFields();
 
 
                             //cerramos el modal
