@@ -38,6 +38,7 @@
                 <td>Nombre</td>
                 <td>Direccion</td>
                 <td>Localidad</td>
+                <td>Mantenedor</td>
                 <td>Cp</td>
                 <td>Acciones</td>
             </tr>
@@ -93,6 +94,8 @@
                 <input type="text" id="edit-cp">
                 <label for="edit-cp">CP</label>
             </div>
+
+            
         </div>
 
         <div class="modal-footer">
@@ -131,6 +134,20 @@
             <div class="input-field">
                 <input type="text" id="create-cp">
                 <label for="create-cp">CP</label>
+            </div>
+
+            <div class="input-field">
+                <select id="create-mantenedor">
+                    <option value="" disabled selected>Elige un mantenedor</option>
+                    <option value="ABI">ABI</option>
+                    <option value="AMUESA">AMUESA</option>
+                    <option value="ASCENSORES DEL CANTABRICO">ASCENSORES DEL CANTABRICO</option>
+                    <option value="ASCOM">ASCOM</option>
+                    <option value="ATI">ATI</option>
+                    <option value="ELEVASTUR">ELEVASTUR</option>
+                    <option value="OTIS">OTIS</option>
+                    
+                </select>
             </div>
         </div>
 
@@ -198,6 +215,7 @@
                                 <td>${cliente.nombre}</td>
                                 <td>${cliente.direccion}</td>
                                 <td>${cliente.localidad}</td>
+                                <td>${cliente.mantenedor}</td>
                                 <td>${cliente.cp}</td>
                                 <td>
                                     <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}"> 
@@ -230,6 +248,9 @@
 
           //inicializamos el modal, por que si no no existe
           $('.modal').modal();
+
+          //inicializamos el select
+          $('select').formSelect();
 
           //------------------------------------------------------------
           //FUNCION comprobar que funciona el boton y muestra el ID(VER)
@@ -338,7 +359,9 @@
                     direccion: $('#create-direccion').val(),
                     localidad: $('#create-localidad').val(),
                     municipio: $('#create-municipio').val(),
+                    mantenedor: $('#create-mantenedor').val(),
                     cp: $('#create-cp').val()
+
                 };
 
                 $.ajax({
@@ -363,6 +386,7 @@
                                     <td>${cliente.nombre}</td>
                                     <td>${cliente.direccion}</td>
                                     <td>${cliente.localidad}</td>
+                                    <td>${cliente.mantenedor}</td>
                                     <td>${cliente.cp}</td>
                                     <td>
                                         <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}"> 
