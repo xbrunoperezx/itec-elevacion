@@ -38,7 +38,7 @@ $sql= "
 if(mysqli_query($link, $sql)){
 
     //nuevo cliente
-    $idNuevo= mysqli_insert_id($link)
+    $idNuevo= mysqli_insert_id($link);
 
     $response['success']= true;
     $response['message']= "Cliente creado correctamente";
