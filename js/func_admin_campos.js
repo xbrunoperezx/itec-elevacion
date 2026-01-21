@@ -62,6 +62,7 @@ function readCampos(){
       tr += "<td class='ancho200'><b>" + abrev + "</b></td>";
       tr += "<td class='ancho80'>" + unidad + "</td>";
       tr += "<td class='ancho80'>" + nombre_revision + "</td>";
+      tr += "<td class='ancho80'>&nbsp;</td>";
       tr += "<td class='ancho50'>" +
             "<a class='more_camp btn-floating btn-small waves-effect waves-light red' title='Más' data-id='"+id+"'><i class='material-icons'>more_vert</i></a>" +
             "</td>";
