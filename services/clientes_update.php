@@ -44,12 +44,12 @@ $sql= "
         direccion='$direccion',
         localidad='$localidad',
         cp='$cp',
-        id_mantenedor='$id_mantenedor',
-        vencimiento= '$vencimiento'
+        id_mantenedor=$id_mantenedor,
+        vencimiento= $vencimiento
     WHERE id=$id    
 ";
 
-
+ 
 //ecutamos la query/consulta  si todo va bien el cliente se actualiza y js recibe success: true si no da el error
 if(mysqli_query($link, $sql)) {
     $response["success"]= true;
