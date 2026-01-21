@@ -139,13 +139,7 @@
             <div class="input-field">
                 <select id="create-mantenedor">
                     <option value="" disabled selected>Elige un mantenedor</option>
-                    <option value="1">ABI</option>
-                    <option value="2">AMUESA</option>
-                    <option value="3">ASCENSORES DEL CANTABRICO</option>
-                    <option value="4">ASCOM</option>
-                    <option value="5">ATI</option>
-                    <option value="6">ELEVASTUR</option>
-                    <option value="7">OTIS</option>
+                    
                     
                 </select>
             </div>
@@ -163,6 +157,8 @@
     <script>
         //creamos una variable acessible desde cualquier punto del programa que en ella recogeremos el array de clientes del back
         let clientesGlobal=[];
+        let mantenedoresGlobal=[];
+       
         $(document).ready(function(){  //cargamos la web (el JS) nada mas acceder a la Url
             $.ajax({ //aqui hacemos la peticion de los datos al back (ajax no recarga la pagina)
                 //donde lo llamo 
@@ -202,6 +198,17 @@
                     
                     //guardamos  el array de clientes traidos del back, en la variable local
                     clientesGlobal=response.resultados;
+                    mantenedoresGlobal=response.mantenedores;
+
+                    //lo mismo que pintar clientes pero con option
+                    let opciones= '<option value="" disabled selected>Elige un mantenedor</option>';
+                    for(let id in mantenedoresGlobal){
+                        opciones+= `<option value="${id}">${mantenedoresGlobal[id]}</option>`
+                    }
+
+                    $('#create-mantenedor').html(opciones);
+                    $('select').formSelect(); // Materializwe
+
                     //4º  ---creamos un acumulador para no sobrescribir cada vuelta el cliente---
                     let html = "";
                     let contador = 1;
@@ -379,6 +386,9 @@
 
                             //ahora solo vamos a pintar la nueva fila con los datos de ese cliente
                             let cliente= response.cliente;
+
+                            //para verificar si existe dame nombre, si no "-", quitar errores
+                            cliente.mantenedor= mantenedoresGlobal[cliente.id_mantenedor] ?? '-';
 
                             let nuevaFila= `
                                  <tr data-id="${cliente.id}">
