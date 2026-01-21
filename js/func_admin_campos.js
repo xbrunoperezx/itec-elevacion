@@ -135,6 +135,7 @@ var saveCampo = function() {
 
   apiCall.done(function(data){
     if (typeof data === 'string' && $.trim(data) === 'OK'){
+      // OK
       $('#modal_confirm').modal('close');
       $('#modal_camp').modal('close');
       $('#filtrar_campos').click();
@@ -264,6 +265,7 @@ var openCampo = function(seccion, cual, id){
     '</form>';
 
     $("#modal_"+seccion).find(".contentForm").html(frm);
+    $('select#tipo_camp').formSelect();
     $("#modal_"+seccion).modal({ dismissible: false });
     $("#modal_"+seccion).modal('open');
     setTimeout(function(){ $('#id_revision_camp').focus(); }, 200);
