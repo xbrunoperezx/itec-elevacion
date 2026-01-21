@@ -32,6 +32,9 @@ $direccion= mysqli_real_escape_string($link, $_POST['direccion']);
 $localidad= mysqli_real_escape_string($link, $_POST['localidad']);
 $cp= mysqli_real_escape_string($link, $_POST['cp']) ;
 $id_mantenedor= (int)$_POST['id_mantenedor'];
+$vencimiento= empty($_POST['vencimiento'])
+    ? "NULL"
+    : "'" . mysqli_real_escape_string($link, $_POST['vencimiento']) . "'";
 
 
 // consulta que dice: "Actualiza este cliente(id) con estos nuevos datos 
@@ -41,7 +44,8 @@ $sql= "
         direccion='$direccion',
         localidad='$localidad',
         cp='$cp',
-        id_mantenedor='$id_mantenedor'
+        id_mantenedor='$id_mantenedor',
+        vencimiento= '$vencimiento'
     WHERE id=$id    
 ";
 

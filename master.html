@@ -103,6 +103,11 @@
                 <label for="edit-cp">CP</label>
             </div>
 
+            <div class="input-field">
+                <input type="date" id="edit-vencimiento">
+                <label for="edit-vencimiento">Vencimiento</label>
+            </div>
+
         </div>
 
         <div class="modal-footer">
@@ -321,6 +326,7 @@
             $('#edit-localidad').val(cliente.localidad);
             $('#edit-mantenedor').val(cliente.id_mantenedor);
             $('#edit-cp').val(cliente.cp);
+            $('#edit-vencimiento').val(cliente.vencimiento);
             $('select').formSelect();
 
             M.updateTextFields();//para mover las etiquetas de label si esta vacio o no el input
@@ -341,6 +347,7 @@
                 localidad: $('#edit-localidad').val(),
                 id_mantenedor: $('#edit-mantenedor').val(),
                 cp: $('#edit-cp').val(),
+                vencimiento: $('#edit-vencimiento').val()
                
             };
 
@@ -363,6 +370,7 @@
                         cliente.localidad= datos.localidad;
                         cliente.id_mantenedor= datos.id_mantenedor;
                         cliente.cp= datos.cp;
+                        cliente.vencimiento= datos.vencimiento;
                        
 
                         //con esto nos devuelve el nombre y no la ID
@@ -375,8 +383,9 @@
                         fila.find('td').eq(1).text(cliente.nombre);
                         fila.find('td').eq(2).text(cliente.direccion);
                         fila.find('td').eq(3).text(cliente.localidad);
-                        fila.find('td').eq(5).text(cliente.mantenedor);
-                        fila.find('td').eq(4).text(cliente.cp);
+                        fila.find('td').eq(4).text(cliente.mantenedor);
+                        fila.find('td').eq(5).text(cliente.cp);
+                        fila.find('td').eq(6).text(cliente.vencimiento);
                         
 
                         //cerramos el modal/ventana por que ya se guardo cliente
