@@ -76,7 +76,6 @@ $(document).ready(function() {
 		var sec = $(this).attr("seccion");
 		openModal(sec, tipo, id);	
 	});
-	$(".modal").modal();
 
 	// Click en editar contratada
 	$(document.body).on("click", ".editar_pri", function(){
@@ -92,17 +91,10 @@ $(document).ready(function() {
 		$("#modal_"+seccion).find(".modal_txt_title").empty();
 		$("#modal_"+seccion).find(".modal_txt_btn_left").empty();
 		$("#modal_"+seccion).find(".modal_txt_btn_right").empty();
-		if(seccion=="cli"){
-			openCliente(seccion, cual, id);
-		}
-		if(seccion=="con"){
-			openContratada(seccion, cual, id);
-		}
-    if(seccion=="pri"){
-      openInforme(seccion, cual, id);
-    }
-    if(seccion=="camp"){
-      openCampo(seccion, cual, id);
+		if(seccion=="cli") openCliente(seccion, cual, id);
+		if(seccion=="con") openContratada(seccion, cual, id);
+    if(seccion=="pri") openInforme(seccion, cual, id);
+    if(seccion=="camp") openCampo(seccion, cual, id);
 	}
 
 	// Click en los elementos del menú superior
