@@ -187,7 +187,9 @@ var openCampo = function(seccion, cual, id){
               '<input type="number" id="id_revision_camp" name="id_revision" value="'+ (item.id_revision || '') +'" autocomplete="off">' +
               '<label for="id_revision_camp" class="active">ID Revisión</label>' +
             '</div>' +
-            '<div class="input-field anchoFrm4 inline">' +
+          '</div>' +
+          '<div class="row">' +
+            '<div class="input-field anchoFrm4 left">' +
               '<select id="tipo_camp" name="tipo">' +
                 '<option value="MEDIDAS" '+ ((item.tipo=='MEDIDAS')? 'selected':'') +'>MEDIDAS</option>' +
                 '<option value="CARACTERISTICAS" '+ ((item.tipo=='CARACTERISTICAS')? 'selected':'') +'>CARACTERISTICAS</option>' +
@@ -215,6 +217,7 @@ var openCampo = function(seccion, cual, id){
         '</form>';
 
         $("#modal_"+seccion).find(".contentForm").html(frm);
+        $('select#tipo_camp').formSelect();
         $("#modal_"+seccion).modal({ dismissible: false });
         $("#modal_"+seccion).modal('open');
     }).fail(function(){
@@ -232,7 +235,9 @@ var openCampo = function(seccion, cual, id){
           '<input type="number" id="id_revision_camp" name="id_revision" value="" autocomplete="off">' +
           '<label for="id_revision_camp">ID Revisión</label>' +
         '</div>' +
-        '<div class="input-field anchoFrm4 inline">' +
+      '</div>' +
+      '<div class="row">' +
+        '<div class="input-field anchoFrm4 left">' +
           '<select id="tipo_camp" name="tipo">' +
             '<option value="MEDIDAS">MEDIDAS</option>' +
             '<option value="CARACTERISTICAS">CARACTERISTICAS</option>' +
