@@ -7,7 +7,7 @@ var UsuariosAPI = (function(){
       url: 'services/usuarios.php',
       method: 'POST',
       data: data,
-      dataType: 'json'
+      dataType: 'text'
     });
   }
 
@@ -49,6 +49,7 @@ function readUsuarios(){
   $('#resultados_cli').html('Cargando...');
 
   UsuariosAPI.list(filtros).done(function(res){
+    if(typeof res === 'string') res = JSON.parse(res);
     var datos = (res && res.resultados) ? res.resultados : [];
     var totalResultados = 0;
 
@@ -197,7 +198,7 @@ var saveUsuario = function() {
   }
 
   apiCall.done(function(data){
-    if (typeof data === 'string' && data.trim() === 'OK'){
+    if (typeof data === 'string' && $.trim(data) === 'OK'){
       $('#modal_confirm').modal('close');
       $('#modal_usu').modal('close');
       $('#filtrar_usuarios').click();
@@ -263,6 +264,7 @@ $(document.body).on('click', '#usu_save', function(){
 var openUsuario = function(seccion, cual, id){
   if(cual === 'frm_editusu'){
     UsuariosAPI.list({ filtro_id: id }).done(function(res){
+      if(typeof res === 'string') res = JSON.parse(res);
       var datos = (res && res.resultados) ? res.resultados : [];
       if(datos.length === 0){
         modalError('ERROR', 'No se encontró el usuario', false, 'Cerrar', 'error');

@@ -7,7 +7,7 @@ var CamposAPI = (function(){
       url: 'services/campos.php',
       method: 'POST',
       data: data,
-      dataType: 'json'
+      dataType: 'text'
     });
   }
 
@@ -42,6 +42,7 @@ function readCampos(){
   $('#resultados_campos').html('Cargando...');
 
   CamposAPI.list(filtros).done(function(res){
+    if(typeof res === 'string') res = JSON.parse(res);
     var datos = (res && res.resultados) ? res.resultados : [];
     var totalResultados = 0;
 
@@ -133,7 +134,7 @@ var saveCampo = function() {
   }
 
   apiCall.done(function(data){
-    if (typeof data === 'string' && data.trim() === 'OK'){
+    if (typeof data === 'string' && $.trim(data) === 'OK'){
       $('#modal_confirm').modal('close');
       $('#modal_camp').modal('close');
       $('#filtrar_campos').click();
@@ -170,6 +171,7 @@ $(document.body).on('click', '#camp_save', function(){
 var openCampo = function(seccion, cual, id){
   if(cual === 'frm_editcamp'){
     CamposAPI.list({ filtro_id: id }).done(function(res){
+      if(typeof res === 'string') res = JSON.parse(res);
       var datos = (res && res.resultados) ? res.resultados : [];
       if(datos.length === 0){
         modalError('ERROR', 'No se encontró el campo', false, 'Cerrar', 'error');
