@@ -52,7 +52,7 @@ if(mysqli_query($link, $sql)){
         "direccion"=> $direccion,
         "localidad"=> $localidad,
         "municipio"=> $municipio,
-        "id_mantenedor"=> $mantenedor,
+        "id_mantenedor"=> $id_mantenedor,
         "cp"=> $cp
     );
 } else {
