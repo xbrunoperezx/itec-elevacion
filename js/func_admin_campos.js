@@ -245,7 +245,7 @@ var openCampo = function(seccion, cual, id){
             '<option value="MEDIDAS">MEDIDAS</option>' +
             '<option value="CARACTERISTICAS">CARACTERISTICAS</option>' +
           '</select>' +
-          '<label for="tipo_camp">Tipo</label>' +
+          '<label for="tipo_camp" class="active">Tipo</label>' +
         '</div>' +
       '</div>' +
       '<div class="row">' +
