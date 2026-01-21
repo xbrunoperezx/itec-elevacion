@@ -221,7 +221,7 @@
                     //para rellenar el SELECT DE EDITAR/UPDATE
                     let opcionesEdit= '<option value="" disabled>Elige un mantenedor</option>';
                     for(let id in mantenedoresGlobal){
-                        opcionesEdir+= `<option value="${id}">${mantenedoresGlobal[id]}</option>`;
+                        opcionesEdit+= `<option value="${id}">${mantenedoresGlobal[id]}</option>`;
                     }
 
                     $('#edit-mantenedor').html(opcionesEdit);
