@@ -96,6 +96,13 @@
                 <label for="edit-cp">CP</label>
             </div>
 
+            <div class="input-field">
+                <select id="edit-mantenedor">
+                    <option value="" disabled>Elige un mantenedor</option>
+                </select>
+                <label>Mantenedor</label>
+            </div>
+
             
         </div>
 
@@ -201,7 +208,7 @@
                     clientesGlobal=response.resultados;
                     mantenedoresGlobal=response.mantenedores;
 
-                    //lo mismo que pintar clientes pero con option
+                    //lo mismo que pintar clientes pero con option el SELECT DE CREAR
                     let opciones= '<option value="" disabled selected>Elige un mantenedor</option>';
                     for(let id in mantenedoresGlobal){
                         opciones+= `<option value="${id}">${mantenedoresGlobal[id]}</option>`
@@ -209,6 +216,16 @@
 
                     $('#create-mantenedor').html(opciones);
                     $('select').formSelect(); // Materializwe
+
+
+                    //para rellenar el SELECT DE EDITAR/UPDATE
+                    let opcionesEdit= '<option value="" disabled>Elige un mantenedor</option>';
+                    for(let id in mantenedoresGlobal){
+                        opcionesEdir+= `<option value="${id}">${mantenedoresGlobal[id]}</option>`;
+                    }
+
+                    $('#edit-mantenedor').html(opcionesEdit);
+                    $('selec').formSelect();
 
                     //4º  ---creamos un acumulador para no sobrescribir cada vuelta el cliente---
                     let html = "";
@@ -303,6 +320,8 @@
             $('#edit-direccion').val(cliente.direccion);
             $('#edit-localidad').val(cliente.localidad);
             $('#edit-cp').val(cliente.cp);
+            $('#edit-mantenedor').val(cliente.id_mantenedor);
+            $('select').formSelect();
 
             M.updateTextFields();//para mover las etiquetas de label si esta vacio o no el input
             $('#modal-editar-cliente').modal('open');
