@@ -92,18 +92,17 @@
             </div>
 
             <div class="input-field">
-                <input type="text" id="edit-cp">
-                <label for="edit-cp">CP</label>
-            </div>
-
-            <div class="input-field">
                 <select id="edit-mantenedor">
                     <option value="" disabled>Elige un mantenedor</option>
                 </select>
                 <label>Mantenedor</label>
             </div>
 
-            
+            <div class="input-field">
+                <input type="text" id="edit-cp">
+                <label for="edit-cp">CP</label>
+            </div>
+
         </div>
 
         <div class="modal-footer">
@@ -139,18 +138,19 @@
                 <label for="create-municipio">Municipio</label>
             </div>
 
-            <div class="input-field">
-                <input type="text" id="create-cp">
-                <label for="create-cp">CP</label>
-            </div>
-
-            <div class="input-field">
+             <div class="input-field">
                 <select id="create-mantenedor">
                     <option value="" disabled selected>Elige un mantenedor</option>
                     
                     
                 </select>
             </div>
+
+            <div class="input-field">
+                <input type="text" id="create-cp">
+                <label for="create-cp">CP</label>
+            </div>
+
         </div>
 
         <div class="modal-footer">
@@ -319,8 +319,8 @@
             $('#edit-nombre').val(cliente.nombre);
             $('#edit-direccion').val(cliente.direccion);
             $('#edit-localidad').val(cliente.localidad);
-            $('#edit-cp').val(cliente.cp);
             $('#edit-mantenedor').val(cliente.id_mantenedor);
+            $('#edit-cp').val(cliente.cp);
             $('select').formSelect();
 
             M.updateTextFields();//para mover las etiquetas de label si esta vacio o no el input
@@ -339,8 +339,9 @@
                 nombre: $('#edit-nombre').val(),
                 direccion: $('#edit-direccion').val(),
                 localidad: $('#edit-localidad').val(),
-                cp: $('#edit-cp').val(),
                 id_mantenedor: $('#edit-mantenedor').val(),
+                cp: $('#edit-cp').val(),
+               
             };
 
             $.ajax({
@@ -360,8 +361,9 @@
                         cliente.nombre= datos.nombre;
                         cliente.direccion= datos.direccion;
                         cliente.localidad= datos.localidad;
-                        cliente.cp= datos.cp;
                         cliente.id_mantenedor= datos.id_mantenedor;
+                        cliente.cp= datos.cp;
+                       
 
                         //con esto nos devuelve el nombre y no la ID
                         cliente.mantenedor= mantenedoresGlobal[datos.id_mantenedor];
@@ -373,8 +375,9 @@
                         fila.find('td').eq(1).text(cliente.nombre);
                         fila.find('td').eq(2).text(cliente.direccion);
                         fila.find('td').eq(3).text(cliente.localidad);
-                        fila.find('td').eq(4).text(cliente.cp);
                         fila.find('td').eq(5).text(cliente.mantenedor);
+                        fila.find('td').eq(4).text(cliente.cp);
+                        
 
                         //cerramos el modal/ventana por que ya se guardo cliente
                         $('#modal-editar-cliente').modal('close'); 
