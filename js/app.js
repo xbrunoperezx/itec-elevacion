@@ -94,7 +94,6 @@ $(document).ready(function() {
 		if(seccion=="cli") openCliente(seccion, cual, id);
 		if(seccion=="con") openContratada(seccion, cual, id);
     if(seccion=="pri") openInforme(seccion, cual, id);
-    if(seccion=="camp") openCampo(seccion, cual, id);
 	}
 
 	// Click en los elementos del menú superior
