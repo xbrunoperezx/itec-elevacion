@@ -47,7 +47,7 @@ function readCampos(){
 
     datos.forEach(function(item){
       var id = item.id || '';
-      var id_revision = item.id_revision || '';
+      var nombre_revision = item.revision_nombre || '';
       var tipo = item.tipo || '';
       var nombreCp = item.nombre || '';
       var abrev = item.abrev || '';
@@ -61,7 +61,7 @@ function readCampos(){
       tr += "<td class='ancho80'>" + nombreCp + "</td>";
       tr += "<td class='ancho200'><b>" + abrev + "</b></td>";
       tr += "<td class='ancho80'>" + unidad + "</td>";
-      tr += "<td class='ancho80'>" + id_revision + "</td>";
+      tr += "<td class='ancho80'>" + nombre_revision + "</td>";
       tr += "<td class='ancho50'>" +
             "<a class='more_camp btn-floating btn-small waves-effect waves-light red' title='Más' data-id='"+id+"'><i class='material-icons'>more_vert</i></a>" +
             "</td>";

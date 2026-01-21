@@ -30,6 +30,17 @@ switch($action) {
       $id = 0;
     }
 
+    $revisiones_sql = "SELECT * FROM revisiones";
+    $revisiones_result = mysqli_query($link, $revisiones_sql);
+
+    // Inicialización de un array para almacenar los datos de las revisiones
+    $revisiones = array();
+
+    // Bucle a través de cada fila de resultados de mantenedores y almacenamiento de datos en el array
+    while ($row = mysqli_fetch_assoc($revisiones_result)) {
+        $revisiones[$row["id"]] = $row["revision"] . ":" . $row["dominio"];
+    }
+
     if($id==0){
       $sql = "SELECT * FROM informe_campos";
       $where = array();
@@ -50,11 +61,17 @@ switch($action) {
     $result = mysqli_query($link, $sql);
     $resultados = array();
     while ($row = mysqli_fetch_assoc($result)) {
+        if(isset($revisiones[$row['id_revision']])) {
+            $row['revision_nombre'] = $revisiones[$row['id_revision']];
+        } else {
+            $row['revision_nombre'] = "-";
+        }
         $resultados[] = $row;
     }
 
     $retorno = array();
     $retorno["resultados"] = $resultados;
+    $retorno["revisiones"] = $revisiones;
     echo json_encode($retorno);
     break;
 
