@@ -15,7 +15,8 @@ if(
     !isset($_POST['nombre']) ||
     !isset($_POST['direccion']) ||
     !isset($_POST['localidad']) ||
-    !isset($_POST['cp'])
+    !isset($_POST['cp']) ||
+    !isset($_POST['id_mantenedor'])
 ) {
     $response['message'] = "Datos incompletos";
     echo json_encode($response); // si falta algo enviamos mensaje formato json a ajax
@@ -30,6 +31,7 @@ $nombre= mysqli_real_escape_string($link, $_POST['nombre']);
 $direccion= mysqli_real_escape_string($link, $_POST['direccion']);
 $localidad= mysqli_real_escape_string($link, $_POST['localidad']);
 $cp= mysqli_real_escape_string($link, $_POST['cp']) ;
+$id_mantenedor= (int)$_POST['id_mantenedor'];
 
 
 // consulta que dice: "Actualiza este cliente(id) con estos nuevos datos 
@@ -38,7 +40,8 @@ $sql= "
     Set nombre='$nombre',
         direccion='$direccion',
         localidad='$localidad',
-        cp='$cp'
+        cp='$cp',
+        id_mantenedor='$id_mantenedor'
     WHERE id=$id    
 ";
 

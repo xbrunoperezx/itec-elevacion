@@ -339,7 +339,8 @@
                 nombre: $('#edit-nombre').val(),
                 direccion: $('#edit-direccion').val(),
                 localidad: $('#edit-localidad').val(),
-                cp: $('#edit-cp').val()
+                cp: $('#edit-cp').val(),
+                id_mantenedor: $('#edit-mantenedor').val(),
             };
 
             $.ajax({
@@ -353,11 +354,17 @@
                         //buscamos el cliente en el array global que  sea igual que el que acabo de editar
                         cliente= clientesGlobal.find(c=> c.id == datos.id);
 
+
+
                         //actualizamos con los nuevos datos del cliente para que no sea la de antes (Desfasada)
                         cliente.nombre= datos.nombre;
                         cliente.direccion= datos.direccion;
                         cliente.localidad= datos.localidad;
                         cliente.cp= datos.cp;
+                        cliente.id_mantenedor= datos.id_mantenedor;
+
+                        //con esto nos devuelve el nombre y no la ID
+                        cliente.mantenedor= mantenedoresGlobal[datos.id_mantenedor];
 
                         //buscamos la fila en la tabla del cliente que editamos
                         let fila= $(`tr[data-id= "${datos.id}"]`);
@@ -367,6 +374,7 @@
                         fila.find('td').eq(2).text(cliente.direccion);
                         fila.find('td').eq(3).text(cliente.localidad);
                         fila.find('td').eq(4).text(cliente.cp);
+                        fila.find('td').es(5).tect(cliente.mantenedor);
 
                         //cerramos el modal/ventana por que ya se guardo cliente
                         $('#modal-editar-cliente').modal('close'); 
