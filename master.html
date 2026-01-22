@@ -40,6 +40,7 @@
                 <td>Localidad</td>
                 <td>Mantenedor</td>
                 <td>Cp</td>
+                <td>Vencimiento</td>
                 <td>Acciones</td>
             </tr>
         </thead>
@@ -237,6 +238,7 @@
                     let contador = 1;
                     //recorremos el array "response.resultados" con cada cliente
                     response.resultados.forEach(function(cliente){
+                        let vencimiento= cliente.vencimiento_dmy ?? '-';
                          
                         //con el acumulador creado vamos añadiendo al html cada iteraccion del bucle un cliente 
                         html += `
@@ -247,6 +249,7 @@
                                 <td>${cliente.localidad}</td>
                                 <td>${cliente.mantenedor}</td>
                                 <td>${cliente.cp}</td>
+                                <td>${cliente.vencimiento}</td>
                                 <td>
                                     <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}"> 
                                         <i class="material-icons">Ver</i>
