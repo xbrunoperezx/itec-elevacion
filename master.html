@@ -374,6 +374,9 @@
                 dataType: 'json',
                 success: function(response){
                     if(response.success){
+
+                        
+
                         
                         //buscamos el cliente en el array global que  sea igual que el que acabo de editar
                         cliente= clientesGlobal.find(c=> c.id == datos.id);
@@ -393,7 +396,7 @@
                         //con esto nos devuelve el nombre y no la ID(busca en el array global usando la id y nos devuelve su nombre)
                         cliente.mantenedor= mantenedoresGlobal[datos.id_mantenedor];
                         //---
-                        let textoContratada= cliente.contratada == 1 ? 'v' : '-';
+                        let textoContratada= datos.contratada == 1 ? 'v' : '-';
 
                         //buscamos la fila en la tabla del cliente que editamos
                         let fila= $(`tr[data-id= "${datos.id}"]`);
@@ -404,8 +407,8 @@
                         fila.find('td').eq(3).text(cliente.localidad);
                         fila.find('td').eq(4).text(cliente.mantenedor);
                         fila.find('td').eq(5).text(cliente.cp);
-                        fila.find('td').eq(6).text(cliente.vencimiento);
-                        fila.find('td').eq(7).text(cliente.textoContratada);
+                        fila.find('td').eq(6).text(datos.vencimiento);
+                        fila.find('td').eq(7).text(textoContratada);
                         
 
                         //cerramos el modal/ventana por que ya se guardo cliente
