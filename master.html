@@ -248,7 +248,10 @@
                     //recorremos el array "response.resultados" con cada cliente
                     response.resultados.forEach(function(cliente){
                         let vencimiento= cliente.vencimiento_dmy ?? '-';
-                        let contratadaTexto= cliente.contratada == 1 ? 'v' : '-';
+                       // let contratadaTexto= cliente.contratada == 1 ? 'v' : '-';
+                        let iconoContratada= cliente.contratada ==1
+                            ? '<i class="material-icons green-text">check_circle>/i>'
+                            : '<i class="material-icons red-text">cancel>/i>';          
                          
                         //con el acumulador creado vamos añadiendo al html cada iteraccion del bucle un cliente 
                         html += `
@@ -261,6 +264,7 @@
                                 <td>${cliente.cp}</td>
                                 <td>${cliente.vencimiento}</td>
                                 <td>${cliente.contratada}</td>
+                                <td class="center-align">${iconoContratada}>/td>
                                 <td>
                                     <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}"> 
                                         <i class="material-icons">Ver</i>
@@ -396,7 +400,11 @@
                         //con esto nos devuelve el nombre y no la ID(busca en el array global usando la id y nos devuelve su nombre)
                         cliente.mantenedor= mantenedoresGlobal[datos.id_mantenedor];
                         //---
-                        let textoContratada= datos.contratada == 1 ? 'v' : '-';
+                        //let textoContratada= datos.contratada == 1 ? 'v' : '-';
+                        let iconoContratada = datos.contratada == 1
+                            ? '<i class="material-icons green-text">check_circle</i>'
+                            : '<i class="material-icons red-text">cancel</i>';
+
 
                         //buscamos la fila en la tabla del cliente que editamos
                         let fila= $(`tr[data-id= "${datos.id}"]`);
@@ -408,7 +416,7 @@
                         fila.find('td').eq(4).text(cliente.mantenedor);
                         fila.find('td').eq(5).text(cliente.cp);
                         fila.find('td').eq(6).text(datos.vencimiento);
-                        fila.find('td').eq(7).text(textoContratada);
+                        fila.find('td').eq(7).html(iconoContratada);
                         
 
                         //cerramos el modal/ventana por que ya se guardo cliente
