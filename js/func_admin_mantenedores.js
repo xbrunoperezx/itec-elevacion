@@ -55,7 +55,7 @@ function readMantenedores(){
       tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho30'>" + id + "</td>";
       tr += "<td class='ancho30'><a seccion='mant' tipo='frm_editmant' data-id='"+id+"' class='editar_mant btn-floating btn-small waves-effect waves-light green' title='Editar mantenedor'><i class='material-icons'>edit</i></a></td>";
-      tr += "<td class='ancho200'>" + mantenedor + "</td>";
+      tr += "<td>" + mantenedor + "</td>";
       tr += "<td class='ancho80'><b>" + corto + "</b></td>";
       tr += "<td class='ancho80'>&nbsp;</td>";
       tr += "<td class='ancho50'>" +
