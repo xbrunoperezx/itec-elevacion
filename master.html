@@ -42,6 +42,7 @@
                 <td>Cp</td>
                 <td>Vencimiento</td>
                 <td>Acciones</td>
+                <td>Contratada</td>
             </tr>
         </thead>
 
@@ -108,6 +109,13 @@
                 <input type="date" id="edit-vencimiento">
                 <label for="edit-vencimiento">Vencimiento</label>
             </div>
+
+            <p>
+                <label>
+                    <input type="checkbox" id="edit-contratada">
+                    <span>Contrato activo</span>
+                </label>
+            </p>
 
         </div>
 
@@ -214,7 +222,7 @@
                     clientesGlobal=response.resultados;
                     mantenedoresGlobal=response.mantenedores;
 
-                    //lo mismo que pintar clientes pero con option el SELECT DE CREAR
+                    //lo mismo que pintar clientes pero con option el SELECT DE CREAR, ara que mediante su id saquemosel nombre para pintarlo en tabla
                     let opciones= '<option value="" disabled selected>Elige un mantenedor</option>';
                     for(let id in mantenedoresGlobal){
                         opciones+= `<option value="${id}">${mantenedoresGlobal[id]}</option>`
@@ -224,7 +232,7 @@
                     $('select').formSelect(); // Materializwe
 
 
-                    //para rellenar el SELECT DE EDITAR/UPDATE
+                    //para rellenar el SELECT DE EDITAR/UPDATE , para que mediante su id saquemosel nombre para pintarlo en tabla
                     let opcionesEdit= '<option value="" disabled>Elige un mantenedor</option>';
                     for(let id in mantenedoresGlobal){
                         opcionesEdit+= `<option value="${id}">${mantenedoresGlobal[id]}</option>`;
@@ -239,6 +247,7 @@
                     //recorremos el array "response.resultados" con cada cliente
                     response.resultados.forEach(function(cliente){
                         let vencimiento= cliente.vencimiento_dmy ?? '-';
+                        let contratadaTexto= cliente.contratada == 1 ? 'v' : '-';
                          
                         //con el acumulador creado vamos añadiendo al html cada iteraccion del bucle un cliente 
                         html += `
@@ -250,6 +259,7 @@
                                 <td>${cliente.mantenedor}</td>
                                 <td>${cliente.cp}</td>
                                 <td>${cliente.vencimiento}</td>
+                                <td>${cliente.contratada}</td>
                                 <td>
                                     <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}"> 
                                         <i class="material-icons">Ver</i>
@@ -330,6 +340,7 @@
             $('#edit-mantenedor').val(cliente.id_mantenedor);
             $('#edit-cp').val(cliente.cp);
             $('#edit-vencimiento').val(cliente.vencimiento);
+            $('#edit-contratada').prop('checked', cliente.contratada == 1);
             $('select').formSelect();
 
             M.updateTextFields();//para mover las etiquetas de label si esta vacio o no el input
@@ -350,7 +361,8 @@
                 localidad: $('#edit-localidad').val(),
                 id_mantenedor: $('#edit-mantenedor').val(),
                 cp: $('#edit-cp').val(),
-                vencimiento: $('#edit-vencimiento').val()
+                vencimiento: $('#edit-vencimiento').val(),
+                contratada: $('#edit-contratada').is(':checked') ? 1 : 0
                
             };
 
@@ -374,10 +386,12 @@
                         cliente.id_mantenedor= datos.id_mantenedor;
                         cliente.cp= datos.cp;
                         cliente.vencimiento= datos.vencimiento;
+                        cliente.contratada= datos.contratada;
                        
 
-                        //con esto nos devuelve el nombre y no la ID
+                        //con esto nos devuelve el nombre y no la ID(busca en el array global usando la id y nos devuelve su nombre)
                         cliente.mantenedor= mantenedoresGlobal[datos.id_mantenedor];
+                        let textoContratada= datos.contratada == 1 ? 'v' : '-';
 
                         //buscamos la fila en la tabla del cliente que editamos
                         let fila= $(`tr[data-id= "${datos.id}"]`);
@@ -389,6 +403,7 @@
                         fila.find('td').eq(4).text(cliente.mantenedor);
                         fila.find('td').eq(5).text(cliente.cp);
                         fila.find('td').eq(6).text(cliente.vencimiento);
+                        fila.find('td').eq(7).text(cliente.textoContratada);
                         
 
                         //cerramos el modal/ventana por que ya se guardo cliente

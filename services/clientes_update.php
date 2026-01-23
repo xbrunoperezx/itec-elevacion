@@ -16,7 +16,8 @@ if(
     !isset($_POST['direccion']) ||
     !isset($_POST['localidad']) ||
     !isset($_POST['cp']) ||
-    !isset($_POST['id_mantenedor'])
+    !isset($_POST['id_mantenedor']) ||
+    
 ) {
     $response['message'] = "Datos incompletos";
     echo json_encode($response); // si falta algo enviamos mensaje formato json a ajax
@@ -35,6 +36,7 @@ $id_mantenedor= (int)$_POST['id_mantenedor'];
 $vencimiento= empty($_POST['vencimiento'])
     ? "NULL"
     : "'" . mysqli_real_escape_string($link, $_POST['vencimiento']) . "'";
+$contratada= isset($_POST['contratada']) && $_POST['contratada'] == 1 ? 1 : 0;     
 
 
 // consulta que dice: "Actualiza este cliente(id) con estos nuevos datos 
@@ -45,7 +47,8 @@ $sql= "
         localidad='$localidad',
         cp='$cp',
         id_mantenedor=$id_mantenedor,
-        vencimiento= $vencimiento
+        vencimiento= $vencimiento,
+        contratada= $contratada
     WHERE id=$id    
 ";
 
