@@ -304,3 +304,22 @@ jQuery(document).on('click', '.more_mant', function(e){
       });
     }, 10);
 });
+
+  // Permitir pulsar Enter en los campos de filtro para ejecutar la búsqueda
+  jQuery(document).on('keydown', '#Mantenedores [id*=filtro_mantenedores]', function(e){
+    jQuery('#filtrar_mantenedores_clear').removeClass('hide');
+    if (e.key === 'Enter' || e.which === 13 || e.keyCode === 13) {
+      e.preventDefault();
+      jQuery(this).closest('#Mantenedores').find('#filtrar_mantenedores').click();
+    }
+  });
+
+  // Limpiar filtros de mantenedores
+  jQuery(document).on('click', '#filtrar_mantenedores_clear', function() {
+    jQuery(this).addClass('hide');
+    var $parent = jQuery(this).closest('#Mantenedores');
+    $parent.find('#filtro_mantenedores_nombre').val('');
+    $parent.find('#filtro_mantenedores_total').val('15');
+    $parent.find('label').not(':eq(0)').removeClass('active');
+    $parent.find('#filtrar_mantenedores').click();
+  });
