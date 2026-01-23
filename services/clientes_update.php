@@ -16,7 +16,7 @@ if(
     !isset($_POST['direccion']) ||
     !isset($_POST['localidad']) ||
     !isset($_POST['cp']) ||
-    !isset($_POST['id_mantenedor']) ||
+    !isset($_POST['id_mantenedor'])
     
 ) {
     $response['message'] = "Datos incompletos";
