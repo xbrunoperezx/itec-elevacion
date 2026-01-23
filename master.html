@@ -392,7 +392,8 @@
 
                         //con esto nos devuelve el nombre y no la ID(busca en el array global usando la id y nos devuelve su nombre)
                         cliente.mantenedor= mantenedoresGlobal[datos.id_mantenedor];
-                        let textoContratada= datos.contratada == 1 ? 'v' : '-';
+                        //---
+                        let textoContratada= cliente.contratada == 1 ? 'v' : '-';
 
                         //buscamos la fila en la tabla del cliente que editamos
                         let fila= $(`tr[data-id= "${datos.id}"]`);
