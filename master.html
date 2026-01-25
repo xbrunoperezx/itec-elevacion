@@ -31,7 +31,7 @@
     </a>
 
     <!--Creamos el "contenedor" donde pintaremos la tabla con el JS-->
-    <table class="none">
+    <table class="striped highlight responsive-table">
         <thead>
             <tr>
                 <td>#</td>
@@ -223,6 +223,9 @@
                     clientesGlobal=response.resultados;
                     mantenedoresGlobal=response.mantenedores;
 
+                    //LLAMADA FUNCION PINTAR TABLA CON CLIENTES
+                    pintarTablaClientes(clientesGlobal);
+
                     //lo mismo que pintar clientes pero con option el SELECT DE CREAR, ara que mediante su id saquemosel nombre para pintarlo en tabla
                     let opciones= '<option value="" disabled selected>Elige un mantenedor</option>';
                     for(let id in mantenedoresGlobal){
@@ -242,58 +245,13 @@
                     $('#edit-mantenedor').html(opcionesEdit);
                     $('select').formSelect();
 
-                    //4º  ---creamos un acumulador para no sobrescribir cada vuelta el cliente---
-                    let html = "";
-                    let contador = 1;
-                    //recorremos el array "response.resultados" con cada cliente
-                    response.resultados.forEach(function(cliente){
-                        let vencimiento= cliente.vencimiento_dmy ?? '-';
-                       // let contratadaTexto= cliente.contratada == 1 ? 'v' : '-';
-                        let iconoContratada= cliente.contratada ==1
-                            ? '<i class="material-icons green-text">check_circle</i>'
-                            : '<i class="material-icons red-text">cancel</i>';          
-                         
-                        //con el acumulador creado vamos añadiendo al html cada iteraccion del bucle un cliente 
-                        html += `
-                            <tr data-id="${cliente.id}">
-                                <td>${contador}</td> 
-                                <td>${cliente.nombre}</td>
-                                <td>${cliente.direccion}</td>
-                                <td>${cliente.localidad}</td>
-                                <td>${cliente.mantenedor}</td>
-                                <td>${cliente.cp}</td>
-                                <td>${cliente.vencimiento}</td>
-                                <td class="center-align">${iconoContratada}</td>
-                                
-                                
-                                <td>
-                                    <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}"> 
-                                        <i class="material-icons">visibility</i>
-                                    </a>
-                                    
-                                    <a href="#" class="btn-small orange editar-cliente" data-id="${cliente.id}">
-                                        <i class="materialize-icons">edit</i>
-                                    </a>
-                                    
-                                    <a href="#" class="btn-small red eliminar-cliente" data-id="${cliente.id}">
-                                        <i class="materialize-icons">delete</i>
-                                    </a>    
-
-                                    
-                                </td>
-
-
-                            </tr>     
-                        `;
-
-                        contador ++;
-                    });
-                    
-                    $('#tabla-clientes').html(html); // este es el pincel de js con el que mostramos en pantalla los resultados
+                   
                 }
                
               //cierre de ajax
             })
+
+            //---- TODAS LAS FUNCIONES DENTRO DE  $(document).ready(function() --------
 
           //inicializamos el modal, por que si no no existe
           $('.modal').modal();
@@ -403,7 +361,7 @@
                         
                         //---
                         //let textoContratada= datos.contratada == 1 ? 'v' : '-';
-                        let iconoContratada= datos.contratada == 1
+                        let iconoContratada= cliente.contratada == 1
                             ? '<i class="material-icons green-text">check_circle</i>'
                             : '<i class="material-icons red-text">cancel</i>';
 
@@ -476,15 +434,15 @@
                                     <td>-</td>
                                     <td>
                                         <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}"> 
-                                            i class="material-icons">Ver</i>
+                                            <i class="material-icons">visibility</i>
                                         </a>
                                     
                                         <a href="#" class="btn-small orange editar-cliente" data-id="${cliente.id}">
-                                            <i class="materialize-icons">Editar</i>
+                                            <i class="material-icons">edit</i>
                                         </a>
                                     
                                         <a href="#" class="btn-small red eliminar-cliente" data-id="${cliente.id}">
-                                            <i class="materialize-icons">Borrar</i>
+                                            <i class="material-icons">delete</i>
                                         </a>    
                                     </td>
                                 </tr> 
@@ -551,6 +509,55 @@
         
          //cierre de la funcion de carga $(document).rea..
         });
+
+        //FUNCIONES FUERA DEL $(document).ready(function()-----
+
+        //FUNCION PINTAR TABLA CLIENTES
+        function pintarTablaClientes(clientes){
+
+            //4º  ---creamos un acumulador para no sobrescribir cada vuelta el cliente---
+            let html = "";
+            let contador = 1;
+
+            //recorremos el array "response.resultados" con cada cliente
+            response.resultados.forEach(function(cliente){
+                let vencimiento= cliente.vencimiento_dmy ?? '-';
+                // let contratadaTexto= cliente.contratada == 1 ? 'v' : '-';
+                let iconoContratada= cliente.contratada ==1
+                    ? '<i class="material-icons green-text">check_circle</i>'
+                    : '<i class="material-icons red-text">cancel</i>';          
+                         
+                    //con el acumulador creado vamos añadiendo al html cada iteraccion del bucle un cliente 
+                    html += `
+                        <tr data-id="${cliente.id}">
+                            <td>${contador}</td> 
+                            <td>${cliente.nombre}</td>
+                            <td>${cliente.direccion}</td>
+                            <td>${cliente.localidad}</td>
+                            <td>${cliente.mantenedor}</td>
+                            <td>${cliente.cp}</td>
+                            <td>${cliente.vencimiento}</td>
+                            <td class="center-align">${iconoContratada}</td>
+                                
+                            <td>
+                                <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}"> 
+                                    <i class="material-icons">visibility</i>
+                                </a>
+                                    
+                                <a href="#" class="btn-small orange editar-cliente" data-id="${cliente.id}">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                                    
+                                <a href="#" class="btn-small red eliminar-cliente" data-id="${cliente.id}">
+                                    <i class="material-icons">delete</i>
+                                </a>    
+
+                            </td>
+                        </tr>  
+                    `;
+                      contador ++;
+            });
+        }
 
         
 
