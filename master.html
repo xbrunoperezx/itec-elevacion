@@ -520,7 +520,7 @@
             let contador = 1;
 
             //recorremos el array "response.resultados" con cada cliente
-            response.resultados.forEach(function(cliente){
+            clientes.forEach(function(cliente){
                 let vencimiento= cliente.vencimiento_dmy ?? '-';
                 // let contratadaTexto= cliente.contratada == 1 ? 'v' : '-';
                 let iconoContratada= cliente.contratada ==1
@@ -556,6 +556,7 @@
                         </tr>  
                     `;
                       contador ++;
+                      $('#tabla-clientes').html(html)
             });
         }
 
