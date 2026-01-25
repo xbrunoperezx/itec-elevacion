@@ -263,8 +263,9 @@
                                 <td>${cliente.mantenedor}</td>
                                 <td>${cliente.cp}</td>
                                 <td>${cliente.vencimiento}</td>
-                                <td>${cliente.contratada}</td>
                                 <td class="center-align">${iconoContratada}>/td>
+                                
+                                
                                 <td>
                                     <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}"> 
                                         <i class="material-icons">Ver</i>
@@ -399,9 +400,10 @@
 
                         //con esto nos devuelve el nombre y no la ID(busca en el array global usando la id y nos devuelve su nombre)
                         cliente.mantenedor= mantenedoresGlobal[datos.id_mantenedor];
+                        
                         //---
                         //let textoContratada= datos.contratada == 1 ? 'v' : '-';
-                        let iconoContratada = datos.contratada == 1
+                        let iconoContratada= datos.contratada == 1
                             ? '<i class="material-icons green-text">check_circle</i>'
                             : '<i class="material-icons red-text">cancel</i>';
 
