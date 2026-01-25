@@ -240,7 +240,7 @@
                     }
 
                     $('#edit-mantenedor').html(opcionesEdit);
-                    $('selec').formSelect();
+                    $('select').formSelect();
 
                     //4º  ---creamos un acumulador para no sobrescribir cada vuelta el cliente---
                     let html = "";
@@ -250,8 +250,8 @@
                         let vencimiento= cliente.vencimiento_dmy ?? '-';
                        // let contratadaTexto= cliente.contratada == 1 ? 'v' : '-';
                         let iconoContratada= cliente.contratada ==1
-                            ? '<i class="material-icons green-text">check_circle>/i>'
-                            : '<i class="material-icons red-text">cancel>/i>';          
+                            ? '<i class="material-icons green-text">check_circle</i>'
+                            : '<i class="material-icons red-text">cancel</i>';          
                          
                         //con el acumulador creado vamos añadiendo al html cada iteraccion del bucle un cliente 
                         html += `
@@ -263,20 +263,20 @@
                                 <td>${cliente.mantenedor}</td>
                                 <td>${cliente.cp}</td>
                                 <td>${cliente.vencimiento}</td>
-                                <td class="center-align">${iconoContratada}>/td>
+                                <td class="center-align">${iconoContratada}</td>
                                 
                                 
                                 <td>
                                     <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}"> 
-                                        <i class="material-icons">Ver</i>
+                                        <i class="material-icons">visibility</i>
                                     </a>
                                     
                                     <a href="#" class="btn-small orange editar-cliente" data-id="${cliente.id}">
-                                        <i class="materialize-icons">Editar</i>
+                                        <i class="materialize-icons">edit</i>
                                     </a>
                                     
                                     <a href="#" class="btn-small red eliminar-cliente" data-id="${cliente.id}">
-                                        <i class="materialize-icons">Borrar</i>
+                                        <i class="materialize-icons">delete</i>
                                     </a>    
 
                                     
@@ -466,12 +466,14 @@
 
                             let nuevaFila= `
                                  <tr data-id="${cliente.id}">
-                              
+                                    <td>-</td>
                                     <td>${cliente.nombre}</td>
                                     <td>${cliente.direccion}</td>
                                     <td>${cliente.localidad}</td>
                                     <td>${cliente.mantenedor}</td>
                                     <td>${cliente.cp}</td>
+                                    <td>-</td>
+                                    <td>-</td>
                                     <td>
                                         <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}"> 
                                             i class="material-icons">Ver</i>
