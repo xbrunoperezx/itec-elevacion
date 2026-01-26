@@ -205,4 +205,10 @@
                     });
                 }
            
-           });         
+           }); 
+           
+           
+           $('#filtro-nombre').on('Keyup', aplicarFiltros);
+           $('#filtro-localidad').on('Keyup', aplicarFiltros);
+           $('#filtro-mantenedor').on('change', aplicarFiltros);
+

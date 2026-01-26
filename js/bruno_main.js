@@ -9,7 +9,8 @@
         //inicializamos el select
         $('select').formSelect();
 
-        cargarClientes(); //la creamos ahora
+        cargarClientes(); 
 
            
     });//cierre de la funcion de carga $(document).rea..
+
