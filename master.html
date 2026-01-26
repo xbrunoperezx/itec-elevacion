@@ -341,8 +341,8 @@
                         
 
                         
-                        //buscamos el cliente en el array global que  sea igual que el que acabo de editar
-                        cliente= clientesGlobal.find(c=> c.id == datos.id);
+                       //buscamos el cliente en el array global que  sea igual que el que acabo de editar
+                       let cliente= clientesGlobal.find(c=> c.id == datos.id);
 
 
 
@@ -354,33 +354,39 @@
                         cliente.cp= datos.cp;
                         cliente.vencimiento= datos.vencimiento;
                         cliente.contratada= datos.contratada;
-                       
-
+                        
                         //con esto nos devuelve el nombre y no la ID(busca en el array global usando la id y nos devuelve su nombre)
                         cliente.mantenedor= mantenedoresGlobal[datos.id_mantenedor];
+
+                        //llamada a funcion 
+                        pintarTablaClientes(clientesGlobal);
+                        $('#modal-editar-cliente').modal('close'); 
+                       
+
+                        
                         
                         //---
                         //let textoContratada= datos.contratada == 1 ? 'v' : '-';
-                        let iconoContratada= cliente.contratada == 1
-                            ? '<i class="material-icons green-text">check_circle</i>'
-                            : '<i class="material-icons red-text">cancel</i>';
+                        //let iconoContratada= cliente.contratada == 1
+                          //  ? '<i class="material-icons green-text">check_circle</i>'
+                            //: '<i class="material-icons red-text">cancel</i>';
 
 
                         //buscamos la fila en la tabla del cliente que editamos
-                        let fila= $(`tr[data-id= "${datos.id}"]`);
+                        //let fila= $(`tr[data-id= "${datos.id}"]`);
 
                         //actualizamos ahora solo la fila que editamos
-                        fila.find('td').eq(1).text(cliente.nombre);
-                        fila.find('td').eq(2).text(cliente.direccion);
-                        fila.find('td').eq(3).text(cliente.localidad);
-                        fila.find('td').eq(4).text(cliente.mantenedor);
-                        fila.find('td').eq(5).text(cliente.cp);
-                        fila.find('td').eq(6).text(datos.vencimiento);
-                        fila.find('td').eq(7).html(iconoContratada);
+                        //fila.find('td').eq(1).text(cliente.nombre);
+                        //fila.find('td').eq(2).text(cliente.direccion);
+                        //fila.find('td').eq(3).text(cliente.localidad);
+                        //fila.find('td').eq(4).text(cliente.mantenedor);
+                        //fila.find('td').eq(5).text(cliente.cp);
+                        //fila.find('td').eq(6).text(datos.vencimiento);
+                        //fila.find('td').eq(7).html(iconoContratada);
                         
 
                         //cerramos el modal/ventana por que ya se guardo cliente
-                        $('#modal-editar-cliente').modal('close'); 
+                       
                     }    
             
                     
@@ -416,48 +422,51 @@
                             //si quisiesmos añadirlo al final seria con .push, pero por logica qeremos que se vea el primero
                             clientesGlobal.unshift(response.cliente);
 
-                            //ahora solo vamos a pintar la nueva fila con los datos de ese cliente
-                            let cliente= response.cliente;
-
-                            //para verificar si existe dame nombre, si no "-", quitar errores
-                            cliente.mantenedor= mantenedoresGlobal[cliente.id_mantenedor] ?? '-';
-
-                            let nuevaFila= `
-                                 <tr data-id="${cliente.id}">
-                                    <td>-</td>
-                                    <td>${cliente.nombre}</td>
-                                    <td>${cliente.direccion}</td>
-                                    <td>${cliente.localidad}</td>
-                                    <td>${cliente.mantenedor}</td>
-                                    <td>${cliente.cp}</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>
-                                        <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}"> 
-                                            <i class="material-icons">visibility</i>
-                                        </a>
-                                    
-                                        <a href="#" class="btn-small orange editar-cliente" data-id="${cliente.id}">
-                                            <i class="material-icons">edit</i>
-                                        </a>
-                                    
-                                        <a href="#" class="btn-small red eliminar-cliente" data-id="${cliente.id}">
-                                            <i class="material-icons">delete</i>
-                                        </a>    
-                                    </td>
-                                </tr> 
-                            `;
-
-                            //para que los neuvos datos aparezcan insertados enla primera fila .prepend
-                            $('#tabla-clientes').prepend(nuevaFila);
-
+                            pintarTablaClientes(clientesGlobal);
+                             
                             //ahora limpiamos el formulario
                             $('#modal-crear-cliente input').val('');
                             M.updateTextFields();
-
-
                             //cerramos el modal
                             $('#modal-crear-cliente').modal('close');
+
+                            
+                            //ahora solo vamos a pintar la nueva fila con los datos de ese cliente
+                            //let cliente= response.cliente;
+
+                            //para verificar si existe dame nombre, si no "-", quitar errores
+                            //cliente.mantenedor= mantenedoresGlobal[cliente.id_mantenedor] ?? '-';
+
+                           // let nuevaFila= `
+                                // <tr data-id="${cliente.id}">
+                                  //  <td>-</td>
+                                   // <td>${cliente.nombre}</td>
+                                   // <td>${cliente.direccion}</td>
+                                    //<td>${cliente.localidad}</td>
+                                    //<td>${cliente.mantenedor}</td>
+                                    //<td>${cliente.cp}</td>
+                                    //<td>-</td>
+                                    //<td>-</td>
+                                    //<td>
+                                      //  <a href="#" class="btn-small blue ver-cliente" data-id="${cliente.id}"> 
+                                        //    <i class="material-icons">visibility</i>
+                                        //</a>
+                                    
+                                   //     <a href="#" class="btn-small orange editar-cliente" data-id="${cliente.id}">
+                                     //       <i class="material-icons">edit</i>
+                                       // </a>
+                                    
+                                        //<a href="#" class="btn-small red eliminar-cliente" data-id="${cliente.id}">
+                                          //  <i class="material-icons">delete</i>
+                                        //</a>    
+                                    //</td>
+                               // </tr> 
+                            //`;
+
+                            //para que los neuvos datos aparezcan insertados enla primera fila .prepend
+                           // $('#tabla-clientes').prepend(nuevaFila);
+
+                           
                            
                         } else {
                             alert(response.message);
@@ -489,11 +498,13 @@
                             if(response.success){
                                 //sobreescribimos el array de clientes paraque solo mantenga los que no queremos borrar
                                 clientesGlobal= clientesGlobal.filter(c=> c.id != id);
+                                pintarTablaClientes(clientesGlobal);
+                                alert(response.message);
 
                                 //ahora buscamos la fila de ese cliente "<tr>" que tenga ese data-id y es la que eliminamos
-                                $(`tr[data-id="${id}"]`).remove();  
+                                //$(`tr[data-id="${id}"]`).remove();  
                                 
-                                alert(response.message);
+                                
                             } else {
                                 alert(response.message);
                             }
@@ -536,7 +547,7 @@
                             <td>${cliente.localidad}</td>
                             <td>${cliente.mantenedor}</td>
                             <td>${cliente.cp}</td>
-                            <td>${cliente.vencimiento}</td>
+                            <td>${cliente.vencimiento_dmy ?? '-'}</td>
                             <td class="center-align">${iconoContratada}</td>
                                 
                             <td>
@@ -555,9 +566,10 @@
                             </td>
                         </tr>  
                     `;
-                      contador ++;
-                      $('#tabla-clientes').html(html)
+                    contador ++;
             });
+            
+            $('#tabla-clientes').html(html)
         }
 
         
