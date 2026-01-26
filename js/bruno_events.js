@@ -91,8 +91,11 @@
                         //con esto nos devuelve el nombre y no la ID(busca en el array global usando la id y nos devuelve su nombre)
                         cliente.mantenedor= mantenedoresGlobal[datos.id_mantenedor];
 
+                        
+
                         //llamada a funcion 
                         pintarTablaClientes(clientesGlobal);
+                        aplicarFiltros();
                         $('#modal-editar-cliente').modal('close'); 
                        
 
@@ -155,6 +158,8 @@
                             clientesGlobal.unshift(response.cliente);
 
                             pintarTablaClientes(clientesGlobal);
+
+                            aplicarFiltros();
                              
                             //ahora limpiamos el formulario
                             $('#modal-crear-cliente input').val('');
@@ -190,7 +195,10 @@
                             if(response.success){
                                 //sobreescribimos el array de clientes paraque solo mantenga los que no queremos borrar
                                 clientesGlobal= clientesGlobal.filter(c=> c.id != id);
+                                
+                                
                                 pintarTablaClientes(clientesGlobal);
+                                aplicarFiltros();
                                 alert(response.message);
 
                                 //ahora buscamos la fila de ese cliente "<tr>" que tenga ese data-id y es la que eliminamos
