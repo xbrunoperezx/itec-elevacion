@@ -47,3 +47,25 @@
             
             $('#tabla-clientes').html(html)
         }
+
+        //FUNCION RELLENAR LOS  MANTENEDORES PARA QUE ME DE EL NOMBRE
+        function rellenarSelects(){
+            //lo mismo que pintar clientes pero con option el SELECT DE CREAR, ara que mediante su id saquemosel nombre para pintarlo en tabla
+            let opciones= '<option value="" disabled selected>Elige un mantenedor</option>';
+                for(let id in mantenedoresGlobal){
+                    opciones+= `<option value="${id}">${mantenedoresGlobal[id]}</option>`
+                }
+
+                $('#create-mantenedor').html(opciones);
+                $('#edit-mantenedor').html(opciones);
+                $('select').formSelect(); // Materializwe
+        }
+
+        //para rellenar el SELECT DE EDITAR/UPDATE , para que mediante su id saquemosel nombre para pintarlo en tabla
+                   // let opcionesEdit= '<option value="" disabled>Elige un mantenedor</option>';
+                    //for(let id in mantenedoresGlobal){
+                      //  opcionesEdit+= `<option value="${id}">${mantenedoresGlobal[id]}</option>`;
+                    //}
+
+                   
+                    //$('select').formSelect();
