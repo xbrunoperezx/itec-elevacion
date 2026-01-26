@@ -43,8 +43,17 @@
 
                     //LLAMADA FUNCION PINTAR TABLA CON CLIENTES
                     pintarTablaClientes(clientesGlobal);
-
                     rellenarSelects(); // la creamos ahora
+
+                    let opcionesFiltro= '<option value="">Todos</option>';
+                    for(let id in mantenedoresGlobal){
+                        opcionesFiltro+= `<option value="${id}">${mantenedoresGlobal[id]}</option>`;
+                    }
+
+                    $('#filtro-mantenedor').html(opcionesFiltro);
+                    $('select').formSelect();
+
+
                 }
                
               
