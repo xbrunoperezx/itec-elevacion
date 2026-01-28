@@ -214,9 +214,8 @@
                         }
                       
                     });
-                })
-           
-           }); 
+                });
+             }); 
 
 
            //----------------------------------------------------------------
@@ -232,11 +231,21 @@
             $('#msg-titulo').text(titulo);
             $('#msg-contenido').text(mensaje);
 
+            // Limpiar botones anteriores del confirmación
+            $('#msg-cancelar').remove();
+            
+            // Resetear el botón principal y eliminar listeners antiguos
+         
+            $('#msg-boton').removeClass('btn-danger btn-warning btn-success red orange green');
+            $('#msg-boton').text('Aceptar');
+            $('#msg-boton').off('click');
+         
+
             //cambiar el color y texto del boton segunel tipo
             if(tipoBoton === 'error'){
-                $('#msg-boton').removeClass('btn-success btn warning').addClass('btn-danger red');
+                $('#msg-boton').removeClass('btn-success btn-warning').addClass('btn-danger red');
             } else if(tipoBoton === 'warning'){
-                $('#msg-boton').removeClass('btn-danger  btn-success').addClass('btn-warning orange');
+                $('#msg-boton').removeClass('btn-danger btn-success').addClass('btn-warning orange');
             } else {
                 $('#msg-boton').removeClass('btn-danger btn-warning').addClass('btn-success green')
             }
