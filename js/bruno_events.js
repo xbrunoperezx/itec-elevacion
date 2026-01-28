@@ -216,7 +216,7 @@
            }); 
            
            
-           $('#filtro-nombre').on('Keyup', aplicarFiltros);
-           $('#filtro-localidad').on('Keyup', aplicarFiltros);
+           $('#filtro-nombre').on('keyup', aplicarFiltros);
+           $('#filtro-localidad').on('keyup', aplicarFiltros);
            $('#filtro-mantenedor').on('change', aplicarFiltros);
 
