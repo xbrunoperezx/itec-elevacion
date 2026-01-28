@@ -188,7 +188,7 @@
                 let id=$(this).data('id');//comprobamos que el data-id coincide
 
                 // creamos una condicional para que no borremos por error que nos aparezca un mensaje de confirmacion
-                if(confirm('¿Seguro que quieres eliminar este cliente?')){
+                 mostrarConfirmacion('⚠️ Confirmar eliminación', '¿Seguro que quieres eliminar este cliente?', function(){
                     $.ajax({
                         type: "POST",
                         url: "services/clientes_delete.php",
@@ -202,19 +202,19 @@
                                 
                                 pintarTablaClientes(clientesGlobal);
                                 aplicarFiltros();
-                                alert(response.message);
+                                mostrarMensaje('✅ Eliminado', response.message, 'success');
 
                                 //ahora buscamos la fila de ese cliente "<tr>" que tenga ese data-id y es la que eliminamos
                                 //$(`tr[data-id="${id}"]`).remove();  
                                 
                                 
                             } else {
-                                alert(response.message);
+                                mostrarMensaje('❌ Error', response.message, 'error');
                             }
                         }
                       
                     });
-                }
+                })
            
            }); 
 
@@ -262,6 +262,7 @@
                 $('#msg-boton').text('Sí, eliminar');
     
                 // Agregar botón "Cancelar"
+                $('#msg-cancelar').remove(); // eliminamos el anterior si existe (Boton)
                 $('#msg-boton').after('<a href="#!" class="modal-close btn grey" id="msg-cancelar">Cancelar</a>');
     
                 // Si presiona "Sí"
@@ -276,6 +277,8 @@
                     // Abrir modal
                     $('#modal-mensaje').modal('open');
             }
+
+           
 
 
            
