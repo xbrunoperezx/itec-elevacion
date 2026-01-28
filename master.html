@@ -30,6 +30,7 @@
         Nuevo cliente
     </a>
 
+    <!--creamos el apartado para los filtros-->
     <div class="row">
         <div class="input-field col s4">
             <input type="text" id="filtro-nombre">
@@ -42,10 +43,15 @@
         </div>
 
         <div class="input-field col s4">
-            <select name="" id="filtro-mantenedor">
-                <option value="">Todos</option>
-            </select>
-            <label for="">Mantenedor</label>
+            <input type="text" id="filtro-mantenedor">
+            <label for="filtro-mantenedor">Mantenedor</label>
+        </div>
+
+        <!--*********Nuevo boton para filtrar**********-->
+        <div class="col s12">
+            <button id="btn-filtrar" class="btn blue">
+                <i class="material-icons left">search</i>Filtrar
+            </button>
         </div>
     </div>
 

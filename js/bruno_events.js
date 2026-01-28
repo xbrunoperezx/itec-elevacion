@@ -215,8 +215,11 @@
            
            }); 
            
-           
+           // Eventos para filtros por teclado (en tiempo real)
            $('#filtro-nombre').on('keyup', aplicarFiltros);
            $('#filtro-localidad').on('keyup', aplicarFiltros);
-           $('#filtro-mantenedor').on('change', aplicarFiltros);
+           $('#filtro-mantenedor').on('keyup', aplicarFiltros);
+           
+           // Evento para botón filtrar (manual)
+           $('#btn-filtrar').on('click', aplicarFiltros);
 
