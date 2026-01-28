@@ -1,7 +1,7 @@
 
          // ✅ AQUÍ van funciones que ESCUCHAN eventos + utilidades
 
-         
+
          //FUNCION comprobar que funciona el boton y muestra el ID(VER)
           $(document).on('click', '.ver-cliente', function(e){
             e.preventDefault();
@@ -154,7 +154,7 @@
                     dataType: 'json',
                     success: function(response){
                         if(response.success){
-                            alert(response.message);
+                           mostrarMensaje('✅ Éxito', response.message, 'success');
 
                             //aqui añadimos el nuevo cliente con el metodo .unshift lo añadimos al principio del array de clientesGlobal
                             //si quisiesmos añadirlo al final seria con .push, pero por logica qeremos que se vea el primero
@@ -172,7 +172,7 @@
                            
                            
                         } else {
-                            alert(response.message);
+                            mostrarMensaje('❌ Error', response.message, 'error');
                         }
 
                     }
@@ -217,6 +217,67 @@
                 }
            
            }); 
+
+
+           //----------------------------------------------------------------
+           //FUNCION  para mostrarlos mensajes
+
+           /**
+            * funcion paramostrar un modal de mensaje elegante
+            * @param {string} titulo - titulo del modal
+            * @param {string} mensaje - contenido del mensaje
+            * @param {string} tipoBoton - 'aceptar' o 'cerrar' (opcional)
+            */
+           function mostrarMensaje(titulo, mensaje, tipoBoton = 'aceptar'){
+            $('#msg-titulo').text(titulo);
+            $('#msg-contenido').text(mensaje);
+
+            //cambiar el color y texto del boton segunel tipo
+            if(tipoBoton === 'error'){
+                $('#msg-boton').removeClass('btn-success btn warning').addClass('btn-danger red');
+            } else if(tipoBoton === 'warning'){
+                $('#msg-boton').removeClass('btn-danger  btn-success').addClass('btn-warning orange');
+            } else {
+                $('#msg-boton').removeClass('btn-danger btn-warning').addClass('btn-success green')
+            }
+              
+            //Abrimos el modal
+            $('#modal-mensaje').modal('open');
+            
+           }
+
+
+           /**
+            * Función para mostrar un modal de confirmación con dos botones (Sí/No)
+            * @param {string} titulo - Título del modal
+            * @param {string} mensaje - Contenido del mensaje
+            * @param {function} callback - Función que se ejecuta si presiona "Sí"
+            */
+            function mostrarConfirmacion(titulo, mensaje, callback) {
+                $('#msg-titulo').text(titulo);
+                $('#msg-contenido').text(mensaje);
+    
+                // Cambiar botón a rojo (estilo de confirmación)
+                $('#msg-boton').removeClass('btn-success btn-warning').addClass('btn-danger red');
+                $('#msg-boton').text('Sí, eliminar');
+    
+                // Agregar botón "Cancelar"
+                $('#msg-boton').after('<a href="#!" class="modal-close btn grey" id="msg-cancelar">Cancelar</a>');
+    
+                // Si presiona "Sí"
+                $('#msg-boton').off('click').on('click', function() {
+                    callback();  // Ejecuta la función que le pasamos
+                    $('#modal-mensaje').modal('close');
+                });
+    
+                    // Limpiar el botón cancelar anterior
+                    $('#msg-cancelar').off('click');
+    
+                    // Abrir modal
+                    $('#modal-mensaje').modal('open');
+            }
+
+
            
            // Eventos para filtros por teclado (en tiempo real)
            $('#filtro-nombre').on('keyup', aplicarFiltros);
