@@ -1,4 +1,7 @@
 
+        // ✅ AQUÍ van llamadas AJAX al backend
+
+        
         //cargamos la web (el JS) nada mas acceder a la Url
         function cargarClientes(){
             $.ajax({ //aqui hacemos la peticion de los datos al back (ajax no recarga la pagina)

@@ -22,7 +22,7 @@
 <body>
     <!--creamos un contenedor para poder dibujar o escribir dentro de el con  una clase y una id (resultado sera el pincel)-->
     <div class="container" id="resultado">
-        <h5>Clientes</h5>
+        <h5>Lista de clientes de SGASTUR</h5>
     </div>
 
     <!--Creamos el boton para crear un nuevo cliente-->
@@ -213,6 +213,27 @@
             <a href="#!" class="modal-close btn grey">Cancelar</a>
         </div>
     </div>
+
+    <!--          MODAL CREAR CLIENTE-->
+    <!--Creamos un SOLO modal reutilizable para mostrar mensajes (exito, error, confirmacion)-->
+    <div id="modal-mensaje" class="modal">
+        <div class="modal-content">
+            <!--Aqui es el titulo que cambiaremos dinamicamente con js-->
+            <h4 id="msg-titulo">Información</h4>
+
+            <!--Mensaje que cambiaremos dinamicamente con js tambien-->
+            <p id="msg-contenido">...</p>
+        </div>
+
+        <div class="modal-footer">
+            <!--boton que cambiaremos tambien con js-->
+            <a href="#!" class="modal-close btn" id="msg-boton">Aceptar</a>
+        </div>
+
+    </div>
+
+  
+               
 
 
     

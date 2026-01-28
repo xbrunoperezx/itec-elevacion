@@ -1,4 +1,7 @@
         
+        // ✅ AQUÍ van funciones que PINTAN en el HTML
+
+        
         //FUNCION PINTAR TABLA CLIENTES
         function pintarTablaClientes(clientes){
 

@@ -1,4 +1,7 @@
 
+         // ✅ AQUÍ van funciones que ESCUCHAN eventos + utilidades
+
+         
          //FUNCION comprobar que funciona el boton y muestra el ID(VER)
           $(document).on('click', '.ver-cliente', function(e){
             e.preventDefault();

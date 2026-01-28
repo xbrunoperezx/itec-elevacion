@@ -1,4 +1,6 @@
 
+// ✅ AQUÍ va SOLO la lógica de filtros
+
 function aplicarFiltros(){
     // obtenemos los valores que rellenamos en los campos inputs del html, compramos mayusc, minusc tambien
     let nombre= $('#filtro-nombre').val().toLowerCase();
