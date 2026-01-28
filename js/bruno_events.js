@@ -219,10 +219,13 @@
            $('#filtro-nombre').on('keyup', aplicarFiltros);
            $('#filtro-localidad').on('keyup', aplicarFiltros);
            $('#filtro-mantenedor').on('keyup', aplicarFiltros);
+           $('#filtro-direccion').on('keyup', aplicarFiltros);
+           $('#filtro-cp').on('keyup', aplicarFiltros);
+           $('#filtro-vencimiento').on('keyup', aplicarFiltros);
            
            // Evento para presionar ENTER en los campos de filtro
            //aqui seleciono los 3 inputs que quiero  de filtro y con on.('keypress) un evento que escucha cuando presionas una tecla
-           $('#filtro-nombre, #filtro-localidad, #filtro-mantenedor').on('keypress', function(e) {
+           $('#filtro-nombre, #filtro-localidad, #filtro-mantenedor, #filtro-direccion, #filtro-cp, #filtro-vencimiento').on('keypress', function(e) {
                //aqui es si la tecla presionada es ENTER
                if(e.key === 'Enter') {
                    e.preventDefault();
