@@ -42,6 +42,8 @@ function aplicarFiltros(){
  * Vacía los inputs y muestra todos los clientes
  */
 function limpiarFiltros() {
+    console.log('🧹 limpiarFiltros() ejecutada');
+    
     // Vaciar todos los inputs de filtro
     $('#filtro-nombre').val('');
     $('#filtro-direccion').val('');
@@ -50,9 +52,15 @@ function limpiarFiltros() {
     $('#filtro-cp').val('');
     $('#filtro-vencimiento').val('');
     
+    console.log('✅ Inputs vaciados');
+    
     // Actualizar los labels de Materialize
     M.updateTextFields();
     
+    console.log('✅ Labels actualizados');
+    
     // Aplicar filtros (sin nada, mostrará todos)
     aplicarFiltros();
+    
+    console.log('✅ aplicarFiltros() ejecutada');
 }
