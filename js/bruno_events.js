@@ -290,16 +290,18 @@
            
 
 
-           
-           // Eventos para filtros por teclado (en tiempo real)
+           // *********eventos y liseners********
+
+           // -----Eventos para filtros por teclado (en tiempo real)-----
            $('#filtro-nombre').on('keyup', aplicarFiltros);
            $('#filtro-localidad').on('keyup', aplicarFiltros);
            $('#filtro-mantenedor').on('keyup', aplicarFiltros);
            $('#filtro-direccion').on('keyup', aplicarFiltros);
            $('#filtro-cp').on('keyup', aplicarFiltros);
            $('#filtro-vencimiento').on('keyup', aplicarFiltros);
+
            
-           // Evento para presionar ENTER en los campos de filtro
+           //---- Evento para presionar ENTER en los campos de filtro------
            //aqui seleciono los 3 inputs que quiero  de filtro y con on.('keypress) un evento que escucha cuando presionas una tecla
            $('#filtro-nombre, #filtro-localidad, #filtro-mantenedor, #filtro-direccion, #filtro-cp, #filtro-vencimiento').on('keypress', function(e) {
                //aqui es si la tecla presionada es ENTER
@@ -309,6 +311,10 @@
                }
            });
            
-           // Evento para botón filtrar (manual)
+           //----- Evento para botón filtrar (manual)--------
            $('#btn-filtrar').on('click', aplicarFiltros);
+
+
+           //-----Evento para botón limpiar filtros (función en bruno_filters.js)-----
+           $('#btn-limpiar-filtros').on('click', limpiarFiltros);
 

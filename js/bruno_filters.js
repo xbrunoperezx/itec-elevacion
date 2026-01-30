@@ -36,3 +36,23 @@ function aplicarFiltros(){
     //pintamos la nueva tabla conlos clientes filtrados
     pintarTablaClientes(filtrados);
 }
+
+/**
+ * Función para limpiar todos los filtros
+ * Vacía los inputs y muestra todos los clientes
+ */
+function limpiarFiltros() {
+    // Vaciar todos los inputs de filtro
+    $('#filtro-nombre').val('');
+    $('#filtro-direccion').val('');
+    $('#filtro-localidad').val('');
+    $('#filtro-mantenedor').val('');
+    $('#filtro-cp').val('');
+    $('#filtro-vencimiento').val('');
+    
+    // Actualizar los labels de Materialize
+    M.updateTextFields();
+    
+    // Aplicar filtros (sin nada, mostrará todos)
+    aplicarFiltros();
+}
