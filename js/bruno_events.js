@@ -318,7 +318,6 @@
 
            //-----Evento para botón limpiar filtros (función en bruno_filters.js)-----
            $(document).on('click', '#btn-limpiar-filtros', function() {
-               console.log('🖱️ Click en btn-limpiar-filtros');
                limpiarFiltros();
            });
 
