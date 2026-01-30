@@ -312,9 +312,12 @@
            });
            
            //----- Evento para botón filtrar (manual)--------
-           $('#btn-filtrar').on('click', aplicarFiltros);
-
+           $(document).on('click', '#btn-filtrar', function() {
+               aplicarFiltros();
+           });
 
            //-----Evento para botón limpiar filtros (función en bruno_filters.js)-----
-           $('#btn-limpiar-filtros').on('click', limpiarFiltros);
+           $(document).on('click', '#btn-limpiar-filtros', function() {
+               limpiarFiltros();
+           });
 
