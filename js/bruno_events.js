@@ -133,9 +133,51 @@
             });
           });
 
+          //----------------------------------------------------------------
+          //FUNCION para validar el formulario a la hora de crear el cliente
+          function validarFormularioCreate(){
+            //creamos objeto que recoja los valores del imput de los campos
+            let datos= {
+                nombre: $('#create-nombre').val(),
+                direccion: $('#create-direccion').val(),
+                localidad: $('#create-localidad').val(),
+                municipio: $('#create-municipio').val(),
+                mantenedor: $('#create-mantenedor').val(),
+                cp: $('#create-cp').val()
+            };
+            
+            //condicion para validar los campos del crear cliente
+            if(datos.nombre === ''){
+                return "El nombre es obligatorio";
+            } else if (datos.direccion === ''){
+                return "La dirección es obligatoria";
+            } else if (datos.localidad === ''){
+                return "La localidad es obligatoria";
+            } else if (datos.municipio === ''){
+                return "El municipio es obligatorio";
+            } else if (datos.mantenedor === ''){
+                return "Debes seleccionar un mantenedor";
+            } else if (datos.cp.match(/^\d{5}$/) === null){
+                return "El CP debe tener exactamente 5 dígitos";
+            } else {
+                return null;
+            }
+
+          }
+
           //-----------------------------------------------------------------
           //FUNCION para crear un nuevo cliente (BOTON CREAR CLIENTE)
           $('#crear-cliente').on('click', function(){
+            //creamos variable de llamada al la funcion de validar
+            let error= validarFormularioCreate();
+
+            //si hay un error mostramos estemensaje y no seguimos haciendo la llamada a ajax ni recojiendo datos en objeto
+            if(error !== null){
+                mostrarMensaje('⚠️ Error de validación', error, 'warning');
+                return; //aqui pàra y no continua
+            }
+
+            //si no hay error continua con el Ajax
             
                 let datos= {
                     nombre: $('#create-nombre').val(),
