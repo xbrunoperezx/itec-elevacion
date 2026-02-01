@@ -136,6 +136,8 @@
           //----------------------------------------------------------------
           //FUNCION para validar el formulario a la hora de crear el cliente
           function validarFormularioCreate(){
+
+            console.log("FUNCION VALIDAR EJECUN");
             //creamos objeto que recoja los valores del imput de los campos
             let datos= {
                 nombre: $('#create-nombre').val(),
