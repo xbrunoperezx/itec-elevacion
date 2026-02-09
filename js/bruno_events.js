@@ -54,10 +54,51 @@ $(document).on('click', '.editar-cliente', function (e) {
 
 });
 
+//FUNCION para validar el formulario a la hora de editar el cliente
+function validarFormularioUpdate(){
+    let datos= {
+        nombre: $('#edit-nombre').val(),
+        direccion: $('#edit-direccion').val(),
+        localidad: $('#edit-localidad').val(),
+        id_mantenedor: $('#edit-mantenedor').val(),
+        cp: $('#edit-cp').val(),
+        vencimiento: $('#edit-vencimiento').val()
+    };
+
+    if(datos.nombre === ''){
+        return "El nombre es obligatorio";
+    } else if (datos.direccion === ''){
+        return "La direccion es obligatoria";
+    } else if(datos.localidad === ''){
+        return "La localidad es obligatoria";
+    } else if(datos.cp.match(/^\d{5}$/) === null ){
+        return "El cp debe tener exactamente 5 dígitos";
+    } else if(datos.id_mantenedor === '' || datos.id_mantenedor === null || datos.id_mantenedor === undefined){
+        return "Debes seleccionar un mantenedor";
+    } else if (datos.vencimiento === ''){
+        return "Debes seleccionar una fecha válida";
+    } else {
+        return null;
+    }
+}
+
 //----------------------------------------------------------------
 //FUNCION para guardar cambios de ese cliente que hemos editado(BOTON GUARDAR)
 $('#guardar-cambios').on('click', function () {
 
+
+    //creamos variable de llamada al la funcion de validar
+    let error = validarFormularioUpdate();
+
+    //si hay un error mostramos este mensaje y no seguimos haciendo la llamada a ajax ni recojiendo datos en objeto
+    if (error !== null) {
+        mostrarMensaje('⚠️ Error de validación', error, 'warning');
+        return; //aqui pàra y no continua
+    }
+
+
+    //si no hay error continua con el Ajax
+    
     // construimos el objeto que guarda los datos para logo enviarlo por ajax
     // que es lo que espera PHP por $_POST
     let datos = {
