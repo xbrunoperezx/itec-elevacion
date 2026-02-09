@@ -137,7 +137,7 @@ $('#guardar-cambios').on('click', function () {
 //FUNCION para validar el formulario a la hora de crear el cliente
 function validarFormularioCreate() {
 
-    console.log("FUNCION VALIDAR EJECUN");
+    
     //creamos objeto que recoja los valores del imput de los campos
     let datos = {
         nombre: $('#create-nombre').val(),
@@ -148,11 +148,7 @@ function validarFormularioCreate() {
         cp: $('#create-cp').val()
     };
 
-    console.log("MANTENEDOR VALOR:", datos.mantenedor);
-    console.log("MANTENEDOR TIPO:", typeof datos.mantenedor);
-    console.log("MANTENEDOR === '' ?", datos.mantenedor === '');
-    console.log("MANTENEDOR === null ?", datos.mantenedor === null);
-    console.log("MANTENEDOR === undefined ?", datos.mantenedor === undefined);
+    
 
     //condicion para validar los campos del crear cliente
     if (datos.nombre === '') {
