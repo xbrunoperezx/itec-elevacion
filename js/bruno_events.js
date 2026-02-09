@@ -148,9 +148,11 @@ function validarFormularioCreate() {
         cp: $('#create-cp').val()
     };
 
-    console.log("cp recibido ", datos.cp);
-    console.log("tipo de cp", typeof datos.cp);
-    console.log("Match result", datos.cp.match(/^\d{5}$/));
+    console.log("MANTENEDOR VALOR:", datos.mantenedor);
+    console.log("MANTENEDOR TIPO:", typeof datos.mantenedor);
+    console.log("MANTENEDOR === '' ?", datos.mantenedor === '');
+    console.log("MANTENEDOR === null ?", datos.mantenedor === null);
+    console.log("MANTENEDOR === undefined ?", datos.mantenedor === undefined);
 
     //condicion para validar los campos del crear cliente
     if (datos.nombre === '') {
