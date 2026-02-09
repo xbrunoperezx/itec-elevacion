@@ -129,7 +129,7 @@ $('#guardar-cambios').on('click', function () {
                 cliente.localidad = datos.localidad;
                 cliente.id_mantenedor = datos.id_mantenedor;
                 cliente.cp = datos.cp;
-                cliente.vencimiento = response.datos.vencimiento;
+                cliente.vencimiento = response.cliente.vencimiento;
                 cliente.contratada = datos.contratada;
 
                 //con esto nos devuelve el nombre y no la ID(busca en el array global usando la id y nos devuelve su nombre)
