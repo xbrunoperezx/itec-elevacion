@@ -129,7 +129,16 @@ $('#guardar-cambios').on('click', function () {
                 cliente.localidad = datos.localidad;
                 cliente.id_mantenedor = datos.id_mantenedor;
                 cliente.cp = datos.cp;
-                cliente.vencimiento = response.cliente.vencimiento;
+                cliente.vencimiento = datos.vencimiento;
+                
+                // Convertir YYYY-MM-DD a DD-MM-YYYY para mostrar en tabla
+                if(datos.vencimiento) {
+                    let [año, mes, día] = datos.vencimiento.split('-');
+                    cliente.vencimiento_dmy = `${día}-${mes}-${año}`;
+                } else {
+                    cliente.vencimiento_dmy = '-';
+                }
+    
                 cliente.contratada = datos.contratada;
 
                 //con esto nos devuelve el nombre y no la ID(busca en el array global usando la id y nos devuelve su nombre)
