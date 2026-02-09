@@ -161,7 +161,7 @@ function validarFormularioCreate() {
         return "La localidad es obligatoria";
     } else if (datos.municipio === '') {
         return "El municipio es obligatorio";
-    } else if (datos.mantenedor === '') {
+    } else if (datos.mantenedor === '' || datos.mantenedor === null || datos.mantenedor === undefined) {
         return "Debes seleccionar un mantenedor";
     } else if (datos.cp.match(/^\d{5}$/) === null) {
         return "El CP debe tener exactamente 5 dígitos";
