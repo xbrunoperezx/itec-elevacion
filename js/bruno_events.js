@@ -482,7 +482,7 @@ function ordenarClientes(columna) {
 //--EVENTO listeners limpios
 document.querySelectorAll('.sortable').forEach(th => {
     th.addEventListener('click', () => {
-        const columna = th.data-col;
+         columna = th.dataset.col;
         ordenarClientes(columna);
     });
 });
@@ -492,8 +492,8 @@ document.querySelectorAll('.sortable').forEach(th => {
 function actualizarIndicadores(){
 
     document.querySelectorAll('.sortable').forEach(th =>{
-        const icono= th.querySelector('.sort-icon');
-        const col= th.data-col;
+        icono= th.querySelector('.sort-icon');
+        col= th.dataset.col;
 
         if(col !==estadoOrden.columna){
             icono.textContent= 'unfold_more';
