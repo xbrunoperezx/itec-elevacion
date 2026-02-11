@@ -417,13 +417,7 @@ $(document).on('click', '#btn-limpiar-filtros', function () {
     limpiarFiltros();
 });
 
-//--EVENTO listeners limpios
-document.querySelectorAll('.sortable').forEach(th => {
-    th.addEventListener('click', () => {
-        const columna = th.dataset.col;
-        ordenarClientes(columna);
-    });
-});
+
 
 
 //OBEJTO para ver estado
@@ -503,5 +497,12 @@ function actualizarIndicadores(){
     });
 }
 
+//--EVENTO listeners limpios
+document.querySelectorAll('.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+        const columna = th.dataset.col;
+        ordenarClientes(columna);
+    });
+});
 
 
