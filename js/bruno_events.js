@@ -479,6 +479,16 @@ function ordenarClientes(columna) {
     pintarTablaClientes(clientesGlobal);
 }
 
+//--EVENTO listeners limpios
+document.querySelectorAll('.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+        const columna = th.dataset.col;
+        ordenarClientes(columna);
+    });
+});
+
+
+
 function actualizarIndicadores(){
 
     document.querySelectorAll('.sortable').forEach(th =>{
@@ -497,12 +507,6 @@ function actualizarIndicadores(){
     });
 }
 
-//--EVENTO listeners limpios
-document.querySelectorAll('.sortable').forEach(th => {
-    th.addEventListener('click', () => {
-        const columna = th.dataset.col;
-        ordenarClientes(columna);
-    });
-});
+
 
 
