@@ -76,18 +76,43 @@
     <!--Creamos el "contenedor" donde pintaremos la tabla con el JS-->
     <table class="striped highlight responsive-table">
         <thead>
-            <tr>
-                <td>#</td>
-                <td>Nombre</td>
-                <td>Direccion</td>
-                <td>Localidad</td>
-                <td>Mantenedor</td>
-                <td>Cp</td>
-                <td>Vencimiento</td>
-                <td>Contratada</td>
-                <td>Acciones</td>
+        <tr>
+            <th>#</th>
+
+            <th class="sortable" data-col="nombre">
+                Nombre
+                <i class="material-icons tiny sort-icon">unfold_more</i>
+            </th>
+
+            <th class="sortable" data-col="direccion">
+                Dirección
+                <i class="material-icons tiny sort-icon">unfold_more</i>
+            </th>
+
+            <th class="sortable" data-col="localidad">
+                Localidad
+                <i class="material-icons tiny sort-icon">unfold_more</i>
+            </th>
+
+            <th class="sortable" data-col="mantenedor">
+                Mantenedor
+                <i class="material-icons tiny sort-icon">unfold_more</i>
+            </th>
+
+            <th class="sortable" data-col="cp">
+                Cp
+                <i class="material-icons tiny sort-icon">unfold_more</i>
+            </th>
+
+            <th class="sortable" data-col="vencimiento">
+                Vencimiento
+                <i class="material-icons tiny sort-icon">unfold_more</i>
+            </th>
                 
-            </tr>
+            <th>Contratada</th>
+            <th>Acciones</th>
+                
+        </tr>
         </thead>
 
         <tbody id="tabla-clientes"> <!--el pincel con el que pintaremos ahroa sera "tabla-clientes"-->

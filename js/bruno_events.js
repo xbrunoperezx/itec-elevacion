@@ -417,3 +417,91 @@ $(document).on('click', '#btn-limpiar-filtros', function () {
     limpiarFiltros();
 });
 
+//--EVENTO listeners limpios
+document.querySelectorAll('.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+        const columna = th.dataset.col;
+        ordenarClientes(columna);
+    });
+});
+
+
+//OBEJTO para ver estado
+let estadoOrden = {
+    columna: null,
+    direccion: 'asc'
+};
+//FUNCION  que ordena los campos de los clientes
+function ordenarClientes(columna) {
+
+    // Toggle automático de dirección
+    if (estadoOrden.columna === columna) {
+        estadoOrden.direccion = estadoOrden.direccion === 'asc' ? 'desc' : 'asc';
+    } else {
+        estadoOrden.columna = columna;
+        estadoOrden.direccion = 'asc';
+    }
+
+    const direccion = estadoOrden.direccion;
+
+    clientesGlobal.sort((a, b) => {
+
+        let valorA = a[columna];
+        let valorB = b[columna];
+
+        // Manejo null o undefined
+        if (valorA == null) return 1;
+        if (valorB == null) return -1;
+
+        // Detectar fechas
+        if (!isNaN(Date.parse(valorA)) && !isNaN(Date.parse(valorB))) {
+            valorA = new Date(valorA);
+            valorB = new Date(valorB);
+        }
+
+        // Orden descendente invirtiendo
+        if (direccion === 'desc') {
+            [valorA, valorB] = [valorB, valorA];
+        }
+
+        // Números
+        if (typeof valorA === 'number' && typeof valorB === 'number') {
+            return valorA - valorB;
+        }
+
+        // Fechas
+        if (valorA instanceof Date && valorB instanceof Date) {
+            return valorA - valorB;
+        }
+
+        // Strings
+        return valorA.toString().localeCompare(valorB.toString(), 'es', {
+            sensitivity: 'base'
+        });
+
+    });
+
+    actualizarIndicadores();
+    pintarTablaClientes(clientesGlobal);
+}
+
+function actualizarIndicadores(){
+
+    document.querySelectorAll('.sortable').forEach(th =>{
+        const icono= th.querySelector('.sort-icon');
+        const col= th.dateset.col;
+
+        if(col !==estadoOrden.columna){
+            icono.textContent= 'unfold_more';
+            return;
+        }
+
+        icono.textContent=
+            estadoOrden.direccion ==='asc'
+                ? 'arrow_upward'
+                : 'arrow_downward';
+    });
+}
+
+
+
