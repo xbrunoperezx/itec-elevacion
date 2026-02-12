@@ -206,6 +206,39 @@ var openInforme = function(seccion, cual, id){
 					'</ul>';
 					var frm_render = '<form id="informe_frm_editar">' + 
 						'<div id="tab1_pri" class="col s12">' + 
+						'<div class="input-field anchoFrm4">' +
+						  '<input type="text" id="id_bbdd" name="id_bbdd" value="' + item.id + '" disabled>' +
+						  '<label for="id_bbdd" class="active">ID BBDD</label>' +
+						'</div>' +
+						'<div class="input-field anchoFrm4">' +
+						  '<input type="text" id="num_informe" name="num_informe" value="' + item.informe + '" disabled>' +
+						  '<label for="num_informe" class="active">Núm. Informe</label>' +
+						'</div>' +
+						'<div class="input-field anchoFrm4">' +
+						  '<input type="text" id="inspector" name="inspector" value="' + item.usuario + '" disabled>' +
+						  '<label for="inspector" class="active">Inspector</label>' +
+						'</div>' +
+						'' +
+						'<div class="input-field anchoFrm4">' +
+						  '<input type="date" id="fecha_inspeccion" name="fecha_inspeccion" value="' + item.fecha + '">' +
+						  '<label for="fecha_inspeccion" class="active">Fecha Inspección</label>' +
+						'</div>' +
+						'<div class="input-field anchoFrm4">' +
+						  '<input type="time" id="hora_ini" name="hora_ini" value="' + item.hora_ini + '">' +
+						  '<label for="hora_ini" class="active">Hora inicio</label>' +
+						'</div>' +
+						'<div class="input-field anchoFrm4">' +
+						  '<input type="time" id="hora_fin" name="hora_fin" value="' + item.hora_fin + '">' +
+						  '<label for="hora_fin" class="active">Hora fin</label>' +
+						'</div>' +
+						'<div class="input-field anchoFrm4">' +
+						  '<input type="text" id="gps_latitud" name="gps_latitud" value="' + item.gps_latitud + '">' +
+						  '<label for="gps_latitud" class="active">GPS lat</label>' +
+						'</div>' +
+						'<div class="input-field anchoFrm4">' +
+						  '<input type="text" id="gps_longitud" name="gps_longitud" value="' + item.gps_longitud + '">' +
+						  '<label for="gps_longitud" class="active">GPS long</label>' +
+						'</div>' +
 						'</div>' +	
 						'<div id="tab2_pri" class="active col s12">' +  
 						'</div>' +	
