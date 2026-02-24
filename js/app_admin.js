@@ -288,23 +288,27 @@ function comparer(index) {
 
 function getCellValue(row, index){ return $(row).children("td").eq(index).text(); }
 
-// Función para cargar tarifas y renderizar la tabla
-function cargarTarifas() {
-  var totalRegistros = $('#filtro_tarifas_total').val();
+
+//-------------------------------------------------------------------------------
+// Función para cargar tarifas y renderizar/exportar la tabla
+function cargarTarifas(){
+  //recojemos en 2 variables los nombres y registrostotales
+  var totalRegistros = $('#filtro_tarifa_total').val();
   var filtroNombre = $('#filtro_tarifas_nombre').val();
 
-  $.ajax({
+  //hacemos la llamada al back via POST
+  $ajax({
     type: 'POST',
     url: 'services/tarifas.php',
-    data: {
+    data :{
       action: 'list',
       filtro_tarifas_total: totalRegistros,
       filtro_tarifa: filtroNombre
     },
-    dataType: 'json',
+    dateType: 'json',
     success: function(response) {
       var tbody = $('#table_tarifas tbody');
-      tbody.empty(); // Limpiar la tabla antes de renderizar
+      tbody.empty(); //aqui limpiamos la tabla antesde renderizar/exportar
 
       if (response.resultados && response.resultados.length > 0) {
         response.resultados.forEach(function(tarifa) {
@@ -312,28 +316,29 @@ function cargarTarifas() {
             '<td>' + tarifa.id + '</td>' +
             '<td>' + tarifa.tarifa + '</td>' +
             '<td>' + tarifa.precio + '</td>' +
-            '<td><button class="btn-small red">Eliminar</button></td>' +
+            '<td><button class= "btn-small red">Eliminar</button></td>' +
           '</tr>';
           tbody.append(row);
-        });
-      } else {
+        });  
+      }  else {
         tbody.append('<tr><td colspan="4">No se encontraron resultados</td></tr>');
       }
     },
-    error: function() {
+    error: function(){
       modalError('Error', 'No se pudieron cargar las tarifas. Intente nuevamente.');
     }
   });
 }
 
-// Evento para el botón de filtro
-$('#filtrar_tarifas').on('click', function() {
+//vincular boton de filtro
+$('#filtrar_tarifas').on('click',function(){
   cargarTarifas();
+
 });
 
-// Cargar tarifas al iniciar la pestaña
-$(document).ready(function() {
-  $('#tar_adm a').on('click', function() {
+//cargar la web losdatos al abrir pantalla
+$(document).ready(function(){
+  $('#tar_adm').on('click', function(){
     cargarTarifas();
   });
 });
