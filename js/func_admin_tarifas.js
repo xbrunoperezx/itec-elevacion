@@ -53,6 +53,7 @@ function readTarifas(){
       var tr = "<tr class='alto50'>";
         tr += "<td class='ancho50'>&nbsp;</td>";
         tr += "<td class='ancho30'>" + id + "</td>";
+        tr += "<td class='ancho50'>&nbsp;</td>";
         tr += "<td class='ancho80'>" + tarifa + "</td>";
         tr += "<td class='ancho80'>" + precio + "</td>";
         tr += "<td class='ancho50'>" +
