@@ -297,7 +297,7 @@ function cargarTarifas(){
   var filtroNombre = $('#filtro_tarifas_nombre').val();
 
   //hacemos la llamada al back via POST
-  $ajax({
+  $.ajax({
     type: 'POST',
     url: 'services/tarifas.php',
     data :{
@@ -305,7 +305,7 @@ function cargarTarifas(){
       filtro_tarifas_total: totalRegistros,
       filtro_tarifa: filtroNombre
     },
-    dateType: 'json',
+    dataType: 'json',
     success: function(response) {
       var tbody = $('#table_tarifas tbody');
       tbody.empty(); //aqui limpiamos la tabla antesde renderizar/exportar
