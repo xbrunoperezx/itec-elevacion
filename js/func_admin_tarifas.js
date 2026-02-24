@@ -56,6 +56,7 @@ function readTarifas(){
         tr += "<td class='ancho50'>&nbsp;</td>";
         tr += "<td class='ancho80'>" + tarifa + "</td>";
         tr += "<td class='ancho80'>" + precio + "</td>";
+        tr += "<td class='ancho50'>&nbsp;</td>";
         tr += "<td class='ancho50'>" +
             "<a class='more_tarifa btn-floating btn-small waves-effect waves-light red' title='Más' data-id='" + id + "'>" +
             "<i class='material-icons'>more_vert</i></a>" +
