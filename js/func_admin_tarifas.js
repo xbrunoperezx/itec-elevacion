@@ -59,6 +59,10 @@ function readTarifas(){
             "<a class='eliminar_tarifa btn-floating btn-small waves-effect waves-light red' data-id='" + id + "' title='Eliminar tarifa'>" +
             "<i class='material-icons'>delete</i></a>" +
             "</td>";
+        tr += "<td class='ancho50'>" +
+            "<a class='more_tarifa btn-floating btn-small waves-effect waves-light red' title='Más' data-id='" + id + "'>" +
+            "<i class='material-icons'>more_vert</i></a>" +
+            "</td>";
         tr += "</tr>";
 
       $('#table_tarifas tbody').append(tr);
