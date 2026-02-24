@@ -56,10 +56,6 @@ function readTarifas(){
         tr += "<td class='ancho80'>" + tarifa + "</td>";
         tr += "<td class='ancho80'>" + precio + "</td>";
         tr += "<td class='ancho50'>" +
-            "<a class='eliminar_tarifa btn-floating btn-small waves-effect waves-light red' data-id='" + id + "' title='Eliminar tarifa'>" +
-            "<i class='material-icons'>delete</i></a>" +
-            "</td>";
-        tr += "<td class='ancho50'>" +
             "<a class='more_tarifa btn-floating btn-small waves-effect waves-light red' title='Más' data-id='" + id + "'>" +
             "<i class='material-icons'>more_vert</i></a>" +
             "</td>";
@@ -146,4 +142,66 @@ $(document).on('click', '#guardar_tarifa', function(e) {
   }).fail(function() {
     alert('Error al guardar la tarifa');
   });
+});
+
+// Add event listener for the dropdown menu
+$(document).on('click', '.more_tarifa', function(e){
+  e.preventDefault();
+  $('.row-menu').remove();
+
+  var $btn = $(this);
+  var itemId = $btn.data('id');
+  var offset = $btn.offset();
+
+  var menuHtml = "<div class='row-menu'><ul><li class='row-menu-hide'>Ocultar fila</li>";
+  menuHtml += "<li class='row-menu-delete'>Eliminar</li>";
+  menuHtml += "<li class='row-menu-cancel'>Cancelar</li></ul></div>";
+  var menu = $(menuHtml);
+
+  menu.css({ visibility: 'hidden', top: 0, left: 0 });
+  $('body').append(menu);
+
+  var menuW = menu.outerWidth();
+  var menuH = menu.outerHeight();
+  var winW = $(window).width();
+  var winTop = $(window).scrollTop();
+
+  var desiredLeft = offset.left + $btn.outerWidth() - menuW;
+  if (desiredLeft + menuW > winW - 6) desiredLeft = winW - menuW - 6;
+  if (desiredLeft < 6) desiredLeft = 6;
+
+  var desiredTop = offset.top + $btn.outerHeight() + 6;
+  if (desiredTop + menuH > winTop + $(window).height()) {
+      desiredTop = offset.top - menuH - 6;
+      if (desiredTop < winTop + 6) desiredTop = winTop + 6;
+  }
+
+  menu.css({ top: desiredTop + 'px', left: desiredLeft + 'px', visibility: 'visible' });
+
+  menu.on('click', '.row-menu-hide', function(ev){
+      ev.stopPropagation();
+      var $tr = $btn.closest('tr');
+      $tr.addClass('hidden-row');
+      menu.remove();
+  });
+
+  menu.on('click', '.row-menu-delete', function(ev){
+      ev.stopPropagation();
+      alert('Eliminar opción seleccionada para tarifa ID: ' + itemId);
+      menu.remove();
+  });
+
+  menu.on('click', '.row-menu-cancel', function(ev){
+      ev.stopPropagation();
+      menu.remove();
+  });
+
+  setTimeout(function(){
+      $(document).on('click.rowMenuCloseTarifa', function(ev){
+          if($(ev.target).closest('.row-menu').length===0 && $(ev.target).closest('.more_tarifa').length===0){
+              $('.row-menu').remove();
+              $(document).off('click.rowMenuCloseTarifa');
+          }
+      });
+  }, 10);
 });
