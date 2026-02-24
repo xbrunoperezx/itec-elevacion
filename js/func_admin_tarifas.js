@@ -50,12 +50,16 @@ function readTarifas(){
       var tarifa = item.tarifa || '';
       var precio = item.precio || '';
 
-      var tr = "<tr>";
-      tr += "<td>" + id + "</td>";
-      tr += "<td>" + tarifa + "</td>";
-      tr += "<td>" + precio + "</td>";
-      tr += "<td><button class='btn-small red eliminar_tarifa' data-id='" + id + "'>Eliminar</button></td>";
-      tr += "</tr>";
+      var tr = "<tr class='alto50'>";
+        tr += "<td class='ancho50'>&nbsp;</td>";
+        tr += "<td class='ancho30'>" + id + "</td>";
+        tr += "<td class='ancho80'>" + tarifa + "</td>";
+        tr += "<td class='ancho80'>" + precio + "</td>";
+        tr += "<td class='ancho50'>" +
+            "<a class='eliminar_tarifa btn-floating btn-small waves-effect waves-light red' data-id='" + id + "' title='Eliminar tarifa'>" +
+            "<i class='material-icons'>delete</i></a>" +
+            "</td>";
+        tr += "</tr>";
 
       $('#table_tarifas tbody').append(tr);
       totalResultados++;
@@ -89,5 +93,53 @@ $(function(){
     }).fail(function(){
       alert('Error al eliminar la tarifa');
     });
+  });
+});
+
+//-----------------------------------------------
+//abrir modal y actualizarlo
+$(document).on('click', '#add_tarifas', function(e) {
+  e.preventDefault();
+
+  // Actualizar el título del modal
+  $('#modal_usu .modal_txt_title').text('Nueva Tarifa');
+
+  // Actualizar el contenido del formulario
+  var formHtml = `
+    <div class="row">
+      <div class="input-field col s12">
+        <input id="nueva_tarifa" type="text">
+        <label for="nueva_tarifa">Nombre de la Tarifa</label>
+      </div>
+      <div class="input-field col s12">
+        <input id="nuevo_precio" type="number">
+        <label for="nuevo_precio">Precio</label>
+      </div>
+    </div>
+  `;
+  $('#modal_usu .contentForm').html(formHtml);
+
+  // Actualizar el botón de guardar
+  $('#modal_usu .modal_txt_btn_left')
+    .attr('id', 'guardar_tarifa')
+    .html('<i class="material-icons left">save</i>Guardar');
+
+  // Abrir el modal
+  $('#modal_usu').modal('open');
+});
+
+//----------------------------------------------
+//guardar la nueva tarifa
+$(document).on('click', '#guardar_tarifa', function(e) {
+  e.preventDefault();
+
+  var nuevaTarifa = $('#nueva_tarifa').val();
+  var nuevoPrecio = $('#nuevo_precio').val();
+
+  TarifasAPI.create({ tarifa: nuevaTarifa, precio: nuevoPrecio }).done(function() {
+    readTarifas(); // Recargar la tabla
+    $('#modal_usu').modal('close'); // Cerrar el modal
+  }).fail(function() {
+    alert('Error al guardar la tarifa');
   });
 });
