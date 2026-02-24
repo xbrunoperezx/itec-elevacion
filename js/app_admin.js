@@ -287,3 +287,53 @@ function comparer(index) {
 	}
 
 function getCellValue(row, index){ return $(row).children("td").eq(index).text(); }
+
+// Función para cargar tarifas y renderizar la tabla
+function cargarTarifas() {
+  var totalRegistros = $('#filtro_tarifas_total').val();
+  var filtroNombre = $('#filtro_tarifas_nombre').val();
+
+  $.ajax({
+    type: 'POST',
+    url: 'services/tarifas.php',
+    data: {
+      action: 'list',
+      filtro_tarifas_total: totalRegistros,
+      filtro_tarifa: filtroNombre
+    },
+    dataType: 'json',
+    success: function(response) {
+      var tbody = $('#table_tarifas tbody');
+      tbody.empty(); // Limpiar la tabla antes de renderizar
+
+      if (response.resultados && response.resultados.length > 0) {
+        response.resultados.forEach(function(tarifa) {
+          var row = '<tr>' +
+            '<td>' + tarifa.id + '</td>' +
+            '<td>' + tarifa.tarifa + '</td>' +
+            '<td>' + tarifa.precio + '</td>' +
+            '<td><button class="btn-small red">Eliminar</button></td>' +
+          '</tr>';
+          tbody.append(row);
+        });
+      } else {
+        tbody.append('<tr><td colspan="4">No se encontraron resultados</td></tr>');
+      }
+    },
+    error: function() {
+      modalError('Error', 'No se pudieron cargar las tarifas. Intente nuevamente.');
+    }
+  });
+}
+
+// Evento para el botón de filtro
+$('#filtrar_tarifas').on('click', function() {
+  cargarTarifas();
+});
+
+// Cargar tarifas al iniciar la pestaña
+$(document).ready(function() {
+  $('#tar_adm a').on('click', function() {
+    cargarTarifas();
+  });
+});
