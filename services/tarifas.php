@@ -1,4 +1,6 @@
 <?php
+//PROPOSITO DE ESTE ARCHIVO TARIFAS.PHP!!
+//-Consultar la abse de datos para obtener la lista de tarifas segun los filtros enviados desde el front
 
 //comprobamos la cookie de sesion
 if(!isset($_COOKIE['user_id'])){
@@ -29,6 +31,7 @@ switch($action){
         if(!empty($filtro_tarifa)) {
             $sql .= "WHERE tarifa LIKE '%$filtro_tarifa%' ";
         }
+        //ordena por Id y limita el numero de registros
         $sql .="ORDER BY id ASC LIMIT $limite";
 
         //paso 4: ejecutar la consulta mysql
@@ -42,12 +45,38 @@ switch($action){
             }
         }
 
-        //paso 6: devolver los resultados en formato json para que se peudan leer
+        //paso 6: devolver los resultados del array en formato JSON para que se puedan leer
         echo json_encode(['resultados' => $tarifas]);
         break;
 
     case 'create':
-        //aqui ira cdoigo para crear
+        //leeremos los datos enviados desd eel front; usaremos $_POST para obtener los valores de 'tarifa' y 'precio' enviados por el form
+        //mmysqli_real_escape_string limpia el texto para evitar inyecciones sql
+        $tarifa = isset($_POST['tarifa']) ? mysqli_real_escape_string($link, $_POST['tarifa']) : '';
+        //floatval convierte el precio a un numero decimal
+        $precio = isset($_POST['precio']) ? floatval($_POST['precio']) : 0;
+
+        //verificamos que el nombre de la tarifa no este vacio y que el precio sea mayor que 0
+        if (empty($tarifa) || $precio <= 0) {
+            echo "KO: Datos inválidos";
+            exit;
+        }
+
+        //construir la consulta SQL para insertar
+        // Creamos una consulta SQL para insertar una nueva fila en la tabla 'tarifas'.
+        // Especificamos las columnas 'tarifa' y 'precio' y sus valores correspondientes.
+        $sql = "INSERT INTO tarifas (tarifa, precio) VALUES ('$tarifa', $precio)";
+
+        // Ejecutar la consulta Usamos mysqli_query para ejecutar la consulta en la base de datos.
+        // Si la consulta se ejecuta correctamente, devolvemos un mensaje de éxito.
+        // Si ocurre un error, devolvemos un mensaje de error con el detalle del problema.
+        if (mysqli_query($link, $sql)) {
+            echo "OK: tarifa creada correctamente";
+        } else {
+            echo: "KO: error al crear tarifa" .mysqli_error($link);
+        }
+
+        
         break;
 
     case 'update':

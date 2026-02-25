@@ -1,8 +1,9 @@
 // Funciones CRUD para administración de tarifas
 // Basado en func_admin_campos.js - adaptado a 'tarifas'
 
-var TarifasAPI = (function(){
-  function request(data){
+// TarifasAPI.list envia solicitud POST al archivo tarifas.php y el back devuelve formato JSON
+var TarifasAPI = (function () {
+  function request(data) {
     return $.ajax({
       url: 'services/tarifas.php',
       method: 'POST',
@@ -12,142 +13,149 @@ var TarifasAPI = (function(){
   }
 
   return {
-    list: function(filters){
+    list: function (filters) {
       filters = filters || {};
-      var payload = $.extend({action: 'list', filtro_tarifas_total: 15}, filters);
+      var payload = $.extend({ action: 'list', filtro_tarifas_total: 15 }, filters);
       return request(payload);
     },
-    create: function(tarifa){
-      var payload = $.extend({action: 'create'}, tarifa);
+    create: function (tarifa) {
+      // Enviar una solicitud POST al backend con los datos de la nueva tarifa
+      var payload = $.extend({ action: 'create' }, tarifa);
+      return request(payload);// Usa la función request para manejar la solicitud
+    },
+    update: function (id, tarifa) {
+      var payload = $.extend({ action: 'update', id: id }, tarifa);
       return request(payload);
     },
-    update: function(id, tarifa){
-      var payload = $.extend({action: 'update', id: id}, tarifa);
-      return request(payload);
-    },
-    remove: function(id){
-      return request({action: 'delete', id: id});
+    remove: function (id) {
+      return request({ action: 'delete', id: id });
     }
   };
 })();
 
-// Render lista de tarifas en el contenedor #Tarifas
-function readTarifas(){
-  var total = parseInt($('#filtro_tarifas_total').val(), 10) || 15;
-  var nombre = ($('#filtro_tarifas_nombre').val() || '').trim();
+// LEER lista de tarifas en el contenedor #Tarifas
+function readTarifas() {
+  var total = parseInt($('#filtro_tarifas_total').val(), 10) || 15;//lee el numero de registros filtro_tarif...
+  var nombre = ($('#filtro_tarifas_nombre').val() || '').trim();//lee el nombre de la taraifa
   var filtros = { filtro_tarifas_total: total };
-  if(nombre) filtros.filtro_tarifa = nombre;
 
-  $('#table_tarifas tbody').empty();
+  if (nombre) filtros.filtro_tarifa = nombre;
+
+  $('#table_tarifas tbody').empty(); //vacia el contenido de la tabla
   $('#resultados_tarifas').html('Cargando...');
 
-  TarifasAPI.list(filtros).done(function(res){
+  TarifasAPI.list(filtros).done(function (res) { //envia solicitud AJAX al back con los filtros
     var datos = (res && res.resultados) ? res.resultados : [];
     var totalResultados = 0;
 
-    datos.forEach(function(item){
+    datos.forEach(function (item) { // itera sobre los resultados devueltos y genera filas en latabla
+
       var id = item.id || '';
       var tarifa = item.tarifa || '';
       var precio = item.precio || '';
 
+      //cada fila incluye esto : id,nombre de la tarifa,precio + boton MAS con menu desplegable
       var tr = "<tr class='alto50'>";
-        tr += "<td class='ancho50'>&nbsp;</td>";
-        tr += "<td class='ancho30'>" + id + "</td>";
-        tr += "<td class='ancho50'>&nbsp;</td>";
-        tr += "<td class='ancho80'>" + tarifa + "</td>";
-        tr += "<td class='ancho80'>" + precio + "</td>";
-        tr += "<td class='ancho50'>&nbsp;</td>";
-        tr += "<td class='ancho50'>" +
-            "<a class='more_tarifa btn-floating btn-small waves-effect waves-light red' title='Más' data-id='" + id + "'>" +
-            "<i class='material-icons'>more_vert</i></a>" +
-            "</td>";
-        tr += "</tr>";
+      tr += "<td class='ancho50'>&nbsp;</td>";
+      tr += "<td class='ancho30'>" + id + "</td>";
+      tr += "<td class='ancho50'>&nbsp;</td>";
+      tr += "<td class='ancho80'>" + tarifa + "</td>";
+      tr += "<td class='ancho80'>" + precio + "</td>";
+      tr += "<td class='ancho50'>&nbsp;</td>";
+      tr += "<td class='ancho50'>" +
+        "<a class='more_tarifa btn-floating btn-small waves-effect waves-light red' title='Más' data-id='" + id + "'>" +
+        "<i class='material-icons'>more_vert</i></a>" +
+        "</td>";
+      tr += "</tr>";
 
       $('#table_tarifas tbody').append(tr);
       totalResultados++;
     });
 
     $('#resultados_tarifas').html('<span>Total de resultados: ' + totalResultados + '</span>');
-  }).fail(function(){
+  }).fail(function () {
     $('#resultados_tarifas').html('Error cargando tarifas');
   });
 }
 
-// Inicializar la pestaña Tarifas al cargar la página
-$(function(){
-  if($('#Tarifas').length) readTarifas();
+// ---Inicializar la pestaña Tarifas al cargar la página---
+$(function () {
+  if ($('#Tarifas').length) readTarifas();
 
-  $(document).on('click', '#filtrar_tarifas', function(e){
+  //---BOTON DE FLTRAR---
+  $(document).on('click', '#filtrar_tarifas', function (e) {
     e.preventDefault();
     readTarifas();
   });
 
-  $(document).on('click', '#add_tarifas', function(e){
-    e.preventDefault();
-    // Aquí puedes abrir un modal para agregar una nueva tarifa
+  //PROPOSITO..ABRIR MODAL Y ACTUALIZARLO
+  //cuando el usuario haga click en el boton se abrira un modal con un formulario para ingresar nombre y precio
+  $(document).on('click', '#add_tarifas', function (e) {
+    e.preventDefault();//evita el comportamiento predeterminado del boton
+    //actualizamos el titulo del modal
+    $('#modal_usu .modal_txt_title').text('Nueva tarifa');
+
+    //actualizamos el contenido del formulario dentro del modal
+    var formHtml = `
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="nueva_tarifa" type="text">
+                <label for="nueva_tarifa">Nombre de la Tarifa</label>
+            </div>
+            <div class="input-field col s12">
+                <input id="nuevo_precio" type="number">
+                <label for="nuevo_precio">Precio</label>
+            </div>
+        </div>
+    `;
+    $('#modal_usu .contentForm').html(formHtml);
+
+    //actualizamos el boton de guardar
+    $('#modal_usu .modal_txt_btn_left')
+      .attr('id', 'guardar_tarifa') //cambia el ID del boton
+      .html('<i class="material-icons left">save</i>Guardar');
+
+    //abrir el modal
+    $('#modal_usu').modal('open');  
   });
 
-  $(document).on('click', '.eliminar_tarifa', function(e){
+  //----ELIMINAR --------------------------------------------
+  $(document).on('click', '.eliminar_tarifa', function (e) {
     e.preventDefault();
     var id = $(this).data('id');
-    TarifasAPI.remove(id).done(function(){
+    TarifasAPI.remove(id).done(function () {
       readTarifas();
-    }).fail(function(){
+    }).fail(function () {
       alert('Error al eliminar la tarifa');
     });
   });
-});
 
-//-----------------------------------------------
-//abrir modal y actualizarlo
-$(document).on('click', '#add_tarifas', function(e) {
+  //---GUARDAR la nueva tarifa---
+  $(document).on('click', '#guardar_tarifa', function (e) {
   e.preventDefault();
 
-  // Actualizar el título del modal
-  $('#modal_usu .modal_txt_title').text('Nueva Tarifa');
+  // Leer los datos ingresados en el formulario
+  var nuevaTarifa = $('#nueva_tarifa').val();//captura el nombre de la tarifa
+  var nuevoPrecio = $('#nuevo_precio').val();//captura el precio
 
-  // Actualizar el contenido del formulario
-  var formHtml = `
-    <div class="row">
-      <div class="input-field col s12">
-        <input id="nueva_tarifa" type="text">
-        <label for="nueva_tarifa">Nombre de la Tarifa</label>
-      </div>
-      <div class="input-field col s12">
-        <input id="nuevo_precio" type="number">
-        <label for="nuevo_precio">Precio</label>
-      </div>
-    </div>
-  `;
-  $('#modal_usu .contentForm').html(formHtml);
+  //validamos los datos ahroa
+  if (!nuevaTarifa || nuevoprecio <= 0) {
+    alert('por favor , ingresa un nombre válido y un precio mayor a 0.');
+    return; // se detiene ejecucion si no son validos los campos
+  }
 
-  // Actualizar el botón de guardar
-  $('#modal_usu .modal_txt_btn_left')
-    .attr('id', 'guardar_tarifa')
-    .html('<i class="material-icons left">save</i>Guardar');
-
-  // Abrir el modal
-  $('#modal_usu').modal('open');
-});
-
-//----------------------------------------------
-//guardar la nueva tarifa
-$(document).on('click', '#guardar_tarifa', function(e) {
-  e.preventDefault();
-
-  var nuevaTarifa = $('#nueva_tarifa').val();
-  var nuevoPrecio = $('#nuevo_precio').val();
-
-  TarifasAPI.create({ tarifa: nuevaTarifa, precio: nuevoPrecio }).done(function() {
+  //enviamos los datos la backend
+  TarifasAPI.create({ tarifa: nuevaTarifa, precio: nuevoPrecio }).done(function () {
     readTarifas(); // Recargar la tabla
     $('#modal_usu').modal('close'); // Cerrar el modal
-  }).fail(function() {
+  }).fail(function () {
+    //si ocurre algun error me da el alert
     alert('Error al guardar la tarifa');
   });
-});
+  });
 
-// Add event listener for the dropdown menu
-$(document).on('click', '.more_tarifa', function(e){
+  //--- Add event listener for the dropdown menu---
+  $(document).on('click', '.more_tarifa', function (e) {
   e.preventDefault();
   $('.row-menu').remove();
 
@@ -174,36 +182,44 @@ $(document).on('click', '.more_tarifa', function(e){
 
   var desiredTop = offset.top + $btn.outerHeight() + 6;
   if (desiredTop + menuH > winTop + $(window).height()) {
-      desiredTop = offset.top - menuH - 6;
-      if (desiredTop < winTop + 6) desiredTop = winTop + 6;
+    desiredTop = offset.top - menuH - 6;
+    if (desiredTop < winTop + 6) desiredTop = winTop + 6;
   }
 
   menu.css({ top: desiredTop + 'px', left: desiredLeft + 'px', visibility: 'visible' });
 
-  menu.on('click', '.row-menu-hide', function(ev){
-      ev.stopPropagation();
-      var $tr = $btn.closest('tr');
-      $tr.addClass('hidden-row');
-      menu.remove();
+  menu.on('click', '.row-menu-hide', function (ev) {
+    ev.stopPropagation();
+    var $tr = $btn.closest('tr');
+    $tr.addClass('hidden-row');
+    menu.remove();
   });
 
-  menu.on('click', '.row-menu-delete', function(ev){
-      ev.stopPropagation();
-      alert('Eliminar opción seleccionada para tarifa ID: ' + itemId);
-      menu.remove();
+  menu.on('click', '.row-menu-delete', function (ev) {
+    ev.stopPropagation();
+    alert('Eliminar opción seleccionada para tarifa ID: ' + itemId);
+    menu.remove();
   });
 
-  menu.on('click', '.row-menu-cancel', function(ev){
-      ev.stopPropagation();
-      menu.remove();
+  menu.on('click', '.row-menu-cancel', function (ev) {
+    ev.stopPropagation();
+    menu.remove();
   });
 
-  setTimeout(function(){
-      $(document).on('click.rowMenuCloseTarifa', function(ev){
-          if($(ev.target).closest('.row-menu').length===0 && $(ev.target).closest('.more_tarifa').length===0){
-              $('.row-menu').remove();
-              $(document).off('click.rowMenuCloseTarifa');
-          }
-      });
+  setTimeout(function () {
+    $(document).on('click.rowMenuCloseTarifa', function (ev) {
+      if ($(ev.target).closest('.row-menu').length === 0 && $(ev.target).closest('.more_tarifa').length === 0) {
+        $('.row-menu').remove();
+        $(document).off('click.rowMenuCloseTarifa');
+      }
+    });
   }, 10);
+  });
 });
+
+
+
+
+
+
+
