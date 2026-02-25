@@ -139,7 +139,7 @@ $(function () {
   var nuevoPrecio = $('#nuevo_precio').val();//captura el precio
 
   //validamos los datos ahroa
-  if (!nuevaTarifa || nuevoprecio <= 0) {
+  if (!nuevaTarifa || nuevoPrecio <= 0) {
     alert('por favor , ingresa un nombre válido y un precio mayor a 0.');
     return; // se detiene ejecucion si no son validos los campos
   }
