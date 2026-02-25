@@ -73,7 +73,7 @@ switch($action){
         if (mysqli_query($link, $sql)) {
             echo "OK: tarifa creada correctamente";
         } else {
-            echo: "KO: error al crear tarifa" .mysqli_error($link);
+            echo "KO: error al crear tarifa: " . mysqli_error($link);
         }
 
         
