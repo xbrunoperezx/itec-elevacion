@@ -80,6 +80,7 @@ function readTarifas() {
 
 // ---Inicializar la pestaña Tarifas al cargar la página---
 $(function () {
+  $('.modal').modal(); // Inicializa todos los modales
   if ($('#Tarifas').length) readTarifas();
 
   //---BOTON DE FLTRAR---
