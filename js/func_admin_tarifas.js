@@ -117,7 +117,7 @@ $(function () {
       .html('<i class="material-icons left">save</i>Guardar');
 
     //abrir el modal
-    $('#modal_usu').modal('open');  
+    $('#modal_usu').modal('open');
   });
 
   //----ELIMINAR --------------------------------------------
@@ -133,88 +133,94 @@ $(function () {
 
   //---GUARDAR la nueva tarifa---
   $(document).on('click', '#guardar_tarifa', function (e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  // Leer los datos ingresados en el formulario
-  var nuevaTarifa = $('#nueva_tarifa').val();//captura el nombre de la tarifa
-  var nuevoPrecio = $('#nuevo_precio').val();//captura el precio
+    // Leer los datos ingresados en el formulario
+    var nuevaTarifa = $('#nueva_tarifa').val();//captura el nombre de la tarifa
+    var nuevoPrecio = $('#nuevo_precio').val();//captura el precio
 
-  //validamos los datos ahroa
-  if (!nuevaTarifa || nuevoPrecio <= 0) {
-    alert('por favor , ingresa un nombre válido y un precio mayor a 0.');
-    return; // se detiene ejecucion si no son validos los campos
-  }
+    //validamos los datos ahroa
+    if (!nuevaTarifa || nuevoPrecio <= 0) {
+      alert('por favor , ingresa un nombre válido y un precio mayor a 0.');
+      return; // se detiene ejecucion si no son validos los campos
+    }
 
-  //enviamos los datos la backend
-  TarifasAPI.create({ tarifa: nuevaTarifa, precio: nuevoPrecio }).done(function () {
-    readTarifas(); // Recargar la tabla
-    $('#modal_usu').modal('close'); // Cerrar el modal
-  }).fail(function () {
-    //si ocurre algun error me da el alert
-    alert('Error al guardar la tarifa');
-  });
+    //enviamos los datos la backend
+    TarifasAPI.create({ tarifa: nuevaTarifa, precio: nuevoPrecio }).done(function (response) {
+      if (response && response.startsWith('OK')) { //verificamos la respuesta del back que empiece por OK
+        readTarifas(); // Recargar la tabla
+        $('#modal_usu').modal('close'); // Cerrar el modal
+
+      } else {
+        alert('Error al guardar la tarifa: ' + response);
+      }
+
+    }).fail(function () {
+      //si ocurre algun error me da el alert
+      alert('Error al guardar la tarifa');
+    });
   });
 
   //--- Add event listener for the dropdown menu---
   $(document).on('click', '.more_tarifa', function (e) {
-  e.preventDefault();
-  $('.row-menu').remove();
+    e.preventDefault();
+    $('.row-menu').remove();
 
-  var $btn = $(this);
-  var itemId = $btn.data('id');
-  var offset = $btn.offset();
+    var $btn = $(this);
+    var itemId = $btn.data('id');
+    var offset = $btn.offset();
 
-  var menuHtml = "<div class='row-menu'><ul><li class='row-menu-hide'>Ocultar fila</li>";
-  menuHtml += "<li class='row-menu-delete'>Eliminar</li>";
-  menuHtml += "<li class='row-menu-cancel'>Cancelar</li></ul></div>";
-  var menu = $(menuHtml);
+    var menuHtml = "<div class='row-menu'><ul><li class='row-menu-hide'>Ocultar fila</li>";
+    menuHtml += "<li class='row-menu-delete'>Eliminar</li>";
+    menuHtml += "<li class='row-menu-cancel'>Cancelar</li></ul></div>";
+    var menu = $(menuHtml);
 
-  menu.css({ visibility: 'hidden', top: 0, left: 0 });
-  $('body').append(menu);
+    menu.css({ visibility: 'hidden', top: 0, left: 0 });
+    $('body').append(menu);
 
-  var menuW = menu.outerWidth();
-  var menuH = menu.outerHeight();
-  var winW = $(window).width();
-  var winTop = $(window).scrollTop();
+    var menuW = menu.outerWidth();
+    var menuH = menu.outerHeight();
+    var winW = $(window).width();
+    var winTop = $(window).scrollTop();
 
-  var desiredLeft = offset.left + $btn.outerWidth() - menuW;
-  if (desiredLeft + menuW > winW - 6) desiredLeft = winW - menuW - 6;
-  if (desiredLeft < 6) desiredLeft = 6;
+    var desiredLeft = offset.left + $btn.outerWidth() - menuW;
+    if (desiredLeft + menuW > winW - 6) desiredLeft = winW - menuW - 6;
+    if (desiredLeft < 6) desiredLeft = 6;
 
-  var desiredTop = offset.top + $btn.outerHeight() + 6;
-  if (desiredTop + menuH > winTop + $(window).height()) {
-    desiredTop = offset.top - menuH - 6;
-    if (desiredTop < winTop + 6) desiredTop = winTop + 6;
-  }
+    var desiredTop = offset.top + $btn.outerHeight() + 6;
+    if (desiredTop + menuH > winTop + $(window).height()) {
+      desiredTop = offset.top - menuH - 6;
+      if (desiredTop < winTop + 6) desiredTop = winTop + 6;
+    }
 
-  menu.css({ top: desiredTop + 'px', left: desiredLeft + 'px', visibility: 'visible' });
+    menu.css({ top: desiredTop + 'px', left: desiredLeft + 'px', visibility: 'visible' });
 
-  menu.on('click', '.row-menu-hide', function (ev) {
-    ev.stopPropagation();
-    var $tr = $btn.closest('tr');
-    $tr.addClass('hidden-row');
-    menu.remove();
-  });
-
-  menu.on('click', '.row-menu-delete', function (ev) {
-    ev.stopPropagation();
-    alert('Eliminar opción seleccionada para tarifa ID: ' + itemId);
-    menu.remove();
-  });
-
-  menu.on('click', '.row-menu-cancel', function (ev) {
-    ev.stopPropagation();
-    menu.remove();
-  });
-
-  setTimeout(function () {
-    $(document).on('click.rowMenuCloseTarifa', function (ev) {
-      if ($(ev.target).closest('.row-menu').length === 0 && $(ev.target).closest('.more_tarifa').length === 0) {
-        $('.row-menu').remove();
-        $(document).off('click.rowMenuCloseTarifa');
-      }
+    menu.on('click', '.row-menu-hide', function (ev) {
+      ev.stopPropagation();
+      var $tr = $btn.closest('tr');
+      $tr.addClass('hidden-row');
+      menu.remove();
     });
-  }, 10);
+
+    menu.on('click', '.row-menu-delete', function (ev) {
+      ev.stopPropagation();
+      alert('Eliminar opción seleccionada para tarifa ID: ' + itemId);
+      menu.remove();
+    });
+
+    menu.on('click', '.row-menu-cancel', function (ev) {
+      ev.stopPropagation();
+      menu.remove();
+    });
+
+    setTimeout(function () {
+      $(document).on('click.rowMenuCloseTarifa', function (ev) {
+        if ($(ev.target).closest('.row-menu').length === 0 && $(ev.target).closest('.more_tarifa').length === 0) {
+          $('.row-menu').remove();
+          $(document).off('click.rowMenuCloseTarifa');
+        }
+      });
+    }, 10);
   });
 });
 

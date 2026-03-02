@@ -75,8 +75,6 @@ switch($action){
         } else {
             echo "KO: error al crear tarifa: " . mysqli_error($link);
         }
-
-        
         break;
 
     case 'update':
