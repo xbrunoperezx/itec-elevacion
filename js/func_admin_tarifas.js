@@ -160,7 +160,7 @@ $(function () {
   });
 
   //Evento abrir el modal de UPDATE
-  $(document).on('click', 'editar_tarifa', function (e) {
+  $(document).on('click', '.editar_tarifa', function (e) {
     e.preventDefault(); // evita comportamiento predeterminado del boton de clic
 
     //obtiene el ID dela tarida desde el boton
