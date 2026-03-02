@@ -121,8 +121,7 @@ $(function () {
     $('#modal_usu').modal('open');
   });
 
-
-  //---GUARDAR la nueva tarifa---
+  //---GUARDAR la nueva tarifa Cuando el usuario crea una tarifa desde 0---
   $(document).on('click', '#guardar_tarifa', function (e) {
     e.preventDefault();
 
@@ -151,6 +150,85 @@ $(function () {
       alert('Error al guardar la tarifa');
     });
   });
+
+  //Evento abrir el modal de UPDATE
+  $(document).on('click', 'editar_tarifa', function (e) {
+    e.preventDefault(); // evita comportamiento predeterminado del boton de clic
+
+    //obtiene el ID dela tarida desde el boton
+    var id = $(this).data('id');
+
+    //Solicita los datos de la tarifa al back
+    TarifasAPI.list({ filtro_id: id }).done(function (response) {
+      var datos = response.resultados || [] //obtiene los resultados de la respuesta
+      if (datos.length === 0) {
+        alert('No se encontro la tarifa'); // muestra un error si no hya datos
+        return;
+      }
+
+      //toma el primer resultado de la tarifa posicion [0]
+      var item = datos[0];
+
+      //actualzia el titulo del modal con el nombre de la tarifa
+      $('#modal_usu .modal_txt_title').text('Editar tarifa - ' + item.tarifa);
+
+      // Llena el formulario del modal con los datos de la tarifa
+      var formHtml = `
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="editar_tarifa" type="text" value="${item.tarifa}">
+                    <label for="editar_tarifa" class="active">Nombre de la Tarifa</label>
+                </div>
+                <div class="input-field col s12">
+                    <input id="editar_precio" type="number" value="${item.precio}">
+                    <label for="editar_precio" class="active">Precio</label>
+                </div>
+            </div>
+        `;
+      $('#modal_usu .contentForm').html(formHtml); // Inserta el formulario en el modal
+      
+      //cambiaer el boton de guardar para que tenfa el ID  y accion correctos
+      $('#modal_usu .modal_txt_btn_left')
+          .attr('id', 'guardar_cambios_tarifa') //cambia el ID del boton
+          .data('id',id) //almacena el ID de la tarifa en el boton
+          .html('<i class="material-icons left">save</i>Guardar'); //cambia el texto del boton
+
+      $('#modal_usu').modal('open'); //abre el modal      
+
+    }).fail(function() {
+      alert('Error al cargar los datos de la tarifa'); //si la solicitud falla muesrta error.
+    })
+  })
+
+
+  //--GUARDAR los cambios de la tarifa esta es del UPDATE----
+  $(document).on('click', '#guardar_cambios_tarifa', function(e){
+    e.preventDefault();
+
+    var id = $(this).data('id'); // Obtiene el ID de la tarifa desde el botón
+    var tarifa = $('#editar_tarifa').val(); // Obtiene el nuevo nombre de la tarifa
+    var precio = $('#editar_precio').val(); // Obtiene el nuevo precio de la tarifa
+
+    // Valida los datos antes de enviarlos
+    if (!tarifa || precio <= 0) {
+        alert('Por favor, ingresa un nombre válido y un precio mayor a 0.'); // Muestra un error si los datos no son válidos
+        return; // Detiene la ejecución si los datos no son válidos
+    }
+
+    //envia los datos la back para actualizar la tarifa
+    TarifasAPI.update(id, {tarifa: tarifa , precio: precio}).done(function(response) {
+      if (response.success) {
+        readTarifas(); // Recarga la tabla de tarifas
+        $('#modal_usu').modal('close'); // Cierra el modal
+      } else {
+        alert('Error al guardar los cambios: ' + response.error); // Muestra un error si la actualización falla
+      }
+    }).fail(function () {
+        alert('Error al guardar los cambios'); // Muestra un error si la solicitud falla
+    });
+
+  })
+
 
   //--- Add event listener for the dropdown menu boton rojo derecha---
   $(document).on('click', '.more_tarifa', function (e) {
@@ -213,6 +291,9 @@ $(function () {
       });
     }, 10);
   });
+
+ 
+
 });
 
 
