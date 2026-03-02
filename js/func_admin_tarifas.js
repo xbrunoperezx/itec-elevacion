@@ -147,7 +147,7 @@ $(function () {
 
     //enviamos los datos la backend
     TarifasAPI.create({ tarifa: nuevaTarifa, precio: nuevoPrecio }).done(function (response) {
-      if (response && response.startsWith('OK')) { //verificamos la respuesta del back que empiece por OK
+      if (response.status === 'OK') { //verificamos el estado de  la respuesta si fue OK
         readTarifas(); // Recargar la tabla
         $('#modal_usu').modal('close'); // Cerrar el modal
 

@@ -71,9 +71,9 @@ switch($action){
         // Si la consulta se ejecuta correctamente, devolvemos un mensaje de éxito.
         // Si ocurre un error, devolvemos un mensaje de error con el detalle del problema.
         if (mysqli_query($link, $sql)) {
-            echo "OK: tarifa creada correctamente";
+            echo json_encode(['status' => 'OK', 'message' => 'Tarifa creada correctamente']);
         } else {
-            echo "KO: error al crear tarifa: " . mysqli_error($link);
+            echo json_encode(['status' => 'KO', 'message' => 'Error al crear tarifa: ' . mysqli_error($link)]);
         }
         break;
 
