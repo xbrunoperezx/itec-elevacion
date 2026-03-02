@@ -89,8 +89,9 @@ $(function () {
     readTarifas();
   });
 
-  //PROPOSITO..ABRIR MODAL Y ACTUALIZARLO
+  //PROPOSITO..ABRIR MODAL Y CREAR
   //cuando el usuario haga click en el boton se abrira un modal con un formulario para ingresar nombre y precio
+  //-----CREATE...............................................
   $(document).on('click', '#add_tarifas', function (e) {
     e.preventDefault();//evita el comportamiento predeterminado del boton
     //actualizamos el titulo del modal
@@ -120,16 +121,6 @@ $(function () {
     $('#modal_usu').modal('open');
   });
 
-  //----ELIMINAR --------------------------------------------
-  $(document).on('click', '.eliminar_tarifa', function (e) {
-    e.preventDefault();
-    var id = $(this).data('id');
-    TarifasAPI.remove(id).done(function () {
-      readTarifas();
-    }).fail(function () {
-      alert('Error al eliminar la tarifa');
-    });
-  });
 
   //---GUARDAR la nueva tarifa---
   $(document).on('click', '#guardar_tarifa', function (e) {
@@ -161,7 +152,7 @@ $(function () {
     });
   });
 
-  //--- Add event listener for the dropdown menu---
+  //--- Add event listener for the dropdown menu boton rojo derecha---
   $(document).on('click', '.more_tarifa', function (e) {
     e.preventDefault();
     $('.row-menu').remove();
@@ -170,8 +161,8 @@ $(function () {
     var itemId = $btn.data('id');
     var offset = $btn.offset();
 
-    var menuHtml = "<div class='row-menu'><ul><li class='row-menu-hide'>Ocultar fila</li>";
-    menuHtml += "<li class='row-menu-delete'>Eliminar</li>";
+    var menuHtml = "<div class='row-menu'><ul>";
+    menuHtml += "<li class='row-menu-delete' data-id='" + itemId + "'>Eliminar</li>";
     menuHtml += "<li class='row-menu-cancel'>Cancelar</li></ul></div>";
     var menu = $(menuHtml);
 
@@ -195,16 +186,16 @@ $(function () {
 
     menu.css({ top: desiredTop + 'px', left: desiredLeft + 'px', visibility: 'visible' });
 
-    menu.on('click', '.row-menu-hide', function (ev) {
-      ev.stopPropagation();
-      var $tr = $btn.closest('tr');
-      $tr.addClass('hidden-row');
-      menu.remove();
-    });
-
     menu.on('click', '.row-menu-delete', function (ev) {
       ev.stopPropagation();
-      alert('Eliminar opción seleccionada para tarifa ID: ' + itemId);
+      var id = $(this).data('id'); //obtenemos aqui el ID  dela tarifa que qeremos eliminar
+      if (confirm('¿Estás seguro de que deseas eliminar esta tarifa?')) {
+        TarifasAPI.remove(id).done(function () {
+          readTarifas(); // Recargar la tabla
+        }).fail(function () {
+          alert('Error al eliminar la tarifa');
+        });
+      }
       menu.remove();
     });
 

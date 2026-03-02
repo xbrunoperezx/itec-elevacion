@@ -82,7 +82,24 @@ switch($action){
         break;
 
     case 'delete':
-        //aqui uira codigo para eliminar
+        //Paso 1: leemos el ID enviado desde el Frontend
+        $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+        
+        //Paso 2: Validamos ese ID
+        if ($id <= 0) {
+            echo json_encode(['status' => 'KO' , 'message' => 'ID inválido']);
+            exit;
+        }
+
+        //Paso 3: Construimos la consulta a la DB
+        $sql = "DELETE FROM tarifas WHERE id = $id";
+
+        //Paso 4: Ejecutamos la consulta y la respuesta del back
+        if (mysqli_query($link, $sql)) {
+            echo json_encode(['status' =>'OK', 'message' =>'Tarifa eliminada correctamente']);
+        } else {
+            echo json_encode(['status' =>'KO', 'message' =>'Error al eliminar la tarifa' . mysqli_error($link)]);
+        }
         break;
 
     default:
