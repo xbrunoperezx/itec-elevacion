@@ -62,13 +62,21 @@ function readTarifas() {
       tr += "<td class='ancho80'>" + tarifa + "</td>";
       tr += "<td class='ancho80'>" + precio + "</td>";
       tr += "<td class='ancho50'>&nbsp;</td>";
+
+      // Aquí insertamos el botón "Editar tarifa"
+      tr += "<td class='ancho30'>"; // Nueva celda para el botón
+      tr += "<a class='editar_tarifa btn-floating btn-small waves-effect waves-light green' data-id='" + id + "' title='Editar tarifa'>";
+      tr += "<i class='material-icons'>edit</i></a>";
+      tr += "</td>";
+
+      // Botón "Más" ya existente
       tr += "<td class='ancho50'>" +
         "<a class='more_tarifa btn-floating btn-small waves-effect waves-light red' title='Más' data-id='" + id + "'>" +
         "<i class='material-icons'>more_vert</i></a>" +
         "</td>";
       tr += "</tr>";
 
-      $('#table_tarifas tbody').append(tr);
+      $('#table_tarifas tbody').append(tr);// Agrega la fila a la tabla
       totalResultados++;
     });
 
