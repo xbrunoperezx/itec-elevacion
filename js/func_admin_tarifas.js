@@ -225,11 +225,11 @@ $(function () {
 
     //envia los datos la back para actualizar la tarifa
     TarifasAPI.update(id, {tarifa: tarifa , precio: precio}).done(function(response) {
-      if (response.success) {
+      if (response.status === 'OK') {
         readTarifas(); // Recarga la tabla de tarifas
         $('#modal_usu').modal('close'); // Cierra el modal
       } else {
-        alert('Error al guardar los cambios: ' + response.error); // Muestra un error si la actualización falla
+        alert('Error al guardar los cambios: ' + response.message); // Muestra un error si la actualización falla
       }
     }).fail(function () {
         alert('Error al guardar los cambios'); // Muestra un error si la solicitud falla

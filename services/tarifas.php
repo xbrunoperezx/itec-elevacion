@@ -86,6 +86,7 @@ switch($action){
         //Paso 2:Validamos esos datos
         if ($id <=0 || empty($tarifa) || $precio <= 0) {
             echo json_encode(['status' => 'KO','message' =>'Datos invalidos']);
+            exit; // Detener ejecución si los datos no son válidos
         }
 
         //Paso 3:Construimos la consulta SQL para actualizar
