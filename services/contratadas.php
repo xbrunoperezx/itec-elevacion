@@ -1,5 +1,11 @@
 <?php
 
+// Comprobar cookie de sesión 'user_id'
+if (!isset($_COOKIE['user_id'])) {
+    echo "KO: sesión ha expirado";
+    exit;
+}
+
 if(isset($_POST["filtro_total"])){
     $lim = $_POST["filtro_total"];
 }else{
@@ -10,6 +16,13 @@ if(isset($_POST["filtro_id"])){
   $id = $_POST["filtro_id"];
 }else{
     $id = "";
+}
+
+// filtro por id_cliente en contratadas
+if(isset($_POST["filtro_id_cliente"])){
+    $filtro_id_cliente = intval($_POST["filtro_id_cliente"]);
+}else{
+    $filtro_id_cliente = "";
 }
 
 include("conn_bbdd.php");
@@ -33,13 +46,13 @@ if (!$link) {
     }
 
 // Consulta para obtener la información de las formas de pago
-    $formapago_sql = "SELECT * FROM formapago";
-    $formapago_result = mysqli_query($link, $formapago_sql);
+    $formas_pago_sql = "SELECT * FROM formas_pago";
+    $formas_pago_result = mysqli_query($link, $formas_pago_sql);
     // Inicialización de un array para almacenar los datos de las formas de pago
-    $formapago = array();
+    $formas_pago = array();
     // Bucle a través de cada fila de resultados de las formas de pago y almacenamiento de datos en el array
-    while ($row = mysqli_fetch_assoc($formapago_result)) {
-        $formapago[$row["id"]] = $row["formapago"];
+    while ($row = mysqli_fetch_assoc($formas_pago_result)) {
+        $formas_pago[$row["id"]] = $row["forma_pago"];
     }
 
 // Consulta para obtener la información de los usuarios
@@ -52,9 +65,12 @@ if (!$link) {
         $usuarios[$row["id"]] = $row["name"];
     }
 
-if($id==""){
+// Si viene filtro por id_cliente, filtrar por con.id_cliente
+if($filtro_id_cliente!=""){
+    $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.estado, con.num_control, con.observaciones AS con_observaciones FROM clientes c JOIN contratadas con ON c.id = con.id_cliente WHERE con.id_cliente=" . $filtro_id_cliente;
+}else if($id==""){
     // Define la consulta SQL
-    $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.informe, con.tipo, con.id_informe, con.estado, con.num_control, con.observaciones AS con_observaciones, con.id_factura, con.nocobrar, con.precio, con.id_formapago AS con_id_formapago, con.id_tarifa AS con_id_tarifa, con.comunicada, con.enviada_cobrar, con.comunicada_aquien, con.comunicada_como, con.contratada_como FROM clientes c JOIN contratadas con ON c.id = con.id_cliente";
+    $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.estado, con.num_control, con.observaciones AS con_observaciones FROM clientes c JOIN contratadas con ON c.id = con.id_cliente";
 
     $where = array();
     if (!empty($_POST['filtro_rae'])) {
@@ -69,9 +85,6 @@ if($id==""){
     if (!empty($_POST['filtro_nombre'])) {
         $where[] = "c.nombre LIKE '%{$_POST['filtro_nombre']}%'";
     }
-    if (!empty($_POST['filtro_num_informe'])) {
-        $where[] = "con.informe = '{$_POST['filtro_informe']}'";
-    }
     if (!empty($_POST['filtro_fecha_inicio'])) {
         $where[] = "c.vencimiento >= '{$_POST['filtro_fecha_inicio']}'";
     }
@@ -83,7 +96,7 @@ if($id==""){
     }
     $sql .= " ORDER BY id DESC LIMIT 0,{$lim}";
 }else{
-    $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.informe, con.tipo, con.id_informe, con.estado, con.num_control, con.observaciones AS con_observaciones, con.id_factura, con.nocobrar, con.precio, con.id_formapago AS con_id_formapago, con.id_tarifa AS con_id_tarifa, con.comunicada, con.enviada_cobrar, con.comunicada_aquien, con.comunicada_como, con.contratada_como FROM clientes c JOIN contratadas con ON c.id = con.id_cliente WHERE con.id=$id";
+    $sql = "SELECT c.*, con.id AS con_id, con.fecha, con.id_usuarios, con.estado, con.num_control, con.observaciones AS con_observaciones FROM clientes c JOIN contratadas con ON c.id = con.id_cliente WHERE con.id=$id";
 }
 
 // Ejecuta la consulta
@@ -100,7 +113,7 @@ $resultados = array();
 while ($row = mysqli_fetch_assoc($result)) {
     $cliente = array();
     foreach (array_keys($row) as $key) {
-        if (in_array($key, ["id","rae","nombre","direccion","localidad","municipio","cp","provincia","id_campo","id_mantenedor","id_administrador","quien_contrata","telefono","telefono2","email","tiene_datos","id_tarifa","id_formapago","vencimiento","cada","contratada","observaciones"])) {
+        if (in_array($key, ["id","rae","nombre","direccion","localidad","municipio","cp","provincia","id_campo","id_mantenedor","id_administrador","quien_contrata","telefono","telefono2","email","tiene_datos","id_tarifa","id_formas_pago","vencimiento","cada","contratada","observaciones"])) {
             if($key=="id_mantenedor"){
                 if(isset($mantenedores[$row[$key]])){
                     $cliente['mantenedor'] = $mantenedores[$row[$key]];
@@ -110,7 +123,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                 }
             }
             if($key=="vencimiento"){
-                if($row[$key]!="0000-00-00"){
+                if($row[$key]!="0000-00-00" AND $row[$key]!="" AND $row[$key]!=null){
                     $row[$key] = date("d-m-Y", strtotime($row[$key]));
                 }else{
                     $row[$key] = "-";
@@ -121,21 +134,25 @@ while ($row = mysqli_fetch_assoc($result)) {
     }
     $contratada = array();
     foreach (array_keys($row) as $key) {
-        if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","informe","tipo","id_informe","estado","num_control","con_observaciones","id_factura","nocobrar","precio","con_id_formapago","con_id_tarifa","comunicada","enviada_cobrar","comunicada_aquien","comunicada_como","contratada_como"])) {
-            if($key=="comunicada"){
-                if($row[$key]!="0000-00-00"){
-                    $row[$key] = $row[$key];
-                    $contratada["comunicada_dmy"] = date("d-m-Y", strtotime($row[$key]));
-                }else{
-                    $row[$key] = "-";
-                    $contratada["comunicada_dmy"] = "-";
-                }
-            }
+        if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","estado","num_control","con_observaciones"])) {
             if($key=="id_usuarios"){
-                if($usuarios[$row[$key]]!=null){
-                    $row[$key] = $usuarios[$row[$key]];
+                // Mantener el id numérico en 'id_usuarios', pero añadir el nombre en 'usuario'
+                $usuario_nombre = (isset($usuarios[$row[$key]]) && $usuarios[$row[$key]] != null) ? $usuarios[$row[$key]] : '-';
+                $contratada['usuario'] = $usuario_nombre;
+            }
+            if($key=="estado"){
+                if($row[$key]==0){
+                    $contratada['estado_f'] = "I";
+                    $contratada['estado_fc'] = "Inicial";
+                }else if($row[$key]==1){
+                    $contratada['estado_f'] = "A";
+                    $contratada['estado_fc'] = "Abierta";
+                }else if($row[$key]==2){
+                    $contratada['estado_f'] = "F";
+                    $contratada['estado_fc'] = "Finalizada";
                 }else{
-                    $row[$key] = "-";
+                    $contratada['estado_f'] = "-";
+                    $contratada['estado_fc'] = "-";
                 }
             }
             $contratada[$key] = $row[$key];
@@ -153,7 +170,7 @@ mysqli_close($link);
 $retorno = array();
 // añadimos una línea al final con los mantenedores
 $retorno["resultados"] = $resultados;
-$retorno["formas_pago"] = $formapago;
+$retorno["formas_pago"] = $formas_pago;
 
 // Codificación del array de datos en formato JSON y envío como respuesta
 echo json_encode($retorno);

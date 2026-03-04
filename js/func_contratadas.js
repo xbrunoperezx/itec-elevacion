@@ -17,27 +17,11 @@ var readContratadas = function(id, totalParams){
 		    });
 		    var totalResultados = 0;
 		    $.each(datos, function(index, item) {
-		      // Construir la fila de la tabla con los datos
-		      var tableRow = "<tr>" +
-		        "<td class='ancho50'>";
-		        if(item.cliente.contratada.estado==0){
-		          tableRow += "<a class='btn-floating btn-small waves-effect waves-light green' title='Enviar a inspección'>" +
-		            "<i class='material-icons'>phone_android</i>" +
-		          "</a>";
-		      	}else{
-		          tableRow += "<a class='disabled btn-floating btn-small waves-effect waves-light green' title='Enviada a inspección'>" +
-		            "<i class='material-icons'>phone_android</i>" +
-		          "</a>";
-		      	}
-		        tableRow += "</td>" +
+		      	// Construir la fila de la tabla con los datos
+		      	var tableRow = "<tr>" +
+		        "<td class='ancho50'>&nbsp;</td>" +
 		        "<td class='ancho50'>" + item.cliente.contratada.num_control + "</td>" +
-		        "<td class='ancho50'>";
-		        if(item.cliente.contratada.informe>0){
-		        	tableRow += item.cliente.contratada.informe;
-		        }else{
-		        	tableRow += "-";
-		        }
-		        tableRow += "</td>" +
+		        "<td class='ancho50'>-</td>" +
 		        "<td class='ancho75'>" + item.cliente.rae + "</td>" +
 		        "<td class='ancho50'>" +
 		          "<a seccion='con' tipo='frm_editcon' data-id='" + item.cliente.contratada.con_id + "' class='editar_con btn-floating btn-small waves-effect waves-light green' title='Editar contratada'>" +
@@ -49,18 +33,18 @@ var readContratadas = function(id, totalParams){
 		        "<td>" + item.cliente.localidad + "</td>" +
 		        "<td class='ancho200'>" + item.cliente.mantenedor + "</td>" +
 		        "<td class='ancho150'>" + item.cliente.vencimiento + "</td>" +
-		        "<td class='ancho100'>";
-		        if(item.cliente.contratada.comunicada_dmy != "-"){
-							tableRow += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Comunicada el día " + item.cliente.contratada.comunicada_dmy + "'><i class='material-icons'>comment</i></a>";
-		        }else{
-		        	tableRow += "<a class='disabled btn-floating btn-small waves-effect waves-light orange' title='Comunicada el día " + item.cliente.contratada.comunicada_dmy + "'><i class='material-icons'>comment</i></a>";
-		        }
-		        tableRow += "</td>" + 
-		        "<td class='ancho50'>" +
-		          "<a class='btn-floating btn-small waves-effect waves-light red' title='Más'>" +
-		            "<i class='material-icons'>more_vert</i>" +
-		          "</a>" +
-		        "</td>" +
+		        "<td class='ancho100'>"+
+					"<a class='btn-floating btn-small waves-effect waves-light ";
+					if(item.cliente.contratada.estado=="0") tableRow += "grey' title='Inicial'>";
+					if(item.cliente.contratada.estado=="1") tableRow += "orange' title='Abierta'>";
+					if(item.cliente.contratada.estado=="2") tableRow += "green' title='Finalizada'>";
+					tableRow += item.cliente.contratada.estado_f +"</a>" +
+				"</td>" + 
+				"<td class='ancho50'>" +
+					"<a class='more_con btn-floating btn-small waves-effect waves-light red' title='Más' data-id='" + item.cliente.contratada.con_id + "'>" +
+						"<i class='material-icons'>more_vert</i>" +
+					"</a>" +
+				"</td>" +
 		      "</tr>";
 
 		      // Agregar la fila a la tabla
@@ -85,10 +69,107 @@ var readContratadas = function(id, totalParams){
 	});
 }
 
+// Cargar listado de informes para una contratada en la pestaña Inspección
+var readInformesContratada = function(id){
+	var container = jQuery('#tab3_con');
+	container.html('Cargando...');
+	$.ajax({
+		url: 'services/primeras.php',
+		type: 'POST',
+		data: { filtro_id_contratada: id },
+		success: function(data){
+			try{ var parsed = JSON.parse(data); }catch(e){ container.html('Error parseando respuesta'); return; }
+			var datos = parsed['resultados'] || [];
+			if(!datos || datos.length===0){
+				container.html('No hay informes');
+				return;
+			}
+			var html = '<div class="right input-field botonesFormEdit"><button type="button" id="btn_refresh_informes" data-id="'+id+'" class="btn-floating waves-effect waves-light blue" title="Actualizar"><i class="material-icons">refresh</i></button></div>';
+			html += '<table class="highlight" id="table_informes_con"><thead><tr><th>Informe</th><th>Fecha</th><th>Hora</th><th>Resultado</th><th>Próxima</th><th>Industria</th><th>Observaciones</th><th></th></tr></thead><tbody>';
+			datos.forEach(function(row){
+				var hora = (row.hora_ini||'') + (row.hora_fin ? (' - '+row.hora_fin) : '');
+				html += '<tr>'+
+					'<td>'+row.informe+'</td>'+
+					'<td>'+row.fecha_dmy+'</td>'+
+					'<td>';
+					// Icono comunicada
+					if(row.comunicada != "-"){
+						html += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Comunicada el día " + 
+						row.comunicada_dmy + " a " + row.comunicada_aquien + ", " + row.comunicada_como + 
+						"'><i class='material-icons'>comment</i></a>";
+					}else{
+						html += "<a class='disabled btn-floating btn-small waves-effect waves-light orange disabled' title=''><i class='material-icons'>comment</i></a>";
+					}
+
+					html += "&nbsp;";
+					// Icono localización Google Maps
+					if(row.gps_latitud != "" && row.gps_longitud != ""){
+						html += "<a class='btn-floating btn-small waves-effect waves-light blue' title='Ver en Google Maps\nLat: " + row.gps_latitud + "\nLon: "+row.gps_longitud + "' href='http://maps.google.com/?q=" + row.gps_latitud + ","+row.gps_longitud + "' target='_blank'><i class='material-icons'>gps_fixed</i></a>";
+					}else{
+						html += "<a class='disabled btn-floating btn-small waves-effect waves-light blue disabled' title='Ver en Google Maps'><i class='material-icons'>gps_fixed</i></a>";
+					}	
+
+					html += "&nbsp;";
+					// Icono hora
+					if(row.hora_ini != "" && row.hora_fin != ""){
+						html += "<a class='btn-floating btn-small waves-effect waves-light green' title='Hora inicio: "+row.hora_ini+"h\nHora fin: "+row.hora_fin+"h'><i class='material-icons'>access_time</i></a>";
+					}
+					if(row.hora_ini != "" && row.hora_fin == ""){
+						html += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Hora inicio: "+row.hora_ini+"h\n¡Inspección en curso!'><i class='material-icons'>access_time</i></a>";
+					}	
+					if(row.hora_ini == "" && row.hora_fin == ""){
+						html += "<a class='disabled btn-floating btn-small waves-effect waves-light red' title='Sin comenzar...'><i class='material-icons'>access_time</i></a>";
+					}	        
+					html += '</td>'+
+					'<td>' +
+					"<a class='btn-floating btn-small waves-effect waves-light grey' title='Inspector: " + row.usuario + "'>" +
+					row.usuario_ab +
+					"</a>&nbsp;" +
+					"<a class='btn-floating btn-small waves-effect waves-light ";
+					if(row.resultado_f=="-") html += "grey disabled' title='Sin hacer'>";
+					if(row.resultado_f=="F") html += "green' title='Favorable'>";
+					if(row.resultado_f=="FL") html += "green' title='Favorable (defectos leves)'>";
+					if(row.resultado_f=="DG") html += "red' title='Desfavorable (defectos graves)'>";
+					if(row.resultado_f=="DM") html += "red' title='Desfavorable (defectos muy graves)'>";
+					html += row.resultado_f +"</a>" +
+					'</td>'+
+					'<td>'+row.proxima_dmy+'</td>'+
+					'<td>'+row.industria_dmy+'</td>'+
+					'<td>'+row.observaciones+'</td>'+
+					'<td>';
+					if(row.enviada_cliente!=null && row.enviada_cliente!=""){
+						html += '<a class="btn-floating btn-small waves-effect waves-light orange" title="Enviada al cliente el día ' + row.enviada_cliente_dmy + '"><i class="material-icons">send</i></a>&nbsp;';
+					}else{
+						html += '<a class="btn-floating btn-small waves-effect waves-light orange disabled" title="Pendiente de envío al cliente"><i class="material-icons">send</i></a>&nbsp;';
+					}
+					html += '<a class="btn-floating btn-small waves-effect waves-light grey" title="Abrir en otra pestaña"><i class="material-icons">open_in_new</i></a>'+
+					'</td>'+
+					'</tr>';
+			});
+			html += '</tbody></table>';
+			container.html(html);
+		},
+		error: function(xhr,status,error){ container.html('Error: '+error); }
+	});
+};
+
+// Handler para botón actualizar informes
+jQuery(document).on('click', '#btn_refresh_informes', function(e){
+	e.preventDefault();
+	var id = jQuery(this).data('id');
+	if(id) readInformesContratada(id);
+});
+
 
 // Filtros de contratada
-jQuery(document).on("keypress", "#tab_con [id*=filtro_con]", function(){
+jQuery(document).on("keydown", "#tab_con [id*=filtro_con]", function(e){
+	// Mostrar botón limpiar cuando se escribe
 	jQuery("#filtrar_con_clear").removeClass("hide");
+	// Si se pulsa Enter, ejecutar búsqueda
+	if (e.key === 'Enter' || e.which === 13 || e.keyCode === 13) {
+		e.preventDefault();
+		jQuery(this).parents("#tab_con").find("#filtrar_con").click();
+	}
 });
 
 jQuery(document).on("click", "#filtrar_con", function() {
@@ -112,12 +193,7 @@ jQuery(document).on("click", "#filtrar_con", function() {
 	  var tipo = "con";
 		readContratadas(tipo, filtros);
   }else{
-  	jQuery("#error-title").text("ERROR");
-  	jQuery("#error-message").text("Hay que introducir un número mínimo de resultados esperados! Para ello introduce un valor en el campo registros, dentro del módulo de filtros.");
-  	jQuery("#modal_error").modal({
-			dismissible: false
-		});
-  	jQuery("#modal_error").modal("open");	
+    modalError("ERROR","Hay que introducir un número mínimo de resultados esperados! Para ello introduce un valor en el campo registros, dentro del módulo de filtros.", false);
   }
 });
 
@@ -156,17 +232,16 @@ var openContratada = function(seccion, cual, id){
 		    		"data" : item
 		    	});
 			    formas_pago = JSON.parse(data)["formas_pago"];
-			    var title = "Editar contratada";
+			    var title = " Editar contratada";
 			    title+= " - RAE: "+item.cliente.rae;
 					$("#modal_"+seccion).find(".modal_txt_title").text(title);
 					$("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
 					$("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
-					var frm_tabs = '<ul class="tabs">' + 
-		        '<li class="tab col s3"><a class="tablink1" href="#tab1_con">Cliente</a></li>' + 
-		        '<li class="tab col s3"><a class="active tablink2" href="#tab2_con">Contratación</a></li>' + 
-		        '<li class="tab col s3"><a class="tablink3" href="#tab3_con">Inspección</a></li>' + 
-		        '<li class="tab col s3"><a class="tablink4" href="#tab4_con">Facturación</a></li>' + 
-		        '<li class="tab col s3"><a class="tablink5" href="#tab5_con">Otros</a></li>' + 
+					var frm_tabs = '<ul class="tabs modalEditar">' + 
+		        '<li class="tab col s3"><a class="tablink1" href="#tab1_con" title="Datos"><i class="material-icons left">home</i></a></li>' + 
+		        '<li class="tab col s3"><a class="active tablink2" href="#tab2_con" title="Contratación"><i class="material-icons left">business</i></a></a></li>' + 
+		        '<li class="tab col s3"><a class="tablink3" href="#tab3_con" title="Inspección"><i class="material-icons left">assignment</i></a></a></li>' + 
+		        '<li class="tab col s3"><a class="tablink4" href="#tab4_con" title="Otros"><i class="material-icons left">settings</i></a></a></li>' + 
 		      '</ul>';
 					var frm_render = '<form id="contratada_frm_editar">' + 
 
@@ -221,20 +296,17 @@ var openContratada = function(seccion, cual, id){
 				    '<div class="input-field anchoFrm4">' +
 				      '<input type="date" id="fecha" name="fecha" value="' + item.cliente.contratada.fecha + '">' +
 				      '<label for="fecha" class="active">Fecha contratada</label>' +
-				    '</div>' +		
-						'<div class="input-field anchoFrm2">' +
-				      '<input type="text" id="id_usuarios" name="id_usuarios" value="' + item.cliente.contratada.id_usuarios + '" disabled>' +
+				    '</div>' +	
+				    '<div class="input-field anchoFrm4">' +
+				      '<input type="text" id="num_control" name="num_control" value="' + item.cliente.contratada.num_control + '">' +
+				      '<label for="num_control" class="active">Número de Solicitud</label>' +
+				    '</div>' +	
+					'<div class="input-field anchoFrm2">' +
+				      '<input type="text" id="id_usuarios" name="id_usuarios" value="' + item.cliente.contratada.usuario + '" disabled>' +
 				      '<label for="id_usuarios" class="active">Contratada por</label>' +
 				    '</div>' +			
 						'<div class="input-field anchoFrm2">' +
-				      '<input type="text" id="estado_actual" name="estado_actual" value="';
-
-							if(item.cliente.contratada.estado==0) frm_render  += 'Inicial';
-							if(item.cliente.contratada.estado==1) frm_render  += 'Enviada a Inspección';
-							if(item.cliente.contratada.estado==2) frm_render  += 'Inspección Realizada';
-							if(item.cliente.contratada.estado==3) frm_render  += 'Enviada a facturación';
-
-				      frm_render  += '" disabled>' +
+				      '<input type="text" id="estado_actual" name="estado_actual" value="' + item.cliente.contratada.estado_fc + '" disabled>' +
 				      '<label for="estado_actual" class="active">Estado</label>' +
 				    '</div>' +		
 				    '<div class="input-field">' +
@@ -243,116 +315,27 @@ var openContratada = function(seccion, cual, id){
 				    '</div>' +    
 			    '</div>' +	
 
-			    '<div id="tab3_con" class="col s12">' + 
-				    '<div class="input-field anchoFrm4">' +
-				      '<input type="text" id="num_control" name="num_control" value="' + item.cliente.contratada.num_control + '">' +
-				      '<label for="num_control" class="active">Número de Solicitud</label>' +
-				    '</div>' +			    
-				    '<div class="input-field anchoFrm4">' +
-				      '<input type="text" id="informe" name="informe" value="' + item.cliente.contratada.informe + '">' +
-				      '<label for="informe" class="active">Número de informe</label>' +
-				    '</div>' +	
-				    '<div class="input-field anchoFrm4">' +
-				      '<select id="tipo" name="tipo">';
-				      	if(item.cliente.contratada.tipo==1){
-				      		frm_render += '<option value="1" selected>Primera inspección</option>';
-				      		frm_render += '<option value="2">Segunda inspección</option>';
-				      		frm_render += '<option value="3">Tercera inspección</option>';
-				      	}else if(item.cliente.contratada.tipo==2){
-									frm_render += '<option value="1">Primera inspección</option>';
-									frm_render += '<option value="2" selected>Segunda inspección</option>';
-									frm_render += '<option value="3">Tercera inspección</option>';
-				      	}else if(item.cliente.contratada.tipo==3){
-									frm_render += '<option value="1">Primera inspección</option>';
-									frm_render += '<option value="2">Segunda inspección</option>';
-									frm_render += '<option value="3" selected>Tercera inspección</option>';
-				      	}
-				      frm_render+='</select>' + 
-				      '<label for="tipo">¿Tipo de inspección?</label>' +
-				    '</div><br>' +				
-				    '<div class="input-field anchoFrm4">';
-				    if(item.vencimiento!="0000-00-00"){
-				    	frm_render+='<input type="date" id="comunicada" name="comunicada" value="' + item.cliente.contratada.comunicada + '">';
-						}else{
-							frm_render+='<input type="date" id="comunicada" name="comunicada">';
-						}
-					      frm_render+='<label for="comunicada" class="active">Fecha comunicación</label>' +
-					  '</div>' +
-				    '<div class="input-field anchoFrm2">' +
-				      '<input type="text" id="comunicada_aquien" name="comunicada_aquien" value="' + item.cliente.contratada.comunicada_aquien + '">' +
-				      '<label for="comunicada_aquien" class="active">¿A quién?</label>' +
-				    '</div>' +
-				    '<div class="input-field anchoFrm2">' +
-				      '<input type="text" id="comunicada_como" name="comunicada_como" value="' + item.cliente.contratada.comunicada_como + '">' +
-				      '<label for="comunicada_como" class="active">¿Cómo se comunicó?</label>' +
-				    '</div>' +      
+			    '<div id="tab3_con" class="col s12">' + 	    
 			    '</div>' +	
-
 			    '<div id="tab4_con" class="col s12">' + 
-				    '<div class="input-field anchoFrm4">' +
-				      '<select id="nocobrar" name="nocobrar">';
-				      	if(item.cliente.contratada.nocobrar==0){
-				      		frm_render += '<option value="0" selected>Facturar</option>';
-				      		frm_render += '<option value="1">No cobrar</option>';
-				      	}else if(item.cliente.contratada.nocobrar==1){
-									frm_render += '<option value="0">Facturar</option>';
-									frm_render += '<option value="1" selected>No cobrar</option>';
-				      	}
-				      frm_render+='</select>' + 
-				      '<label for="nocobrar">¿Facturar?</label>' +
-				    '</div><br>' +		
-				    '<div class="input-field anchoFrm4">' +
-				      '<input type="text" id="precio" name="precio" value="' + item.cliente.contratada.precio + '">' +
-				      '<label for="precio" class="active">Precio de la inspección</label>' +
-				    '</div>' +
-				    '<div class="input-field anchoFrm2">' +
-							'<select id="con_id_formapago" name="con_id_formapago">';
-				      	for (let clave in formas_pago){
-					      	if(item.cliente.contratada.con_id_formapago==clave){
-					      		frm_render += '<option value="'+ clave +'" selected>'+ formas_pago[clave] +'</option>';
-					      	}else{
-					      		frm_render += '<option value="'+ clave +'">'+ formas_pago[clave] +'</option>';
-					      	}
-				      	};
-				      frm_render+='</select>' + 
-				      '<label for="con_id_formapago">Forma de pago</label>' +
-				    '</div><br>' +  
-				    '<div class="input-field anchoFrm2">' +
-				      '<input type="text" id="con_id_tarifa" name="con_id_tarifa" value="' + item.cliente.contratada.con_id_tarifa + '">' +
-				      '<label for="con_id_tarifa" class="active">Tarifa</label>' +
-				    '</div>' +			
-			    '</div>' +	
-
-			    '<div id="tab5_con" class="col s12">' + 
 				    '<div class="input-field">' +
 				      '<input type="text" id="id" name="id" value="' + item.cliente.contratada.con_id + '" disabled>' +
 				      '<label for="id" class="active">ID Contratada BBDD</label>' +
-				    '</div>' +    
-				    '<div class="input-field">' +
-				      '<input type="text" id="id_informe" name="id_informe" value="' + item.cliente.contratada.id_informe + '" disabled>' +
-				      '<label for="id_informe" class="active">ID Informe BBDD</label>' +
-				    '</div>' +    
-				    '<div class="input-field">' +
-				      '<input type="text" id="con_id_formapago" name="con_id_formapago" value="' + item.cliente.contratada.con_id_formapago + '" disabled>' +
-				      '<label for="con_id_formapago" class="active">ID Forma pago BBDD</label>' +
-				    '</div>' +   
-				    '<div class="input-field">' +
-				      '<input type="text" id="id_tipo" name="id_tipo" value="' + item.cliente.contratada.tipo + '" disabled>' +
-				      '<label for="id_tipo" class="active">ID Tipo inspección BBDD</label>' +
-				    '</div>' +   
+				    '</div>' +     
 			    '</div>' +	
 
  					'</form>';
 				  $("#modal_"+seccion).find(".contentTabs").html(frm_tabs);
 				  $("#modal_"+seccion).find(".contentForm").html(frm_render);
 				  $('select#mantenedor_con').formSelect();
-				  $('select#tipo').formSelect();
-				  $('select#nocobrar').formSelect();
-				  $('select#con_id_formapago').formSelect();
 				  $("#modal_"+seccion).find('.tabs').tabs();
 				  $("#modal_"+seccion).modal({
 						dismissible: false
 					});
+					// Cargar lista de informes (pestaña Inspección)
+					if(item && item.cliente && item.cliente.contratada && item.cliente.contratada.con_id){
+						readInformesContratada(item.cliente.contratada.con_id);
+					}
 					$("#modal_"+seccion).modal("open");		
 			},
 			error: function(xhr, status, error) {
@@ -363,3 +346,68 @@ var openContratada = function(seccion, cual, id){
 		});				
 	}
 }
+
+// Menú contextual para cada fila de contratadas (ocultar fila / cancelar)
+jQuery(document).on("click", ".more_con", function(e){
+		e.preventDefault();
+		// cerrar cualquier menú abierto
+		jQuery('.row-menu').remove();
+
+		var $btn = jQuery(this);
+		var itemId = $btn.data('id');
+		var offset = $btn.offset();
+
+		var menu = jQuery("<div class='row-menu'><ul><li class='row-menu-hide'>Ocultar fila</li><li class='row-menu-cancel'>Cancelar</li></ul></div>");
+
+		// añadirlo oculto para medir y posicionar correctamente (alineado a la derecha del icono)
+		menu.css({ visibility: 'hidden', top: 0, left: 0 });
+		jQuery('body').append(menu);
+
+		// medir dimensiones y ventana
+		var menuW = menu.outerWidth();
+		var menuH = menu.outerHeight();
+		var winW = jQuery(window).width();
+		var winTop = jQuery(window).scrollTop();
+
+		// calcular izquierda para alinear a la derecha del botón
+		var desiredLeft = offset.left + $btn.outerWidth() - menuW;
+		if (desiredLeft + menuW > winW - 6) {
+				desiredLeft = winW - menuW - 6;
+		}
+		if (desiredLeft < 6) {
+				desiredLeft = 6;
+		}
+
+		// calcular top (por defecto debajo del botón)
+		var desiredTop = offset.top + $btn.outerHeight() + 6;
+		if (desiredTop + menuH > winTop + jQuery(window).height()) {
+				desiredTop = offset.top - menuH - 6;
+				if (desiredTop < winTop + 6) desiredTop = winTop + 6;
+		}
+
+		menu.css({ top: desiredTop + 'px', left: desiredLeft + 'px', visibility: 'visible' });
+
+		// acción ocultar
+		menu.on('click', '.row-menu-hide', function(ev){
+				ev.stopPropagation();
+				var $tr = $btn.closest('tr');
+				$tr.addClass('hidden-row');
+				menu.remove();
+		});
+
+		// cancelar
+		menu.on('click', '.row-menu-cancel', function(ev){
+				ev.stopPropagation();
+				menu.remove();
+		});
+
+		// cerrar si se hace click fuera
+		setTimeout(function(){
+			jQuery(document).on('click.rowMenuClose', function(ev){
+				if(jQuery(ev.target).closest('.row-menu').length===0 && jQuery(ev.target).closest('.more_con').length===0){
+					jQuery('.row-menu').remove();
+					jQuery(document).off('click.rowMenuClose');
+				}
+			});
+		}, 10);
+});

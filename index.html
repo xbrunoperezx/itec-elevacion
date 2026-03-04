@@ -4,37 +4,37 @@
     <meta name="robots" content="noindex, nofollow">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+    <link rel="manifest" href="img/site.webmanifest">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Librería XLS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
-    <!-- Materialize CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <!-- Materialize JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <!-- Importación de Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Tu propio CSS personalizado -->
     <link rel="stylesheet" type="text/css" href="css/styles.css">
-    <title>SGASTUR - SGA Elevación</title>
+    <title>SGASTUR - SGA DEV ENVIRONMENT</title>
   </head>
   <body>
 
     <!-- Menú de navegación -->
     <nav>
       <div class="nav-wrapper">
-        <img class="right logo_itec" src="img/logo_itec.png" height="50">&nbsp;&nbsp;
-        <ul id="nav-mobile" class="left hide-on-med-and-down">
-          <li id="cli" class="active"><a href="#Clientes"><i class="material-icons left">people</i>Clientes</a></li>
-          <li id="con"><a href="#Contratadas"><i class="material-icons left">business</i>Contratadas</a></li>
-          <li id="pri"><a href="#Primeras"><i class="material-icons left">star</i>Primeras</a></li>
-          <li id="seg"><a href="#Segundas"><i class="material-icons left">star_half</i>Segundas</a></li>
-          <li id="cer"><a href="#Cerradas"><i class="material-icons left">close</i>Cerradas</a></li>
-          <li id="fac"><a href="#Facturas"><i class="material-icons left">receipt</i>Facturas</a></li>
-          <li id="adm"><a href="#Administrador"><i class="material-icons left">supervisor_account</i>Administrador</a></li>
-          <li id="equ"><a href="#Equipos"><i class="material-icons left">devices</i>Equipos</a></li>
-          <li id="usu"><a href="#Usuario"><i class="material-icons left">person</i>Usuario</a></li>
-          <li id="his"><a href="#Historial de versiones"><i class="material-icons left">history</i>Historial de versiones</a></li>
+        <div class="right" style="display:inline-flex;align-items:center;gap:8px;">
+          <a href="#" title="Usuario"><i class="material-icons" id="nav_account" title="Usuario">account_circle</i></a>
+          <img class="logo_itec" src="img/logo_itec.png" height="50">
+        </div>
+        <div id="user_menu_nav" class="right">Nombre usuario</div>
+        <ul id="nav-desktop" class="left">
+          <li id="cli" class="active"><a href="#Clientes"><i class="material-icons left">home</i></a></li>
+          <li id="con"><a href="#Contratadas"><i class="material-icons left">business</i></a></li>
+          <li id="pri"><a href="#Primeras"><i class="material-icons left">looks_one</i></a></li>
+          <li id="seg"><a href="#Segundas"><i class="material-icons left">looks_two</i></a></li>
+          <li id="cer"><a href="#Cerradas"><i class="material-icons left">assignment_turned_in</i></a></li>
+          <li id="fac"><a href="#Facturas"><i class="material-icons left">payment</i></a></li>
+          <li id="adm"><a href="#Administrador"><i class="material-icons left">settings</i></a></li>
+          <li id="his"><a href="#Historial de versiones"><i class="material-icons left">history</i></a></li>
         </ul>
+        <div id="title_nav" class="left">Clientes</div>
       </div>
     </nav>
 
@@ -70,11 +70,11 @@
               </div>
               <div class="input-field col s1">
                   <input type="date" id="filtro_cli_fechainicio">
-                  <label for="filtro_cli_fechainicio">F.Vencimiento [ desde ]</label>
+                  <label for="filtro_cli_fechainicio">Vencimiento [desde]</label>
               </div>
               <div class="input-field col s1">
                   <input type="date" id="filtro_cli_fechafin">
-                  <label for="filtro_cli_fechafin">[ hasta ]</label>
+                  <label for="filtro_cli_fechafin">[hasta]</label>
               </div>
               <div class="input-field col s1">
                   <button class="btn-floating waves-effect waves-light red" id="filtrar_cli" title='Filtrar'>
@@ -85,15 +85,15 @@
                   </button>
               </div>
               <div class="right input-field col s1"><button class="right btn-floating waves-effect waves-light grey" id="btnToggle_cli"><i class="material-icons">arrow_drop_up</i></button></div>
-              <div class="right input-field col s1">
+              <div class="right input-field col s2">
+                  <button class="btn-floating waves-effect waves-light orange" id="add_cli" title='Crear nuevo cliente'>
+                    <i class="material-icons">add</i>
+                  </button>
                   <button class="btn-floating waves-effect waves-light black" id="imprimir_cli" title='Generar PDF'>
                     <i class="material-icons">print</i>
                   </button>
                   <button class="btn-floating waves-effect waves-light green" id="exportar_cli" title='Exportar a XLS (Excel)'>
                     <i class="material-icons">import_export</i>
-                  </button>
-                  <button class="btn-floating waves-effect waves-light red" id="settings_cli" title='Configurar listado'>
-                    <i class="material-icons">settings</i>
                   </button>
               </div>
             </div>
@@ -144,11 +144,11 @@
               </div>
               <div class="input-field col s1">
                   <input type="date" id="filtro_con_fechainicio">
-                  <label for="filtro_con_fechainicio">F.Vencimiento [ desde ]</label>
+                  <label for="filtro_con_fechainicio">Fecha [desde]</label>
               </div>
               <div class="input-field col s1">
                   <input type="date" id="filtro_con_fechafin">
-                  <label for="filtro_con_fechafin">[ hasta ]</label>
+                  <label for="filtro_con_fechafin">[hasta]</label>
               </div>
               <div class="input-field col s1">
                   <button class="btn-floating waves-effect waves-light red" id="filtrar_con" title='Filtrar'>
@@ -220,11 +220,11 @@
               </div>
               <div class="input-field col s1">
                   <input type="date" id="filtro_pri_fechainicio">
-                  <label for="filtro_pri_fechainicio">F.Inspección [ desde ]</label>
+                  <label for="filtro_pri_fechainicio">Fecha [desde]</label>
               </div>
               <div class="input-field col s1">
                   <input type="date" id="filtro_pri_fechafin">
-                  <label for="filtro_pri_fechafin">[ hasta ]</label>
+                  <label for="filtro_pri_fechafin">[hasta]</label>
               </div>
               <div class="input-field col s1">
                   <label><input type="checkbox" id="filtro_pri_pendiente" class="filled-in">
@@ -301,11 +301,11 @@
               </div>
               <div class="input-field col s1">
                   <input type="date" id="filtro_seg_fechainicio">
-                  <label for="filtro_seg_fechainicio">F.Inspección [ desde ]</label>
+                  <label for="filtro_seg_fechainicio">Fecha [desde]</label>
               </div>
               <div class="input-field col s1">
                   <input type="date" id="filtro_seg_fechafin">
-                  <label for="filtro_seg_fechafin">[ hasta ]</label>
+                  <label for="filtro_seg_fechafin">[hasta]</label>
               </div>
               <div class="input-field col s1">
                   <label><input type="checkbox" id="filtro_seg_pendiente" class="filled-in">
@@ -371,56 +371,56 @@
   <!-- Estructura del Modal -->
   <div id="modal_cli" class="modal">
     <div class="modal-content">
-      <div class="red white-text row valign-wrapper">
-          &nbsp;&nbsp;<i class='left material-icons'>people</i><h6 class="modal_txt_title">Título del Modal</h6>
+      <div class="red white-text row valign-wrapper tituloModal">
+          <i class='left material-icons'>people</i><h6 class="modal_txt_title">Título del Modal</h6>
       </div>
     </div>
     <div class="contentTabs"></div>
     <div class="contentForm"></div>
     <div class="modal-footer">
-      <a href="#!" class="modal_txt_btn_left left waves-effect waves-light btn modal-trigger green accent-4" id="cli_save"><i class="material-icons left">save</i>Guardar</a>
-      <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn modal-trigger red accent-4" id="cli_exit">Salir</a>
+      <a href="#!" class="modal_txt_btn_left left waves-effect waves-light btn green accent-4" id="cli_save"><i class="material-icons left">save</i>Guardar</a>
+      <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn red accent-4" id="cli_exit">Salir</a>
     </div>
   </div>
   <div id="modal_con" class="modal">
     <div class="modal-content">
-      <div class="red white-text row valign-wrapper">
-          &nbsp;&nbsp;<i class='left material-icons' id="modal_edit_icon">business</i><h6 class="modal_txt_title">Título del Modal</h6>
+      <div class="red white-text row valign-wrapper tituloModal">
+          <i class='left material-icons' id="modal_edit_icon">business</i><h6 class="modal_txt_title">Título del Modal</h6>
       </div>
     </div>
     <div class="contentTabs"></div>
     <div class="contentForm"></div>
     <div class="modal-footer">
-      <a href="#!" class="modal_txt_btn_left left modal-close waves-effect waves-light btn modal-trigger green accent-4" id="con_save">Guardar</a>
-      <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn modal-trigger red accent-4" id="con_exit">Salir</a>
+      <a href="#!" class="modal_txt_btn_left left modal-close waves-effect waves-light btn green accent-4" id="con_save">Guardar</a>
+      <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn red accent-4" id="con_exit">Salir</a>
     </div>
   </div>
 
   <div id="modal_pri" class="modal">
     <div class="modal-content">
-      <div class="red white-text row valign-wrapper">
-          &nbsp;&nbsp;<i class='left material-icons' id="modal_edit_icon">edit</i><h6 class="modal_txt_title">Título del Modal</h6>
+      <div class="red white-text row valign-wrapper tituloModal">
+          <i class='left material-icons' id="modal_edit_icon">edit</i><h6 class="modal_txt_title">Título del Modal</h6>
       </div>
     </div>
     <div class="contentTabs"></div>
     <div class="contentForm"></div>
     <div class="modal-footer">
-      <a href="#!" class="modal_txt_btn_left left modal-close waves-effect waves-light btn modal-trigger green accent-4" id="pri_save">Guardar</a>
-      <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn modal-trigger red accent-4" id="pri_save">Salir</a>
+      <a href="#!" class="modal_txt_btn_left left modal-close waves-effect waves-light btn green accent-4" id="pri_save">Guardar</a>
+      <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn red accent-4" id="pri_save">Salir</a>
     </div>
   </div>
 
   <div id="modal_seg" class="modal">
     <div class="modal-content">
-      <div class="red white-text row valign-wrapper">
-          &nbsp;&nbsp;<i class='left material-icons' id="modal_edit_icon">edit</i><h6 class="modal_txt_title">Título del Modal</h6>
+      <div class="red white-text row valign-wrapper tituloModal">
+          <i class='left material-icons' id="modal_edit_icon">edit</i><h6 class="modal_txt_title">Título del Modal</h6>
       </div>
     </div>
     <div class="contentTabs"></div>
     <div class="contentForm"></div>
     <div class="modal-footer">
-      <a href="#!" class="modal_txt_btn_left left modal-close waves-effect waves-light btn modal-trigger green accent-4" id="seg_save">Guardar</a>
-      <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn modal-trigger red accent-4" id="seg_save">Salir</a>
+      <a href="#!" class="modal_txt_btn_left left modal-close waves-effect waves-light btn green accent-4" id="seg_save">Guardar</a>
+      <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn red accent-4" id="seg_save">Salir</a>
     </div>
   </div>
 
@@ -432,7 +432,7 @@
       <p id="error-message" class="center"></p>
     </div>
     <div class="modal-footer">
-      <a href="#!" class="right modal-close waves-effect waves-light btn modal-trigger red accent-4"><i class='material-icons left'>check</i>Aceptar</a>
+      <a href="#!" class="right waves-effect waves-light btn red accent-4" id="error_confirm"><i class='material-icons left'>check</i>Aceptar</a>
     </div>
   </div>
 
@@ -444,8 +444,8 @@
       <p id="confirm-message" class="center"></p>
     </div>
     <div class="modal-footer">
-      <a href="#!" class="left waves-effect waves-light btn modal-trigger green accent-4" id="save_confirm"><i class="material-icons left">check</i>Aceptar</a>
-      <a href="#!" class="right waves-effect waves-light btn modal-trigger red accent-4" id="save_cancel"><i class="material-icons left">clear</i>Cancelar</a>
+      <a href="#!" class="left waves-effect waves-light btn green accent-4" id="save_confirm"><i class="material-icons left">check</i>Aceptar</a>
+      <a href="#!" class="right waves-effect waves-light btn modal-close red accent-4" id="save_cancel"><i class="material-icons left">clear</i>Cancelar</a>
     </div>
   </div>
 
@@ -457,7 +457,7 @@
       <div id="export-content"></div>
     </div>
     <div class="modal-footer">
-      <a href="#!" class="right modal-close waves-effect waves-light btn modal-trigger green accent-4"><i class='material-icons left'>exit_to_app</i>Cerrar</a>
+      <a href="#!" class="right modal-close waves-effect waves-light btn green accent-4"><i class='material-icons left'>exit_to_app</i>Cerrar</a>
     </div>
   </div>
 
@@ -471,10 +471,11 @@
       </div>
     </footer>
     <!-- JavaScript personalizado -->
+    <script src="js/app.js"></script>
     <script src="js/func_clientes.js"></script>
     <script src="js/func_contratadas.js"></script>
     <script src="js/func_informes.js"></script>
     <script src="js/func_segundas.js"></script>
-    <script src="js/app.js"></script>
+
   </body>
 </html>

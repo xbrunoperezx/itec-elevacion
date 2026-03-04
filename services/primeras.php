@@ -4,6 +4,7 @@
 $__post_defaults = [
   'filtro_total' => 15,
   'filtro_id' => '',
+  'filtro_id_contratada' => '',
   'filtro_direccion' => '',
   'filtro_nombre' => '',
   'filtro_rae' => '',
@@ -19,7 +20,8 @@ foreach ($__post_defaults as $k => $v) {
 }
 
 $lim = $_POST["filtro_total"];
-$id = $_POST["filtro_id"];
+$id = intval($_POST["filtro_id"]);
+$id_contratada = isset($_POST["filtro_id_contratada"]) ? intval($_POST["filtro_id_contratada"]) : '';
 
 include("conn_bbdd.php");
 // $link = mysqli_connect("89.46.111.188", "Sql1396152", "5i4w182228", "Sql1396152_2");
@@ -51,8 +53,18 @@ if (!$link) {
         $usuarios[$row["id"]] = $row["abrev"]."-".$row["name"];
     }
 
-if($id==""){
+// Columnas usadas en las consultas (definidas aquí para usarlas en ambos casos)
+$columnas = array('inf.*','cli.id AS cli_id','cli.rae','cli.nombre','cli.direccion','cli.localidad','cli.municipio','cli.cp','cli.provincia','cli.id_campo','cli.id_mantenedor','cli.id_administrador','cli.quien_contrata','cli.telefono','cli.telefono2','cli.email','cli.tiene_datos','cli.vencimiento','cli.cada','cli.contratada','cli.observaciones AS cli_observaciones','con.id AS con_id','con.id_cliente','con.fecha AS con_fecha','con.estado AS con_estado','con.num_control','con.observaciones AS con_observaciones');
+
+$columnas = implode(',', $columnas);
+
+if($id <= 0){
   $filters = [
+    'filtro_id_contratada' => [
+      'column' => 'inf.id_contratada',
+      'value' => $_POST['filtro_id_contratada'],
+      'operator' => '='
+    ],
     'filtro_direccion' => [
       'column' => 'cli.direccion',
       'value' => "%".$_POST['filtro_direccion']."%",
@@ -96,21 +108,39 @@ if($id==""){
     $where_clause = ' WHERE ' . implode(' AND ', $where);
   }
   if($_POST['filtro_pendientes']=="true"){
-    $where_clause .= ' AND resultado=0';
+    if($where_clause==''){
+      $where_clause = ' WHERE resultado=0';
+    }else{
+      $where_clause .= ' AND resultado=0';
+    }
   }
-  $columnas = array('inf.*','cli.id AS cli_id','cli.rae','cli.nombre','cli.direccion','cli.localidad','cli.municipio','cli.cp','cli.provincia','cli.id_campo','cli.id_mantenedor','cli.id_administrador','cli.quien_contrata','cli.telefono','cli.telefono2','cli.email','cli.tiene_datos','cli.id_tarifa AS cli_id_tarifa','cli.id_formapago AS cli_id_formapago','cli.vencimiento','cli.cada','cli.contratada','cli.observaciones AS cli_observaciones','con.id AS con_id','con.id_cliente','con.fecha AS con_fecha','con.id_usuarios','con.informe','con.tipo','con.id_informe','con.estado AS con_estado','con.num_control','con.observaciones AS con_observaciones','con.id_factura','con.nocobrar','con.precio','con.id_formapago AS con_id_formapago','con.id_tarifa AS con_id_tarifa','con.comunicada','con.enviada_cobrar','con.comunicada_aquien','con.comunicada_como','con.contratada_como');
-
-  $columnas = implode(',', $columnas);
   $sql = "SELECT {$columnas} FROM informes inf";
   $sql.= " JOIN contratadas con ON inf.id_contratada = con.id";
   $sql.= " JOIN clientes cli ON con.id_cliente = cli.id".$where_clause;
-  $sql.= " ORDER BY fecha DESC LIMIT 0,{$lim}";
+  $sql.= " ORDER BY inf.fecha DESC LIMIT 0,{$lim}";
 }else{
-  $sql = "SELECT {$columnas} FROM informes WHERE id=$id";
+  // Usar las mismas joins para obtener la estructura completa cuando se solicita por id
+  $sql = "SELECT {$columnas} FROM informes inf";
+  $sql.= " JOIN contratadas con ON inf.id_contratada = con.id";
+  $sql.= " JOIN clientes cli ON con.id_cliente = cli.id WHERE inf.id = {$id}";
 }
 
 // Ejecuta la consulta
 $result = mysqli_query($link, $sql);
+// Comprobar errores en la consulta y devolver información útil para depuración
+if($result === false){
+  $err = mysqli_error($link);
+  // Cerrar conexión
+  mysqli_close($link);
+  // Devolver respuesta vacía con información de error (no mostrar en producción)
+  $retorno = array();
+  $retorno["resultados"] = array();
+  $retorno["mantenedores"] = $mantenedores;
+  $retorno["error"] = $err;
+  $retorno["sql"] = $sql;
+  echo json_encode($retorno);
+  exit;
+}
 
 // Inicialización de un array para almacenar los datos
 $informes = array();
@@ -118,114 +148,135 @@ $informes = array();
 // Bucle a través de cada fila de resultados y almacenamiento de datos en el array
 while ($row = mysqli_fetch_assoc($result)) {
 
-  $informe = array();
-  foreach (array_keys($row) as $key) {
-    if (in_array($key, ["id","id_contratada","destino","num_viviendas","num_paradas","puesta_marcha","insp_anterior","plazo","legislacion"])) {
-      $informe[$key] = $row[$key];
-    }
-  }
-  $primera = array();
-  foreach (array_keys($row) as $key) {
-    if (in_array($key, ["fecha","id_user","hora_ini","hora_fin","velocidad","tipo_aparato","cuarto_maquinas","tipo_puertas","guia","guia2","marca","carga_maxima","num_personas","grupo_tractor","potencia","num_cables","diametro_cables","limitador","cab_nom","cab_dis","contra_nom","contra_dis","lux_sala","lux_hueco","lux_cabina","vel_lim_cab","vel_lim_cab2","vel_lim_media","vel_lim_contra","vel_lim_contra2","vel_lim_media2","dif_fuerza","dif_alumbrado","dina","estado","dina2","continuidad","equipo_1","equipo_2","equipo_3","equipo_4","equipo_5","equipo_6","equipo_7","equipo_8","equipo_9","equipo_10","recorrido","segunda","destinadoa","grupo","industria","observaciones_check","resultado","id_mantenedor","latitud","longitud","enviada_cliente","caducidad1","caducidad2","caducidad3","caducidad4","caducidad5","caducidad6","caducidad7","caducidad8","caducidad9","caducidad10","lista_defectos","holgura_cab_piso","holgura_cab_recinto","holgura_cab_contra","profundidad_foso","desnivel_sala","longitud_faldon","otras_medidas","esmodificacion","fecha_modificacion","comentarios_mod","id_revision","temp_sala","dist_desenclav","prec_parada","observaciones","acude","proxima"])) {
-      if($key=="fecha" || $key=="industria"){
-        if($row[$key]!="0000-00-00"){
-            $row[$key] = $row[$key];
-            $primera[$key."_dmy"] = date("d-m-Y", strtotime($row[$key]));
-        }else{
-            $row[$key] = "-";
-            $primera[$key."_dmy"] = "-";
-        }
-        if($key=="fecha"){
-          $primera["fecha_y"] =  date("Y", strtotime($row[$key]));
-        }  
-      }
-      if($key=="resultado"){
-        if($row[$key]==0) $primera["resultado_f"] = "-";
-        if($row[$key]==1) $primera["resultado_f"] = "F";
-        if($row[$key]==2) $primera["resultado_f"] = "FL";
-        if($row[$key]==3) $primera["resultado_f"] = "DG";
-        if($row[$key]==4) $primera["resultado_f"] = "DM";
-      }
-      if($key=="id_user"){
-        $user_array = explode("-", $usuarios[$row[$key]]);
-        $primera["usuario"] = $user_array[1];
-        $primera["usuario_ab"] = $user_array[0];
-      }    
-      $primera[$key] = $row[$key];
-    }
-  }
-  $segunda = array();
-  foreach (array_keys($row) as $key) {
-    if (in_array($key, ["2fecha","latitud2","longitud2","2id_mantenedor","2hora_ini","2hora_fin","2estado","2resultado","2acude","2observaciones","2proxima","2velocidad","2grupo_tractor","2potencia","2num_cables","2diametro_cables","2limitador","2cab_nom","2cab_dis","2contra_nom","2contra_dis","2lux_sala","2lux_hueco","2lux_cabina","2vel_lim_cab","2vel_lim_cab2","2vel_lim_media","2vel_lim_contra","2vel_lim_contra2","2vel_lim_media2","2dif_fuerza","2dif_alumbrado","2dina","2dina2","2continuidad","2equipo_1","2equipo_2","2equipo_3","2equipo_4","2equipo_5","2equipo_6","2equipo_7","2equipo_8","2equipo_9","2equipo_10","2industria","2observaciones_check","enviada_cliente2","2id_user","2temp_sala","2dist_desenclav","2prec_parada","2holgura_cab_piso","2holgura_cab_recinto","2holgura_cab_contra","2profundidad_foso","2desnivel_sala","2longitud_faldon","2otras_medidas","2caducidad1","2caducidad2","2caducidad3","2caducidad4","2caducidad5","2caducidad6","2caducidad7","2caducidad8","2caducidad9","2caducidad10"])) {
-      if($key=="2fecha" || $key=="2industria"){
-        if($row[$key]!="0000-00-00"){
-            $row[$key] = $row[$key];
-            $segunda[$key."_dmy"] = date("d-m-Y", strtotime($row[$key]));
-        }else{
-            $row[$key] = "-";
-            $segunda[$key."_dmy"] = "-";
-        }
-      }
-      if($key=="id_user"){
-        $user_array = explode("-", $usuarios[$row[$key]]);
-        $segunda["usuario"] = $user_array[1];
-        $segunda["usuario_ab"] = $user_array[0];
-      }    
-      $segunda[$key] = $row[$key];
-    }
-  }
-
   $cliente = array();
   foreach (array_keys($row) as $key) {
-      if (in_array($key, ["cli_id","rae","nombre","direccion","localidad","municipio","cp","provincia","id_campo","id_mantenedor","id_administrador","quien_contrata","telefono","telefono2","email","tiene_datos","cli_id_tarifa","cli_id_formapago","vencimiento","cada","contratada","cli_observaciones"])) {
-          if($key=="id_mantenedor"){
-              if(isset($mantenedores[$row[$key]])){
-                  $cliente['mantenedor'] = $mantenedores[$row[$key]];
-              }else{
-                  $cliente['mantenedor'] = "-";
-                  $row[$key] = "-";
-              }
+    if (in_array($key, ["cli_id","rae","nombre","direccion","localidad","municipio","cp","provincia","id_campo","id_mantenedor","id_administrador","quien_contrata","telefono","telefono2","email","tiene_datos","vencimiento","cada","contratada","cli_observaciones"])) {
+      if($key=="id_mantenedor"){
+          if(isset($mantenedores[$row[$key]])){
+              $cliente['mantenedor'] = $mantenedores[$row[$key]];
+          }else{
+              $cliente['mantenedor'] = "-";
+              $row[$key] = "-";
           }
-          if($key=="vencimiento"){
-              if($row[$key]!="0000-00-00"){
-                  $row[$key] = date("d-m-Y", strtotime($row[$key]));
-              }else{
-                  $row[$key] = "-";
-              }
-          }
-          $cliente[$key] = $row[$key];
       }
+      if($key=="vencimiento"){
+          if($row[$key]!="0000-00-00" AND $row[$key]!="" AND $row[$key]!=null){
+              $row[$key] = date("d-m-Y", strtotime($row[$key]));
+          }else{
+              $row[$key] = "-";
+          }
+      }
+      $cliente[$key] = $row[$key];
+    }
   }
   $contratada = array();
   foreach (array_keys($row) as $key) {
-      if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","informe","tipo","id_informe","estado","num_control","con_observaciones","id_factura","nocobrar","precio","con_id_formapago","con_id_tarifa","comunicada","enviada_cobrar","comunicada_aquien","comunicada_como","contratada_como"])) {
-          if($key=="comunicada"){
-              if($row[$key]!="0000-00-00"){
-                  $row[$key] = $row[$key];
-                  $contratada["comunicada_dmy"] = date("d-m-Y", strtotime($row[$key]));
-              }else{
-                  $row[$key] = "-";
-                  $contratada["comunicada_dmy"] = "-";
-              }
-          }
-          if($key=="id_usuarios"){
-              if($usuarios[$row[$key]]!=null){
-                  $row[$key] = $usuarios[$row[$key]];
-              }else{
-                  $row[$key] = "-";
-              }
-          }
-          $contratada[$key] = $row[$key];
-      }
+    if (in_array($key, ["con_id","id_cliente","fecha","id_usuarios","tipo","estado","num_control","con_observaciones"])) {
+      $contratada[$key] = $row[$key];
+    }
   }
-  $resultado = array();
-  $resultado["informe"] = $informe;
-  $resultado["informe"]["primera"] = $primera;
-  $resultado["informe"]["segunda"] = $segunda;
-  $resultado['contratada'] = $contratada;
-  $resultado["cliente"] = $cliente;
+  // Construir el objeto de salida con la estructura solicitada
+  $item = array();
 
-  $informes[] = $resultado;  
+  // Campos principales del informe (nivel superior)
+  $item['id'] = isset($row['id']) ? (string)$row['id'] : null;
+  $item['id_contratada'] = isset($row['id_contratada']) ? (string)$row['id_contratada'] : null;
+  $item['id_usuarios'] = isset($row['id_usuarios']) ? (int)$row['id_usuarios'] : null;
+  $item['fecha'] = isset($row['fecha']) ? $row['fecha'] : null;
+  $item['informe'] = isset($row['informe']) ? $row['informe'] : "-";
+  $item['hora_ini'] = isset($row['hora_ini']) ? $row['hora_ini'] : "-";
+  $item['hora_fin'] = isset($row['hora_fin']) ? $row['hora_fin'] : "-";
+  $item['estado'] = isset($row['estado']) ? $row['estado'] : null;
+  $item['resultado'] = isset($row['resultado']) ? $row['resultado'] : null;
+  $item['plazo'] = isset($row['plazo']) ? $row['plazo'] : null;
+  $item['legislacion'] = isset($row['legislacion']) ? $row['legislacion'] : null;
+  $item['acude'] = isset($row['acude']) ? $row['acude'] : null;
+  $item['proxima'] = isset($row['proxima']) ? $row['proxima'] : null;
+  $item['industria'] = isset($row['industria']) ? $row['industria'] : null;
+  $item['observaciones'] = isset($row['observaciones']) ? $row['observaciones'] : null;
+  $item['observaciones_check'] = isset($row['observaciones_check']) ? $row['observaciones_check'] : null;
+  $item['gps_latitud'] = isset($row['latitud']) ? $row['latitud'] : (isset($row['gps_latitud']) ? $row['gps_latitud'] : null);
+  $item['gps_longitud'] = isset($row['longitud']) ? $row['longitud'] : (isset($row['gps_longitud']) ? $row['gps_longitud'] : null);
+  $item['enviada_cliente'] = isset($row['enviada_cliente']) ? $row['enviada_cliente'] : null;
+  $item['enviada_cliente_dmy'] = isset($row['enviada_cliente']) && $row['enviada_cliente'] != "0000-00-00" ? date("d-m-Y", strtotime($row['enviada_cliente'])) : null;
+  $item['esmodificacion'] = isset($row['esmodificacion']) ? $row['esmodificacion'] : 0;
+  $item['fecha_modificacion'] = isset($row['fecha_modificacion']) ? $row['fecha_modificacion'] : null;
+  $item['comentarios_mod'] = isset($row['comentarios_mod']) ? $row['comentarios_mod'] : null;
+  $item['id_revision'] = isset($row['id_revision']) ? $row['id_revision'] : null;
+  $item['comunicada'] = isset($row['comunicada']) ? $row['comunicada'] : "-";
+  $item['comunicada_dmy'] = isset($row['comunicada']) && $row['comunicada'] != "0000-00-00" ? date("d-m-Y", strtotime($row['comunicada'])) : "-";
+  $item['comunicada_aquien'] = isset($row['comunicada_aquien']) ? $row['comunicada_aquien'] : "";
+  $item['comunicada_como'] = isset($row['comunicada_como']) ? $row['comunicada_como'] : "";
+
+  if($item['fecha']!=null) $item['fecha_dmy'] = date("d-m-Y", strtotime($item['fecha']));
+  if($item['fecha']!=null) $item['fecha_y'] = date("Y", strtotime($item['fecha']));
+  if($item['industria']!=null){
+    $item['industria_dmy'] = date("d-m-Y", strtotime($item['industria']));
+  }else{
+    $item['industria_dmy'] = "-";
+  }
+  if($item['proxima']!=null){
+    $item['proxima_dmy'] = date("d-m-Y", strtotime($item['proxima']));
+  }else{
+    $item['proxima_dmy'] = "-";
+  }
+  if($item['resultado']==0) $item['resultado_f'] = "-";
+  if($item['resultado']==1) $item['resultado_f'] = "F";
+  if($item['resultado']==2) $item['resultado_f'] = "FL";
+  if($item['resultado']==3) $item['resultado_f'] = "DG";
+  if($item['resultado']==4) $item['resultado_f'] = "DM";
+  if($item['resultado']==0) $item['resultado_fc'] = "-";
+  if($item['resultado']==1) $item['resultado_fc'] = "Favorable";
+  if($item['resultado']==2) $item['resultado_fc'] = "Defectos leves";
+  if($item['resultado']==3) $item['resultado_fc'] = "Defectos graves";
+  if($item['resultado']==4) $item['resultado_fc'] = "Defectos muy graves";  
+  if($item['id_usuarios']!=null && isset($usuarios[$item['id_usuarios']])){
+      $user_array = explode("-", $usuarios[$item['id_usuarios']]);
+      $item['usuario'] = $user_array[1];
+      $item['usuario_ab'] = $user_array[0];
+  }else{
+      $item['usuario'] = "-";
+      $item['usuario_ab'] = "-";
+  }
+
+  // Contratada: preferir alias de consulta si existen
+  $contratada_obj = array();
+  $contratada_obj['id'] = isset($row['con_id']) ? (string)$row['con_id'] : (isset($row['id_contratada']) ? (string)$row['id_contratada'] : null);
+  $contratada_obj['id_cliente'] = isset($row['id_cliente']) ? (string)$row['id_cliente'] : null;
+  $contratada_obj['fecha'] = isset($row['con_fecha']) ? $row['con_fecha'] : (isset($row['fecha']) ? $row['fecha'] : null);
+  $contratada_obj['id_usuarios'] = isset($row['id_usuarios']) ? (int)$row['id_usuarios'] : null;
+  $contratada_obj['estado'] = isset($row['con_estado']) ? $row['con_estado'] : (isset($row['con_estado']) ? $row['con_estado'] : null);
+  $contratada_obj['num_control'] = isset($row['num_control']) ? $row['num_control'] : null;
+  $contratada_obj['observaciones'] = isset($row['con_observaciones']) ? $row['con_observaciones'] : null;
+
+  // Cliente dentro de contratada: mapear campos quitando prefijo si existe
+  $cliente_obj = array();
+  $cliente_obj['cp'] = isset($cliente['cp']) ? $cliente['cp'] : (isset($row['cp']) ? $row['cp'] : null);
+  $cliente_obj['direccion'] = isset($cliente['direccion']) ? $cliente['direccion'] : (isset($row['direccion']) ? $row['direccion'] : null);
+  $cliente_obj['email'] = isset($cliente['email']) ? $cliente['email'] : (isset($row['email']) ? $row['email'] : null);
+  $cliente_obj['id'] = isset($cliente['cli_id']) ? (string)$cliente['cli_id'] : (isset($row['cli_id']) ? (string)$row['cli_id'] : null);
+  $cliente_obj['id_administrador'] = isset($cliente['id_administrador']) ? $cliente['id_administrador'] : (isset($row['id_administrador']) ? $row['id_administrador'] : null);
+  $cliente_obj['id_campo'] = isset($cliente['id_campo']) ? $cliente['id_campo'] : (isset($row['id_campo']) ? $row['id_campo'] : null);
+  $cliente_obj['id_mantenedor'] = isset($cliente['id_mantenedor']) ? $cliente['id_mantenedor'] : (isset($row['id_mantenedor']) ? $row['id_mantenedor'] : null);
+  $cliente_obj['localidad'] = isset($cliente['localidad']) ? $cliente['localidad'] : (isset($row['localidad']) ? $row['localidad'] : null);
+  $cliente_obj['mantenedor'] = isset($cliente['mantenedor']) ? $cliente['mantenedor'] : null;
+  $cliente_obj['municipio'] = isset($cliente['municipio']) ? $cliente['municipio'] : (isset($row['municipio']) ? $row['municipio'] : null);
+  $cliente_obj['nombre'] = isset($cliente['nombre']) ? $cliente['nombre'] : (isset($row['nombre']) ? $row['nombre'] : null);
+  $cliente_obj['observaciones'] = isset($cliente['cli_observaciones']) ? $cliente['cli_observaciones'] : (isset($row['cli_observaciones']) ? $row['cli_observaciones'] : null);
+  $cliente_obj['provincia'] = isset($cliente['provincia']) ? $cliente['provincia'] : (isset($row['provincia']) ? $row['provincia'] : null);
+  $cliente_obj['quien_contrata'] = isset($cliente['quien_contrata']) ? $cliente['quien_contrata'] : (isset($row['quien_contrata']) ? $row['quien_contrata'] : null);
+  $cliente_obj['rae'] = isset($cliente['rae']) ? $cliente['rae'] : (isset($row['rae']) ? $row['rae'] : null);
+  $cliente_obj['telefono'] = isset($cliente['telefono']) ? $cliente['telefono'] : (isset($row['telefono']) ? $row['telefono'] : null);
+  $cliente_obj['telefono2'] = isset($cliente['telefono2']) ? $cliente['telefono2'] : (isset($row['telefono2']) ? $row['telefono2'] : null);
+  $cliente_obj['tiene_datos'] = isset($cliente['tiene_datos']) ? $cliente['tiene_datos'] : (isset($row['tiene_datos']) ? $row['tiene_datos'] : null);
+  $cliente_obj['vencimiento'] = isset($cliente['vencimiento']) ? $cliente['vencimiento'] : (isset($row['vencimiento']) ? $row['vencimiento'] : null);
+
+  $contratada_obj['cliente'] = $cliente_obj;
+
+  // Añadir contratada anidada al elemento principal
+  $item['contratada'] = $contratada_obj;
+
+  $informes[] = $item;
 }
 
 if (mysqli_num_rows($result) > 0) {

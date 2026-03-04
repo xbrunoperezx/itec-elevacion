@@ -3,7 +3,7 @@ body {
 }
 
 .nav-wrapper {
-  background-color: #F71735;
+  background-color: #414141;
   font-size: 0.9em;
   }
 
@@ -90,7 +90,7 @@ div.modal#modal_export {
   width: 600px;
 }
 
-div#resultados_cli, div#resultados_con, div#resultados_pri, div#resultados_seg, #table_cli_fact{
+div#resultados_cli, div#resultados_con, div#resultados_pri, div#resultados_seg, div#resultados_campos, div#resultados_equipos, #table_cli_fact{
   margin: 10px;
   padding: 10px;
 }
@@ -206,6 +206,10 @@ table td{
   width:400px;
 }
 
+.alto50{
+  height: 50px;
+}
+
 .logo_itec{
   padding: 5px;
   margin: 5px;
@@ -267,6 +271,14 @@ i.left{
 .botonesFormEdit{
   margin-top: 0px;
   margin-bottom: 0px;
+}
+
+.input-field{
+  margin-top: 0px;
+}
+
+.select-wrapper+label{
+  top: 0px!important;
 }
 
 .modal_txt_title{
