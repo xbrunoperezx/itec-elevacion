@@ -163,21 +163,24 @@ $(function () {
   $(document).on('click', '.editar_tarifa', function (e) {
     e.preventDefault(); // evita comportamiento predeterminado del boton de clic
 
-    //obtiene el ID dela tarida desde el boton
+    //obtiene el ID de la tarifa desde el boton
     var id = $(this).data('id');
+    console.log('ID obtenido del botón:', id); // Log para verificar el ID obtenido
 
     //Solicita los datos de la tarifa al back
     TarifasAPI.list({ filtro_id: id }).done(function (response) {
-      var datos = response.resultados || [] //obtiene los resultados de la respuesta
+      console.log('Respuesta del backend:', response); // Log para verificar la respuesta del backend
+      var datos = response.resultados || []; //obtiene los resultados de la respuesta
       if (datos.length === 0) {
-        alert('No se encontro la tarifa'); // muestra un error si no hya datos
+        alert('No se encontró la tarifa'); // muestra un error si no hay datos
         return;
       }
 
       //toma el primer resultado de la tarifa posicion [0]
       var item = datos[0];
+      console.log('Datos de la tarifa cargados en el modal:', item); // Log para verificar los datos cargados
 
-      //actualzia el titulo del modal con el nombre de la tarifa
+      //actualiza el titulo del modal con el nombre de la tarifa
       $('#modal_usu .modal_txt_title').text('Editar tarifa - ' + item.tarifa);
 
       // Llena el formulario del modal con los datos de la tarifa
@@ -195,17 +198,17 @@ $(function () {
         `;
       $('#modal_usu .contentForm').html(formHtml); // Inserta el formulario en el modal
       
-      //cambiaer el boton de guardar para que tenfa el ID  y accion correctos
+      //cambia el boton de guardar para que tenga el ID y acción correctos
       $('#modal_usu .modal_txt_btn_left')
           .attr('id', 'guardar_cambios_tarifa') //cambia el ID del boton
-          .data('id',id) //almacena el ID de la tarifa en el boton
+          .data('id', id) //almacena el ID de la tarifa en el boton
           .html('<i class="material-icons left">save</i>Guardar'); //cambia el texto del boton
 
       $('#modal_usu').modal('open'); //abre el modal      
 
     }).fail(function() {
-      alert('Error al cargar los datos de la tarifa'); //si la solicitud falla muesrta error.
-    })
+      alert('Error al cargar los datos de la tarifa'); //si la solicitud falla muestra error.
+    });
   })
 
 
