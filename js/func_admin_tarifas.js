@@ -176,8 +176,17 @@ $(function () {
         return;
       }
 
-      //toma el primer resultado de la tarifa posicion [0]
-      var item = datos[0];
+      //Bsucamos el elemento que coincida con el ID recibido
+      var item = datos.find(function() {
+        return tarifa.id == id;// comparamos el ID recibido con el ID de cada  tarifa del array
+
+      });
+
+      if (!item) {
+        alert ('No se encontro la tarifa con ID proporcionado.');
+        return;
+      }
+      
       console.log('Datos de la tarifa cargados en el modal:', item); // Log para verificar los datos cargados
 
       //actualiza el titulo del modal con el nombre de la tarifa
