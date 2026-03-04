@@ -78,7 +78,28 @@ switch($action){
         break;
 
     case 'update':
-        //aqui ira codigo para actualizar
+        //Paso 1:leemos losdatos enviados desde el frontend
+        $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+        $tarifa = isset($_POST['tarifa']) ? mysqli_real_escape_string($link, $_POST['tarifa']) : '';
+        $precio = isset($_POST['precio']) ? floatval($_POST['precio']) : 0;
+
+        //Paso 2:Validamos esos datos
+        if ($id <=0 || empty($tarifa) || $precio <= 0) {
+            echo json_encode(['status' => 'KO','message' =>'Datos invalidos']);
+        }
+
+        //Paso 3:Construimos la consulta SQL para actualizar
+        $sql = "UPDATE tarifas SET 
+            tarifa = '$tarifa', 
+            precio = $precio
+            WHERE id= $id ";
+        
+        //Paso 4 : Ejecutar la consulta y devolver la respuesta
+        if (mysqli_query($link, $sql)) {
+            echo json_encode(['status' => 'OK', 'message' => 'Tarifa actualizada correctamente']);
+        } else {
+            echo json_encode(['status' => 'KO', 'message' => 'Error al actualizar la tarifa: ' .mysqli_error($link)]);
+        }
         break;
 
     case 'delete':

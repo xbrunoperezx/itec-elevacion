@@ -211,7 +211,7 @@ $(function () {
 
   //--GUARDAR los cambios de la tarifa esta es del UPDATE----
   $(document).on('click', '#guardar_cambios_tarifa', function(e){
-    e.preventDefault();
+    e.preventDefault(); // evita comportamiento predeterminado del boton de clic
 
     var id = $(this).data('id'); // Obtiene el ID de la tarifa desde el botón
     var tarifa = $('#editar_tarifa').val(); // Obtiene el nuevo nombre de la tarifa
@@ -239,6 +239,7 @@ $(function () {
 
 
   //--- Add event listener for the dropdown menu boton rojo derecha---
+  //--CONTIENE EL DELETE--------------
   $(document).on('click', '.more_tarifa', function (e) {
     e.preventDefault();
     $('.row-menu').remove();
