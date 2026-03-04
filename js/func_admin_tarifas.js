@@ -177,7 +177,7 @@ $(function () {
       }
 
       //Bsucamos el elemento que coincida con el ID recibido
-      var item = datos.find(function() {
+      var item = datos.find(function(item) {
         return item.id == id;// comparamos el ID recibido con el ID de cada  tarifa del array
 
       });
