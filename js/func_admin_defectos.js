@@ -117,7 +117,7 @@ function readDefectos(){
       tr += "<td class='ancho100'><span class='main-text'>" + (item.codigo || '') + "</span></td>";
       tr += "<td class='ancho100'>" + (item.provincia || '') + "</td>";
       tr += "<td>" + (item.defecto || '') + "</td>";
-      tr += "<td class='ancho150'>" + (item.valoracion || '') + "</td>";
+      tr += "<td class='ancho200'>" + (item.valoracion || '') + "</td>";
       tr += "<td class='ancho75'>" + (item.id_revision || '') + "</td>";
       tr += "<td class='ancho100'>" +
             "<a seccion='def' tipo='frm_editdef' data-id='" + (item.id || '') + "' class='editar_def btn-floating btn-small waves-effect waves-light green' title='Editar defecto'><i class='material-icons'>edit</i></a>" +
