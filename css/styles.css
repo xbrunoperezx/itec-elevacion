@@ -196,13 +196,14 @@ div.modal#modal_pri {
   outline: none;
   box-shadow: none;
 }
-#modal_pri .mediciones-table select {
+#modal_pri .mediciones-table .medicion-valor-cell select {
   width: 100%;
   border: none;
   border-bottom: 1px solid #9e9e9e;
   background: transparent;
   height: 1.8em;
-  display: block;
+  display: inline-block;
+  cursor: pointer;
 }
 .tabs{
   background-color: #EEEEEE;

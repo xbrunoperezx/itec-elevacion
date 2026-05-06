@@ -365,7 +365,7 @@ function syncMedicionesFormFromJson(){
 		if(baseNames[nombre]) return;
 		addMedicionPersonalizada(nombre, (data && data.valor !== undefined && data.valor !== null) ? data.valor : '', data && data.unidad ? data.unidad : '');
 	});
-	$('#mediciones_container').find('select').formSelect();
+	$('#mediciones_mode').formSelect();
 	return true;
 }
 
@@ -707,10 +707,7 @@ var openInforme = function(seccion, cual, id){
 				  // Renderizar mediciones
 				  var medicionesHtml = buildMedicionesTab4(campos, mediciones);
 				  $('#mediciones_container').html(medicionesHtml);
-				  $('#mediciones_container').find('select').formSelect();
-				  
-				  syncGrupoLegislacion();
-				  syncGoogleMapsButton();
+						  $('#mediciones_mode').formSelect();
 				  $("#modal_"+seccion).modal({
 						dismissible: false
 					});
