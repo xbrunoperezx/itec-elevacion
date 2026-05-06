@@ -48,6 +48,11 @@ switch($action) {
     $rows = array();
     if ($result) {
       while ($row = mysqli_fetch_assoc($result)) {
+        if ($row['entrada_vigor'] && $row['entrada_vigor'] != '0000-00-00') {
+          $row['entrada_vigor_dmy'] = date("d-m-Y", strtotime($row['entrada_vigor']));
+        } else {
+          $row['entrada_vigor_dmy'] = '-';
+        }
         $rows[] = $row;
       }
     }

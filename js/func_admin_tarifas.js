@@ -50,7 +50,7 @@ function readTarifas(){
       tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho30'>" + (item.id || '') + "</td>";
       tr += "<td class='ancho30'><a seccion='tar' tipo='frm_edittar' data-id='" + (item.id || '') + "' class='editar_tar btn-floating btn-small waves-effect waves-light green' title='Editar tarifa'><i class='material-icons'>edit</i></a></td>";
-      tr += "<td><span class='main-text'>" + (item.tarifa || '') + "</span></td>";
+      tr += "<td>" + (item.tarifa || '') + "</td>";
       tr += "<td class='ancho100'>" + (item.precio !== undefined ? item.precio : '') + " €</td>";
       tr += "<td class='ancho100'>&nbsp;</td>";
       tr += "<td class='ancho50'>" +
