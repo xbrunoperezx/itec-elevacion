@@ -31,6 +31,18 @@ var CamposAPI = (function(){
   };
 })();
 
+function toggleListaCampoVisibility(){
+  var dt = ($('#data_type_camp').val() || '').trim();
+  var isLista = (dt === 'LISTA VALORES');
+  $('#lista_camp_wrap').toggleClass('hide', !isLista);
+  if (!isLista) {
+    $('#lista_camp').val('');
+    $('#lista_camp_wrap label').removeClass('active');
+  } else if ($('#lista_camp').val()) {
+    $('#lista_camp_wrap label').addClass('active');
+  }
+}
+
 // Render lista de campos en el contenedor #Campos
 function readCampos(){
   var total = parseInt($('#filtro_campos_total').val(),10) || 15;
@@ -115,13 +127,21 @@ var saveCampo = function() {
   var nombre = ($('#nombre_camp').val() || '').trim();
   var abrev = ($('#abrev_camp').val() || '').trim();
   var unidad = ($('#unidad_camp').val() || '').trim();
+  var data_type = ($('#data_type_camp').val() || '').trim();
+  var lista = ($('#lista_camp').val() || '').trim();
+
+  if (data_type !== 'LISTA VALORES') {
+    lista = '';
+  }
 
   var campo = {
     id_revision: id_revision,
     tipo: tipo,
     nombre: nombre,
     abrev: abrev,
-    unidad: unidad
+    unidad: unidad,
+    data_type: data_type,
+    lista: lista
   };
 
   var apiCall;
@@ -199,6 +219,15 @@ var openCampo = function(seccion, cual, id){
               '</select>' +
               '<label for="tipo_camp" class="active">Tipo</label>' +
             '</div>' +
+            '<div class="input-field anchoFrm4 inline">' +
+              '<select id="data_type_camp" name="data_type">' +
+                '<option value="NUMERO" '+ ((item.data_type=='NUMERO')? 'selected':'') +'>NUMERO</option>' +
+                '<option value="TEXTO NORMAL" '+ ((item.data_type=='TEXTO NORMAL')? 'selected':'') +'>TEXTO NORMAL</option>' +
+                '<option value="CHECKBOX" '+ ((item.data_type=='CHECKBOX')? 'selected':'') +'>CHECKBOX</option>' +
+                '<option value="LISTA VALORES" '+ ((item.data_type=='LISTA VALORES')? 'selected':'') +'>LISTA VALORES</option>' +
+              '</select>' +
+              '<label for="data_type_camp" class="active">Tipo de dato</label>' +
+            '</div>' +
           '</div>' +
           '<div class="row">' +
             '<div class="input-field anchoFrm4 left">' +
@@ -214,6 +243,12 @@ var openCampo = function(seccion, cual, id){
               '<label for="unidad_camp" class="active">Unidad</label>' +
             '</div>' +
           '</div>' +
+          '<div class="row ' + (((item.data_type || '') === 'LISTA VALORES') ? '' : 'hide') + '" id="lista_camp_wrap">' +
+            '<div class="input-field anchoFrm4 left">' +
+              '<input type="text" id="lista_camp" name="lista" value="'+ (item.lista || '') +'" autocomplete="off">' +
+              '<label for="lista_camp" class="active">Lista (valores separados por comas)</label>' +
+            '</div>' +
+          '</div>' +
           '<div class="input-field" style="display:none;">' +
             '<input type="text" id="id_camp" name="id" value="'+ (item.id || '') +'">' +
           '</div>' +
@@ -221,6 +256,8 @@ var openCampo = function(seccion, cual, id){
 
         $("#modal_"+seccion).find(".contentForm").html(frm);
         $('select#tipo_camp').formSelect();
+        $('select#data_type_camp').formSelect();
+        toggleListaCampoVisibility();
         $("#modal_"+seccion).modal({ dismissible: false });
         $("#modal_"+seccion).modal('open');
     }).fail(function(){
@@ -247,6 +284,15 @@ var openCampo = function(seccion, cual, id){
           '</select>' +
           '<label for="tipo_camp" class="active">Tipo</label>' +
         '</div>' +
+        '<div class="input-field anchoFrm4 inline">' +
+          '<select id="data_type_camp" name="data_type">' +
+            '<option value="NUMERO" selected>NUMERO</option>' +
+            '<option value="TEXTO NORMAL">TEXTO NORMAL</option>' +
+            '<option value="CHECKBOX">CHECKBOX</option>' +
+            '<option value="LISTA VALORES">LISTA VALORES</option>' +
+          '</select>' +
+          '<label for="data_type_camp" class="active">Tipo de dato</label>' +
+        '</div>' +
       '</div>' +
       '<div class="row">' +
         '<div class="input-field anchoFrm4 left">' +
@@ -262,15 +308,27 @@ var openCampo = function(seccion, cual, id){
           '<label for="unidad_camp">Unidad</label>' +
         '</div>' +
       '</div>' +
+      '<div class="row hide" id="lista_camp_wrap">' +
+        '<div class="input-field anchoFrm4 left">' +
+          '<input type="text" id="lista_camp" name="lista" value="" autocomplete="off">' +
+          '<label for="lista_camp">Lista (valores separados por comas)</label>' +
+        '</div>' +
+      '</div>' +
     '</form>';
 
     $("#modal_"+seccion).find(".contentForm").html(frm);
     $('select#tipo_camp').formSelect();
+    $('select#data_type_camp').formSelect();
+    toggleListaCampoVisibility();
     $("#modal_"+seccion).modal({ dismissible: false });
     $("#modal_"+seccion).modal('open');
     setTimeout(function(){ $('#id_revision_camp').focus(); }, 200);
   }
 };
+
+jQuery(document).on('change', '#data_type_camp', function(){
+  toggleListaCampoVisibility();
+});
 
 // Permitir pulsar Enter en los campos de filtro para ejecutar la búsqueda
 jQuery(document).on('keydown', '#Campos [id*=filtro_campos]', function(e){

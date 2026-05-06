@@ -82,6 +82,8 @@ switch($action) {
     $nombre = isset($_POST['nombre']) ? mysqli_real_escape_string($link, $_POST['nombre']) : '';
     $abrev = isset($_POST['abrev']) ? mysqli_real_escape_string($link, $_POST['abrev']) : '';
     $unidad = isset($_POST['unidad']) ? mysqli_real_escape_string($link, $_POST['unidad']) : '';
+    $data_type = isset($_POST['data_type']) ? mysqli_real_escape_string($link, $_POST['data_type']) : 'NUMERO';
+    $lista = isset($_POST['lista']) ? mysqli_real_escape_string($link, trim($_POST['lista'])) : '';
 
     // Normalizar y validar 'tipo'
     $validTipos = array('MEDIDAS','CARACTERISTICAS');
@@ -91,8 +93,19 @@ switch($action) {
       $tipo = strtoupper($tipo);
     }
 
-    $cols = array('`id_revision`','`tipo`','`nombre`','`abrev`','`unidad`');
-    $vals = array("{$id_revision}","'{$tipo}'","'{$nombre}'","'{$abrev}'","'{$unidad}'");
+    $validDataTypes = array('NUMERO','TEXTO NORMAL','CHECKBOX','LISTA VALORES');
+    if(!in_array(strtoupper($data_type), $validDataTypes)){
+      $data_type = 'NUMERO';
+    } else {
+      $data_type = strtoupper($data_type);
+    }
+    if($data_type !== 'LISTA VALORES') {
+      $lista = '';
+    }
+
+    $listaSql = ($lista === '') ? "NULL" : "'{$lista}'";
+    $cols = array('`id_revision`','`tipo`','`nombre`','`abrev`','`unidad`','`data_type`','`lista`');
+    $vals = array("{$id_revision}","'{$tipo}'","'{$nombre}'","'{$abrev}'","'{$unidad}'","'{$data_type}'",$listaSql);
     $sql = "INSERT INTO `informe_campos` (" . implode(',', $cols) . ") VALUES (" . implode(',', $vals) . ")";
 
     if (mysqli_query($link, $sql)) {
@@ -115,6 +128,8 @@ switch($action) {
     $nombre = isset($_POST['nombre']) ? mysqli_real_escape_string($link, $_POST['nombre']) : '';
     $abrev = isset($_POST['abrev']) ? mysqli_real_escape_string($link, $_POST['abrev']) : '';
     $unidad = isset($_POST['unidad']) ? mysqli_real_escape_string($link, $_POST['unidad']) : '';
+    $data_type = isset($_POST['data_type']) ? mysqli_real_escape_string($link, $_POST['data_type']) : 'NUMERO';
+    $lista = isset($_POST['lista']) ? mysqli_real_escape_string($link, trim($_POST['lista'])) : '';
 
     // Normalizar y validar 'tipo'
     $validTipos = array('MEDIDAS','CARACTERISTICAS');
@@ -124,12 +139,28 @@ switch($action) {
       $tipo = strtoupper($tipo);
     }
 
+    $validDataTypes = array('NUMERO','TEXTO NORMAL','CHECKBOX','LISTA VALORES');
+    if(!in_array(strtoupper($data_type), $validDataTypes)){
+      $data_type = 'NUMERO';
+    } else {
+      $data_type = strtoupper($data_type);
+    }
+    if($data_type !== 'LISTA VALORES') {
+      $lista = '';
+    }
+
     $setParts = array();
     $setParts[] = "`id_revision`={$id_revision}";
     $setParts[] = "`tipo`='{$tipo}'";
     $setParts[] = "`nombre`='{$nombre}'";
     $setParts[] = "`abrev`='{$abrev}'";
     $setParts[] = "`unidad`='{$unidad}'";
+    $setParts[] = "`data_type`='{$data_type}'";
+    if($lista === '') {
+      $setParts[] = "`lista`=NULL";
+    } else {
+      $setParts[] = "`lista`='{$lista}'";
+    }
 
     $sql = "UPDATE `informe_campos` SET " . implode(', ', $setParts) . " WHERE `id`={$id}";
 
