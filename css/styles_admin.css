@@ -320,10 +320,13 @@ textarea{
   resize: none;
   white-space: pre;
   font-family: Consolas, "Courier New", monospace;
-  padding-top: 2.1em;
 }
 
 .json-field-wrapper label{
   width: auto;
   top: 6px;
+}
+
+.pb-checkboxes{
+  padding-bottom: 40px;
 }

@@ -265,14 +265,14 @@ var openDefecto = function(seccion, cual, id){
             '<textarea id="defecto_def" class="materialize-textarea">' + (item.defecto || '') + '</textarea>' +
             '<label for="defecto_def" class="active">Defecto</label>' +
           '</div>' +
-          '<div class="row">' +
-            '<div class="input-field col s2">' +
+          '<div class="row pb-checkboxes">' +
+            '<div class="input-field col s3">' +
               '<label><input type="checkbox" id="leve_def" class="filled-in" ' + ((parseInt(item.leve, 10) === 1) ? 'checked' : '') + '><span>Leve</span></label>' +
             '</div>' +
-            '<div class="input-field col s2">' +
+            '<div class="input-field col s3">' +
               '<label><input type="checkbox" id="grave_def" class="filled-in" ' + ((parseInt(item.grave, 10) === 1) ? 'checked' : '') + '><span>Grave</span></label>' +
             '</div>' +
-            '<div class="input-field col s2">' +
+            '<div class="input-field col s3">' +
               '<label><input type="checkbox" id="muygrave_def" class="filled-in" ' + ((parseInt(item.muygrave, 10) === 1) ? 'checked' : '') + '><span>Muy grave</span></label>' +
             '</div>' +
           '</div>' +
@@ -319,14 +319,14 @@ var openDefecto = function(seccion, cual, id){
             '<textarea id="defecto_def" class="materialize-textarea"></textarea>' +
             '<label for="defecto_def">Defecto</label>' +
           '</div>' +
-          '<div class="row">' +
-            '<div class="input-field col s2">' +
+          '<div class="row pb-checkboxes">' +
+            '<div class="input-field col s3">' +
               '<label><input type="checkbox" id="leve_def" class="filled-in"><span>Leve</span></label>' +
             '</div>' +
-            '<div class="input-field col s2">' +
+            '<div class="input-field col s3">' +
               '<label><input type="checkbox" id="grave_def" class="filled-in"><span>Grave</span></label>' +
             '</div>' +
-            '<div class="input-field col s2">' +
+            '<div class="input-field col s3">' +
               '<label><input type="checkbox" id="muygrave_def" class="filled-in"><span>Muy grave</span></label>' +
             '</div>' +
           '</div>' +
