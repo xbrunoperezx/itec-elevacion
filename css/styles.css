@@ -130,10 +130,6 @@ div.modal#modal_pri {
   overflow-y: auto;
 }
 
-#modal_pri .tabs .tab a {
-  padding: 0 8px;
-}
-
 #modal_pri .contentForm .row {
   margin-bottom: 8px;
 }
