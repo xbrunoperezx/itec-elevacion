@@ -141,6 +141,69 @@ div.modal#modal_pri {
 #modal_pri .mediciones-toolbar {
   margin-bottom: 4px;
 }
+#modal_pri .mediciones-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+#modal_pri .mediciones-table thead th {
+  background-color: #f0f0f0;
+  padding: 6px 8px;
+  font-weight: 600;
+  border-bottom: 2px solid #ccc;
+  text-align: left;
+  white-space: nowrap;
+}
+#modal_pri .mediciones-table tbody tr {
+  border-bottom: 1px solid #e0e0e0;
+}
+#modal_pri .mediciones-table tbody tr:hover {
+  background-color: #fafafa;
+}
+#modal_pri .mediciones-table td {
+  padding: 4px 8px;
+  vertical-align: middle;
+}
+#modal_pri .mediciones-table .medicion-nombre-cell {
+  width: 20%;
+  font-weight: 500;
+}
+#modal_pri .mediciones-table .medicion-valor-cell {
+  width: 15%;
+}
+#modal_pri .mediciones-table .medicion-unidad-cell {
+  width: 12%;
+}
+#modal_pri .mediciones-table .medicion-desc-cell {
+  color: #555;
+  font-size: 0.85em;
+}
+#modal_pri .mediciones-table input[type=text],
+#modal_pri .mediciones-table input[type=number] {
+  border: none;
+  border-bottom: 1px solid #9e9e9e;
+  background: transparent;
+  width: 100%;
+  height: 1.8em;
+  padding: 0 2px;
+  box-sizing: border-box;
+  margin: 0;
+  box-shadow: none;
+}
+#modal_pri .mediciones-table input[type=text]:focus,
+#modal_pri .mediciones-table input[type=number]:focus {
+  border-bottom: 2px solid #26a69a;
+  outline: none;
+  box-shadow: none;
+}
+#modal_pri .mediciones-table select {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #9e9e9e;
+  background: transparent;
+  height: 1.8em;
+  display: block;
+}
 .tabs{
   background-color: #EEEEEE;
 }

@@ -200,11 +200,16 @@ function buildMedicionesTab4(camposData, medicionesData){
 
 	html += '<div id="mediciones_mode_normal">';
 
+	html += '<table class="mediciones-table">' +
+		'<thead><tr>' +
+			'<th>Medición</th><th>Valor</th><th>Unidades</th><th>Descripción</th>' +
+		'</tr></thead>' +
+		'<tbody id="mediciones_tbody">';
+
 	// Campos de base de datos
 	$.each(camposData || [], function(idx, campo){
 		if(campo.tipo !== 'MEDIDAS') return;
-		totalCamposMedida++;
-		
+
 		var nombreCampo = campo.nombre || '';
 		baseNames[nombreCampo] = true;
 		var dataType = campo.data_type || 'NUMERO';
@@ -213,81 +218,52 @@ function buildMedicionesTab4(camposData, medicionesData){
 		var unidad = (mediciones[nombreCampo] && mediciones[nombreCampo].unidad) ? mediciones[nombreCampo].unidad : (campo.unidad || '');
 		var listaValores = (campo.lista || '').split(',').map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
 
-		html += '<div class="row medicion-row" data-medicion-nombre="' + nombreCampo + '">' +
-			'<div class="input-field col s3">';
-
+		html += '<tr class="medicion-row" data-medicion-nombre="' + nombreCampo + '">';
+		html += '<td class="medicion-nombre-cell">' + nombreCampo + '</td>';
+		html += '<td class="medicion-valor-cell">';
 		if(dataType === 'NUMERO'){
-			html += '<input type="number" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" value="' + (valor || '') + '">' +
-				'<label class="active">' + nombreCampo + '</label>';
+			html += '<input type="number" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" value="' + (valor || '') + '">';
 		} else if(dataType === 'TEXTO NORMAL'){
-			html += '<input type="text" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" value="' + (valor || '') + '">' +
-				'<label class="active">' + nombreCampo + '</label>';
+			html += '<input type="text" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" value="' + (valor || '') + '">';
 		} else if(dataType === 'LISTA VALORES'){
 			html += '<select class="medicion_valor" data-medicion-nombre="' + nombreCampo + '">';
 			html += '<option value="" ' + ((valor === '' || valor === null || valor === undefined) ? 'selected' : '') + '>---</option>';
 			$.each(listaValores, function(i, itemLista){
 				html += '<option value="' + itemLista + '" ' + ((String(valor) === String(itemLista)) ? 'selected' : '') + '>' + itemLista + '</option>';
 			});
-			html += '</select>' +
-				'<label class="active">' + nombreCampo + '</label>';
+			html += '</select>';
 		} else if(dataType === 'CHECKBOX'){
-			html += '<p><label><input type="checkbox" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" ' + (valor ? 'checked' : '') + '><span>' + nombreCampo + '</span></label></p>';
+			html += '<label><input type="checkbox" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" ' + (valor ? 'checked' : '') + '><span></span></label>';
 		} else {
-			html += '<input type="text" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" value="' + (valor || '') + '">' +
-				'<label class="active">' + nombreCampo + '</label>';
+			html += '<input type="text" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" value="' + (valor || '') + '">';
 		}
-
-		html += '</div>';
-
+		html += '</td>';
+		html += '<td class="medicion-unidad-cell">';
 		if(dataType !== 'CHECKBOX'){
-			html += '<div class="input-field col s2">' +
-				'<input type="text" class="medicion_unidad" data-medicion-nombre="' + nombreCampo + '" data-default-unidad="' + (campo.unidad || '') + '" value="' + (unidad || campo.unidad || '') + '" placeholder="Unidad">' +
-				'<label class="active">Unidad</label>' +
-			'</div>';
-			html += '<div class="col s7" style="padding-top: 8px;">' +
-				(descripcion ? '<div class="secondary-text" style="font-size:0.85em; line-height:1.3;">' + descripcion + '</div>' : '') +
-			'</div>';
-		} else {
-			html += '<div class="col s9" style="padding-top: 8px;">' +
-				(descripcion ? '<div class="secondary-text" style="font-size:0.85em; line-height:1.3;">' + descripcion + '</div>' : '') +
-			'</div>';
+			html += '<input type="text" class="medicion_unidad" data-medicion-nombre="' + nombreCampo + '" data-default-unidad="' + (campo.unidad || '') + '" value="' + (unidad || campo.unidad || '') + '" placeholder="Unidad">';
 		}
-
-		html += '</div>';
+		html += '</td>';
+		html += '<td class="medicion-desc-cell">' + (descripcion || '') + '</td>';
+		html += '</tr>';
 	});
 
-	if(totalCamposMedida === 0){
-		html += '<div class="row"><div class="col s12"><span class="secondary-text">No hay campos MEDIDAS configurados en administración. Puedes usar medidas personalizadas.</span></div></div>';
-	}
-
-	html += '<div class="row" style="margin-top:4px; margin-bottom:4px;">' +
-		'<div class="col s12">' +
-		'<button type="button" id="add_medicion_personalizada" class="btn waves-effect waves-light green btn-small"><i class="material-icons left">add</i>Agregar medida personalizada</button>' +
-		'</div>' +
-	'</div>';
-
-	html += '<div id="mediciones_personalizadas">';
+	// Mediciones personalizadas existentes
 	$.each(mediciones, function(nombre, data){
 		if(baseNames[nombre]) return;
-		html += '<div class="medicion_personalizada_row row">' +
-			'<div class="input-field col s6">' +
-			'<input type="text" class="medicion_personalizada_nombre" placeholder="Nombre de medida" value="' + (nombre || '') + '">' +
-			'<label class="active">Nombre</label>' +
-			'</div>' +
-			'<div class="input-field col s3">' +
-			'<input type="number" class="medicion_personalizada_valor" placeholder="Valor" value="' + ((data && data.valor !== undefined && data.valor !== null) ? data.valor : '') + '">' +
-			'<label class="active">Valor</label>' +
-			'</div>' +
-			'<div class="input-field col s2">' +
-			'<input type="text" class="medicion_personalizada_unidad" placeholder="Unidad" value="' + (data && data.unidad ? data.unidad : '') + '">' +
-			'<label class="active">Unidad</label>' +
-			'</div>' +
-			'<div class="col s1" style="margin-top: 10px;">' +
-			'<a class="btn-floating btn-small waves-effect waves-light red remove-medicion-personalizada"><i class="material-icons">close</i></a>' +
-			'</div>' +
-		'</div>';
+		html += '<tr class="medicion_personalizada_row">' +
+			'<td class="medicion-nombre-cell"><input type="text" class="medicion_personalizada_nombre" placeholder="Nombre de medida" value="' + (nombre || '') + '"></td>' +
+			'<td class="medicion-valor-cell"><input type="number" class="medicion_personalizada_valor" placeholder="Valor" value="' + ((data && data.valor !== undefined && data.valor !== null) ? data.valor : '') + '"></td>' +
+			'<td class="medicion-unidad-cell"><input type="text" class="medicion_personalizada_unidad" placeholder="Unidad" value="' + (data && data.unidad ? data.unidad : '') + '"></td>' +
+			'<td class="medicion-desc-cell"><a class="btn-floating btn-small waves-effect waves-light red remove-medicion-personalizada"><i class="material-icons">close</i></a></td>' +
+		'</tr>';
 	});
-	html += '</div>';
+
+	html += '</tbody></table>';
+
+	html += '<div style="margin-top:8px;">' +
+		'<button type="button" id="add_medicion_personalizada" class="btn waves-effect waves-light green btn-small"><i class="material-icons left">add</i>Agregar medida personalizada</button>' +
+		'</div>';
+
 	html += '</div>';
 
 	html += '<div id="mediciones_mode_codigo" style="display:none;">' +
@@ -303,26 +279,13 @@ function buildMedicionesTab4(camposData, medicionesData){
 }
 
 function addMedicionPersonalizada(nombre, valor, unidad){
-	var $container = $('#mediciones_personalizadas');
-	var rowCount = $container.find('.medicion_personalizada_row').length;
-	var html = '<div class="medicion_personalizada_row row" data-medicion-idx="' + rowCount + '">' +
-		'<div class="input-field col s6">' +
-		'<input type="text" class="medicion_personalizada_nombre" placeholder="Nombre de medida" value="' + (nombre || '') + '">' +
-		'<label class="active">Nombre</label>' +
-		'</div>' +
-		'<div class="input-field col s3">' +
-		'<input type="number" class="medicion_personalizada_valor" placeholder="Valor" value="' + (valor || '') + '">' +
-		'<label class="active">Valor</label>' +
-		'</div>' +
-		'<div class="input-field col s2">' +
-		'<input type="text" class="medicion_personalizada_unidad" placeholder="Unidad" value="' + (unidad || '') + '">' +
-		'<label class="active">Unidad</label>' +
-		'</div>' +
-		'<div class="col s1" style="margin-top: 10px;">' +
-		'<a class="btn-floating btn-small waves-effect waves-light red remove-medicion-personalizada"><i class="material-icons">close</i></a>' +
-		'</div>' +
-	'</div>';
-	$container.append(html);
+	var html = '<tr class="medicion_personalizada_row">' +
+		'<td class="medicion-nombre-cell"><input type="text" class="medicion_personalizada_nombre" placeholder="Nombre de medida" value="' + (nombre || '') + '"></td>' +
+		'<td class="medicion-valor-cell"><input type="number" class="medicion_personalizada_valor" placeholder="Valor" value="' + ((valor !== undefined && valor !== null && valor !== '') ? valor : '') + '"></td>' +
+		'<td class="medicion-unidad-cell"><input type="text" class="medicion_personalizada_unidad" placeholder="Unidad" value="' + (unidad || '') + '"></td>' +
+		'<td class="medicion-desc-cell"><a class="btn-floating btn-small waves-effect waves-light red remove-medicion-personalizada"><i class="material-icons">close</i></a></td>' +
+	'</tr>';
+	$('#mediciones_tbody').append(html);
 }
 
 jQuery(document).on('click', '#add_medicion_personalizada', function(e){
@@ -397,7 +360,7 @@ function syncMedicionesFormFromJson(){
 		}
 	});
 
-	$('#mediciones_personalizadas').empty();
+	$('#mediciones_tbody .medicion_personalizada_row').remove();
 	$.each(json, function(nombre, data){
 		if(baseNames[nombre]) return;
 		addMedicionPersonalizada(nombre, (data && data.valor !== undefined && data.valor !== null) ? data.valor : '', data && data.unidad ? data.unidad : '');
