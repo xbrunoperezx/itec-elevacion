@@ -113,8 +113,8 @@ function readRevisiones(){
       tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho30'>" + (item.id || '') + "</td>";
       tr += "<td class='ancho30'><a seccion='rev' tipo='frm_editrev' data-id='" + (item.id || '') + "' class='editar_rev btn-floating btn-small waves-effect waves-light green' title='Editar revision'><i class='material-icons'>edit</i></a></td>";
-      tr += "<td><span class='main-text'>" + (item.revision || '') + "</span></td>";
-      tr += "<td class='ancho200'>" + (item.dominio || '') + "</td>";
+      tr += "<td class='ancho200'><span class='main-text'>" + (item.revision || '') + "</span></td>";
+      tr += "<td>" + (item.dominio || '') + "</td>";
       tr += "<td class='ancho100'>" + (item.entrada_vigor_dmy || '-') + "</td>";
 
       tr += "<td class='ancho100'>" + activaBadge + "</td>";

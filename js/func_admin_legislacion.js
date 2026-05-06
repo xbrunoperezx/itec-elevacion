@@ -30,6 +30,21 @@ var LegislacionAPI = (function(){
   };
 })();
 
+var LEGISLACION_OPTIONS = [
+  'RAE 1966',
+  'RD 2291/1985 (ITC-MIE-AEM1)',
+  'R.D. 1314/1997',
+  'R.D. 203/2016'
+];
+
+function buildLegislacionOptions(selectedValue){
+  var html = '<option value="" disabled' + (!selectedValue ? ' selected' : '') + '>Selecciona legislación</option>';
+  LEGISLACION_OPTIONS.forEach(function(option){
+    html += '<option value="' + option + '"' + (option === selectedValue ? ' selected' : '') + '>' + option + '</option>';
+  });
+  return html;
+}
+
 function readLegislacion(){
   var total = parseInt($('#filtro_legislacion_total').val(), 10) || 15;
   var nombre = ($('#filtro_legislacion_nombre').val() || '').trim();
@@ -54,7 +69,8 @@ function readLegislacion(){
       tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho30'>" + (item.id || '') + "</td>";
       tr += "<td class='ancho30'><a seccion='leg' tipo='frm_editleg' data-id='" + (item.id || '') + "' class='editar_leg btn-floating btn-small waves-effect waves-light green' title='Editar legislacion'><i class='material-icons'>edit</i></a></td>";
-      tr += "<td><span class='main-text'>" + (item.nombre || '') + "</span></td>";
+      tr += "<td>" + (item.nombre || '') + "</td>";
+      tr += "<td class='ancho200'>" + (item.legislacion || '') + "</td>";
       tr += "<td class='ancho150'>" + (item.abrev || '') + "</td>";
       tr += "<td class='ancho100'>" + estadoBadge + "</td>";
       tr += "<td class='ancho50'>" +
@@ -77,15 +93,16 @@ function saveLegislacion(){
 
   var id = $('#id_leg').length ? $('#id_leg').val() : '';
   var nombre = ($('#leg_nombre').val() || '').trim();
+  var legislacion = ($('#leg_legislacion').val() || '').trim();
   var abrev = ($('#leg_abrev').val() || '').trim();
   var activa = $('#leg_activa').is(':checked') ? 1 : 0;
 
-  if (!nombre || !abrev) {
-    modalError('ERROR', 'Nombre y Abreviatura son obligatorios.', false, 'Cerrar', 'warning');
+  if (!nombre || !abrev || !legislacion) {
+    modalError('ERROR', 'Nombre, Legislación y Abreviatura son obligatorios.', false, 'Cerrar', 'warning');
     return;
   }
 
-  var payload = { nombre: nombre, abrev: abrev, activa: activa };
+  var payload = { nombre: nombre, legislacion: legislacion, abrev: abrev, activa: activa };
 
   var apiCall;
   if (typeof id !== 'undefined' && id !== null && String(id).trim() !== '') {
@@ -131,6 +148,12 @@ var openLegislacion = function(seccion, cual, id){
             '<label for="leg_nombre" class="active">Nombre</label>' +
           '</div>' +
           '<div class="input-field">' +
+            '<select id="leg_legislacion">' +
+              buildLegislacionOptions(item.legislacion || '') +
+            '</select>' +
+            '<label class="active">Legislación</label>' +
+          '</div>' +
+          '<div class="input-field">' +
             '<input type="text" id="leg_abrev" value="' + (item.abrev || '') + '" autocomplete="off">' +
             '<label for="leg_abrev" class="active">Abreviatura</label>' +
           '</div>' +
@@ -146,6 +169,7 @@ var openLegislacion = function(seccion, cual, id){
         '</form>';
 
       $('#modal_' + seccion).find('.contentForm').html(frm);
+  $('#modal_' + seccion).find('select').formSelect();
       $('#modal_' + seccion).modal({ dismissible: false });
       $('#modal_' + seccion).modal('open');
     }).fail(function(){
@@ -164,6 +188,12 @@ var openLegislacion = function(seccion, cual, id){
           '<label for="leg_nombre">Nombre</label>' +
         '</div>' +
         '<div class="input-field">' +
+          '<select id="leg_legislacion">' +
+            buildLegislacionOptions('') +
+          '</select>' +
+          '<label>Legislación</label>' +
+        '</div>' +
+        '<div class="input-field">' +
           '<input type="text" id="leg_abrev" value="" autocomplete="off">' +
           '<label for="leg_abrev">Abreviatura</label>' +
         '</div>' +
@@ -176,6 +206,7 @@ var openLegislacion = function(seccion, cual, id){
       '</form>';
 
     $('#modal_' + seccion).find('.contentForm').html(frmNew);
+    $('#modal_' + seccion).find('select').formSelect();
     $('#modal_' + seccion).modal({ dismissible: false });
     $('#modal_' + seccion).modal('open');
     setTimeout(function(){ $('#leg_nombre').focus(); }, 200);

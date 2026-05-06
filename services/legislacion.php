@@ -11,6 +11,13 @@ if (!$link) {
   die(json_encode(["error" => "Conexion fallida: " . mysqli_connect_error()]));
 }
 
+$LEGISLACIONES_VALIDAS = [
+  'RAE 1966',
+  'RD 2291/1985 (ITC-MIE-AEM1)',
+  'R.D. 1314/1997',
+  'R.D. 203/2016'
+];
+
 $action = isset($_POST['action']) ? $_POST['action'] : 'list';
 
 switch($action) {
@@ -20,9 +27,9 @@ switch($action) {
     $id = isset($_POST['filtro_id']) ? intval($_POST['filtro_id']) : 0;
 
     if ($id > 0) {
-      $sql = "SELECT id, nombre, abrev, activa FROM legislacion WHERE id=" . $id;
+      $sql = "SELECT id, nombre, abrev, activa, legislacion FROM legislacion WHERE id=" . $id;
     } else {
-      $sql = "SELECT id, nombre, abrev, activa FROM legislacion";
+      $sql = "SELECT id, nombre, abrev, activa, legislacion FROM legislacion";
       $where = array();
 
       if (!empty($_POST['filtro_nombre'])) {
@@ -49,15 +56,20 @@ switch($action) {
 
   case 'create':
     $nombre = isset($_POST['nombre']) ? mysqli_real_escape_string($link, trim($_POST['nombre'])) : '';
+    $legislacion = isset($_POST['legislacion']) ? mysqli_real_escape_string($link, trim($_POST['legislacion'])) : '';
     $abrev  = isset($_POST['abrev'])  ? mysqli_real_escape_string($link, trim($_POST['abrev']))  : '';
     $activa = isset($_POST['activa']) ? intval($_POST['activa']) : 1;
 
-    if ($nombre === '' || $abrev === '') {
-      echo "Error: nombre y abreviatura son obligatorios";
+    if ($nombre === '' || $abrev === '' || $legislacion === '') {
+      echo "Error: nombre, legislacion y abreviatura son obligatorios";
+      break;
+    }
+    if (!in_array($legislacion, $LEGISLACIONES_VALIDAS)) {
+      echo "Error: legislacion no valida";
       break;
     }
 
-    $sql = "INSERT INTO `legislacion` (`nombre`, `abrev`, `activa`) VALUES ('{$nombre}', '{$abrev}', {$activa})";
+    $sql = "INSERT INTO `legislacion` (`nombre`, `abrev`, `activa`, `legislacion`) VALUES ('{$nombre}', '{$abrev}', {$activa}, '{$legislacion}')";
     if (mysqli_query($link, $sql)) {
       echo "OK";
     } else {
@@ -73,15 +85,20 @@ switch($action) {
     }
 
     $nombre = isset($_POST['nombre']) ? mysqli_real_escape_string($link, trim($_POST['nombre'])) : '';
+    $legislacion = isset($_POST['legislacion']) ? mysqli_real_escape_string($link, trim($_POST['legislacion'])) : '';
     $abrev  = isset($_POST['abrev'])  ? mysqli_real_escape_string($link, trim($_POST['abrev']))  : '';
     $activa = isset($_POST['activa']) ? intval($_POST['activa']) : 1;
 
-    if ($nombre === '' || $abrev === '') {
-      echo "Error: nombre y abreviatura son obligatorios";
+    if ($nombre === '' || $abrev === '' || $legislacion === '') {
+      echo "Error: nombre, legislacion y abreviatura son obligatorios";
+      break;
+    }
+    if (!in_array($legislacion, $LEGISLACIONES_VALIDAS)) {
+      echo "Error: legislacion no valida";
       break;
     }
 
-    $sql = "UPDATE `legislacion` SET `nombre`='{$nombre}', `abrev`='{$abrev}', `activa`={$activa} WHERE `id`={$id}";
+    $sql = "UPDATE `legislacion` SET `nombre`='{$nombre}', `abrev`='{$abrev}', `activa`={$activa}, `legislacion`='{$legislacion}' WHERE `id`={$id}";
     if (mysqli_query($link, $sql)) {
       echo "OK";
     } else {
