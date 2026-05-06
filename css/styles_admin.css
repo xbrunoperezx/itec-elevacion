@@ -297,3 +297,30 @@ i.left{
 textarea{
   margin-top: 8px;
 }
+
+/* Defectos: JSON aplicabilidad */
+.json-field-wrapper{
+  position: relative;
+}
+
+.json-copy-btn{
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+}
+
+.json-field-wrapper textarea.json-fixed-height{
+  min-height: 8.5em !important;
+  height: 8.5em !important;
+  max-height: 8.5em !important;
+  overflow-y: auto !important;
+  resize: none;
+  white-space: pre;
+  font-family: Consolas, "Courier New", monospace;
+  padding-top: 2.1em;
+}
+
+.json-field-wrapper label{
+  width: auto;
+}

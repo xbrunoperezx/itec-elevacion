@@ -78,6 +78,19 @@ function getAplicabilidadAyudaHtml(){
   return '<div class="secondary-text" style="margin-top:4px;">Legislaciones (abrev): ' + abrevs.join(', ') + '</div>';
 }
 
+function getAplicabilidadFieldHtml(textValue, labelActive){
+  var labelClass = labelActive ? ' class="active"' : '';
+  return '' +
+    '<div class="input-field json-field-wrapper">' +
+      '<a href="#!" class="btn-small waves-effect waves-light blue darken-1 json-copy-btn" id="btn_copy_aplicabilidad" title="Copiar JSON">' +
+        '<i class="material-icons left">content_copy</i>Copiar JSON' +
+      '</a>' +
+      '<textarea id="aplicabilidad_def" class="materialize-textarea json-fixed-height" placeholder="{\n  \"ce9516e\": true\n}">' + (textValue || '') + '</textarea>' +
+      '<label for="aplicabilidad_def"' + labelClass + '>Aplicabilidad (JSON)</label>' +
+      getAplicabilidadAyudaHtml() +
+    '</div>';
+}
+
 function readDefectos(){
   var total = parseInt($('#filtro_defectos_total').val(), 10) || 15;
   var codigo = ($('#filtro_defectos_codigo').val() || '').trim();
@@ -99,9 +112,9 @@ function readDefectos(){
       var tr = "<tr class='alto50'>";
       tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho30'>" + (item.id || '') + "</td>";
-      tr += "<td class='ancho100'>" + (item.codigo || '') + "</td>";
+      tr += "<td class='ancho100'><span class='main-text'>" + (item.codigo || '') + "</span></td>";
       tr += "<td class='ancho100'>" + (item.provincia || '') + "</td>";
-      tr += "<td><span class='main-text'>" + (item.defecto || '') + "</span></td>";
+      tr += "<td>" + (item.defecto || '') + "</td>";
       tr += "<td class='ancho150'>" + (item.valoracion || '') + "</td>";
       tr += "<td class='ancho75'>" + (item.id_revision || '') + "</td>";
       tr += "<td class='ancho100'>" +
@@ -139,11 +152,15 @@ function saveDefecto(){
   var provincia = ($('#provincia_def').val() || '').trim();
   var codigo = ($('#codigo_def').val() || '').trim();
   var defecto = ($('#defecto_def').val() || '').trim();
-  var valoracion = ($('#valoracion_def').val() || '').trim();
   var id_revision = ($('#id_revision_def').val() || '').trim();
   var leve = $('#leve_def').is(':checked') ? 1 : 0;
   var grave = $('#grave_def').is(':checked') ? 1 : 0;
   var muygrave = $('#muygrave_def').is(':checked') ? 1 : 0;
+  var valoracionParts = [];
+  if (leve === 1) valoracionParts.push('LEVE');
+  if (grave === 1) valoracionParts.push('GRAVE');
+  if (muygrave === 1) valoracionParts.push('MUY GRAVE');
+  var valoracion = valoracionParts.join(', ');
   var aplicabilidadRaw = ($('#aplicabilidad_def').val() || '').trim();
 
   var aplicabilidadObj = parseAplicabilidadInput(aplicabilidadRaw);
@@ -240,10 +257,6 @@ var openDefecto = function(seccion, cual, id){
             '<textarea id="defecto_def" class="materialize-textarea">' + (item.defecto || '') + '</textarea>' +
             '<label for="defecto_def" class="active">Defecto</label>' +
           '</div>' +
-          '<div class="input-field">' +
-            '<input type="text" id="valoracion_def" value="' + (item.valoracion || '') + '" autocomplete="off">' +
-            '<label for="valoracion_def" class="active">Valoracion</label>' +
-          '</div>' +
           '<div class="row">' +
             '<div class="input-field col s2">' +
               '<label><input type="checkbox" id="leve_def" class="filled-in" ' + ((parseInt(item.leve, 10) === 1) ? 'checked' : '') + '><span>Leve</span></label>' +
@@ -255,11 +268,7 @@ var openDefecto = function(seccion, cual, id){
               '<label><input type="checkbox" id="muygrave_def" class="filled-in" ' + ((parseInt(item.muygrave, 10) === 1) ? 'checked' : '') + '><span>Muy grave</span></label>' +
             '</div>' +
           '</div>' +
-          '<div class="input-field">' +
-            '<textarea id="aplicabilidad_def" class="materialize-textarea" placeholder="{\n  \"ce9516e\": true\n}">' + aplicabilidadTxt + '</textarea>' +
-            '<label for="aplicabilidad_def" class="active">Aplicabilidad (JSON)</label>' +
-            aplicabilidadAyuda +
-          '</div>' +
+          getAplicabilidadFieldHtml(aplicabilidadTxt, true) +
           '<div class="input-field" style="display:none;">' +
             '<input type="text" id="id_def" value="' + (item.id || '') + '">' +
           '</div>' +
@@ -303,10 +312,6 @@ var openDefecto = function(seccion, cual, id){
             '<textarea id="defecto_def" class="materialize-textarea"></textarea>' +
             '<label for="defecto_def">Defecto</label>' +
           '</div>' +
-          '<div class="input-field">' +
-            '<input type="text" id="valoracion_def" value="" autocomplete="off">' +
-            '<label for="valoracion_def">Valoracion</label>' +
-          '</div>' +
           '<div class="row">' +
             '<div class="input-field col s2">' +
               '<label><input type="checkbox" id="leve_def" class="filled-in"><span>Leve</span></label>' +
@@ -318,11 +323,7 @@ var openDefecto = function(seccion, cual, id){
               '<label><input type="checkbox" id="muygrave_def" class="filled-in"><span>Muy grave</span></label>' +
             '</div>' +
           '</div>' +
-          '<div class="input-field">' +
-            '<textarea id="aplicabilidad_def" class="materialize-textarea" placeholder="{\n  \"ce9516e\": true\n}">' + aplicabilidadTxtNew + '</textarea>' +
-            '<label for="aplicabilidad_def" class="active">Aplicabilidad (JSON)</label>' +
-            aplicabilidadAyudaNew +
-          '</div>' +
+          getAplicabilidadFieldHtml(aplicabilidadTxtNew, true) +
         '</form>';
 
       $('#modal_' + seccion).find('.contentForm').html(frmNew);
@@ -365,6 +366,38 @@ $(document.body).on('click', '#def_save', function(){
     modalConfirm('Guardar defecto', 'Estas seguro de que quieres guardar los cambios?', false, 'Guardar', 'Cancelar', 'save', 'clear', function(){
       saveDefecto();
     }, function(){});
+  }
+});
+
+$(document).on('click', '#btn_copy_aplicabilidad', function(e){
+  e.preventDefault();
+  var txt = ($('#aplicabilidad_def').val() || '').trim();
+  if (!txt) {
+    modalError('INFO', 'No hay contenido JSON para copiar.', false, 'Aceptar', 'info');
+    return;
+  }
+
+  function onOk(){
+    M.toast({ html: 'JSON copiado al portapapeles' });
+  }
+  function onErr(){
+    modalError('ERROR', 'No se pudo copiar automaticamente. Copialo manualmente.', false, 'Aceptar', 'warning');
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(onOk).catch(onErr);
+    return;
+  }
+
+  try {
+    var $tmp = $('<textarea>').css({ position: 'fixed', left: '-9999px', top: '0' }).val(txt).appendTo('body');
+    $tmp[0].focus();
+    $tmp[0].select();
+    var ok = document.execCommand('copy');
+    $tmp.remove();
+    if (ok) onOk(); else onErr();
+  } catch (err) {
+    onErr();
   }
 });
 
