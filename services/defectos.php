@@ -122,6 +122,16 @@ switch($action){
         $where[] = "defecto LIKE '%" . $defecto . "%'";
       }
 
+      if (!empty($_POST['filtro_legislacion'])) {
+        $filtroLeg = trim($_POST['filtro_legislacion']);
+        // Validar que la clave existe en la tabla legislacion para evitar inyeccion
+        $validAbrevs = getLegislacionesAbrevList($link);
+        if (in_array($filtroLeg, $validAbrevs, true)) {
+          $safeLeg = mysqli_real_escape_string($link, $filtroLeg);
+          $where[] = "JSON_UNQUOTE(JSON_EXTRACT(aplicabilidad, '$.\"" . $safeLeg . "\"')) = 'true'";
+        }
+      }
+
       if (count($where) > 0) {
         $sql .= " WHERE " . implode(" AND ", $where);
       }

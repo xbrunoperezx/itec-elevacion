@@ -95,10 +95,12 @@ function readDefectos(){
   var total = parseInt($('#filtro_defectos_total').val(), 10) || 15;
   var codigo = ($('#filtro_defectos_codigo').val() || '').trim();
   var defecto = ($('#filtro_defectos_defecto').val() || '').trim();
+  var legislacion = ($('#filtro_defectos_legislacion').val() || '').trim();
 
   var filtros = { filtro_total: total };
   if (codigo) filtros.filtro_codigo = codigo;
   if (defecto) filtros.filtro_defecto = defecto;
+  if (legislacion) filtros.filtro_legislacion = legislacion;
 
   $('#table_defectos tbody').empty();
   $('#resultados_defectos').html('Cargando...');
@@ -408,7 +410,7 @@ $(document).on('click', '#btn_copy_aplicabilidad', function(e){
   }
 });
 
-jQuery(document).on('keydown', '#Defectos [id*=filtro_defectos]', function(e){
+jQuery(document).on('keydown', '#Defectos [id*=filtro_defectos], #Defectos #filtro_defectos_legislacion', function(e){
   jQuery('#filtrar_defectos_clear').removeClass('hide');
   if (e.key === 'Enter' || e.which === 13 || e.keyCode === 13) {
     e.preventDefault();
@@ -421,6 +423,7 @@ jQuery(document).on('click', '#filtrar_defectos_clear', function(){
   var $parent = jQuery(this).closest('#Defectos');
   $parent.find('#filtro_defectos_codigo').val('');
   $parent.find('#filtro_defectos_defecto').val('');
+  $parent.find('#filtro_defectos_legislacion').val('');
   $parent.find('#filtro_defectos_total').val('15');
   $parent.find('label').not(':eq(0)').removeClass('active');
   $parent.find('#filtrar_defectos').click();

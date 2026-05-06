@@ -356,6 +356,10 @@
                   <label for="filtro_defectos_defecto">Defecto</label>
               </div>
               <div class="input-field col s1">
+                  <input type="text" id="filtro_defectos_legislacion">
+                  <label for="filtro_defectos_legislacion">Legislación</label>
+              </div>
+              <div class="input-field col s1">
                   <button class="btn-floating waves-effect waves-light red" id="filtrar_defectos" title='Filtrar'>
                       <i class="material-icons">search</i>
                   </button>
@@ -394,7 +398,47 @@
           </table>
           <div id="resultados_defectos"></div>
         </div>
-        <div id="Tarifas" class="tab-content" style="display:none;">Contenido - Tarifas</div>
+        <div id="Tarifas" class="tab-content" style="display:none;">
+          <div class="row">
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_tarifas_total" value="15" autocomplete="off">
+                  <label for="filtro_tarifas_total" class="active">Resultados</label>
+              </div>
+              <div class="input-field col s2">
+                  <input type="text" id="filtro_tarifas_tarifa" autocomplete="off">
+                  <label for="filtro_tarifas_tarifa">Tarifa</label>
+              </div>
+              <div class="input-field col s1">
+                  <button class="btn-floating waves-effect waves-light red" id="filtrar_tarifas" title='Filtrar'>
+                      <i class="material-icons">search</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light grey hide" id="filtrar_tarifas_clear" title='Limpiar'>
+                      <i class="material-icons">clear</i>
+                  </button>
+              </div>
+              <div class="right input-field col s2">
+                  <button class="btn-floating waves-effect waves-light orange" id="add_tarifas" title='Crear nueva tarifa'>
+                    <i class="material-icons">add</i>
+                  </button>
+              </div>
+          </div>
+          <table class="highlight" id="table_tarifas">
+            <thead>
+              <tr class="header-row">
+                <th>&nbsp;</th>
+                <th class="orderBy">ID<span class="direct"></span></th>
+                <th>&nbsp;</th>
+                <th class="orderBy">Tarifa<span class="direct"></span></th>
+                <th class="orderBy">Precio<span class="direct"></span></th>
+                <th>&nbsp;</th>
+                <th>Opciones<span class="direct"></span></th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+          <div id="resultados_tarifas"></div>
+        </div>
       </div>
     </div>
 
@@ -445,6 +489,18 @@
     <div class="modal-footer">
       <a href="#!" class="modal_txt_btn_left left waves-effect waves-light btn green accent-4" id="camp_save"><i class="material-icons left">save</i>Guardar</a>
       <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn red accent-4" id="camp_exit">Salir</a>
+    </div>
+  </div>
+  <div id="modal_tar" class="modal">
+    <div class="modal-content">
+      <div class="grey darken-3 white-text row valign-wrapper tituloModal">
+          <i class='left material-icons'>attach_money</i><h6 class="modal_txt_title">Titulo del Modal</h6>
+      </div>
+    </div>
+    <div class="contentForm"></div>
+    <div class="modal-footer">
+      <a href="#!" class="modal_txt_btn_left left waves-effect waves-light btn green accent-4" id="tar_save"><i class="material-icons left">save</i>Guardar</a>
+      <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn red accent-4" id="tar_exit">Salir</a>
     </div>
   </div>
   <div id="modal_def" class="modal">
@@ -502,5 +558,6 @@
     <script src="js/func_admin_campos.js"></script>
     <script src="js/func_admin_mantenedores.js"></script>
     <script src="js/func_admin_defectos.js"></script>
+    <script src="js/func_admin_tarifas.js"></script>
   </body>
 </html>
