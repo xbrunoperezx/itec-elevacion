@@ -114,6 +114,37 @@ div#resultados_cli, div#resultados_con, div#resultados_pri, div#resultados_seg, 
   padding-right: 40px;
   min-height: 400px;
 }
+
+div.modal#modal_pri {
+  width: 92%;
+  max-height: 92%;
+}
+
+#modal_pri .contentForm{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 18px;
+  padding-right: 18px;
+  min-height: 0;
+  max-height: 62vh;
+  overflow-y: auto;
+}
+
+#modal_pri .tabs .tab a {
+  padding: 0 8px;
+}
+
+#modal_pri .contentForm .row {
+  margin-bottom: 8px;
+}
+
+#modal_pri .medicion-row {
+  margin-bottom: 6px !important;
+}
+
+#modal_pri .mediciones-toolbar {
+  margin-bottom: 4px;
+}
 .tabs{
   background-color: #EEEEEE;
 }
