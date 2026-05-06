@@ -208,6 +208,7 @@ function buildMedicionesTab4(camposData, medicionesData){
 		var nombreCampo = campo.nombre || '';
 		baseNames[nombreCampo] = true;
 		var dataType = campo.data_type || 'NUMERO';
+		var descripcion = campo.descripcion || '';
 		var valor = (mediciones[nombreCampo] && mediciones[nombreCampo].valor !== undefined && mediciones[nombreCampo].valor !== null) ? mediciones[nombreCampo].valor : '';
 		var unidad = (mediciones[nombreCampo] && mediciones[nombreCampo].unidad) ? mediciones[nombreCampo].unidad : (campo.unidad || '');
 		var listaValores = (campo.lista || '').split(',').map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
@@ -242,6 +243,11 @@ function buildMedicionesTab4(camposData, medicionesData){
 			html += '<div class="input-field col s6">' +
 				'<input type="text" class="medicion_unidad" data-medicion-nombre="' + nombreCampo + '" value="' + (unidad || '') + '" placeholder="Ej: kg, m, ohm">' +
 				'<label class="active">Unidad</label>' +
+				(descripcion ? '<div class="secondary-text" style="margin-top:6px; font-size:0.85em;">' + descripcion + '</div>' : '') +
+			'</div>';
+		} else {
+			html += '<div class="col s6" style="padding-top: 8px;">' +
+				(descripcion ? '<div class="secondary-text" style="font-size:0.85em;">' + descripcion + '</div>' : '') +
 			'</div>';
 		}
 

@@ -126,6 +126,7 @@ var saveCampo = function() {
   var id_revision = ($('#id_revision_camp').val() || '').trim();
   var tipo = ($('#tipo_camp').val() || '').trim();
   var nombre = ($('#nombre_camp').val() || '').trim();
+  var descripcion = ($('#descripcion_camp').val() || '').trim();
   var abrev = ($('#abrev_camp').val() || '').trim();
   var unidad = ($('#unidad_camp').val() || '').trim();
   var data_type = ($('#data_type_camp').val() || '').trim();
@@ -139,6 +140,7 @@ var saveCampo = function() {
     id_revision: id_revision,
     tipo: tipo,
     nombre: nombre,
+    descripcion: descripcion,
     abrev: abrev,
     unidad: unidad,
     data_type: data_type,
@@ -237,6 +239,10 @@ var openCampo = function(seccion, cual, id){
               '<label for="nombre_camp" class="active">Nombre</label>' +
             '</div>' +
             '<div class="input-field anchoFrm4 inline">' +
+              '<input type="text" id="descripcion_camp" name="descripcion" value="'+ (item.descripcion || '') +'" autocomplete="off">' +
+              '<label for="descripcion_camp" class="active">Descripción</label>' +
+            '</div>' +
+            '<div class="input-field anchoFrm4 inline">' +
               '<input type="text" id="abrev_camp" name="abrev" value="'+ (item.abrev || '') +'" autocomplete="off">' +
               '<label for="abrev_camp" class="active">Abreviatura</label>' +
             '</div>' +
@@ -301,6 +307,10 @@ var openCampo = function(seccion, cual, id){
         '<div class="input-field anchoFrm4 left">' +
           '<input type="text" id="nombre_camp" name="nombre" value="" autocomplete="off">' +
           '<label for="nombre_camp">Nombre</label>' +
+        '</div>' +
+        '<div class="input-field anchoFrm4 inline">' +
+          '<input type="text" id="descripcion_camp" name="descripcion" value="" autocomplete="off">' +
+          '<label for="descripcion_camp">Descripción</label>' +
         '</div>' +
         '<div class="input-field anchoFrm4 inline">' +
           '<input type="text" id="abrev_camp" name="abrev" value="" autocomplete="off">' +

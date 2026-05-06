@@ -80,6 +80,7 @@ switch($action) {
     $id_revision = isset($_POST['id_revision']) ? intval($_POST['id_revision']) : 0;
     $tipo = isset($_POST['tipo']) ? mysqli_real_escape_string($link, $_POST['tipo']) : '';
     $nombre = isset($_POST['nombre']) ? mysqli_real_escape_string($link, $_POST['nombre']) : '';
+    $descripcion = isset($_POST['descripcion']) ? mysqli_real_escape_string($link, $_POST['descripcion']) : '';
     $abrev = isset($_POST['abrev']) ? mysqli_real_escape_string($link, $_POST['abrev']) : '';
     $unidad = isset($_POST['unidad']) ? mysqli_real_escape_string($link, $_POST['unidad']) : '';
     $data_type = isset($_POST['data_type']) ? mysqli_real_escape_string($link, $_POST['data_type']) : 'NUMERO';
@@ -104,8 +105,8 @@ switch($action) {
     }
 
     $listaSql = ($lista === '') ? "NULL" : "'{$lista}'";
-    $cols = array('`id_revision`','`tipo`','`nombre`','`abrev`','`unidad`','`data_type`','`lista`');
-    $vals = array("{$id_revision}","'{$tipo}'","'{$nombre}'","'{$abrev}'","'{$unidad}'","'{$data_type}'",$listaSql);
+    $cols = array('`id_revision`','`tipo`','`nombre`','`descripcion`','`abrev`','`unidad`','`data_type`','`lista`');
+    $vals = array("{$id_revision}","'{$tipo}'","'{$nombre}'","'{$descripcion}'","'{$abrev}'","'{$unidad}'","'{$data_type}'",$listaSql);
     $sql = "INSERT INTO `informe_campos` (" . implode(',', $cols) . ") VALUES (" . implode(',', $vals) . ")";
 
     if (mysqli_query($link, $sql)) {
@@ -126,6 +127,7 @@ switch($action) {
     $id_revision = isset($_POST['id_revision']) ? intval($_POST['id_revision']) : 0;
     $tipo = isset($_POST['tipo']) ? mysqli_real_escape_string($link, $_POST['tipo']) : '';
     $nombre = isset($_POST['nombre']) ? mysqli_real_escape_string($link, $_POST['nombre']) : '';
+    $descripcion = isset($_POST['descripcion']) ? mysqli_real_escape_string($link, $_POST['descripcion']) : '';
     $abrev = isset($_POST['abrev']) ? mysqli_real_escape_string($link, $_POST['abrev']) : '';
     $unidad = isset($_POST['unidad']) ? mysqli_real_escape_string($link, $_POST['unidad']) : '';
     $data_type = isset($_POST['data_type']) ? mysqli_real_escape_string($link, $_POST['data_type']) : 'NUMERO';
@@ -153,6 +155,7 @@ switch($action) {
     $setParts[] = "`id_revision`={$id_revision}";
     $setParts[] = "`tipo`='{$tipo}'";
     $setParts[] = "`nombre`='{$nombre}'";
+    $setParts[] = "`descripcion`='{$descripcion}'";
     $setParts[] = "`abrev`='{$abrev}'";
     $setParts[] = "`unidad`='{$unidad}'";
     $setParts[] = "`data_type`='{$data_type}'";
