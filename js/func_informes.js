@@ -240,17 +240,18 @@ function buildMedicionesTab4(camposData, medicionesData){
 		html += '</div>';
 
 		if(dataType !== 'CHECKBOX'){
-			html += '<div class="input-field col s3">' +
+			html += '<div class="input-field col s2">' +
 				'<input type="text" class="medicion_unidad" data-medicion-nombre="' + nombreCampo + '" data-default-unidad="' + (campo.unidad || '') + '" value="' + (unidad || campo.unidad || '') + '" placeholder="Unidad">' +
 				'<label class="active">Unidad</label>' +
 			'</div>';
+			html += '<div class="col s7" style="padding-top: 8px;">' +
+				(descripcion ? '<div class="secondary-text" style="font-size:0.85em; line-height:1.3;">' + descripcion + '</div>' : '') +
+			'</div>';
 		} else {
-			html += '<div class="col s3"></div>';
+			html += '<div class="col s9" style="padding-top: 8px;">' +
+				(descripcion ? '<div class="secondary-text" style="font-size:0.85em; line-height:1.3;">' + descripcion + '</div>' : '') +
+			'</div>';
 		}
-
-		html += '<div class="col s6" style="padding-top: 8px;">' +
-			(descripcion ? '<div class="secondary-text" style="font-size:0.85em; line-height:1.3;">' + descripcion + '</div>' : '') +
-		'</div>';
 
 		html += '</div>';
 	});
