@@ -301,11 +301,13 @@ textarea{
 /* Defectos: JSON aplicabilidad */
 .json-field-wrapper{
   position: relative;
+  margin-top: 10px;
+  padding-top: 6px;
 }
 
 .json-copy-btn{
   position: absolute;
-  top: 0;
+  top: 6px;
   right: 0;
   z-index: 3;
 }
@@ -323,4 +325,5 @@ textarea{
 
 .json-field-wrapper label{
   width: auto;
+  top: 6px;
 }

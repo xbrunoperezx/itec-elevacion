@@ -224,18 +224,26 @@ var openDefecto = function(seccion, cual, id){
       $('#modal_' + seccion).find('.modal_txt_btn_left').html("<i class='material-icons left'>save</i>Guardar");
       $('#modal_' + seccion).find('.modal_txt_btn_right').html("<i class='material-icons left'>exit_to_app</i>Salir");
 
-      var aplicabilidadObj = null;
-      if (item.aplicabilidad && typeof item.aplicabilidad === 'object') {
-        aplicabilidadObj = item.aplicabilidad;
-      } else if (typeof item.aplicabilidad === 'string') {
-        try {
-          aplicabilidadObj = JSON.parse(item.aplicabilidad);
-        } catch (e) {
-          aplicabilidadObj = null;
+      var aplicabilidadTxt = '';
+      var aplicabilidadRawEdit = item.aplicabilidad;
+      var hasAplicabilidadValue = !(aplicabilidadRawEdit === null || typeof aplicabilidadRawEdit === 'undefined' || (typeof aplicabilidadRawEdit === 'string' && $.trim(aplicabilidadRawEdit) === ''));
+
+      if (hasAplicabilidadValue) {
+        if (typeof aplicabilidadRawEdit === 'object') {
+          aplicabilidadTxt = getAplicabilidadTextareaString(aplicabilidadRawEdit);
+        } else if (typeof aplicabilidadRawEdit === 'string') {
+          var aplicabilidadRawTrim = $.trim(aplicabilidadRawEdit);
+          if (aplicabilidadRawTrim.toLowerCase() === 'null') {
+            aplicabilidadTxt = '';
+          } else {
+            try {
+              aplicabilidadTxt = getAplicabilidadTextareaString(JSON.parse(aplicabilidadRawTrim));
+            } catch (e) {
+              aplicabilidadTxt = aplicabilidadRawTrim;
+            }
+          }
         }
       }
-      var aplicabilidadTxt = getAplicabilidadTextareaString(aplicabilidadObj);
-      var aplicabilidadAyuda = getAplicabilidadAyudaHtml();
 
       var frm = '' +
         '<form id="defecto_frm_editar">' +
@@ -290,7 +298,6 @@ var openDefecto = function(seccion, cual, id){
       $('#modal_' + seccion).find('.modal_txt_btn_right').html("<i class='material-icons left'>exit_to_app</i>Salir");
 
       var aplicabilidadTxtNew = getAplicabilidadTextareaString({});
-      var aplicabilidadAyudaNew = getAplicabilidadAyudaHtml();
 
       var frmNew = '' +
         '<form id="defecto_frm_nuevo">' +
