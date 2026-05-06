@@ -129,7 +129,7 @@ var openHistorial = function(seccion, cual, id){
             '<label for="his_version" class="active">Versión</label>' +
           '</div>' +
           '<div class="input-field">' +
-            '<textarea id="his_texto" class="materialize-textarea">' + (item.texto || '') + '</textarea>' +
+            '<textarea id="his_texto" style="height: 5.5em; min-height: 5.5em; max-height: 5.5em; resize: none; overflow-y: auto;">' + (item.texto || '') + '</textarea>' +
             '<label for="his_texto" class="active">Texto</label>' +
           '</div>' +
           '<div class="input-field">' +
@@ -160,7 +160,7 @@ var openHistorial = function(seccion, cual, id){
           '<label for="his_version">Versión</label>' +
         '</div>' +
         '<div class="input-field">' +
-          '<textarea id="his_texto" class="materialize-textarea"></textarea>' +
+          '<textarea id="his_texto" style="height: 5.5em; min-height: 5.5em; max-height: 5.5em; resize: none; overflow-y: auto;"></textarea>' +
           '<label for="his_texto">Texto</label>' +
         '</div>' +
         '<div class="input-field">' +

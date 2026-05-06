@@ -71,13 +71,13 @@ function readCampos(){
       tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho30'>" + id + "</td>";
       tr += "<td class='ancho80'>" + tipo + "</td>";
+      tr += "<td class='ancho30'><a seccion='camp' tipo='frm_editcamp' data-id='"+id+"' class='editar_camp btn-floating btn-small waves-effect waves-light green' title='Editar campo'><i class='material-icons'>edit</i></a></td>";
       tr += "<td class='ancho80'>" + nombreCp + "</td>";
       tr += "<td class='ancho200'><b>" + abrev + "</b></td>";
       tr += "<td class='ancho80'>" + unidad + "</td>";
       tr += "<td class='ancho100'>" + dataType + "</td>";
       tr += "<td class='ancho80'>" + nombre_revision + "</td>";
       tr += "<td class='ancho50'>" +
-        "<a seccion='camp' tipo='frm_editcamp' data-id='"+id+"' class='editar_camp btn-floating btn-small waves-effect waves-light green' title='Editar campo'><i class='material-icons'>edit</i></a>&nbsp;" +
             "<a class='more_camp btn-floating btn-small waves-effect waves-light red' title='Más' data-id='"+id+"'><i class='material-icons'>more_vert</i></a>" +
             "</td>";
       tr += "</tr>";
