@@ -14,7 +14,7 @@
 				break;
 			}
 
-			$sql = "SELECT * FROM `informe_mediciones` WHERE `id_informe` = {$id_informe}";
+			$sql = "SELECT * FROM `informes_mediciones` WHERE `id_informe` = {$id_informe}";
 			$result = mysqli_query($link, $sql);
 
 			if(mysqli_num_rows($result) > 0){
@@ -57,15 +57,15 @@
 			$medidas_json_escaped = mysqli_real_escape_string($link, $medidas_json_str);
 
 			// Verificar si existe registro
-			$sql_check = "SELECT `id` FROM `informe_mediciones` WHERE `id_informe` = {$id_informe}";
+			$sql_check = "SELECT `id` FROM `informes_mediciones` WHERE `id_informe` = {$id_informe}";
 			$result_check = mysqli_query($link, $sql_check);
 
 			if(mysqli_num_rows($result_check) > 0){
 				// UPDATE
-				$sql = "UPDATE `informe_mediciones` SET `medidas_json` = '{$medidas_json_escaped}' WHERE `id_informe` = {$id_informe}";
+				$sql = "UPDATE `informes_mediciones` SET `medidas_json` = '{$medidas_json_escaped}' WHERE `id_informe` = {$id_informe}";
 			} else {
 				// INSERT
-				$sql = "INSERT INTO `informe_mediciones` (`id_informe`, `medidas_json`) VALUES ({$id_informe}, '{$medidas_json_escaped}')";
+				$sql = "INSERT INTO `informes_mediciones` (`id_informe`, `medidas_json`) VALUES ({$id_informe}, '{$medidas_json_escaped}')";
 			}
 
 			if(mysqli_query($link, $sql)){
