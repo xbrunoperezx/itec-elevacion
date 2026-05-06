@@ -129,6 +129,51 @@ var readInformes = function(id, totalParams){
 	});
 }
 
+function buildGrupoOptions(legislaciones, selectedNombre){
+	var html = '<option value="" disabled' + (!selectedNombre ? ' selected' : '') + '>Selecciona grupo</option>';
+	$.each(legislaciones || [], function(index, item){
+		var nombre = item.nombre || '';
+		var legislacion = item.legislacion || '';
+		html += '<option value="' + nombre + '" data-legislacion="' + legislacion + '"' + (nombre === selectedNombre ? ' selected' : '') + '>' + nombre + '</option>';
+	});
+	return html;
+}
+
+function syncGrupoLegislacion(){
+	var $grupo = $('#grupo_pri');
+	if(!$grupo.length) return;
+	var legislacion = $grupo.find('option:selected').data('legislacion') || '';
+	$('#legislacion_pri').val(legislacion);
+	var $label = $('label[for="legislacion_pri"]');
+	if(legislacion){
+		$label.addClass('active');
+	}else{
+		$label.removeClass('active');
+	}
+}
+
+function syncGoogleMapsButton(){
+	var lat = ($('#gps_latitud').val() || '').trim();
+	var lon = ($('#gps_longitud').val() || '').trim();
+	var $btn = $('#open_google_maps_pri');
+	if(!$btn.length) return;
+	if(lat !== '' && lon !== ''){
+		$btn.attr('href', 'https://www.google.com/maps?q=' + encodeURIComponent(lat + ',' + lon));
+		$btn.removeClass('disabled');
+	}else{
+		$btn.attr('href', '#!');
+		$btn.addClass('disabled');
+	}
+}
+
+jQuery(document).on('change', '#grupo_pri', function(){
+	syncGrupoLegislacion();
+});
+
+jQuery(document).on('input', '#gps_latitud, #gps_longitud', function(){
+	syncGoogleMapsButton();
+});
+
 
 // Filtros de informe
 jQuery(document).on("keydown", "#tab_pri [id*=filtro_pri]", function(e){
@@ -181,6 +226,17 @@ var openInforme = function(seccion, cual, id){
 			success: function(data) {
 				// Recorrer los datos devueltos por la consulta
 				var item = JSON.parse(data)["resultados"][0];
+				$.ajax({
+					url: 'services/legislacion.php',
+					type: 'POST',
+					data: { action: 'list', filtro_total: 500 },
+					success: function(legData) {
+						var legislaciones = [];
+						try {
+							legislaciones = JSON.parse(legData).resultados || [];
+						} catch(err) {
+							legislaciones = [];
+						}
 				dataLayer.push({
 			    	"event" : "service",
 			    	"type" : "get_pri",
@@ -244,8 +300,25 @@ var openInforme = function(seccion, cual, id){
 						    '<label for="gps_longitud" class="active">GPS long</label>' +
 						  '</div>' +
 						'</div>' +
+						'<div class="row">' +
+						  '<div class="col s12">' +
+						    '<a id="open_google_maps_pri" class="btn waves-effect waves-light blue' + ((item.gps_latitud && item.gps_longitud) ? '' : ' disabled') + '" href="' + ((item.gps_latitud && item.gps_longitud) ? ('https://www.google.com/maps?q=' + encodeURIComponent(item.gps_latitud + ',' + item.gps_longitud)) : '#!') + '" target="_blank" rel="noopener noreferrer"><i class="material-icons left">map</i>Abrir en Google Maps</a>' +
+						  '</div>' +
+						'</div>' +
 						'</div>' +	
 						'<div id="tab2_pri" class="active col s12">' +  
+						  '<div class="row">' +
+						    '<div class="input-field col s12">' +
+						      '<select id="grupo_pri" name="grupo">' + buildGrupoOptions(legislaciones, item.grupo || '') + '</select>' +
+						      '<label>Grupo</label>' +
+						    '</div>' +
+						  '</div>' +
+						  '<div class="row">' +
+						    '<div class="input-field col s12">' +
+						      '<input type="text" id="legislacion_pri" name="legislacion" value="' + (item.legislacion || '') + '" readonly>' +
+						      '<label for="legislacion_pri" class="active">Legislación</label>' +
+						    '</div>' +
+						  '</div>' +
 						'</div>' +	
 						'<div id="tab3_pri" class="col s12">' + 	    
 						'</div>' +	
@@ -269,11 +342,19 @@ var openInforme = function(seccion, cual, id){
 				  $("#modal_"+seccion).find(".contentTabs").html(frm_tabs);
 				  $("#modal_"+seccion).find(".contentForm").html(frm_render);
 				  $("#modal_"+seccion).find('.tabs').tabs();
+				  $("#modal_"+seccion).find('select').formSelect();
+				  syncGrupoLegislacion();
+				  syncGoogleMapsButton();
 				  $("#modal_"+seccion).modal({
 						dismissible: false
 					});
 					// Abrir modal
 					$("#modal_"+seccion).modal("open");		
+					},
+					error: function() {
+						modalError('ERROR', 'Error cargando legislaciones para el formulario.', false, 'Cerrar', 'error');
+					}
+				});
 			},
 			error: function(xhr, status, error) {
 				// Mostrar un mensaje de error en el centro de la pantalla
