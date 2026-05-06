@@ -284,6 +284,7 @@ function comparer(index) {
     if(seccion=="usu") openUsuario(seccion, cual, id);
     if(seccion=="equ") openEquipo(seccion, cual, id);
     if(seccion=="camp") openCampo(seccion, cual, id);
+    if(seccion=="def") openDefecto(seccion, cual, id);
 	}
 
 function getCellValue(row, index){ return $(row).children("td").eq(index).text(); }

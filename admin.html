@@ -29,6 +29,7 @@
           <li id="equ_adm"><a href="#Equipos"><i class="material-icons">business_center</i></a></li>
           <li id="his_adm"><a href="#Historial"><i class="material-icons">update</i></a></li>
           <li id="cam_adm"><a href="#Campos"><i class="material-icons">input</i></a></li>
+          <li id="def_adm"><a href="#Defectos"><i class="material-icons">report_problem</i></a></li>
           <li id="tar_adm"><a href="#Tarifas"><i class="material-icons">attach_money</i></a></li>
         </ul>
         <div id="title_nav" class="left">Administrador</div>
@@ -340,6 +341,59 @@
           </table>
           <div id="resultados_campos"></div>
         </div>
+        <div id="Defectos" class="tab-content" style="display:none;">
+          <div class="row">
+              <div class="input-field col ancho75">
+                  <input type="number" id="filtro_defectos_total" value="15">
+                  <label for="filtro_defectos_total">Registros</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_defectos_codigo">
+                  <label for="filtro_defectos_codigo">Codigo</label>
+              </div>
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_defectos_defecto">
+                  <label for="filtro_defectos_defecto">Defecto</label>
+              </div>
+              <div class="input-field col s1">
+                  <button class="btn-floating waves-effect waves-light red" id="filtrar_defectos" title='Filtrar'>
+                      <i class="material-icons">search</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light grey hide" id="filtrar_defectos_clear" title='Limpiar'>
+                      <i class="material-icons">clear</i>
+                  </button>
+              </div>
+              <div class="right input-field col s2">
+                  <button class="btn-floating waves-effect waves-light orange" id="add_defectos" title='Crear nuevo defecto'>
+                    <i class="material-icons">add</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light black" id="imprimir_defectos" title='Generar PDF'>
+                    <i class="material-icons">print</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light green" id="exportar_defectos" title='Exportar a XLS (Excel)'>
+                    <i class="material-icons">import_export</i>
+                  </button>
+              </div>
+          </div>
+          <table class="highlight" id="table_defectos">
+            <thead>
+              <tr class="header-row">
+                <th>&nbsp;</th>
+                <th class="orderBy">ID<span class="direct"></span></th>
+                <th class="orderBy">Codigo<span class="direct"></span></th>
+                <th class="orderBy">Provincia<span class="direct"></span></th>
+                <th class="orderBy">Defecto<span class="direct"></span></th>
+                <th class="orderBy">Valoracion<span class="direct"></span></th>
+                <th class="orderBy">Revision<span class="direct"></span></th>
+                <th>Opciones<span class="direct"></span></th>
+                <th>&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+          <div id="resultados_defectos"></div>
+        </div>
         <div id="Tarifas" class="tab-content" style="display:none;">Contenido - Tarifas</div>
       </div>
     </div>
@@ -392,7 +446,19 @@
       <a href="#!" class="modal_txt_btn_left left waves-effect waves-light btn green accent-4" id="camp_save"><i class="material-icons left">save</i>Guardar</a>
       <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn red accent-4" id="camp_exit">Salir</a>
     </div>
-  </div>  
+  </div>
+  <div id="modal_def" class="modal">
+    <div class="modal-content">
+      <div class="grey darken-3 white-text row valign-wrapper tituloModal">
+          <i class='left material-icons'>report_problem</i><h6 class="modal_txt_title">Titulo del Modal</h6>
+      </div>
+    </div>
+    <div class="contentForm"></div>
+    <div class="modal-footer">
+      <a href="#!" class="modal_txt_btn_left left waves-effect waves-light btn green accent-4" id="def_save"><i class="material-icons left">save</i>Guardar</a>
+      <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn red accent-4" id="def_exit">Salir</a>
+    </div>
+  </div>
   <div id="modal_error" class="modal">
     <div class="modal-content">
       <div class="valign-wrapper tituloModal red white-text">
@@ -435,5 +501,6 @@
     <script src="js/func_admin_equipos.js"></script>
     <script src="js/func_admin_campos.js"></script>
     <script src="js/func_admin_mantenedores.js"></script>
+    <script src="js/func_admin_defectos.js"></script>
   </body>
 </html>
