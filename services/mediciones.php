@@ -23,6 +23,10 @@
 				if(is_string($medidas_json_parsed)){
 					$medidas_json_parsed = json_decode($medidas_json_parsed, true);
 				}
+				// Ensure nested structure
+				if(!isset($medidas_json_parsed['medidas']))    $medidas_json_parsed['medidas'] = array();
+				if(!isset($medidas_json_parsed['instalacion'])) $medidas_json_parsed['instalacion'] = array();
+				if(!isset($medidas_json_parsed['caracteristicas'])) $medidas_json_parsed['caracteristicas'] = array();
 				echo json_encode(array(
 					'id' => $row['id'],
 					'id_informe' => $row['id_informe'],
@@ -32,7 +36,7 @@
 				echo json_encode(array(
 					'id' => null,
 					'id_informe' => $id_informe,
-					'medidas_json' => array()
+					'medidas_json' => array('medidas' => array(), 'instalacion' => array(), 'caracteristicas' => array())
 				));
 			}
 			break;
@@ -43,7 +47,7 @@
 				break;
 			}
 
-			// Validar que medidas_json sea JSON válido
+			// Validar que medidas_json sea JSON válido con estructura anidada
 			$medidas_array = array();
 			if(!empty($medidas_json)){
 				$medidas_array = is_string($medidas_json) ? json_decode($medidas_json, true) : $medidas_json;
@@ -52,8 +56,11 @@
 					break;
 				}
 			}
+			if(!isset($medidas_array['medidas']))        $medidas_array['medidas'] = array();
+			if(!isset($medidas_array['instalacion']))    $medidas_array['instalacion'] = array();
+			if(!isset($medidas_array['caracteristicas'])) $medidas_array['caracteristicas'] = array();
 
-			$medidas_json_str = !empty($medidas_array) ? json_encode($medidas_array) : json_encode(array());
+			$medidas_json_str = json_encode($medidas_array);
 			$medidas_json_escaped = mysqli_real_escape_string($link, $medidas_json_str);
 
 			// Verificar si existe registro

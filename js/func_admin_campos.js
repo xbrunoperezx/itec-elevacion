@@ -227,6 +227,7 @@ var openCampo = function(seccion, cual, id){
                 '<option value="TEXTO NORMAL" '+ ((item.data_type=='TEXTO NORMAL')? 'selected':'') +'>TEXTO NORMAL</option>' +
                 '<option value="CHECKBOX" '+ ((item.data_type=='CHECKBOX')? 'selected':'') +'>CHECKBOX</option>' +
                 '<option value="LISTA VALORES" '+ ((item.data_type=='LISTA VALORES')? 'selected':'') +'>LISTA VALORES</option>' +
+                '<option value="FECHA" '+ ((item.data_type=='FECHA')? 'selected':'') +'>FECHA</option>' +
               '</select>' +
               '<label for="data_type_camp" class="active">Tipo de dato</label>' +
             '</div>' +
