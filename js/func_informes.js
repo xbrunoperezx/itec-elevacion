@@ -174,6 +174,201 @@ jQuery(document).on('input', '#gps_latitud, #gps_longitud', function(){
 	syncGoogleMapsButton();
 });
 
+function buildMedicionesTab4(camposData, medicionesData){
+	var html = '';
+	var mediciones = {};
+	try {
+		mediciones = (medicionesData && typeof medicionesData === 'object') ? medicionesData : {};
+	} catch(err) {
+		mediciones = {};
+	}
+
+	html += '<div class="row">' +
+		'<div class="col s12"><h5>Mediciones</h5></div>' +
+	'</div>';
+
+	// Campos de base de datos
+	$.each(camposData || [], function(idx, campo){
+		if(campo.tipo !== 'MEDIDAS') return;
+		
+		var nombreCampo = campo.nombre || '';
+		var abrev = campo.abrev || '';
+		var dataType = campo.data_type || 'NUMERO';
+		var valor = (mediciones[nombreCampo] && mediciones[nombreCampo].valor) ? mediciones[nombreCampo].valor : '';
+		var unidad = (mediciones[nombreCampo] && mediciones[nombreCampo].unidad) ? mediciones[nombreCampo].unidad : (campo.unidad || '');
+
+		html += '<div class="row" style="margin-bottom: 10px;" data-medicion-nombre="' + nombreCampo + '">' +
+			'<div class="input-field col s6">';
+
+		if(dataType === 'NUMERO'){
+			html += '<input type="number" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" value="' + (valor || '') + '">' +
+				'<label class="active">' + nombreCampo + '</label>';
+		} else if(dataType === 'TEXTO NORMAL'){
+			html += '<input type="text" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" value="' + (valor || '') + '">' +
+				'<label class="active">' + nombreCampo + '</label>';
+		} else if(dataType === 'CHECKBOX'){
+			html += '<p><label><input type="checkbox" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" ' + (valor ? 'checked' : '') + '><span>' + nombreCampo + '</span></label></p>';
+		}
+
+		html += '</div>' +
+			'<div class="input-field col s6">' +
+			'<input type="text" class="medicion_unidad" data-medicion-nombre="' + nombreCampo + '" value="' + (unidad || '') + '" placeholder="Ej: kg, m, ohm">' +
+			'<label class="active">Unidad</label>' +
+			'</div>' +
+		'</div>';
+	});
+
+	html += '<div class="row">' +
+		'<div class="col s12">' +
+		'<button type="button" id="add_medicion_personalizada" class="btn waves-effect waves-light green"><i class="material-icons left">add</i>Agregar medida personalizada</button>' +
+		'</div>' +
+	'</div>';
+
+	html += '<div id="mediciones_personalizadas"></div>';
+
+	return html;
+}
+
+function addMedicionPersonalizada(){
+	var $container = $('#mediciones_personalizadas');
+	var rowCount = $container.find('.medicion_personalizada_row').length;
+	var html = '<div class="medicion_personalizada_row row" style="margin-bottom: 10px;" data-medicion-idx="' + rowCount + '">' +
+		'<div class="input-field col s6">' +
+		'<input type="text" class="medicion_personalizada_nombre" placeholder="Nombre de medida">' +
+		'<label class="active">Nombre</label>' +
+		'</div>' +
+		'<div class="input-field col s3">' +
+		'<input type="number" class="medicion_personalizada_valor" placeholder="Valor">' +
+		'<label class="active">Valor</label>' +
+		'</div>' +
+		'<div class="input-field col s2">' +
+		'<input type="text" class="medicion_personalizada_unidad" placeholder="Unidad">' +
+		'<label class="active">Unidad</label>' +
+		'</div>' +
+		'<div class="col s1" style="margin-top: 20px;">' +
+		'<a class="btn-floating btn-small waves-effect waves-light red remove-medicion-personalizada"><i class="material-icons">close</i></a>' +
+		'</div>' +
+	'</div>';
+	$container.append(html);
+}
+
+jQuery(document).on('click', '#add_medicion_personalizada', function(e){
+	e.preventDefault();
+	addMedicionPersonalizada();
+});
+
+jQuery(document).on('click', '.remove-medicion-personalizada', function(e){
+	e.preventDefault();
+	$(this).closest('.medicion_personalizada_row').remove();
+});
+
+function serializeMediciones(){
+	var mediciones = {};
+	
+	// Mediciones de base de datos
+	$('#mediciones_container .row[data-medicion-nombre]').each(function(){
+		var nombre = $(this).data('medicion-nombre');
+		var valor = $(this).find('.medicion_valor').val();
+		var unidad = $(this).find('.medicion_unidad').val();
+		
+		if(valor !== '' && valor !== undefined && valor !== null){
+			mediciones[nombre] = {
+				valor: valor,
+				unidad: unidad || ''
+			};
+		}
+	});
+	
+	// Mediciones personalizadas
+	$('.medicion_personalizada_row').each(function(){
+		var nombre = $(this).find('.medicion_personalizada_nombre').val();
+		var valor = $(this).find('.medicion_personalizada_valor').val();
+		var unidad = $(this).find('.medicion_personalizada_unidad').val();
+		
+		if(nombre && valor){
+			mediciones[nombre] = {
+				valor: valor,
+				unidad: unidad || ''
+			};
+		}
+	});
+	
+	return mediciones;
+}
+
+function savePrimera(){
+	var frm = $('#informe_frm_editar');
+	if(!frm.length){
+		modalError('ERROR', 'Formulario no encontrado', false, 'Cerrar', 'error');
+		return;
+	}
+
+	var id = $('#id_bbdd').val();
+	var mediciones = serializeMediciones();
+
+	// Datos básicos del informe
+	var data = {
+		id: id,
+		fecha_inspeccion: $('#fecha_inspeccion').val(),
+		hora_ini: $('#hora_ini').val(),
+		hora_fin: $('#hora_fin').val(),
+		gps_latitud: $('#gps_latitud').val(),
+		gps_longitud: $('#gps_longitud').val(),
+		grupo: $('#grupo_pri').val(),
+		legislacion: $('#legislacion_pri').val()
+	};
+
+	// Guardar informe (si existe servicio)
+	$.ajax({
+		url: 'services/primeras_new.php',
+		type: 'POST',
+		data: data,
+		success: function(response){
+			// Guardar mediciones
+			if(Object.keys(mediciones).length > 0 || true){
+				$.ajax({
+					url: 'services/mediciones.php',
+					type: 'POST',
+					data: {
+						action: 'save',
+						id_informe: id,
+						medidas_json: JSON.stringify(mediciones)
+					},
+					success: function(response){
+						var resp = JSON.parse(response);
+						if(resp.success){
+							modalError('ÉXITO', 'Informe guardado correctamente', false, 'Cerrar', 'success');
+							$('#modal_pri').modal('close');
+							readInformes('pri', { filtro_total: 15 });
+						} else {
+							modalError('ERROR', resp.error || 'Error al guardar mediciones', false, 'Cerrar', 'error');
+						}
+					},
+					error: function(){
+						modalError('ERROR', 'Error al guardar mediciones', false, 'Cerrar', 'error');
+					}
+				});
+			} else {
+				modalError('ÉXITO', 'Informe guardado correctamente', false, 'Cerrar', 'success');
+				$('#modal_pri').modal('close');
+				readInformes('pri', { filtro_total: 15 });
+			}
+		},
+		error: function(){
+			modalError('ERROR', 'Error al guardar informe', false, 'Cerrar', 'error');
+		}
+	});
+}
+
+// Click en guardar informe
+$(document.body).on("click", "#pri_save", function(){
+	modalConfirm("Guardar cambios en informe", "¿Estás seguro de que quieres guardar los cambios?\n\n", false, "Guardar", "Cancelar", "save", "clear", function(){
+		savePrimera(); // acción de guardar
+	}, function(){ 
+		console.log('Accion cancelar: no se han guardado los cambios');
+	});
+}); // end click en guardar informe
+
 
 // Filtros de informe
 jQuery(document).on("keydown", "#tab_pri [id*=filtro_pri]", function(e){
@@ -237,6 +432,33 @@ var openInforme = function(seccion, cual, id){
 						} catch(err) {
 							legislaciones = [];
 						}
+						
+						// Cargar campos MEDIDAS
+						$.ajax({
+							url: 'services/campos.php',
+							type: 'POST',
+							data: { action: 'list', filtro_total: 500 },
+							success: function(camposData) {
+								var campos = [];
+								try {
+									campos = JSON.parse(camposData).resultados || [];
+								} catch(err) {
+									campos = [];
+								}
+								
+								// Cargar mediciones existentes
+								$.ajax({
+									url: 'services/mediciones.php',
+									type: 'POST',
+									data: { action: 'get', id_informe: id },
+									success: function(medData) {
+										var mediciones = {};
+										try {
+											var resp = JSON.parse(medData);
+											mediciones = (resp.medidas_json && typeof resp.medidas_json === 'object') ? resp.medidas_json : {};
+										} catch(err) {
+											mediciones = {};
+										}
 				dataLayer.push({
 			    	"event" : "service",
 			    	"type" : "get_pri",
@@ -291,18 +513,16 @@ var openInforme = function(seccion, cual, id){
 						  '</div>' +
 						'</div>' +
 						'<div class="row">' +
-						  '<div class="input-field col s6">' +
+						  '<div class="input-field col s4">' +
 						    '<input type="text" id="gps_latitud" name="gps_latitud" value="' + item.gps_latitud + '">' +
 						    '<label for="gps_latitud" class="active">GPS lat</label>' +
 						  '</div>' +
-						  '<div class="input-field col s6">' +
+						  '<div class="input-field col s4">' +
 						    '<input type="text" id="gps_longitud" name="gps_longitud" value="' + item.gps_longitud + '">' +
 						    '<label for="gps_longitud" class="active">GPS long</label>' +
 						  '</div>' +
-						'</div>' +
-						'<div class="row">' +
-						  '<div class="col s12">' +
-						    '<a id="open_google_maps_pri" class="btn waves-effect waves-light blue' + ((item.gps_latitud && item.gps_longitud) ? '' : ' disabled') + '" href="' + ((item.gps_latitud && item.gps_longitud) ? ('https://www.google.com/maps?q=' + encodeURIComponent(item.gps_latitud + ',' + item.gps_longitud)) : '#!') + '" target="_blank" rel="noopener noreferrer"><i class="material-icons left">map</i>Abrir en Google Maps</a>' +
+						  '<div class="col s4" style="margin-top: 20px;">' +
+						    '<a id="open_google_maps_pri" class="btn waves-effect waves-light blue' + ((item.gps_latitud && item.gps_longitud) ? '' : ' disabled') + '" href="' + ((item.gps_latitud && item.gps_longitud) ? ('https://www.google.com/maps?q=' + encodeURIComponent(item.gps_latitud + ',' + item.gps_longitud)) : '#!') + '" target="_blank" rel="noopener noreferrer"><i class="material-icons left">map</i>Maps</a>' +
 						  '</div>' +
 						'</div>' +
 						'</div>' +	
@@ -323,6 +543,7 @@ var openInforme = function(seccion, cual, id){
 						'<div id="tab3_pri" class="col s12">' + 	    
 						'</div>' +	
 						'<div id="tab4_pri" class="col s12">' + 
+						'<div id="mediciones_container"></div>' +
 						'</div>' +	
 						'<div id="tab5_pri" class="col s12">' + 
 						'</div>' +	
@@ -343,17 +564,35 @@ var openInforme = function(seccion, cual, id){
 				  $("#modal_"+seccion).find(".contentForm").html(frm_render);
 				  $("#modal_"+seccion).find('.tabs').tabs();
 				  $("#modal_"+seccion).find('select').formSelect();
+				  
+				  // Renderizar mediciones
+				  var medicionesHtml = buildMedicionesTab4(campos, mediciones);
+				  $('#mediciones_container').html(medicionesHtml);
+				  
+				  // Materialize labels
+				  Materialize.updateTextFields();
+				  
 				  syncGrupoLegislacion();
 				  syncGoogleMapsButton();
 				  $("#modal_"+seccion).modal({
 						dismissible: false
 					});
 					// Abrir modal
-					$("#modal_"+seccion).modal("open");		
-					},
-					error: function() {
-						modalError('ERROR', 'Error cargando legislaciones para el formulario.', false, 'Cerrar', 'error');
-					}
+					$("#modal_"+seccion).modal("open");
+										},
+										error: function() {
+											modalError('ERROR', 'Error cargando mediciones.', false, 'Cerrar', 'error');
+										}
+									});
+								},
+								error: function() {
+									modalError('ERROR', 'Error cargando campos para mediciones.', false, 'Cerrar', 'error');
+								}
+							});
+						},
+						error: function() {
+							modalError('ERROR', 'Error cargando legislaciones para el formulario.', false, 'Cerrar', 'error');
+						}
 				});
 			},
 			error: function(xhr, status, error) {
