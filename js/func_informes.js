@@ -569,9 +569,6 @@ var openInforme = function(seccion, cual, id){
 				  var medicionesHtml = buildMedicionesTab4(campos, mediciones);
 				  $('#mediciones_container').html(medicionesHtml);
 				  
-				  // Materialize labels
-				  Materialize.updateTextFields();
-				  
 				  syncGrupoLegislacion();
 				  syncGoogleMapsButton();
 				  $("#modal_"+seccion).modal({
