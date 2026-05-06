@@ -285,6 +285,7 @@ function comparer(index) {
     if(seccion=="equ") openEquipo(seccion, cual, id);
     if(seccion=="camp") openCampo(seccion, cual, id);
     if(seccion=="def") openDefecto(seccion, cual, id);
+    if(seccion=="leg") openLegislacion(seccion, cual, id);
     if(seccion=="rev") openRevision(seccion, cual, id);
     if(seccion=="tar") openTarifa(seccion, cual, id);
     if(seccion=="his") openHistorial(seccion, cual, id);
