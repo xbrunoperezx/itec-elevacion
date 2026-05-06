@@ -213,9 +213,7 @@ var openCampo = function(seccion, cual, id){
               '<input type="number" id="id_revision_camp" name="id_revision" value="'+ (item.id_revision || '') +'" autocomplete="off">' +
               '<label for="id_revision_camp" class="active">ID Revisión</label>' +
             '</div>' +
-          '</div>' +
-          '<div class="row">' +
-            '<div class="input-field anchoFrm4 left">' +
+            '<div class="input-field anchoFrm4 inline">' +
               '<select id="tipo_camp" name="tipo">' +
                 '<option value="MEDIDAS" '+ ((item.tipo=='MEDIDAS')? 'selected':'') +'>MEDIDAS</option>' +
                 '<option value="CARACTERISTICAS" '+ ((item.tipo=='CARACTERISTICAS')? 'selected':'') +'>CARACTERISTICAS</option>' +
@@ -239,16 +237,18 @@ var openCampo = function(seccion, cual, id){
               '<label for="nombre_camp" class="active">Nombre</label>' +
             '</div>' +
             '<div class="input-field anchoFrm4 inline">' +
-              '<input type="text" id="descripcion_camp" name="descripcion" value="'+ (item.descripcion || '') +'" autocomplete="off">' +
-              '<label for="descripcion_camp" class="active">Descripción</label>' +
-            '</div>' +
-            '<div class="input-field anchoFrm4 inline">' +
               '<input type="text" id="abrev_camp" name="abrev" value="'+ (item.abrev || '') +'" autocomplete="off">' +
               '<label for="abrev_camp" class="active">Abreviatura</label>' +
             '</div>' +
             '<div class="input-field anchoFrm4 inline">' +
               '<input type="text" id="unidad_camp" name="unidad" value="'+ (item.unidad || '') +'" autocomplete="off">' +
               '<label for="unidad_camp" class="active">Unidad</label>' +
+            '</div>' +
+          '</div>' +
+          '<div class="row">' +
+            '<div class="input-field col s12">' +
+              '<input type="text" id="descripcion_camp" name="descripcion" value="'+ (item.descripcion || '') +'" autocomplete="off">' +
+              '<label for="descripcion_camp" class="active">Descripción</label>' +
             '</div>' +
           '</div>' +
           '<div class="row ' + (((item.data_type || '') === 'LISTA VALORES') ? '' : 'hide') + '" id="lista_camp_wrap">' +
@@ -283,9 +283,7 @@ var openCampo = function(seccion, cual, id){
           '<input type="number" id="id_revision_camp" name="id_revision" value="" autocomplete="off">' +
           '<label for="id_revision_camp">ID Revisión</label>' +
         '</div>' +
-      '</div>' +
-      '<div class="row">' +
-        '<div class="input-field anchoFrm4 left">' +
+        '<div class="input-field anchoFrm4 inline">' +
           '<select id="tipo_camp" name="tipo">' +
             '<option value="MEDIDAS">MEDIDAS</option>' +
             '<option value="CARACTERISTICAS">CARACTERISTICAS</option>' +
@@ -309,16 +307,18 @@ var openCampo = function(seccion, cual, id){
           '<label for="nombre_camp">Nombre</label>' +
         '</div>' +
         '<div class="input-field anchoFrm4 inline">' +
-          '<input type="text" id="descripcion_camp" name="descripcion" value="" autocomplete="off">' +
-          '<label for="descripcion_camp">Descripción</label>' +
-        '</div>' +
-        '<div class="input-field anchoFrm4 inline">' +
           '<input type="text" id="abrev_camp" name="abrev" value="" autocomplete="off">' +
           '<label for="abrev_camp">Abreviatura</label>' +
         '</div>' +
         '<div class="input-field anchoFrm4 inline">' +
           '<input type="text" id="unidad_camp" name="unidad" value="" autocomplete="off">' +
           '<label for="unidad_camp">Unidad</label>' +
+        '</div>' +
+      '</div>' +
+      '<div class="row">' +
+        '<div class="input-field col s12">' +
+          '<input type="text" id="descripcion_camp" name="descripcion" value="" autocomplete="off">' +
+          '<label for="descripcion_camp">Descripción</label>' +
         '</div>' +
       '</div>' +
       '<div class="row hide" id="lista_camp_wrap">' +

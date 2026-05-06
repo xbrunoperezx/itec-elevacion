@@ -214,7 +214,7 @@ function buildMedicionesTab4(camposData, medicionesData){
 		var listaValores = (campo.lista || '').split(',').map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
 
 		html += '<div class="row medicion-row" data-medicion-nombre="' + nombreCampo + '">' +
-			'<div class="input-field col s6">';
+			'<div class="input-field col s3">';
 
 		if(dataType === 'NUMERO'){
 			html += '<input type="number" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" value="' + (valor || '') + '">' +
@@ -240,16 +240,17 @@ function buildMedicionesTab4(camposData, medicionesData){
 		html += '</div>';
 
 		if(dataType !== 'CHECKBOX'){
-			html += '<div class="input-field col s6">' +
-				'<input type="text" class="medicion_unidad" data-medicion-nombre="' + nombreCampo + '" value="' + (unidad || '') + '" placeholder="Ej: kg, m, ohm">' +
+			html += '<div class="input-field col s3">' +
+				'<input type="text" class="medicion_unidad" data-medicion-nombre="' + nombreCampo + '" data-default-unidad="' + (campo.unidad || '') + '" value="' + (unidad || campo.unidad || '') + '" placeholder="Unidad">' +
 				'<label class="active">Unidad</label>' +
-				(descripcion ? '<div class="secondary-text" style="margin-top:6px; font-size:0.85em;">' + descripcion + '</div>' : '') +
 			'</div>';
 		} else {
-			html += '<div class="col s6" style="padding-top: 8px;">' +
-				(descripcion ? '<div class="secondary-text" style="font-size:0.85em;">' + descripcion + '</div>' : '') +
-			'</div>';
+			html += '<div class="col s3"></div>';
 		}
+
+		html += '<div class="col s6" style="padding-top: 8px;">' +
+			(descripcion ? '<div class="secondary-text" style="font-size:0.85em; line-height:1.3;">' + descripcion + '</div>' : '') +
+		'</div>';
 
 		html += '</div>';
 	});
@@ -388,7 +389,11 @@ function syncMedicionesFormFromJson(){
 		} else {
 			$valorInput.val(data.valor !== undefined && data.valor !== null ? data.valor : '');
 		}
-		$(this).find('.medicion_unidad').val(data.unidad || '');
+		var $unidad = $(this).find('.medicion_unidad');
+		if($unidad.length){
+			var unidadDefault = $unidad.attr('data-default-unidad') || '';
+			$unidad.val(data.unidad !== undefined && data.unidad !== null ? data.unidad : unidadDefault);
+		}
 	});
 
 	$('#mediciones_personalizadas').empty();
