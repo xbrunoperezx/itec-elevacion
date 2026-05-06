@@ -86,7 +86,7 @@ switch($action) {
     $lista = isset($_POST['lista']) ? mysqli_real_escape_string($link, trim($_POST['lista'])) : '';
 
     // Normalizar y validar 'tipo'
-    $validTipos = array('MEDIDAS','CARACTERISTICAS');
+    $validTipos = array('MEDIDAS','CARACTERISTICAS','INSTALACIÓN');
     if(!in_array(strtoupper($tipo), $validTipos)){
       $tipo = 'MEDIDAS';
     } else {
@@ -132,7 +132,7 @@ switch($action) {
     $lista = isset($_POST['lista']) ? mysqli_real_escape_string($link, trim($_POST['lista'])) : '';
 
     // Normalizar y validar 'tipo'
-    $validTipos = array('MEDIDAS','CARACTERISTICAS');
+    $validTipos = array('MEDIDAS','CARACTERISTICAS','INSTALACIÓN');
     if(!in_array(strtoupper($tipo), $validTipos)){
       $tipo = 'MEDIDAS';
     } else {
