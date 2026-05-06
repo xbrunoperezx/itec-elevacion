@@ -161,7 +161,7 @@ div.modal#modal_pri {
   background-color: #fafafa;
 }
 #modal_pri .mediciones-table td {
-  padding: 4px 8px;
+  padding: 8px 8px;
   vertical-align: middle;
 }
 #modal_pri .mediciones-table .medicion-nombre-cell {
@@ -184,7 +184,7 @@ div.modal#modal_pri {
   border-bottom: 1px solid #9e9e9e;
   background: transparent;
   width: 100%;
-  height: 1.8em;
+  height: 2.2em;
   padding: 0 2px;
   box-sizing: border-box;
   margin: 0;
@@ -201,7 +201,7 @@ div.modal#modal_pri {
   border: none;
   border-bottom: 1px solid #9e9e9e;
   background: transparent;
-  height: 1.8em;
+  height: 2.2em;
   display: inline-block;
   cursor: pointer;
 }
