@@ -1,58 +1,110 @@
 <?php
 
-// Comprobar cookie de sesión 'user_id'
 if (!isset($_COOKIE['user_id'])) {
-    echo "KO: sesión ha expirado";
-    exit;
-}
-
-$lim = isset($_POST['filtro_total']) ? intval($_POST['filtro_total']) : 100;
-$filtro_id = 0;
-if(isset($_POST['filtro_id_cliente'])){
-    $filtro_id = intval($_POST['filtro_id_cliente']);
-} elseif(isset($_POST['filtro_id'])){
-    $filtro_id = intval($_POST['filtro_id']);
-}
-
-if($filtro_id <= 0){
-    echo json_encode(['resultados' => []]);
-    exit;
+  echo json_encode(["error" => "KO: sesion ha expirado"]);
+  exit;
 }
 
 include("conn_bbdd.php");
 
-// Verifica si la conexión es exitosa
 if (!$link) {
-    die("Conexión fallida: " . mysqli_connect_error());
+  die(json_encode(["error" => "Conexion fallida: " . mysqli_connect_error()]));
 }
 
-// Consulta para obtener la información de los usuarios
-$usuarios_sql = "SELECT * FROM usuarios";
-$usuarios_result = mysqli_query($link, $usuarios_sql);
+$action = isset($_POST['action']) ? $_POST['action'] : 'list';
 
-// Inicialización de un array para almacenar los datos de los usuarios
-$usuarios = array();
+switch($action) {
+  case 'list':
+    $lim = isset($_POST['filtro_total']) ? intval($_POST['filtro_total']) : 15;
+    if ($lim <= 0) $lim = 15;
+    $id = isset($_POST['filtro_id']) ? intval($_POST['filtro_id']) : 0;
 
-// Bucle a través de cada fila de resultados de usuarios y almacenamiento de datos en el array
-while ($row = mysqli_fetch_assoc($usuarios_result)) {
-    $usuarios[$row["id"]] = $row["user"];
-}
+    if ($id > 0) {
+      $sql = "SELECT id, version, texto, date FROM historial_versiones WHERE id=" . $id;
+    } else {
+      $sql = "SELECT id, version, texto, date FROM historial_versiones";
+      $where = array();
 
-$sql = "SELECT * FROM clientes_historial WHERE id_cliente = %d ORDER BY id DESC LIMIT %d";
-$sql = sprintf($sql, $filtro_id, $lim);
-$res = mysqli_query($link, $sql);
-$resultados = array();
-if($res){
-    while($row = mysqli_fetch_assoc($res)){
-        if (isset($usuarios[$row['id_usuario']])) {
-            $row['usuario'] = $usuarios[$row['id_usuario']];
-        }else{
-            $row['usuario'] = "-";
-        }
-        $resultados[] = $row;
+      if (!empty($_POST['filtro_version'])) {
+        $filtro = mysqli_real_escape_string($link, $_POST['filtro_version']);
+        $where[] = "version LIKE '%" . $filtro . "%'";
+      }
+
+      if (count($where) > 0) {
+        $sql .= " WHERE " . implode(" AND ", $where);
+      }
+      $sql .= " ORDER BY id DESC LIMIT 0," . $lim;
     }
+
+    $result = mysqli_query($link, $sql);
+    $rows = array();
+    if ($result) {
+      while ($row = mysqli_fetch_assoc($result)) {
+        if ($row['date'] && $row['date'] != '0000-00-00') {
+          $row['date_dmy'] = date("d-m-Y", strtotime($row['date']));
+        } else {
+          $row['date_dmy'] = '-';
+        }
+        $rows[] = $row;
+      }
+    }
+    echo json_encode(array('resultados' => $rows));
+    break;
+
+  case 'create':
+    $version = isset($_POST['version']) ? mysqli_real_escape_string($link, trim($_POST['version'])) : '';
+    $texto   = isset($_POST['texto'])   ? mysqli_real_escape_string($link, trim($_POST['texto']))   : '';
+    $date    = (!empty($_POST['date'])) ? mysqli_real_escape_string($link, $_POST['date']) : date('Y-m-d');
+
+    if ($version === '') {
+      echo "Error: el campo version es obligatorio";
+      break;
+    }
+
+    $sql = "INSERT INTO `historial_versiones` (`version`, `texto`, `date`) VALUES ('{$version}', '{$texto}', '{$date}')";
+    if (mysqli_query($link, $sql)) {
+      echo "OK";
+    } else {
+      echo "Error al insertar historial: " . mysqli_error($link);
+    }
+    break;
+
+  case 'update':
+    $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+    if ($id === 0) {
+      echo "Error: ID no proporcionado";
+      break;
+    }
+    $version = isset($_POST['version']) ? mysqli_real_escape_string($link, trim($_POST['version'])) : '';
+    $texto   = isset($_POST['texto'])   ? mysqli_real_escape_string($link, trim($_POST['texto']))   : '';
+    $date    = (!empty($_POST['date'])) ? mysqli_real_escape_string($link, $_POST['date']) : date('Y-m-d');
+
+    $sql = "UPDATE `historial_versiones` SET `version`='{$version}', `texto`='{$texto}', `date`='{$date}' WHERE `id`={$id}";
+    if (mysqli_query($link, $sql)) {
+      echo "OK";
+    } else {
+      echo "Error al actualizar historial: " . mysqli_error($link);
+    }
+    break;
+
+  case 'delete':
+    $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+    if ($id === 0) {
+      echo "KO";
+      break;
+    }
+    $sql = "DELETE FROM `historial_versiones` WHERE `id`={$id} LIMIT 1";
+    if (mysqli_query($link, $sql)) {
+      echo "OK";
+    } else {
+      echo "ERROR: " . mysqli_error($link);
+    }
+    break;
+
+  default:
+    echo json_encode(["error" => "Accion no valida"]);
+    break;
 }
 
-echo json_encode(['resultados' => $resultados]);
-
+mysqli_close($link);
 ?>

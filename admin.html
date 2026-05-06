@@ -290,7 +290,46 @@
           </table>
           <div id="resultados_equipos"></div>
         </div>
-        <div id="Historial" class="tab-content" style="display:none;">Contenido - Historial Versiones</div>
+        <div id="Historial" class="tab-content" style="display:none;">
+          <div class="row">
+              <div class="input-field col s1">
+                  <input type="text" id="filtro_historial_total" value="15" autocomplete="off">
+                  <label for="filtro_historial_total" class="active">Resultados</label>
+              </div>
+              <div class="input-field col s2">
+                  <input type="text" id="filtro_historial_version" autocomplete="off">
+                  <label for="filtro_historial_version">Versión</label>
+              </div>
+              <div class="input-field col s1">
+                  <button class="btn-floating waves-effect waves-light red" id="filtrar_historial" title='Filtrar'>
+                      <i class="material-icons">search</i>
+                  </button>
+                  <button class="btn-floating waves-effect waves-light grey hide" id="filtrar_historial_clear" title='Limpiar'>
+                      <i class="material-icons">clear</i>
+                  </button>
+              </div>
+              <div class="right input-field col s2">
+                  <button class="btn-floating waves-effect waves-light orange" id="add_historial" title='Crear nueva version'>
+                    <i class="material-icons">add</i>
+                  </button>
+              </div>
+          </div>
+          <table class="highlight" id="table_historial">
+            <thead>
+              <tr class="header-row">
+                <th>&nbsp;</th>
+                <th class="orderBy">ID<span class="direct"></span></th>
+                <th>&nbsp;</th>
+                <th class="orderBy">Versión<span class="direct"></span></th>
+                <th class="orderBy">Fecha<span class="direct"></span></th>
+                <th>Opciones<span class="direct"></span></th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+          <div id="resultados_historial"></div>
+        </div>
         <div id="Campos" class="tab-content" style="display:none;">
           <div class="row">
               <div class="input-field col ancho75">
@@ -515,6 +554,18 @@
       <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn red accent-4" id="tar_exit">Salir</a>
     </div>
   </div>
+  <div id="modal_his" class="modal">
+    <div class="modal-content">
+      <div class="grey darken-3 white-text row valign-wrapper tituloModal">
+          <i class='left material-icons'>update</i><h6 class="modal_txt_title">Titulo del Modal</h6>
+      </div>
+    </div>
+    <div class="contentForm"></div>
+    <div class="modal-footer">
+      <a href="#!" class="modal_txt_btn_left left waves-effect waves-light btn green accent-4" id="his_save"><i class="material-icons left">save</i>Guardar</a>
+      <a href="#!" class="modal_txt_btn_right right modal-close waves-effect waves-light btn red accent-4" id="his_exit">Salir</a>
+    </div>
+  </div>
   <div id="modal_def" class="modal">
     <div class="modal-content">
       <div class="grey darken-3 white-text row valign-wrapper tituloModal">
@@ -572,5 +623,6 @@
     <script src="js/func_admin_defectos.js"></script>
     <script src="js/func_admin_revisiones.js"></script>
     <script src="js/func_admin_tarifas.js"></script>
+    <script src="js/func_admin_historial.js"></script>
   </body>
 </html>

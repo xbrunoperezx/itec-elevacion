@@ -287,6 +287,7 @@ function comparer(index) {
     if(seccion=="def") openDefecto(seccion, cual, id);
     if(seccion=="rev") openRevision(seccion, cual, id);
     if(seccion=="tar") openTarifa(seccion, cual, id);
+    if(seccion=="his") openHistorial(seccion, cual, id);
 	}
 
 function getCellValue(row, index){ return $(row).children("td").eq(index).text(); }
