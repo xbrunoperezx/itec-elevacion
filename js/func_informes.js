@@ -213,18 +213,19 @@ function buildInstalacionTab2(camposData, instalacionData){
 	$.each(camposData || [], function(idx, campo){
 		if(campo.tipo !== 'INSTALACIÓN') return;
 		var nombreCampo = campo.nombre || '';
+		var abrevCampo = campo.abrev || nombreCampo;
 		var dataType = campo.data_type || 'TEXTO NORMAL';
 		var descripcion = campo.descripcion || '';
-		var valor = (instalacion[nombreCampo] && instalacion[nombreCampo].valor !== undefined && instalacion[nombreCampo].valor !== null) ? instalacion[nombreCampo].valor : '';
-		var unidad = (instalacion[nombreCampo] && instalacion[nombreCampo].unidad) ? instalacion[nombreCampo].unidad : (campo.unidad || '');
+		var valor = (instalacion[abrevCampo] && instalacion[abrevCampo].valor !== undefined && instalacion[abrevCampo].valor !== null) ? instalacion[abrevCampo].valor : '';
+		var unidad = (instalacion[abrevCampo] && instalacion[abrevCampo].unidad) ? instalacion[abrevCampo].unidad : (campo.unidad || '');
 		var listaValores = (campo.lista || '').split(',').map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
 
-		html += '<tr class="instalacion-row" data-campo-nombre="' + nombreCampo + '">';
+		html += '<tr class="instalacion-row" data-campo-abrev="' + abrevCampo + '" data-campo-nombre="' + nombreCampo + '" data-campo-tipo="' + dataType + '">';
 		html += '<td class="medicion-nombre-cell">' + nombreCampo + '</td>';
 		html += '<td class="medicion-valor-cell">' + buildCamposInputHtml(dataType, nombreCampo, valor, listaValores) + '</td>';
 		html += '<td class="medicion-unidad-cell">';
 		if(dataType !== 'CHECKBOX'){
-			html += '<input type="text" class="campo_unidad" data-campo-nombre="' + nombreCampo + '" data-default-unidad="' + (campo.unidad || '') + '" value="' + (unidad || campo.unidad || '') + '" placeholder="Unidad">';
+			html += '<input type="text" class="campo_unidad" data-campo-abrev="' + abrevCampo + '" data-default-unidad="' + (campo.unidad || '') + '" value="' + (unidad || campo.unidad || '') + '" placeholder="Unidad">';
 		}
 		html += '</td>';
 		html += '<td class="medicion-desc-cell">' + (descripcion || '') + '</td>';
@@ -237,12 +238,14 @@ function buildInstalacionTab2(camposData, instalacionData){
 
 function serializeInstalacionFromForm(){
 	var instalacion = {};
-	$('#instalacion_container .instalacion-row[data-campo-nombre]').each(function(){
+	$('#instalacion_container .instalacion-row[data-campo-abrev]').each(function(){
+		var abrev = $(this).data('campo-abrev');
 		var nombre = $(this).data('campo-nombre');
+		var tipo = $(this).data('campo-tipo') || '';
 		var $valorInput = $(this).find('.campo_valor');
 		var valor = $valorInput.attr('type') === 'checkbox' ? $valorInput.is(':checked') : $valorInput.val();
 		var unidad = $(this).find('.campo_unidad').length ? $(this).find('.campo_unidad').val() : '';
-		instalacion[nombre] = { valor: valor !== undefined && valor !== null ? valor : '', unidad: unidad || '' };
+		instalacion[abrev] = { name: nombre, valor: valor !== undefined && valor !== null ? valor : '', unidad: unidad || '', tipo: tipo };
 	});
 	return instalacion;
 }
@@ -275,7 +278,7 @@ function buildMedicionesTab4(camposData, medicionesData){
 
 	html += '<table class="mediciones-table">' +
 		'<thead><tr>' +
-			'<th>Medición</th><th>Valor</th><th>Unidades</th><th>Descripción</th>' +
+			'<th>Clave</th><th>Medición</th><th>Valor</th><th>Unidades</th><th>Descripción</th>' +
 		'</tr></thead>' +
 		'<tbody id="mediciones_tbody">';
 
@@ -284,38 +287,40 @@ function buildMedicionesTab4(camposData, medicionesData){
 		if(campo.tipo !== 'MEDIDAS') return;
 
 		var nombreCampo = campo.nombre || '';
-		baseNames[nombreCampo] = true;
+		var abrevCampo = campo.abrev || nombreCampo;
+		baseNames[abrevCampo] = true;
 		var dataType = campo.data_type || 'NUMERO';
 		var descripcion = campo.descripcion || '';
-		var valor = (mediciones[nombreCampo] && mediciones[nombreCampo].valor !== undefined && mediciones[nombreCampo].valor !== null) ? mediciones[nombreCampo].valor : '';
-		var unidad = (mediciones[nombreCampo] && mediciones[nombreCampo].unidad) ? mediciones[nombreCampo].unidad : (campo.unidad || '');
+		var valor = (mediciones[abrevCampo] && mediciones[abrevCampo].valor !== undefined && mediciones[abrevCampo].valor !== null) ? mediciones[abrevCampo].valor : '';
+		var unidad = (mediciones[abrevCampo] && mediciones[abrevCampo].unidad) ? mediciones[abrevCampo].unidad : (campo.unidad || '');
 		var listaValores = (campo.lista || '').split(',').map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
 
-		html += '<tr class="medicion-row" data-medicion-nombre="' + nombreCampo + '">';
+		html += '<tr class="medicion-row" data-medicion-abrev="' + abrevCampo + '" data-medicion-nombre="' + nombreCampo + '" data-medicion-tipo="' + dataType + '">';
+		html += '<td class="medicion-clave-cell"><span class="medicion-clave-text">' + abrevCampo + '</span></td>';
 		html += '<td class="medicion-nombre-cell">' + nombreCampo + '</td>';
 		html += '<td class="medicion-valor-cell">';
 		if(dataType === 'NUMERO'){
-			html += '<input type="number" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" value="' + (valor || '') + '">';
+			html += '<input type="number" class="medicion_valor" data-medicion-abrev="' + abrevCampo + '" value="' + (valor || '') + '">';
 		} else if(dataType === 'TEXTO NORMAL'){
-			html += '<input type="text" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" value="' + (valor || '') + '">';
+			html += '<input type="text" class="medicion_valor" data-medicion-abrev="' + abrevCampo + '" value="' + (valor || '') + '">';
 		} else if(dataType === 'LISTA VALORES'){
-			html += '<select class="medicion_valor" data-medicion-nombre="' + nombreCampo + '">';
+			html += '<select class="medicion_valor" data-medicion-abrev="' + abrevCampo + '">';
 			html += '<option value="" ' + ((valor === '' || valor === null || valor === undefined) ? 'selected' : '') + '>---</option>';
 			$.each(listaValores, function(i, itemLista){
 				html += '<option value="' + itemLista + '" ' + ((String(valor) === String(itemLista)) ? 'selected' : '') + '>' + itemLista + '</option>';
 			});
 			html += '</select>';
 		} else if(dataType === 'CHECKBOX'){
-			html += '<label><input type="checkbox" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" ' + (valor ? 'checked' : '') + '><span></span></label>';
+			html += '<label><input type="checkbox" class="medicion_valor" data-medicion-abrev="' + abrevCampo + '" ' + (valor ? 'checked' : '') + '><span></span></label>';
 		} else if(dataType === 'FECHA'){
-			html += '<input type="date" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" value="' + (valor || '') + '">';
+			html += '<input type="date" class="medicion_valor" data-medicion-abrev="' + abrevCampo + '" value="' + (valor || '') + '">';
 		} else {
-			html += '<input type="text" class="medicion_valor" data-medicion-nombre="' + nombreCampo + '" value="' + (valor || '') + '">';
+			html += '<input type="text" class="medicion_valor" data-medicion-abrev="' + abrevCampo + '" value="' + (valor || '') + '">';
 		}
 		html += '</td>';
 		html += '<td class="medicion-unidad-cell">';
 		if(dataType !== 'CHECKBOX'){
-			html += '<input type="text" class="medicion_unidad" data-medicion-nombre="' + nombreCampo + '" data-default-unidad="' + (campo.unidad || '') + '" value="' + (unidad || campo.unidad || '') + '" placeholder="Unidad">';
+			html += '<input type="text" class="medicion_unidad" data-medicion-abrev="' + abrevCampo + '" data-default-unidad="' + (campo.unidad || '') + '" value="' + (unidad || campo.unidad || '') + '" placeholder="Unidad">';
 		}
 		html += '</td>';
 		html += '<td class="medicion-desc-cell">' + (descripcion || '') + '</td>';
@@ -323,11 +328,13 @@ function buildMedicionesTab4(camposData, medicionesData){
 	});
 
 	// Mediciones personalizadas existentes
-	$.each(mediciones, function(nombre, data){
-		if(baseNames[nombre]) return;
+	$.each(mediciones, function(abrev, data){
+		if(baseNames[abrev]) return;
+		var nombreDisplay = (data && data.name) ? data.name : abrev;
 		html += '<tr class="medicion_personalizada_row">' +
-			'<td class="medicion-nombre-cell"><input type="text" class="medicion_personalizada_nombre" placeholder="Nombre de medida" value="' + (nombre || '') + '"></td>' +
-			'<td class="medicion-valor-cell"><input type="number" class="medicion_personalizada_valor" placeholder="Valor" value="' + ((data && data.valor !== undefined && data.valor !== null) ? data.valor : '') + '"></td>' +
+			'<td class="medicion-clave-cell"><input type="text" class="medicion_personalizada_clave" placeholder="clave_var" value="' + (abrev || '') + '"></td>' +
+			'<td class="medicion-nombre-cell"><input type="text" class="medicion_personalizada_nombre" placeholder="Nombre de medida" value="' + (nombreDisplay || '') + '"></td>' +
+			'<td class="medicion-valor-cell"><input type="text" class="medicion_personalizada_valor" placeholder="Valor" value="' + ((data && data.valor !== undefined && data.valor !== null) ? data.valor : '') + '"></td>' +
 			'<td class="medicion-unidad-cell"><input type="text" class="medicion_personalizada_unidad" placeholder="Unidad" value="' + (data && data.unidad ? data.unidad : '') + '"></td>' +
 			'<td class="medicion-desc-cell"><a class="btn-floating btn-small waves-effect waves-light red remove-medicion-personalizada"><i class="material-icons">close</i></a></td>' +
 		'</tr>';
@@ -353,10 +360,11 @@ function buildMedicionesTab4(camposData, medicionesData){
 	return html;
 }
 
-function addMedicionPersonalizada(nombre, valor, unidad){
+function addMedicionPersonalizada(clave, nombre, valor, unidad){
 	var html = '<tr class="medicion_personalizada_row">' +
+		'<td class="medicion-clave-cell"><input type="text" class="medicion_personalizada_clave" placeholder="clave_var" value="' + (clave || '') + '"></td>' +
 		'<td class="medicion-nombre-cell"><input type="text" class="medicion_personalizada_nombre" placeholder="Nombre de medida" value="' + (nombre || '') + '"></td>' +
-		'<td class="medicion-valor-cell"><input type="number" class="medicion_personalizada_valor" placeholder="Valor" value="' + ((valor !== undefined && valor !== null && valor !== '') ? valor : '') + '"></td>' +
+		'<td class="medicion-valor-cell"><input type="text" class="medicion_personalizada_valor" placeholder="Valor" value="' + ((valor !== undefined && valor !== null && valor !== '') ? valor : '') + '"></td>' +
 		'<td class="medicion-unidad-cell"><input type="text" class="medicion_personalizada_unidad" placeholder="Unidad" value="' + (unidad || '') + '"></td>' +
 		'<td class="medicion-desc-cell"><a class="btn-floating btn-small waves-effect waves-light red remove-medicion-personalizada"><i class="material-icons">close</i></a></td>' +
 	'</tr>';
@@ -365,33 +373,41 @@ function addMedicionPersonalizada(nombre, valor, unidad){
 
 jQuery(document).on('click', '#add_medicion_personalizada', function(e){
 	e.preventDefault();
-	addMedicionPersonalizada();
+	addMedicionPersonalizada('', '', '', '');
 });
 
 function serializeMedicionesFromForm(){
 	var mediciones = {};
 	
-	$('#mediciones_container .medicion-row[data-medicion-nombre]').each(function(){
+	$('#mediciones_container .medicion-row[data-medicion-abrev]').each(function(){
+		var abrev = $(this).data('medicion-abrev');
 		var nombre = $(this).data('medicion-nombre');
+		var tipo = $(this).data('medicion-tipo') || '';
 		var $valorInput = $(this).find('.medicion_valor');
 		var valor = $valorInput.attr('type') === 'checkbox' ? $valorInput.is(':checked') : $valorInput.val();
 		var unidad = $(this).find('.medicion_unidad').length ? $(this).find('.medicion_unidad').val() : '';
 		if(valor !== '' && valor !== undefined && valor !== null){
-			mediciones[nombre] = {
+			mediciones[abrev] = {
+				name: nombre,
 				valor: valor,
-				unidad: unidad || ''
+				unidad: unidad || '',
+				tipo: tipo
 			};
 		}
 	});
 
 	$('.medicion_personalizada_row').each(function(){
+		var clave = ($(this).find('.medicion_personalizada_clave').val() || '').trim();
 		var nombre = ($(this).find('.medicion_personalizada_nombre').val() || '').trim();
 		var valor = $(this).find('.medicion_personalizada_valor').val();
 		var unidad = $(this).find('.medicion_personalizada_unidad').val();
-		if(nombre !== '' && valor !== '' && valor !== undefined && valor !== null){
-			mediciones[nombre] = {
+		var key = clave || nombre;
+		if(key !== '' && valor !== '' && valor !== undefined && valor !== null){
+			mediciones[key] = {
+				name: nombre,
 				valor: valor,
-				unidad: unidad || ''
+				unidad: unidad || '',
+				tipo: 'MANUAL'
 			};
 		}
 	});
@@ -418,10 +434,10 @@ function syncMedicionesFormFromJson(){
 	}
 
 	var baseNames = {};
-	$('#mediciones_container .medicion-row[data-medicion-nombre]').each(function(){
-		var nombre = $(this).data('medicion-nombre');
-		baseNames[nombre] = true;
-		var data = json[nombre] || {};
+	$('#mediciones_container .medicion-row[data-medicion-abrev]').each(function(){
+		var abrev = $(this).data('medicion-abrev');
+		baseNames[abrev] = true;
+		var data = json[abrev] || {};
 		var $valorInput = $(this).find('.medicion_valor');
 		if($valorInput.attr('type') === 'checkbox'){
 			$valorInput.prop('checked', !!data.valor);
@@ -436,9 +452,10 @@ function syncMedicionesFormFromJson(){
 	});
 
 	$('#mediciones_tbody .medicion_personalizada_row').remove();
-	$.each(json, function(nombre, data){
-		if(baseNames[nombre]) return;
-		addMedicionPersonalizada(nombre, (data && data.valor !== undefined && data.valor !== null) ? data.valor : '', data && data.unidad ? data.unidad : '');
+	$.each(json, function(abrev, data){
+		if(baseNames[abrev]) return;
+		var nombreDisplay = (data && data.name) ? data.name : abrev;
+		addMedicionPersonalizada(abrev, nombreDisplay, (data && data.valor !== undefined && data.valor !== null) ? data.valor : '', data && data.unidad ? data.unidad : '');
 	});
 	$('#mediciones_mode').formSelect();
 	return true;
