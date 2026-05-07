@@ -73,7 +73,7 @@ function readCampos(){
       var mandatory = parseInt(item.mandatory, 10) === 1;
 
       var tr = "<tr class='alto50'>";
-      tr += "<td class='ancho50'>&nbsp;</td>";
+      tr += "<td class='ancho50'>" + (mandatory ? "<i class='material-icons grey-text' title='Obligatorio'>check_circle</i>" : "&nbsp;") + "</td>";
       tr += "<td class='ancho30'>" + id + "</td>";
       tr += "<td class='ancho80'>" + tipo + "</td>";
       tr += "<td class='ancho30'><a seccion='camp' tipo='frm_editcamp' data-id='"+id+"' class='editar_camp btn-floating btn-small waves-effect waves-light green' title='Editar campo'><i class='material-icons'>edit</i></a></td>";
@@ -85,7 +85,6 @@ function readCampos(){
       tr += "<td class='ancho50'>" +
             "<a class='more_camp btn-floating btn-small waves-effect waves-light red' title='Más' data-id='"+id+"'><i class='material-icons'>more_vert</i></a>" +
             "</td>";
-      tr += "<td class='ancho80'>" + (mandatory ? "Obligatorio" : "") + "</td>";
       tr += "</tr>";
 
       $('#table_campos tbody').append(tr);
