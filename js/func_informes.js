@@ -224,7 +224,7 @@ function buildInstalacionTab2(camposData, instalacionData){
 		html += '<td class="medicion-nombre-cell">' + nombreCampo + '</td>';
 		html += '<td class="medicion-valor-cell">' + buildCamposInputHtml(dataType, nombreCampo, valor, listaValores) + '</td>';
 		html += '<td class="medicion-unidad-cell">';
-		if(dataType !== 'CHECKBOX'){
+		if(dataType !== 'CHECKBOX' && dataType !== 'TEXTO NORMAL'){
 			html += '<input type="text" class="campo_unidad" data-campo-abrev="' + abrevCampo + '" data-default-unidad="' + (campo.unidad || '') + '" value="' + (unidad || campo.unidad || '') + '" placeholder="Unidad">';
 		}
 		html += '</td>';
@@ -260,19 +260,6 @@ function buildMedicionesTab4(camposData, medicionesData){
 	} catch(err) {
 		mediciones = {};
 	}
-
-	html += '<div class="row mediciones-toolbar">' +
-		'<div class="input-field col s4 m3 l3" style="margin-top:0;">' +
-			'<select id="mediciones_mode">' +
-				'<option value="normal" selected>Modo normal</option>' +
-				'<option value="codigo">Modo codigo JSON</option>' +
-			'</select>' +
-			'<label class="active" for="mediciones_mode">Modo de edicion</label>' +
-		'</div>' +
-		'<div class="col s8 m9 l9 right-align" style="padding-top:8px;">' +
-			'<a id="copy_mediciones_json" class="btn blue waves-effect waves-light"><i class="material-icons left">content_copy</i>Copiar JSON</a>' +
-		'</div>' +
-	'</div>';
 
 	html += '<div id="mediciones_mode_normal">';
 
@@ -319,7 +306,7 @@ function buildMedicionesTab4(camposData, medicionesData){
 		}
 		html += '</td>';
 		html += '<td class="medicion-unidad-cell">';
-		if(dataType !== 'CHECKBOX'){
+		if(dataType !== 'CHECKBOX' && dataType !== 'TEXTO NORMAL'){
 			html += '<input type="text" class="medicion_unidad" data-medicion-abrev="' + abrevCampo + '" data-default-unidad="' + (campo.unidad || '') + '" value="' + (unidad || campo.unidad || '') + '" placeholder="Unidad">';
 		}
 		html += '</td>';
@@ -342,9 +329,21 @@ function buildMedicionesTab4(camposData, medicionesData){
 
 	html += '</tbody></table>';
 
-	html += '<div style="margin-top:8px;">' +
-		'<button type="button" id="add_medicion_personalizada" class="btn waves-effect waves-light green btn-small"><i class="material-icons left">add</i>Agregar medida personalizada</button>' +
-		'</div>';
+	html += '<div class="row mediciones-toolbar" style="margin-top:8px; margin-bottom:0;">' +
+		'<div class="col s12 m4 l4" style="padding-top:6px;">' +
+			'<button type="button" id="add_medicion_personalizada" class="btn waves-effect waves-light green btn-small"><i class="material-icons left">add</i>Agregar medida personalizada</button>' +
+		'</div>' +
+		'<div class="input-field col s6 m4 l3" style="margin-top:0;">' +
+			'<select id="mediciones_mode">' +
+				'<option value="normal" selected>Modo normal</option>' +
+				'<option value="codigo">Modo codigo JSON</option>' +
+			'</select>' +
+			'<label class="active" for="mediciones_mode">Modo de edicion</label>' +
+		'</div>' +
+		'<div class="col s6 m4 l5 right-align" style="padding-top:8px;">' +
+			'<a id="copy_mediciones_json" class="btn blue waves-effect waves-light"><i class="material-icons left">content_copy</i>Copiar JSON</a>' +
+		'</div>' +
+	'</div>';
 
 	html += '</div>';
 
