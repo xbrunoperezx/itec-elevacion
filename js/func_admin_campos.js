@@ -70,6 +70,7 @@ function readCampos(){
       var abrev = item.abrev || '';
       var unidad = item.unidad || '';
       var dataType = item.data_type || '';
+      var mandatory = parseInt(item.mandatory, 10) === 1;
 
       var tr = "<tr class='alto50'>";
       tr += "<td class='ancho50'>&nbsp;</td>";
@@ -84,6 +85,7 @@ function readCampos(){
       tr += "<td class='ancho50'>" +
             "<a class='more_camp btn-floating btn-small waves-effect waves-light red' title='Más' data-id='"+id+"'><i class='material-icons'>more_vert</i></a>" +
             "</td>";
+      tr += "<td class='ancho80'>" + (mandatory ? "Obligatorio" : "") + "</td>";
       tr += "</tr>";
 
       $('#table_campos tbody').append(tr);
