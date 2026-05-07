@@ -135,6 +135,7 @@ var saveCampo = function() {
   var unidad = ($('#unidad_camp').val() || '').trim();
   var data_type = ($('#data_type_camp').val() || '').trim();
   var lista = ($('#lista_camp').val() || '').trim();
+  var mandatory = $('#mandatory_camp').is(':checked') ? 1 : 0;
 
   if (data_type !== 'LISTA VALORES') {
     lista = '';
@@ -148,7 +149,8 @@ var saveCampo = function() {
     abrev: abrev,
     unidad: unidad,
     data_type: data_type,
-    lista: lista
+    lista: lista,
+    mandatory: mandatory
   };
 
   var apiCall;
@@ -256,6 +258,14 @@ var openCampo = function(seccion, cual, id){
               '<label for="descripcion_camp" class="active">Descripción</label>' +
             '</div>' +
           '</div>' +
+          '<div class="row">' +
+            '<div class="col s12">' +
+              '<label>' +
+                '<input type="checkbox" id="mandatory_camp" name="mandatory" ' + ((parseInt(item.mandatory, 10) === 1) ? 'checked' : '') + '>' +
+                '<span>Campo obligatorio</span>' +
+              '</label>' +
+            '</div>' +
+          '</div>' +
           '<div class="row ' + (((item.data_type || '') === 'LISTA VALORES') ? '' : 'hide') + '" id="lista_camp_wrap">' +
             '<div class="input-field anchoFrm4 left">' +
               '<input type="text" id="lista_camp" name="lista" value="'+ (item.lista || '') +'" autocomplete="off">' +
@@ -324,6 +334,14 @@ var openCampo = function(seccion, cual, id){
         '<div class="input-field col s12">' +
           '<input type="text" id="descripcion_camp" name="descripcion" value="" autocomplete="off">' +
           '<label for="descripcion_camp">Descripción</label>' +
+        '</div>' +
+      '</div>' +
+      '<div class="row">' +
+        '<div class="col s12">' +
+          '<label>' +
+            '<input type="checkbox" id="mandatory_camp" name="mandatory">' +
+            '<span>Campo obligatorio</span>' +
+          '</label>' +
         '</div>' +
       '</div>' +
       '<div class="row hide" id="lista_camp_wrap">' +
