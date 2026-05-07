@@ -166,12 +166,48 @@ function syncGoogleMapsButton(){
 	}
 }
 
+function syncDuracionMinutos(){
+	var horaIni = ($('#hora_ini').val() || '').trim();
+	var horaFin = ($('#hora_fin').val() || '').trim();
+	var $duracion = $('#duracion_minutos');
+	if(!$duracion.length) return;
+
+	if(horaIni === '' || horaFin === ''){
+		$duracion.val('');
+		return;
+	}
+
+	var iniParts = horaIni.split(':');
+	var finParts = horaFin.split(':');
+	if(iniParts.length < 2 || finParts.length < 2){
+		$duracion.val('');
+		return;
+	}
+
+	var iniMin = parseInt(iniParts[0], 10) * 60 + parseInt(iniParts[1], 10);
+	var finMin = parseInt(finParts[0], 10) * 60 + parseInt(finParts[1], 10);
+	if(isNaN(iniMin) || isNaN(finMin)){
+		$duracion.val('');
+		return;
+	}
+
+	if(finMin < iniMin){
+		finMin += 24 * 60;
+	}
+
+	$duracion.val(String(finMin - iniMin));
+}
+
 jQuery(document).on('change', '#grupo_pri', function(){
 	syncGrupoLegislacion();
 });
 
 jQuery(document).on('input', '#gps_latitud, #gps_longitud', function(){
 	syncGoogleMapsButton();
+});
+
+jQuery(document).on('input change', '#hora_ini, #hora_fin', function(){
+	syncDuracionMinutos();
 });
 
 function buildCamposInputHtml(dataType, nombreCampo, valor, listaValores){
@@ -735,21 +771,25 @@ var openInforme = function(seccion, cual, id){
 						    '<input type="date" id="fecha_inspeccion" name="fecha_inspeccion" value="' + item.fecha + '">' +
 						    '<label for="fecha_inspeccion" class="active">Fecha Inspección</label>' +
 						  '</div>' +
-						  '<div class="input-field col s4">' +
+						  '<div class="input-field col s2">' +
 						    '<input type="time" id="hora_ini" name="hora_ini" value="' + item.hora_ini + '">' +
 						    '<label for="hora_ini" class="active">Hora inicio</label>' +
 						  '</div>' +
-						  '<div class="input-field col s4">' +
+						  '<div class="input-field col s2">' +
 						    '<input type="time" id="hora_fin" name="hora_fin" value="' + item.hora_fin + '">' +
 						    '<label for="hora_fin" class="active">Hora fin</label>' +
 						  '</div>' +
+						  '<div class="input-field col s4">' +
+						    '<input type="text" id="duracion_minutos" name="duracion_minutos" value="" readonly>' +
+						    '<label for="duracion_minutos" class="active">Duración (min)</label>' +
+						  '</div>' +
 						'</div>' +
 						'<div class="row">' +
-						  '<div class="input-field col s4">' +
+						  '<div class="input-field col s2">' +
 						    '<input type="text" id="gps_latitud" name="gps_latitud" value="' + item.gps_latitud + '">' +
 						    '<label for="gps_latitud" class="active">GPS lat</label>' +
 						  '</div>' +
-						  '<div class="input-field col s4">' +
+						  '<div class="input-field col s2">' +
 						    '<input type="text" id="gps_longitud" name="gps_longitud" value="' + item.gps_longitud + '">' +
 						    '<label for="gps_longitud" class="active">GPS long</label>' +
 						  '</div>' +
@@ -807,6 +847,7 @@ var openInforme = function(seccion, cual, id){
 				  $("#modal_"+seccion).modal({ dismissible: false });
 				  $("#modal_"+seccion).modal("open");
 				  syncGrupoLegislacion();
+				  syncDuracionMinutos();
 				  syncGoogleMapsButton();
 				  $("#modal_"+seccion).find('#grupo_pri').formSelect();
 										},
