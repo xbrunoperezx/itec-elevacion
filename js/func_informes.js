@@ -95,7 +95,7 @@ var readInformes = function(id, totalParams){
 					tableRow += "<a seccion='pri' tipo='sheet_pri' data-id='" + item.id + "' class='disabled sheet_pri btn-floating btn-small waves-effect waves-light grey darken-1' title='Hoja de campo'>" +
 						"<i class='material-icons'>assignment</i>" +
 					"</a>&nbsp;" +
-					tableRow += "<a seccion='pri' tipo='print_pri' data-id='" + item.id + "' class='disabled print_pri btn-floating btn-small waves-effect waves-light light-blue darken-2' title='Generar informe'>" +
+					"<a seccion='pri' tipo='print_pri' data-id='" + item.id + "' class='disabled print_pri btn-floating btn-small waves-effect waves-light light-blue darken-2' title='Generar informe'>" +
 						"<i class='material-icons'>picture_as_pdf</i>" +
 					"</a>";		        	
 				}
@@ -657,14 +657,14 @@ function savePrimera(){
 			var allMediciones = {
 				medidas: mediciones,
 				instalacion: serializeInstalacionFromForm(),
-				caracteristicas: {}
+				caracteristicas: serializeAscensorFromForm()
 			};
+			$.ajax({
+				url: 'services/mediciones.php',
+				type: 'POST',
+				data: {
+					action: 'save',
 					id_informe: id,
-						var allMediciones = {
-							medidas: mediciones,
-							instalacion: serializeInstalacionFromForm(),
-							caracteristicas: serializeAscensorFromForm()
-						};
 					medidas_json: JSON.stringify(allMediciones)
 				},
 				success: function(response){
