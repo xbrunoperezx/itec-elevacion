@@ -190,7 +190,6 @@ while ($row = mysqli_fetch_assoc($result)) {
   $item['resultado'] = isset($row['resultado']) ? $row['resultado'] : null;
   $item['plazo'] = isset($row['plazo']) ? $row['plazo'] : null;
   $item['grupo'] = isset($row['grupo']) ? $row['grupo'] : null;
-  $item['legislacion'] = isset($row['legislacion']) ? $row['legislacion'] : null;
   $item['acude'] = isset($row['acude']) ? $row['acude'] : null;
   $item['proxima'] = isset($row['proxima']) ? $row['proxima'] : null;
   $item['industria'] = isset($row['industria']) ? $row['industria'] : null;

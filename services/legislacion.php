@@ -27,9 +27,9 @@ switch($action) {
     $id = isset($_POST['filtro_id']) ? intval($_POST['filtro_id']) : 0;
 
     if ($id > 0) {
-      $sql = "SELECT id, nombre, abrev, activa, legislacion FROM legislacion WHERE id=" . $id;
+      $sql = "SELECT id, nombre, abrev, activa, legislacion, tipo_ascensor FROM grupos WHERE id=" . $id;
     } else {
-      $sql = "SELECT id, nombre, abrev, activa, legislacion FROM legislacion";
+      $sql = "SELECT id, nombre, abrev, activa, legislacion, tipo_ascensor FROM grupos";
       $where = array();
 
       if (!empty($_POST['filtro_nombre'])) {
@@ -69,11 +69,11 @@ switch($action) {
       break;
     }
 
-    $sql = "INSERT INTO `legislacion` (`nombre`, `abrev`, `activa`, `legislacion`) VALUES ('{$nombre}', '{$abrev}', {$activa}, '{$legislacion}')";
+    $sql = "INSERT INTO `grupos` (`nombre`, `abrev`, `activa`, `legislacion`) VALUES ('{$nombre}', '{$abrev}', {$activa}, '{$legislacion}')";
     if (mysqli_query($link, $sql)) {
       echo "OK";
     } else {
-      echo "Error al insertar legislacion: " . mysqli_error($link);
+      echo "Error al insertar grupo: " . mysqli_error($link);
     }
     break;
 

@@ -16,7 +16,7 @@ $action = isset($_POST['action']) ? $_POST['action'] : 'list';
 
 function getLegislacionesAbrev($link){
   $out = array();
-  $sql = "SELECT id, abrev, nombre FROM legislacion ORDER BY id ASC";
+  $sql = "SELECT id, abrev, nombre FROM grupos ORDER BY id ASC";
   $res = mysqli_query($link, $sql);
   if ($res) {
     while ($r = mysqli_fetch_assoc($res)) {
@@ -28,7 +28,7 @@ function getLegislacionesAbrev($link){
 
 function getLegislacionesAbrevList($link){
   $out = array();
-  $sql = "SELECT abrev FROM legislacion WHERE abrev IS NOT NULL AND abrev <> '' ORDER BY id ASC";
+  $sql = "SELECT abrev FROM grupos WHERE abrev IS NOT NULL AND abrev <> '' ORDER BY id ASC";
   $res = mysqli_query($link, $sql);
   if ($res) {
     while ($r = mysqli_fetch_assoc($res)) {

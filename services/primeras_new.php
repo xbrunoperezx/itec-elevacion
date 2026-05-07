@@ -107,7 +107,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
   $informe = array();
   foreach (array_keys($row) as $key) {
-    if (in_array($key, ["id","id_contratada","destino","num_viviendas","num_paradas","puesta_marcha","insp_anterior","plazo","legislacion"])) {
+    if (in_array($key, ["id","id_contratada","destino","num_viviendas","num_paradas","puesta_marcha","insp_anterior","plazo","grupo"])) {
       $informe[$key] = $row[$key];
     }
   }

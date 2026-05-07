@@ -129,12 +129,13 @@ var readInformes = function(id, totalParams){
 	});
 }
 
-function buildGrupoOptions(legislaciones, selectedNombre){
+function buildGrupoOptions(grupos, selectedNombre){
 	var html = '<option value="" disabled' + (!selectedNombre ? ' selected' : '') + '>Selecciona grupo</option>';
-	$.each(legislaciones || [], function(index, item){
+	$.each(grupos || [], function(index, item){
 		var nombre = item.nombre || '';
 		var legislacion = item.legislacion || '';
-		html += '<option value="' + nombre + '" data-legislacion="' + legislacion + '"' + (nombre === selectedNombre ? ' selected' : '') + '>' + nombre + '</option>';
+		var tipoAscensor = item.tipo_ascensor || '';
+		html += '<option value="' + nombre + '" data-legislacion="' + legislacion + '" data-tipo_ascensor="' + tipoAscensor + '"' + (nombre === selectedNombre ? ' selected' : '') + '>' + nombre + '</option>';
 	});
 	return html;
 }
@@ -143,12 +144,20 @@ function syncGrupoLegislacion(){
 	var $grupo = $('#grupo_pri');
 	if(!$grupo.length) return;
 	var legislacion = $grupo.find('option:selected').data('legislacion') || '';
+	var tipoAscensor = $grupo.find('option:selected').data('tipo_ascensor') || '';
 	$('#legislacion_pri').val(legislacion);
+	$('#tipo_ascensor_pri').val(tipoAscensor);
 	var $label = $('label[for="legislacion_pri"]');
 	if(legislacion){
 		$label.addClass('active');
 	}else{
 		$label.removeClass('active');
+	}
+	var $labelTipo = $('label[for="tipo_ascensor_pri"]');
+	if(tipoAscensor){
+		$labelTipo.addClass('active');
+	}else{
+		$labelTipo.removeClass('active');
 	}
 }
 
@@ -692,11 +701,11 @@ var openInforme = function(seccion, cual, id){
 					type: 'POST',
 					data: { action: 'list', filtro_total: 500 },
 					success: function(legData) {
-						var legislaciones = [];
+						var grupos = [];
 						try {
-							legislaciones = JSON.parse(legData).resultados || [];
+							grupos = JSON.parse(legData).resultados || [];
 						} catch(err) {
-							legislaciones = [];
+							grupos = [];
 						}
 						
 						// Cargar campos MEDIDAS
@@ -804,14 +813,18 @@ var openInforme = function(seccion, cual, id){
 						'<div id="tab3_pri" class="col s12">' +
 						  '<div class="row">' +
 						    '<div class="input-field col s12">' +
-						      '<select id="grupo_pri" name="grupo">' + buildGrupoOptions(legislaciones, item.grupo || '') + '</select>' +
+						      '<select id="grupo_pri" name="grupo">' + buildGrupoOptions(grupos, item.grupo || '') + '</select>' +
 						      '<label>Grupo</label>' +
 						    '</div>' +
 						  '</div>' +
 						  '<div class="row">' +
-						    '<div class="input-field col s12">' +
-						      '<input type="text" id="legislacion_pri" name="legislacion" value="' + (item.legislacion || '') + '" readonly>' +
+						    '<div class="input-field col s6">' +
+						      '<input type="text" id="legislacion_pri" name="legislacion" value="" readonly>' +
 						      '<label for="legislacion_pri" class="active">Legislación</label>' +
+						    '</div>' +
+						    '<div class="input-field col s6">' +
+						      '<input type="text" id="tipo_ascensor_pri" name="tipo_ascensor" value="" readonly>' +
+						      '<label for="tipo_ascensor_pri" class="active">Tipo</label>' +
 						    '</div>' +
 						  '</div>' +
 						'</div>' +	
