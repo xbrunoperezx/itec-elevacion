@@ -95,7 +95,7 @@ var readInformes = function(id, totalParams){
 					tableRow += "<a seccion='pri' tipo='sheet_pri' data-id='" + item.id + "' class='disabled sheet_pri btn-floating btn-small waves-effect waves-light grey darken-1' title='Hoja de campo'>" +
 						"<i class='material-icons'>assignment</i>" +
 					"</a>&nbsp;" +
-					tableRow += "<a seccion='pri' tipo='print_pri' data-id='" + item.id + "' class='disabled print_pri btn-floating btn-small waves-effect waves-light light-blue darken-2' title='Generar informe'>" +
+					"<a seccion='pri' tipo='print_pri' data-id='" + item.id + "' class='disabled print_pri btn-floating btn-small waves-effect waves-light light-blue darken-2' title='Generar informe'>" +
 						"<i class='material-icons'>picture_as_pdf</i>" +
 					"</a>";		        	
 				}
@@ -281,45 +281,6 @@ function buildInstalacionTab2(camposData, instalacionData){
 	return html;
 }
 
-function buildAscensorTab3(camposData, ascensorData){
-	var html = '';
-	var ascensor = {};
-	try {
-		ascensor = (ascensorData && typeof ascensorData === 'object') ? ascensorData : {};
-	} catch(err) { ascensor = {}; }
-
-	html += '<table class="mediciones-table">' +
-		'<thead><tr>' +
-			'<th>Campo</th><th>Valor</th><th>Unidades</th><th>Descripción</th>' +
-		'</tr></thead>' +
-		'<tbody id="ascensor_tbody">';
-
-	$.each(camposData || [], function(idx, campo){
-		if(campo.tipo !== 'CARACTERÍSTICAS') return;
-		var nombreCampo = campo.nombre || '';
-		var abrevCampo = campo.abrev || nombreCampo;
-		var dataType = campo.data_type || 'TEXTO NORMAL';
-		var descripcion = campo.descripcion || '';
-		var valor = (ascensor[abrevCampo] && ascensor[abrevCampo].valor !== undefined && ascensor[abrevCampo].valor !== null) ? ascensor[abrevCampo].valor : '';
-		var unidad = (ascensor[abrevCampo] && ascensor[abrevCampo].unidad) ? ascensor[abrevCampo].unidad : (campo.unidad || '');
-		var listaValores = (campo.lista || '').split(',').map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
-
-		html += '<tr class="ascensor-row" data-campo-abrev="' + abrevCampo + '" data-campo-nombre="' + nombreCampo + '" data-campo-tipo="' + dataType + '">';
-		html += '<td class="medicion-nombre-cell">' + nombreCampo + '</td>';
-		html += '<td class="medicion-valor-cell">' + buildCamposInputHtml(dataType, nombreCampo, valor, listaValores) + '</td>';
-		html += '<td class="medicion-unidad-cell">';
-		if(dataType !== 'CHECKBOX' && dataType !== 'TEXTO NORMAL'){
-			html += '<input type="text" class="campo_unidad" data-campo-abrev="' + abrevCampo + '" data-default-unidad="' + (campo.unidad || '') + '" value="' + (unidad || campo.unidad || '') + '" placeholder="Unidad">';
-		}
-		html += '</td>';
-		html += '<td class="medicion-desc-cell">' + (descripcion || '') + '</td>';
-		html += '</tr>';
-	});
-
-	html += '</tbody></table>';
-	return html;
-}
-
 function serializeInstalacionFromForm(){
 	var instalacion = {};
 	$('#instalacion_container .instalacion-row[data-campo-abrev]').each(function(){
@@ -332,20 +293,6 @@ function serializeInstalacionFromForm(){
 		instalacion[abrev] = { name: nombre, valor: valor !== undefined && valor !== null ? valor : '', unidad: unidad || '', tipo: tipo };
 	});
 	return instalacion;
-
-function serializeAscensorFromForm(){
-	var ascensor = {};
-	$('#ascensor_container .ascensor-row[data-campo-abrev]').each(function(){
-		var abrev = $(this).data('campo-abrev');
-		var nombre = $(this).data('campo-nombre');
-		var tipo = $(this).data('campo-tipo') || '';
-		var $valorInput = $(this).find('.campo_valor');
-		var valor = $valorInput.attr('type') === 'checkbox' ? $valorInput.is(':checked') : $valorInput.val();
-		var unidad = $(this).find('.campo_unidad').length ? $(this).find('.campo_unidad').val() : '';
-		ascensor[abrev] = { name: nombre, valor: valor !== undefined && valor !== null ? valor : '', unidad: unidad || '', tipo: tipo };
-	});
-	return ascensor;
-}
 }
 
 function buildMedicionesTab4(camposData, medicionesData){
@@ -659,12 +606,12 @@ function savePrimera(){
 				instalacion: serializeInstalacionFromForm(),
 				caracteristicas: {}
 			};
+			$.ajax({
+				url: 'services/mediciones.php',
+				type: 'POST',
+				data: {
+					action: 'save',
 					id_informe: id,
-						var allMediciones = {
-							medidas: mediciones,
-							instalacion: serializeInstalacionFromForm(),
-							caracteristicas: serializeAscensorFromForm()
-						};
 					medidas_json: JSON.stringify(allMediciones)
 				},
 				success: function(response){
@@ -789,7 +736,6 @@ var openInforme = function(seccion, cual, id){
 									}
 									var mediciones = allData.medidas || {};
 									var instalacionData = allData.instalacion || {};
-									var ascensorData = allData.caracteristicas || {};
 				dataLayer.push({
 			    	"event" : "service",
 			    	"type" : "get_pri",
@@ -862,26 +808,25 @@ var openInforme = function(seccion, cual, id){
 						'</div>' +
 						'</div>' +	
 						'<div id="tab2_pri" class="active col s12">' +
-						'<div class="row">' +
-						'  <div class="input-field col s12">' +
-						'    <select id="grupo_pri" name="grupo">' + buildGrupoOptions(grupos, item.grupo || '') + '</select>' +
-						'    <label>Grupo</label>' +
-						'  </div>' +
-						'</div>' +
-						'<div class="row">' +
-						'  <div class="input-field col s6">' +
-						'    <input type="text" id="legislacion_pri" name="legislacion" value="" readonly>' +
-						'    <label for="legislacion_pri" class="active">Legislación</label>' +
-						'  </div>' +
-						'  <div class="input-field col s6">' +
-						'    <input type="text" id="tipo_ascensor_pri" name="tipo_ascensor" value="" readonly>' +
-						'    <label for="tipo_ascensor_pri" class="active">Tipo</label>' +
-						'  </div>' +
-						'</div>' +
 						'<div id="instalacion_container"></div>' +
 						'</div>' +
 						'<div id="tab3_pri" class="col s12">' +
-						'<div id="ascensor_container"></div>' +
+						  '<div class="row">' +
+						    '<div class="input-field col s12">' +
+						      '<select id="grupo_pri" name="grupo">' + buildGrupoOptions(grupos, item.grupo || '') + '</select>' +
+						      '<label>Grupo</label>' +
+						    '</div>' +
+						  '</div>' +
+						  '<div class="row">' +
+						    '<div class="input-field col s6">' +
+						      '<input type="text" id="legislacion_pri" name="legislacion" value="" readonly>' +
+						      '<label for="legislacion_pri" class="active">Legislación</label>' +
+						    '</div>' +
+						    '<div class="input-field col s6">' +
+						      '<input type="text" id="tipo_ascensor_pri" name="tipo_ascensor" value="" readonly>' +
+						      '<label for="tipo_ascensor_pri" class="active">Tipo</label>' +
+						    '</div>' +
+						  '</div>' +
 						'</div>' +	
 						'<div id="tab4_pri" class="col s12">' + 
 						'<div id="mediciones_container"></div>' +
@@ -906,14 +851,12 @@ var openInforme = function(seccion, cual, id){
 				  $("#modal_"+seccion).find('.tabs').tabs();
 				  $("#modal_"+seccion).find('select').formSelect();
 				  
-				  // Renderizar mediciones, instalación y ascensor
+				  // Renderizar mediciones e instalación
 				  var medicionesHtml = buildMedicionesTab4(campos, mediciones);
 				  $('#mediciones_container').html(medicionesHtml);
 				  $('#mediciones_mode').formSelect();
 				  var instalacionHtml = buildInstalacionTab2(campos, instalacionData);
 				  $('#instalacion_container').html(instalacionHtml);
-				  var ascensorHtml = buildAscensorTab3(campos, ascensorData);
-				  $('#ascensor_container').html(ascensorHtml);
 				  $("#modal_"+seccion).modal({ dismissible: false });
 				  $("#modal_"+seccion).modal("open");
 				  syncGrupoLegislacion();
@@ -955,4 +898,7 @@ jQuery(document).on("click", "#filtrar_pri_clear", function() {
 	jQuery(this).parents("#tab_pri").find("#filtro_pri_fechainicio").val('');	
 	jQuery(this).parents("#tab_pri").find("#filtro_pri_fechafin").val('');	
 	jQuery(this).parents("#tab_pri").find("label").not(":eq(0)").removeClass("active");
+	jQuery(this).parents("#tab_pri").find("#filtro_pri_total").val('15');	
+	jQuery(this).parents("#tab_pri").find("#filtro_pri_pendiente").prop("checked", false);
+	jQuery(this).parents("#tab_pri").find("#filtrar_pri").click();
 });
