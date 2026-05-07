@@ -12,6 +12,37 @@ if (!$link) {
     die(json_encode(["error" => "Conexión fallida: " . mysqli_connect_error()]));
 }
 
+function tipo_campo_key($tipo) {
+  $tipo = trim((string)$tipo);
+  $tipo = strtr($tipo, array(
+    'á' => 'a', 'à' => 'a', 'ä' => 'a', 'â' => 'a',
+    'Á' => 'A', 'À' => 'A', 'Ä' => 'A', 'Â' => 'A',
+    'é' => 'e', 'è' => 'e', 'ë' => 'e', 'ê' => 'e',
+    'É' => 'E', 'È' => 'E', 'Ë' => 'E', 'Ê' => 'E',
+    'í' => 'i', 'ì' => 'i', 'ï' => 'i', 'î' => 'i',
+    'Í' => 'I', 'Ì' => 'I', 'Ï' => 'I', 'Î' => 'I',
+    'ó' => 'o', 'ò' => 'o', 'ö' => 'o', 'ô' => 'o',
+    'Ó' => 'O', 'Ò' => 'O', 'Ö' => 'O', 'Ô' => 'O',
+    'ú' => 'u', 'ù' => 'u', 'ü' => 'u', 'û' => 'u',
+    'Ú' => 'U', 'Ù' => 'U', 'Ü' => 'U', 'Û' => 'U'
+  ));
+  return strtoupper($tipo);
+}
+
+function tipo_campo_canonico($tipo) {
+  $key = tipo_campo_key($tipo);
+  switch ($key) {
+    case 'MEDIDAS':
+      return 'MEDIDAS';
+    case 'CARACTERISTICAS':
+      return 'CARACTERÍSTICAS';
+    case 'INSTALACION':
+      return 'INSTALACIÓN';
+    default:
+      return 'MEDIDAS';
+  }
+}
+
 // Determinar la acción solicitada
 $action = isset($_POST['action']) ? $_POST['action'] : 'list';
 
@@ -51,7 +82,14 @@ switch($action) {
         $where[] = "`nombre` LIKE '%" . mysqli_real_escape_string($link, $_POST['filtro_nombre']) . "%'";
       }
       if (!empty($_POST['filtro_tipo'])) {
-        $where[] = "`tipo` = '" . mysqli_real_escape_string($link, $_POST['filtro_tipo']) . "'";
+        $tipoFiltro = tipo_campo_canonico($_POST['filtro_tipo']);
+        if ($tipoFiltro === 'CARACTERÍSTICAS') {
+          $where[] = "`tipo` IN ('CARACTERÍSTICAS','CARACTERISTICAS')";
+        } elseif ($tipoFiltro === 'INSTALACIÓN') {
+          $where[] = "`tipo` IN ('INSTALACIÓN','INSTALACION')";
+        } else {
+          $where[] = "`tipo` = '" . mysqli_real_escape_string($link, $tipoFiltro) . "'";
+        }
       }
       if (!empty($_POST['filtro_data_type'])) {
         $where[] = "`data_type` = '" . mysqli_real_escape_string($link, $_POST['filtro_data_type']) . "'";
@@ -67,6 +105,7 @@ switch($action) {
     $result = mysqli_query($link, $sql);
     $resultados = array();
     while ($row = mysqli_fetch_assoc($result)) {
+      $row['tipo'] = tipo_campo_canonico(isset($row['tipo']) ? $row['tipo'] : '');
         if(isset($revisiones[$row['id_revision']])) {
             $row['revision_nombre'] = $revisiones[$row['id_revision']];
         } else {
@@ -94,13 +133,8 @@ switch($action) {
     $mandatory = isset($_POST['mandatory']) ? intval($_POST['mandatory']) : 0;
     $mandatory = ($mandatory === 1) ? 1 : 0;
 
-    // Normalizar y validar 'tipo'
-    $validTipos = array('MEDIDAS','CARACTERISTICAS','INSTALACIÓN');
-    if(!in_array(strtoupper($tipo), $validTipos)){
-      $tipo = 'MEDIDAS';
-    } else {
-      $tipo = strtoupper($tipo);
-    }
+    // Normalizar y validar 'tipo' (acepta variantes con y sin tilde)
+    $tipo = tipo_campo_canonico($tipo);
 
     $validDataTypes = array('NUMERO','TEXTO NORMAL','CHECKBOX','LISTA VALORES');
     if(!in_array(strtoupper($data_type), $validDataTypes)){
@@ -143,13 +177,8 @@ switch($action) {
     $mandatory = isset($_POST['mandatory']) ? intval($_POST['mandatory']) : 0;
     $mandatory = ($mandatory === 1) ? 1 : 0;
 
-    // Normalizar y validar 'tipo'
-    $validTipos = array('MEDIDAS','CARACTERISTICAS','INSTALACIÓN');
-    if(!in_array(strtoupper($tipo), $validTipos)){
-      $tipo = 'MEDIDAS';
-    } else {
-      $tipo = strtoupper($tipo);
-    }
+    // Normalizar y validar 'tipo' (acepta variantes con y sin tilde)
+    $tipo = tipo_campo_canonico($tipo);
 
     $validDataTypes = array('NUMERO','TEXTO NORMAL','CHECKBOX','LISTA VALORES');
     if(!in_array(strtoupper($data_type), $validDataTypes)){
