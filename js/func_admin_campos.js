@@ -223,7 +223,7 @@ var openCampo = function(seccion, cual, id){
             '<div class="input-field anchoFrm4 inline">' +
               '<select id="tipo_camp" name="tipo">' +
                 '<option value="MEDIDAS" '+ ((item.tipo=='MEDIDAS')? 'selected':'') +'>MEDIDAS</option>' +
-                '<option value="CARACTERISTICAS" '+ ((item.tipo=='CARACTERISTICAS')? 'selected':'') +'>CARACTERISTICAS</option>' +
+                '<option value="CARACTERÍSTICAS" '+ ((item.tipo=='CARACTERÍSTICAS' || item.tipo=='CARACTERISTICAS')? 'selected':'') +'>CARACTERÍSTICAS</option>' +
                 '<option value="INSTALACIÓN" '+ ((item.tipo=='INSTALACIÓN')? 'selected':'') +'>INSTALACIÓN</option>' +
               '</select>' +
               '<label for="tipo_camp" class="active">Tipo</label>' +
