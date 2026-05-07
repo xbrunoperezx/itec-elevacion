@@ -50,6 +50,12 @@ switch($action) {
       if (!empty($_POST['filtro_nombre'])) {
         $where[] = "`nombre` LIKE '%" . mysqli_real_escape_string($link, $_POST['filtro_nombre']) . "%'";
       }
+      if (!empty($_POST['filtro_tipo'])) {
+        $where[] = "`tipo` = '" . mysqli_real_escape_string($link, $_POST['filtro_tipo']) . "'";
+      }
+      if (!empty($_POST['filtro_data_type'])) {
+        $where[] = "`data_type` = '" . mysqli_real_escape_string($link, $_POST['filtro_data_type']) . "'";
+      }
       if (count($where) > 0) {
         $sql .= " WHERE " . implode(" AND ", $where);
       }

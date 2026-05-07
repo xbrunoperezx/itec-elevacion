@@ -47,8 +47,12 @@ function toggleListaCampoVisibility(){
 function readCampos(){
   var total = parseInt($('#filtro_campos_total').val(),10) || 15;
   var nombre = ($('#filtro_campos_nombre').val() || '').trim();
+  var tipo = ($('#filtro_campos_tipo').val() || '').trim();
+  var dataType = ($('#filtro_campos_data_type').val() || '').trim();
   var filtros = { filtro_total: total };
   if(nombre) filtros.filtro_nombre = nombre;
+  if(tipo) filtros.filtro_tipo = tipo;
+  if(dataType) filtros.filtro_data_type = dataType;
 
   $('#table_campos tbody').empty();
   $('#resultados_campos').html('Cargando...');
@@ -353,12 +357,18 @@ jQuery(document).on('keydown', '#Campos [id*=filtro_campos]', function(e){
     }
 });
 
+jQuery(document).on('change', '#filtro_campos_tipo, #filtro_campos_data_type', function(){
+  jQuery('#filtrar_campos_clear').removeClass('hide');
+});
+
 // Limpiar filtros de campos
 jQuery(document).on('click', '#filtrar_campos_clear', function() {
   jQuery(this).addClass('hide');
   var $parent = jQuery(this).closest('#Campos');
   $parent.find('#filtro_campos_nombre').val('');
   $parent.find('#filtro_campos_total').val('15');
+  $parent.find('#filtro_campos_tipo').val('');
+  $parent.find('#filtro_campos_data_type').val('');
   $parent.find('label').not(':eq(0)').removeClass('active');
   $parent.find('#filtrar_campos').click();
 });
