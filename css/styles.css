@@ -281,6 +281,12 @@ div.modal#modal_pri {
  border-bottom: 1px solid #000!important;
  box-shadow: 0 1px 0 0 #000!important;
 }
+
+#modal_pri #tab8_pri .input-field .select-wrapper + label,
+#modal_pri #tab8_pri .input-field .select-wrapper > label {
+ top: 0 !important;
+}
+
 /* valid color */
 .input-field input[type=text].valid {
  border-bottom: 1px solid #000!important;
