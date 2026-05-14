@@ -43,9 +43,19 @@ footer {
   border-radius: 20%;
 }
 
-input[type=text] {
+input[type=text],
+input[type=number],
+input[type=date],
+select {
   padding-left: 10px;
   background-color: #FFFFFF !important;
+}
+
+[id^="sectionToggle_"] input[type=text],
+[id^="sectionToggle_"] input[type=number],
+[id^="sectionToggle_"] input[type=date],
+[id^="sectionToggle_"] select {
+  background-color: transparent !important;
 }
 
 .footer-copyright {
