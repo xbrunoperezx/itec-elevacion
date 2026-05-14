@@ -490,6 +490,7 @@ function serializeInstalacionFromForm(){
 		instalacion[abrev] = { name: nombre, valor: valor !== undefined && valor !== null ? valor : '', unidad: unidad || '', tipo: tipo };
 	});
 	return instalacion;
+}
 
 function serializeAscensorFromForm(){
 	var ascensor = {};
@@ -503,7 +504,6 @@ function serializeAscensorFromForm(){
 		ascensor[abrev] = { name: nombre, valor: valor !== undefined && valor !== null ? valor : '', unidad: unidad || '', tipo: tipo };
 	});
 	return ascensor;
-}
 }
 
 function buildMedicionesTab4(camposData, medicionesData){
