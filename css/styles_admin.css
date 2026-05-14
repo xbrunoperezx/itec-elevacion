@@ -39,6 +39,15 @@ footer {
   padding:  0px;
 }
 
+.btn-floating {
+  border-radius: 20%;
+}
+
+input[type=text] {
+  padding-left: 10px;
+  background-color: #FFFFFF !important;
+}
+
 .footer-copyright {
   text-align: center;
   line-height: 60px;

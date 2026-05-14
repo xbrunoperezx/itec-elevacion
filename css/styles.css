@@ -39,6 +39,15 @@ footer {
   padding:  0px;
 }
 
+.btn-floating {
+  border-radius: 20%;
+}
+
+input[type=text] {
+  padding-left: 10px;
+  background-color: #FFFFFF !important;
+}
+
 .footer-copyright {
   text-align: center;
   line-height: 60px;
@@ -188,6 +197,7 @@ div.modal#modal_pri {
   width: 100%;
   height: 2.2em;
   padding: 0 2px;
+  padding-left: 10px;
   box-sizing: border-box;
   margin: 0;
   box-shadow: none;

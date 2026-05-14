@@ -4,6 +4,11 @@
   margin: 50px auto;
 }
 
+input[type=text] {
+  padding-left: 10px;
+  background-color: #FFFFFF !important;
+}
+
 div.container{
   width: 100%;
   max-width: 100%;
