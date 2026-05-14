@@ -309,7 +309,7 @@ function buildFirmaTab9(idInforme){
 	html += '</div>';
 	html += '<div class="firma-pri-actions right-align">';
 	html += '<a href="#" id="firma_pri_clear" class="btn waves-effect waves-light grey"><i class="material-icons left">clear</i>Borrar</a>&nbsp;';
-	html += '<a href="#" id="firma_pri_delete" class="btn waves-effect waves-light red"><i class="material-icons left">delete</i>Eliminar firma</a>&nbsp;';
+	html += '<a href="#" id="firma_pri_delete" class="btn waves-effect waves-light red" style="display:none;"><i class="material-icons left">delete</i>Eliminar firma</a>&nbsp;';
 	html += '<a href="#" id="firma_pri_save" class="btn waves-effect waves-light green"><i class="material-icons left">save</i>Guardar firma</a>';
 	html += '</div>';
 	html += '<div id="firma_pri_preview_wrap" class="firma-pri-preview-wrap" style="display:none;">';
@@ -427,8 +427,24 @@ function initInformeFirmaPad(idInforme){
 
 function clearInformeFirmaPad(){
 	if(!firmaPadState.canvas || !firmaPadState.ctx) return;
-	resizeInformeFirmaCanvas();
 	firmaPadState.hasStrokes = false;
+	var ratio = Math.max(window.devicePixelRatio || 1, 1);
+	firmaPadState.ctx.fillStyle = '#ffffff';
+	firmaPadState.ctx.fillRect(0, 0, firmaPadState.canvas.width / ratio, firmaPadState.canvas.height / ratio);
+}
+
+function setInformeFirmaLocked(locked){
+	if(locked){
+		$('.firma-pri-pad').hide();
+		$('#firma_pri_clear').hide();
+		$('#firma_pri_save').hide();
+		$('#firma_pri_delete').show();
+	} else {
+		$('.firma-pri-pad').show();
+		$('#firma_pri_clear').show();
+		$('#firma_pri_save').show();
+		$('#firma_pri_delete').hide();
+	}
 }
 
 function setInformeFirmaPreview(url){
@@ -466,8 +482,10 @@ function loadInformeFirma(idInforme){
 			if(resp && resp.success && imgSrc){
 				setInformeFirmaPreview(imgSrc);
 				drawInformeFirmaFromUrl(imgSrc);
+				setInformeFirmaLocked(true);
 			} else {
 				setInformeFirmaPreview(null);
+				setInformeFirmaLocked(false);
 			}
 		}
 	});
@@ -504,6 +522,7 @@ function saveInformeFirma(){
 		success: function(resp){
 			if(resp && resp.success){
 				setInformeFirmaPreview(resp.data_url || resp.url || null);
+				setInformeFirmaLocked(true);
 				M.toast({ html: 'Firma guardada correctamente' });
 			} else {
 				modalError('ERROR', (resp && resp.error) ? resp.error : 'No se pudo guardar la firma.', false, 'Cerrar', 'error');
@@ -534,6 +553,7 @@ function deleteInformeFirma(){
 			if(resp && resp.success){
 				clearInformeFirmaPad();
 				setInformeFirmaPreview(null);
+				setInformeFirmaLocked(false);
 				M.toast({ html: 'Firma eliminada correctamente' });
 			} else {
 				modalError('ERROR', (resp && resp.error) ? resp.error : 'No se pudo eliminar la firma.', false, 'Cerrar', 'error');
