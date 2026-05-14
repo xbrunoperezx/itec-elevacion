@@ -1507,8 +1507,8 @@ var openInforme = function(seccion, cual, id){
 									success: function(medData) {
 									var allData = {};
 									try {
-										var resp = JSON.parse(medData);
-										allData = (resp.medidas_json && typeof resp.medidas_json === 'object') ? resp.medidas_json : {};
+										var resp = (typeof medData === 'string') ? JSON.parse(medData) : medData;
+										allData = (resp && resp.medidas_json && typeof resp.medidas_json === 'object') ? resp.medidas_json : {};
 									} catch(err) {
 										allData = {};
 									}
@@ -1636,11 +1636,13 @@ var openInforme = function(seccion, cual, id){
 				  // Renderizar mediciones, instalación y ascensor
 				  var medicionesHtml = buildMedicionesTab4(campos, mediciones);
 				  $('#mediciones_container').html(medicionesHtml);
-				  $('#mediciones_mode').formSelect();
+				  $('#mediciones_container select').formSelect();
 				  var instalacionHtml = buildInstalacionTab2(campos, instalacionData);
 				  $('#instalacion_container').html(instalacionHtml);
+				  $('#instalacion_container select').formSelect();
 				  var ascensorHtml = buildAscensorTab3(campos, ascensorData);
 				  $('#ascensor_container').html(ascensorHtml);
+				  $('#ascensor_container select').formSelect();
 						$('#equipos_container').html(buildEquiposTab7(item.equipos || {}));
 						$('#firma_container').html(buildFirmaTab9(item.id || id));
 						initInformeFirmaPad(item.id || id);
