@@ -1,4 +1,162 @@
 // Funciones relacionadas con la pestaña de informes
+var equiposCatalogMap = {};
+
+function escapeHtml(text){
+	return String(text == null ? '' : text)
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
+}
+
+function parseDateToInput(dateText){
+	if(!dateText) return '';
+	var text = String(dateText).trim();
+	if(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(text)) return text;
+	if(/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/.test(text)){
+		var parts = text.split('-');
+		return parts[2] + '-' + parts[1] + '-' + parts[0];
+	}
+	return text;
+}
+
+function parseDateToStorage(dateText){
+	if(!dateText) return '';
+	var text = String(dateText).trim();
+	if(/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/.test(text)) return text;
+	if(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(text)){
+		var parts = text.split('-');
+		return parts[2] + '-' + parts[1] + '-' + parts[0];
+	}
+	return text;
+}
+
+function buildEquipoLabel(equipo){
+	if(!equipo) return '';
+	var codigo = (equipo.codigo || '').trim();
+	var nombre = (equipo.nombre || '').trim();
+	var marca = (equipo.marca || '').trim();
+	var modelo = (equipo.modelo || '').trim();
+	var numSerie = (equipo.num_serie || '').trim();
+	var fechaCaducidad = (equipo.prox_calibracion_dmy || equipo.prox_calibracion || '').trim();
+	var parts = [];
+	if(codigo) parts.push(codigo);
+	if(nombre) parts.push(nombre);
+	if(marca || modelo || numSerie){
+		parts.push([marca, modelo].filter(Boolean).join(' - ') + (numSerie ? ' (' + numSerie + ')' : ''));
+	}
+	var label = parts.filter(Boolean).join(' - ');
+	if(fechaCaducidad){
+		label += ' =>>>> Caducidad: ' + fechaCaducidad;
+	}
+	return label;
+}
+
+function renderEquiposCatalogList(){
+	var html = '';
+	$.each(equiposCatalogMap, function(label, prox){
+		html += '<option value="' + escapeHtml(label) + '"></option>';
+	});
+	$('#equipos_catalogo_list').html(html);
+}
+
+function syncEquiposRowsFromCatalog(){
+	$('#equipos_tbody .equipo-utilizado-row').each(function(){
+		var $row = $(this);
+		var label = ($row.find('.equipo_nombre').val() || '').trim();
+		var prox = equiposCatalogMap[label] || '';
+		var $fecha = $row.find('.equipo_proxima_calibracion');
+		if(prox && $fecha.length && (!$fecha.val() || $fecha.val().trim() === '')){
+			$fecha.val(parseDateToInput(prox));
+		}
+	});
+}
+
+function loadEquiposCatalog(callback){
+	$.ajax({
+		url: 'services/equipos.php',
+		type: 'POST',
+		data: { filtro_total: 500 },
+		success: function(data){
+			var parsed = null;
+			try{
+				parsed = (typeof data === 'string') ? JSON.parse(data) : data;
+			}catch(err){
+				parsed = null;
+			}
+			equiposCatalogMap = {};
+			$.each((parsed && parsed.resultados) ? parsed.resultados : [], function(index, equipo){
+				var label = buildEquipoLabel(equipo);
+				if(label){
+					equiposCatalogMap[label] = equipo.prox_calibracion_dmy || '';
+				}
+			});
+			renderEquiposCatalogList();
+			syncEquiposRowsFromCatalog();
+			if(typeof callback === 'function') callback();
+		},
+		error: function(){
+			equiposCatalogMap = {};
+			renderEquiposCatalogList();
+			if(typeof callback === 'function') callback();
+		}
+	});
+}
+
+function buildEquiposTab7(equiposData){
+	var html = '';
+	html += '<div class="row" style="margin-bottom:8px;">' +
+		'<div class="col s12 right-align">' +
+			'<a href="#" id="add_equipo_utilizado" class="btn waves-effect waves-light green btn-small"><i class="material-icons left">add</i>Agregar equipo utilizado</a>&nbsp;' +
+			'<a href="#" id="refresh_equipos_catalog" class="btn waves-effect waves-light blue btn-small"><i class="material-icons left">refresh</i>Refrescar equipos</a>' +
+		'</div>' +
+	'</div>';
+	html += '<datalist id="equipos_catalogo_list"></datalist>';
+	html += '<table class="mediciones-table" id="equipos-table">' +
+		'<thead><tr>' +
+			'<th>Equipo</th><th>Próxima calibración</th><th>Acción</th>' +
+		'</tr></thead>' +
+		'<tbody id="equipos_tbody">';
+	$.each(equiposData || {}, function(key, data){
+		var nombre = (data && data.nombre) ? data.nombre : '';
+		var proxima = (data && data.proxima_calibracion) ? data.proxima_calibracion : '';
+		html += '<tr class="equipo-utilizado-row" data-equipo-key="' + escapeHtml(key) + '">' +
+			'<td class="equipo-nombre-cell"><input type="text" class="equipo_nombre" list="equipos_catalogo_list" value="' + escapeHtml(nombre) + '" placeholder="Equipo utilizado"></td>' +
+			'<td class="equipo-fecha-cell"><input type="date" class="equipo_proxima_calibracion" value="' + escapeHtml(parseDateToInput(proxima)) + '"></td>' +
+			'<td class="equipo-accion-cell"><a href="#" class="btn-floating btn-small waves-effect waves-light red remove-equipo-utilizado" title="Eliminar"><i class="material-icons">close</i></a></td>' +
+		'</tr>';
+	});
+	html += '</tbody></table>';
+	return html;
+}
+
+function addEquipoUtilizadoRow(nombre, proximaCalibracion){
+	var html = '<tr class="equipo-utilizado-row">' +
+		'<td class="equipo-nombre-cell"><input type="text" class="equipo_nombre" list="equipos_catalogo_list" value="' + escapeHtml(nombre || '') + '" placeholder="Equipo utilizado"></td>' +
+		'<td class="equipo-fecha-cell"><input type="date" class="equipo_proxima_calibracion" value="' + escapeHtml(parseDateToInput(proximaCalibracion || '')) + '"></td>' +
+		'<td class="equipo-accion-cell"><a href="#" class="btn-floating btn-small waves-effect waves-light red remove-equipo-utilizado" title="Eliminar"><i class="material-icons">close</i></a></td>' +
+	'</tr>';
+	$('#equipos_tbody').append(html);
+}
+
+function serializeEquiposFromForm(){
+	var equipos = {};
+	var index = 1;
+	$('#equipos_tbody .equipo-utilizado-row').each(function(){
+		var nombre = ($(this).find('.equipo_nombre').val() || '').trim();
+		var proxima = ($(this).find('.equipo_proxima_calibracion').val() || '').trim();
+		if(nombre !== '' || proxima !== ''){
+			equipos[String(index)] = {
+				nombre: nombre,
+				proxima_calibracion: parseDateToStorage(proxima)
+			};
+			index++;
+		}
+	});
+	return equipos;
+}
+
 var readInformes = function(id, totalParams){
 	// limpiamos la tabla de contratadas
 	$("#table_pri tbody").empty();
@@ -474,6 +632,30 @@ jQuery(document).on('click', '#add_medicion_personalizada', function(e){
 	addMedicionPersonalizada('', '', '', '');
 });
 
+jQuery(document).on('click', '#add_equipo_utilizado', function(e){
+	e.preventDefault();
+	addEquipoUtilizadoRow('', '');
+});
+
+jQuery(document).on('click', '#refresh_equipos_catalog', function(e){
+	e.preventDefault();
+	loadEquiposCatalog();
+});
+
+jQuery(document).on('click', '.remove-equipo-utilizado', function(e){
+	e.preventDefault();
+	$(this).closest('.equipo-utilizado-row').remove();
+});
+
+jQuery(document).on('change input', '.equipo_nombre', function(){
+	var label = ($(this).val() || '').trim();
+	var $row = $(this).closest('.equipo-utilizado-row');
+	var prox = equiposCatalogMap[label] || '';
+	if(prox){
+		$row.find('.equipo_proxima_calibracion').val(parseDateToInput(prox));
+	}
+});
+
 function serializeMedicionesFromForm(){
 	var mediciones = {};
 	
@@ -634,6 +816,10 @@ function savePrimera(){
 	if(mediciones === null){
 		return;
 	}
+	var equipos = serializeEquiposFromForm();
+	if(equipos === null){
+		return;
+	}
 
 	// Datos básicos del informe
 	var data = {
@@ -668,11 +854,30 @@ function savePrimera(){
 					medidas_json: JSON.stringify(allMediciones)
 				},
 				success: function(response){
-					var resp = JSON.parse(response);
+					var resp = (typeof response === 'string') ? JSON.parse(response) : response;
 					if(resp.success){
-						modalError('ÉXITO', 'Informe guardado correctamente', false, 'Cerrar', 'success');
-						$('#modal_pri').modal('close');
-						readInformes('pri', { filtro_total: 15 });
+							$.ajax({
+								url: 'services/informes_equipos.php',
+								type: 'POST',
+								data: {
+									action: 'save',
+									id_informe: id,
+									equipos_json: JSON.stringify(equipos)
+								},
+								success: function(responseEquipos){
+									var respEquipos = (typeof responseEquipos === 'string') ? JSON.parse(responseEquipos) : responseEquipos;
+									if(respEquipos.success){
+										modalError('ÉXITO', 'Informe guardado correctamente', false, 'Cerrar', 'success');
+										$('#modal_pri').modal('close');
+										readInformes('pri', { filtro_total: 15 });
+									} else {
+										modalError('ERROR', respEquipos.error || 'Error al guardar equipos', false, 'Cerrar', 'error');
+									}
+								},
+								error: function(){
+									modalError('ERROR', 'Error al guardar equipos', false, 'Cerrar', 'error');
+								}
+							});
 					} else {
 						modalError('ERROR', resp.error || 'Error al guardar mediciones', false, 'Cerrar', 'error');
 					}
@@ -891,6 +1096,7 @@ var openInforme = function(seccion, cual, id){
 						'<div id="tab6_pri" class="col s12">' + 
 						'</div>' +	
 						'<div id="tab7_pri" class="col s12">' + 
+						'<div id="equipos_container"></div>' +
 						'</div>' +	
 						'<div id="tab8_pri" class="col s12">' + 
 						'</div>' +	
@@ -914,6 +1120,8 @@ var openInforme = function(seccion, cual, id){
 				  $('#instalacion_container').html(instalacionHtml);
 				  var ascensorHtml = buildAscensorTab3(campos, ascensorData);
 				  $('#ascensor_container').html(ascensorHtml);
+						$('#equipos_container').html(buildEquiposTab7(item.equipos || {}));
+						loadEquiposCatalog();
 				  $("#modal_"+seccion).modal({ dismissible: false });
 				  $("#modal_"+seccion).modal("open");
 				  syncGrupoLegislacion();

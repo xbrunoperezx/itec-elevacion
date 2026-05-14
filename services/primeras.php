@@ -276,6 +276,23 @@ while ($row = mysqli_fetch_assoc($result)) {
   // Añadir contratada anidada al elemento principal
   $item['contratada'] = $contratada_obj;
 
+  // Equipos utilizados en la inspección asociados al informe
+  $item['equipos'] = array();
+  if(isset($row['id'])){
+    $id_informe_row = intval($row['id']);
+    $equipos_sql = "SELECT `equipos` FROM `informes_equipos` WHERE `id_informe` = {$id_informe_row} ORDER BY `id` DESC LIMIT 1";
+    $equipos_result = mysqli_query($link, $equipos_sql);
+    if($equipos_result && mysqli_num_rows($equipos_result) > 0){
+      $equipos_row = mysqli_fetch_assoc($equipos_result);
+      if(isset($equipos_row['equipos']) && $equipos_row['equipos'] !== ''){
+        $equipos_json = json_decode($equipos_row['equipos'], true);
+        if(is_array($equipos_json)){
+          $item['equipos'] = $equipos_json;
+        }
+      }
+    }
+  }
+
   $informes[] = $item;
 }
 
