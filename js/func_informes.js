@@ -1706,7 +1706,7 @@ var openInforme = function(seccion, cual, id){
 						    '<label for="acude_pri" class="active">Acompaña</label>' +
 						  '</div>' +
 						  '<div class="input-field col s6">' +
-						    '<input type="text" id="mantenedor_pri" name="mantenedor" value="' + ((item.contratada && item.contratada.cliente && item.contratada.cliente.mantenedor) ? item.contratada.cliente.mantenedor : '') + '" readonly>' +
+						    '<input type="text" id="mantenedor_pri" name="mantenedor" value="' + ((item.contratada && item.contratada.cliente && item.contratada.cliente.mantenedor) ? item.contratada.cliente.mantenedor : '') + '" disabled>' +
 						    '<label for="mantenedor_pri" class="active">Mantenedor</label>' +
 						  '</div>' +
 						'</div>' +
