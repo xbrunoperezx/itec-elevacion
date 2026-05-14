@@ -15,6 +15,7 @@ $hora_ini = isset($_POST['hora_ini']) ? trim($_POST['hora_ini']) : '';
 $hora_fin = isset($_POST['hora_fin']) ? trim($_POST['hora_fin']) : '';
 $gps_latitud = isset($_POST['gps_latitud']) ? trim($_POST['gps_latitud']) : '';
 $gps_longitud = isset($_POST['gps_longitud']) ? trim($_POST['gps_longitud']) : '';
+$acude = isset($_POST['acude']) ? trim($_POST['acude']) : '';
 $grupo = isset($_POST['grupo']) ? trim($_POST['grupo']) : '';
 $estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
 $resultado = isset($_POST['resultado']) ? trim($_POST['resultado']) : '';
@@ -50,6 +51,7 @@ $hora_ini_sql = "'" . mysqli_real_escape_string($link, $hora_ini) . "'";
 $hora_fin_sql = "'" . mysqli_real_escape_string($link, $hora_fin) . "'";
 $gps_latitud_sql = "'" . mysqli_real_escape_string($link, $gps_latitud) . "'";
 $gps_longitud_sql = "'" . mysqli_real_escape_string($link, $gps_longitud) . "'";
+$acude_sql = "'" . mysqli_real_escape_string($link, $acude) . "'";
 $grupo_sql = "NULL";
 
 if ($grupo !== '') {
@@ -96,6 +98,7 @@ $sql = "UPDATE `informes` SET
   `hora_fin` = {$hora_fin_sql},
   `gps_latitud` = {$gps_latitud_sql},
   `gps_longitud` = {$gps_longitud_sql},
+  `acude` = {$acude_sql},
   `grupo` = {$grupo_sql},
   `estado` = {$estado_sql},
   `resultado` = {$resultado_sql},

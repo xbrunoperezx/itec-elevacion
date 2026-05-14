@@ -1452,6 +1452,7 @@ function savePrimera(){
 		hora_fin: $('#hora_fin').val(),
 		gps_latitud: $('#gps_latitud').val(),
 		gps_longitud: $('#gps_longitud').val(),
+		acude: $('#acude_pri').val(),
 		grupo: $('#grupo_pri').val(),
 		estado: $('#estado_inspeccion').val(),
 		resultado: $('#resultado_inspeccion').val(),
@@ -1699,6 +1700,16 @@ var openInforme = function(seccion, cual, id){
 						    '<a id="open_google_maps_pri" class="btn waves-effect waves-light blue' + ((item.gps_latitud && item.gps_longitud) ? '' : ' disabled') + '" href="' + ((item.gps_latitud && item.gps_longitud) ? ('https://www.google.com/maps?q=' + encodeURIComponent(item.gps_latitud + ',' + item.gps_longitud)) : '#!') + '" target="_blank" rel="noopener noreferrer"><i class="material-icons left">map</i>Maps</a>' +
 						  '</div>' +
 						'</div>' +
+						'<div class="row">' +
+						  '<div class="input-field col s6">' +
+						    '<input type="text" id="acude_pri" name="acude" value="' + (item.acude || '') + '">' +
+						    '<label for="acude_pri" class="active">Acompaña</label>' +
+						  '</div>' +
+						  '<div class="input-field col s6">' +
+						    '<input type="text" id="mantenedor_pri" name="mantenedor" value="' + ((item.contratada && item.contratada.cliente && item.contratada.cliente.mantenedor) ? item.contratada.cliente.mantenedor : '') + '" readonly>' +
+						    '<label for="mantenedor_pri" class="active">Mantenedor</label>' +
+						  '</div>' +
+						'</div>' +
 						'</div>' +	
 						'<div id="tab2_pri" class="active col s12">' +
 						'<div class="row">' +
@@ -1738,8 +1749,9 @@ var openInforme = function(seccion, cual, id){
 													'<select id="estado_inspeccion" name="estado_inspeccion">' +
 															'<option value="" disabled' + ((item.estado == null || item.estado === "") ? ' selected' : '') + '>Selecciona estado</option>' +
 															'<option value="0"' + (item.estado == 0 ? ' selected' : '') + '>Pendiente</option>' +
-															'<option value="1"' + (item.estado == 1 ? ' selected' : '') + '>Inspección Realizada</option>' +
-															'<option value="2"' + (item.estado == 2 ? ' selected' : '') + '>Enviada a Facturación</option>' +
+															'<option value="1"' + (item.estado == 1 ? ' selected' : '') + '>En curso</option>' +
+															'<option value="2"' + (item.estado == 2 ? ' selected' : '') + '>Inspección realizada</option>' +
+															'<option value="3"' + (item.estado == 3 ? ' selected' : '') + '>Enviada a facturación</option>' +
 														'</select>' +
 														'<label for="estado_inspeccion" class="active">Estado</label>' +
 												'</div>' +
