@@ -867,8 +867,8 @@ function savePrimera(){
 								success: function(responseEquipos){
 									var respEquipos = (typeof responseEquipos === 'string') ? JSON.parse(responseEquipos) : responseEquipos;
 									if(respEquipos.success){
-										modalError('ÉXITO', 'Informe guardado correctamente', false, 'Cerrar', 'success');
 										$('#modal_pri').modal('close');
+										modalError('ÉXITO', 'Informe guardado correctamente', false, 'Cerrar', 'success');
 										readInformes('pri', { filtro_total: 15 });
 									} else {
 										modalError('ERROR', respEquipos.error || 'Error al guardar equipos', false, 'Cerrar', 'error');
