@@ -2,6 +2,13 @@
 var equiposCatalogMap = {};
 var equiposCatalogById = {};
 var inspectorEquiposDefaultIds = [];
+var firmaPadState = {
+	canvas: null,
+	ctx: null,
+	isDrawing: false,
+	hasStrokes: false,
+	currentInformeId: null
+};
 
 function escapeHtml(text){
 	return String(text == null ? '' : text)
@@ -290,6 +297,252 @@ function serializeEquiposFromForm(){
 		}
 	});
 	return equipos;
+}
+
+function buildFirmaTab9(idInforme){
+	var idSafe = (idInforme || '').toString();
+	var html = '';
+	html += '<div class="firma-pri-wrap" data-informe-id="' + escapeHtml(idSafe) + '">';
+	html += '<div class="firma-pri-header">Firma del informe (ratón o dedo)</div>';
+	html += '<div class="firma-pri-pad">';
+	html += '<canvas id="firma_pri_canvas"></canvas>';
+	html += '</div>';
+	html += '<div class="firma-pri-actions right-align">';
+	html += '<a href="#" id="firma_pri_clear" class="btn waves-effect waves-light grey"><i class="material-icons left">clear</i>Borrar</a>&nbsp;';
+	html += '<a href="#" id="firma_pri_delete" class="btn waves-effect waves-light red"><i class="material-icons left">delete</i>Eliminar firma</a>&nbsp;';
+	html += '<a href="#" id="firma_pri_save" class="btn waves-effect waves-light green"><i class="material-icons left">save</i>Guardar firma</a>';
+	html += '</div>';
+	html += '<div id="firma_pri_preview_wrap" class="firma-pri-preview-wrap" style="display:none;">';
+	html += '<div class="firma-pri-preview-title">Firma guardada</div>';
+	html += '<img id="firma_pri_preview" class="firma-pri-preview" alt="Firma guardada">';
+	html += '</div>';
+	html += '</div>';
+	return html;
+}
+
+function resizeInformeFirmaCanvas(){
+	if(!firmaPadState.canvas || !firmaPadState.ctx) return;
+	var canvas = firmaPadState.canvas;
+	var ratio = Math.max(window.devicePixelRatio || 1, 1);
+	var prevImage = null;
+	if(firmaPadState.hasStrokes){
+		try { prevImage = canvas.toDataURL('image/png'); } catch(err) { prevImage = null; }
+	}
+
+	canvas.width = Math.max(1, Math.floor(canvas.offsetWidth * ratio));
+	canvas.height = Math.max(1, Math.floor(canvas.offsetHeight * ratio));
+	var ctx = canvas.getContext('2d');
+	ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+	ctx.lineWidth = 2;
+	ctx.lineCap = 'round';
+	ctx.lineJoin = 'round';
+	ctx.strokeStyle = '#1f2937';
+	ctx.fillStyle = '#ffffff';
+	ctx.fillRect(0, 0, canvas.width / ratio, canvas.height / ratio);
+	firmaPadState.ctx = ctx;
+
+	if(prevImage){
+		var img = new Image();
+		img.onload = function(){
+			ctx.drawImage(img, 0, 0, canvas.width / ratio, canvas.height / ratio);
+		};
+		img.src = prevImage;
+	}
+}
+
+function getFirmaCanvasPoint(evt){
+	var canvas = firmaPadState.canvas;
+	if(!canvas) return null;
+	var rect = canvas.getBoundingClientRect();
+	var clientX = evt.clientX;
+	var clientY = evt.clientY;
+	if((clientX === undefined || clientY === undefined) && evt.touches && evt.touches.length){
+		clientX = evt.touches[0].clientX;
+		clientY = evt.touches[0].clientY;
+	}
+	if(clientX === undefined || clientY === undefined) return null;
+	var scaleX = canvas.width / rect.width;
+	var scaleY = canvas.height / rect.height;
+	return {
+		x: (clientX - rect.left) * scaleX,
+		y: (clientY - rect.top) * scaleY
+	};
+}
+
+function initInformeFirmaPad(idInforme){
+	var canvas = document.getElementById('firma_pri_canvas');
+	if(!canvas) return;
+	canvas.style.touchAction = 'none';
+
+	firmaPadState.canvas = canvas;
+	firmaPadState.ctx = canvas.getContext('2d');
+	firmaPadState.isDrawing = false;
+	firmaPadState.hasStrokes = false;
+	firmaPadState.currentInformeId = idInforme;
+
+	resizeInformeFirmaCanvas();
+
+	var onDown = function(evt){
+		evt.preventDefault();
+		var p = getFirmaCanvasPoint(evt);
+		if(!p) return;
+		firmaPadState.isDrawing = true;
+		firmaPadState.ctx.beginPath();
+		firmaPadState.ctx.moveTo(p.x, p.y);
+	};
+
+	var onMove = function(evt){
+		if(!firmaPadState.isDrawing) return;
+		evt.preventDefault();
+		var p = getFirmaCanvasPoint(evt);
+		if(!p) return;
+		firmaPadState.ctx.lineTo(p.x, p.y);
+		firmaPadState.ctx.stroke();
+		firmaPadState.hasStrokes = true;
+	};
+
+	var onUp = function(evt){
+		if(evt) evt.preventDefault();
+		if(!firmaPadState.isDrawing) return;
+		firmaPadState.isDrawing = false;
+		firmaPadState.ctx.closePath();
+	};
+
+	canvas.onpointerdown = onDown;
+	canvas.onpointermove = onMove;
+	canvas.onpointerup = onUp;
+	canvas.onpointerleave = onUp;
+	canvas.onpointercancel = onUp;
+
+	canvas.ontouchstart = onDown;
+	canvas.ontouchmove = onMove;
+	canvas.ontouchend = onUp;
+	canvas.onmousedown = onDown;
+	canvas.onmousemove = onMove;
+	canvas.onmouseup = onUp;
+	canvas.onmouseleave = onUp;
+
+	loadInformeFirma(idInforme);
+}
+
+function clearInformeFirmaPad(){
+	if(!firmaPadState.canvas || !firmaPadState.ctx) return;
+	resizeInformeFirmaCanvas();
+	firmaPadState.hasStrokes = false;
+}
+
+function setInformeFirmaPreview(url){
+	if(url){
+		$('#firma_pri_preview').attr('src', url);
+		$('#firma_pri_preview_wrap').show();
+	}else{
+		$('#firma_pri_preview').attr('src', '');
+		$('#firma_pri_preview_wrap').hide();
+	}
+}
+
+function drawInformeFirmaFromUrl(url){
+	if(!url || !firmaPadState.canvas || !firmaPadState.ctx) return;
+	var ratio = Math.max(window.devicePixelRatio || 1, 1);
+	var img = new Image();
+	img.onload = function(){
+		firmaPadState.ctx.fillStyle = '#ffffff';
+		firmaPadState.ctx.fillRect(0, 0, firmaPadState.canvas.width / ratio, firmaPadState.canvas.height / ratio);
+		firmaPadState.ctx.drawImage(img, 0, 0, firmaPadState.canvas.width / ratio, firmaPadState.canvas.height / ratio);
+		firmaPadState.hasStrokes = true;
+	};
+	img.src = url;
+}
+
+function loadInformeFirma(idInforme){
+	if(!idInforme) return;
+	$.ajax({
+		url: 'services/informes_firma.php',
+		type: 'POST',
+		dataType: 'json',
+		data: { action: 'get', id_informe: idInforme },
+		success: function(resp){
+			var imgSrc = (resp && resp.data_url) ? resp.data_url : ((resp && resp.url) ? resp.url : null);
+			if(resp && resp.success && imgSrc){
+				setInformeFirmaPreview(imgSrc);
+				drawInformeFirmaFromUrl(imgSrc);
+			} else {
+				setInformeFirmaPreview(null);
+			}
+		}
+	});
+}
+
+function saveInformeFirma(){
+	var idInforme = firmaPadState.currentInformeId || $('#id_bbdd').val();
+	if(!idInforme){
+		modalError('ERROR', 'No se encontró el ID del informe.', false, 'Cerrar', 'error');
+		return;
+	}
+	if(!firmaPadState.hasStrokes){
+		modalError('ERROR', 'No se puede guardar una firma vacía.', false, 'Cerrar', 'error');
+		return;
+	}
+
+	var imgData = '';
+	try {
+		imgData = firmaPadState.canvas.toDataURL('image/png');
+	} catch(err){
+		modalError('ERROR', 'No se pudo generar la imagen de la firma.', false, 'Cerrar', 'error');
+		return;
+	}
+
+	$.ajax({
+		url: 'services/informes_firma.php',
+		type: 'POST',
+		dataType: 'json',
+		data: {
+			action: 'save',
+			id_informe: idInforme,
+			img: imgData
+		},
+		success: function(resp){
+			if(resp && resp.success){
+				setInformeFirmaPreview(resp.data_url || resp.url || null);
+				M.toast({ html: 'Firma guardada correctamente' });
+			} else {
+				modalError('ERROR', (resp && resp.error) ? resp.error : 'No se pudo guardar la firma.', false, 'Cerrar', 'error');
+			}
+		},
+		error: function(){
+			modalError('ERROR', 'Error guardando la firma.', false, 'Cerrar', 'error');
+		}
+	});
+}
+
+function deleteInformeFirma(){
+	var idInforme = firmaPadState.currentInformeId || $('#id_bbdd').val();
+	if(!idInforme){
+		modalError('ERROR', 'No se encontró el ID del informe.', false, 'Cerrar', 'error');
+		return;
+	}
+
+	$.ajax({
+		url: 'services/informes_firma.php',
+		type: 'POST',
+		dataType: 'json',
+		data: {
+			action: 'delete',
+			id_informe: idInforme
+		},
+		success: function(resp){
+			if(resp && resp.success){
+				clearInformeFirmaPad();
+				setInformeFirmaPreview(null);
+				M.toast({ html: 'Firma eliminada correctamente' });
+			} else {
+				modalError('ERROR', (resp && resp.error) ? resp.error : 'No se pudo eliminar la firma.', false, 'Cerrar', 'error');
+			}
+		},
+		error: function(){
+			modalError('ERROR', 'Error eliminando la firma.', false, 'Cerrar', 'error');
+		}
+	});
 }
 
 var readInformes = function(id, totalParams){
@@ -782,6 +1035,25 @@ jQuery(document).on('click', '#refresh_equipos_catalog', function(e){
 	loadEquiposCatalog();
 });
 
+jQuery(document).on('click', '#firma_pri_clear', function(e){
+	e.preventDefault();
+	clearInformeFirmaPad();
+});
+
+jQuery(document).on('click', '#firma_pri_save', function(e){
+	e.preventDefault();
+	saveInformeFirma();
+});
+
+jQuery(document).on('click', '#firma_pri_delete', function(e){
+	e.preventDefault();
+	deleteInformeFirma();
+});
+
+jQuery(window).on('resize', function(){
+	resizeInformeFirmaCanvas();
+});
+
 jQuery(document).on('click', '.remove-equipo-utilizado', function(e){
 	e.preventDefault();
 	$(this).closest('.equipo-utilizado-row').remove();
@@ -1245,6 +1517,7 @@ var openInforme = function(seccion, cual, id){
 						'<div id="tab8_pri" class="col s12">' + 
 						'</div>' +	
 						'<div id="tab9_pri" class="col s12">' + 
+						'<div id="firma_container"></div>' +
 						'</div>' +	
 						'<div id="tab10_pri" class="col s12">' + 
 						'</div>' +	
@@ -1265,6 +1538,8 @@ var openInforme = function(seccion, cual, id){
 				  var ascensorHtml = buildAscensorTab3(campos, ascensorData);
 				  $('#ascensor_container').html(ascensorHtml);
 						$('#equipos_container').html(buildEquiposTab7(item.equipos || {}));
+						$('#firma_container').html(buildFirmaTab9(item.id || id));
+						initInformeFirmaPad(item.id || id);
 						loadEquiposCatalog();
 						loadInspectorEquiposDefaults(item.id_usuarios || null);
 				  $("#modal_"+seccion).modal({ dismissible: false });
