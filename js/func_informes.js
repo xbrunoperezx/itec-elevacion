@@ -303,11 +303,11 @@ function buildFirmaTab9(idInforme){
 	var idSafe = (idInforme || '').toString();
 	var html = '';
 	html += '<div class="firma-pri-wrap" data-informe-id="' + escapeHtml(idSafe) + '">';
-	html += '<div class="firma-pri-header">Firma del informe (ratón o dedo)</div>';
+	html += '<div id="firma_pri_header" class="firma-pri-header">Firma del informe (ratón o dedo)</div>';
 	html += '<div class="firma-pri-pad">';
 	html += '<canvas id="firma_pri_canvas"></canvas>';
 	html += '</div>';
-	html += '<div class="firma-pri-actions right-align">';
+	html += '<div id="firma_pri_actions" class="firma-pri-actions right-align">';
 	html += '<a href="#" id="firma_pri_clear" class="btn waves-effect waves-light grey"><i class="material-icons left">clear</i>Borrar</a>&nbsp;';
 	html += '<a href="#" id="firma_pri_delete" class="btn waves-effect waves-light red" style="display:none;"><i class="material-icons left">delete</i>Eliminar firma</a>&nbsp;';
 	html += '<a href="#" id="firma_pri_save" class="btn waves-effect waves-light green"><i class="material-icons left">save</i>Guardar firma</a>';
@@ -465,16 +465,25 @@ function clearInformeFirmaPad(){
 }
 
 function setInformeFirmaLocked(locked){
+	var $wrap = $('.firma-pri-wrap');
+	var $actions = $('#firma_pri_actions');
+	var $pad = $wrap.find('.firma-pri-pad');
+	var $preview = $('#firma_pri_preview_wrap');
+
 	if(locked){
-		$('.firma-pri-pad').hide();
+		$('#firma_pri_header').hide();
+		$pad.hide();
 		$('#firma_pri_clear').hide();
 		$('#firma_pri_save').hide();
 		$('#firma_pri_delete').show();
+		$preview.after($actions);
 	} else {
-		$('.firma-pri-pad').show();
+		$('#firma_pri_header').show();
+		$pad.show();
 		$('#firma_pri_clear').show();
 		$('#firma_pri_save').show();
 		$('#firma_pri_delete').hide();
+		$pad.after($actions);
 	}
 }
 
