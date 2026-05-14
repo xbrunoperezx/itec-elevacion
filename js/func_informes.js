@@ -361,11 +361,9 @@ function getFirmaCanvasPoint(evt){
 		clientY = evt.touches[0].clientY;
 	}
 	if(clientX === undefined || clientY === undefined) return null;
-	var scaleX = canvas.width / rect.width;
-	var scaleY = canvas.height / rect.height;
 	return {
-		x: (clientX - rect.left) * scaleX,
-		y: (clientY - rect.top) * scaleY
+		x: (clientX - rect.left),
+		y: (clientY - rect.top)
 	};
 }
 
@@ -383,7 +381,7 @@ function initInformeFirmaPad(idInforme){
 	resizeInformeFirmaCanvas();
 
 	var onDown = function(evt){
-		evt.preventDefault();
+		if(evt && evt.cancelable) evt.preventDefault();
 		var p = getFirmaCanvasPoint(evt);
 		if(!p) return;
 		firmaPadState.isDrawing = true;
@@ -393,7 +391,7 @@ function initInformeFirmaPad(idInforme){
 
 	var onMove = function(evt){
 		if(!firmaPadState.isDrawing) return;
-		evt.preventDefault();
+		if(evt && evt.cancelable) evt.preventDefault();
 		var p = getFirmaCanvasPoint(evt);
 		if(!p) return;
 		firmaPadState.ctx.lineTo(p.x, p.y);
@@ -402,25 +400,40 @@ function initInformeFirmaPad(idInforme){
 	};
 
 	var onUp = function(evt){
-		if(evt) evt.preventDefault();
+		if(evt && evt.cancelable) evt.preventDefault();
 		if(!firmaPadState.isDrawing) return;
 		firmaPadState.isDrawing = false;
 		firmaPadState.ctx.closePath();
 	};
 
-	canvas.onpointerdown = onDown;
-	canvas.onpointermove = onMove;
-	canvas.onpointerup = onUp;
-	canvas.onpointerleave = onUp;
-	canvas.onpointercancel = onUp;
+	canvas.onpointerdown = null;
+	canvas.onpointermove = null;
+	canvas.onpointerup = null;
+	canvas.onpointerleave = null;
+	canvas.onpointercancel = null;
+	canvas.ontouchstart = null;
+	canvas.ontouchmove = null;
+	canvas.ontouchend = null;
+	canvas.onmousedown = null;
+	canvas.onmousemove = null;
+	canvas.onmouseup = null;
+	canvas.onmouseleave = null;
 
-	canvas.ontouchstart = onDown;
-	canvas.ontouchmove = onMove;
-	canvas.ontouchend = onUp;
-	canvas.onmousedown = onDown;
-	canvas.onmousemove = onMove;
-	canvas.onmouseup = onUp;
-	canvas.onmouseleave = onUp;
+	if (window.PointerEvent) {
+		canvas.onpointerdown = onDown;
+		canvas.onpointermove = onMove;
+		canvas.onpointerup = onUp;
+		canvas.onpointerleave = onUp;
+		canvas.onpointercancel = onUp;
+	} else {
+		canvas.ontouchstart = onDown;
+		canvas.ontouchmove = onMove;
+		canvas.ontouchend = onUp;
+		canvas.onmousedown = onDown;
+		canvas.onmousemove = onMove;
+		canvas.onmouseup = onUp;
+		canvas.onmouseleave = onUp;
+	}
 
 	loadInformeFirma(idInforme);
 }
