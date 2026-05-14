@@ -761,14 +761,41 @@ var readInformes = function(id, totalParams){
 	});
 }
 
-function buildGrupoOptions(grupos, selectedNombre){
-	var html = '<option value="" disabled' + (!selectedNombre ? ' selected' : '') + '>Selecciona grupo</option>';
+function buildGrupoOptions(grupos, selectedGrupo){
+	var selectedRaw = String(selectedGrupo === undefined || selectedGrupo === null ? '' : selectedGrupo).trim();
+	var selectedNorm = normalizeCampoKey(selectedRaw);
+	var hasSelected = false;
+	var html = '<option value="" disabled' + (selectedRaw === '' ? ' selected' : '') + '>Selecciona grupo</option>';
+
 	$.each(grupos || [], function(index, item){
+		var id = String(item.id === undefined || item.id === null ? '' : item.id).trim();
 		var nombre = item.nombre || '';
 		var legislacion = item.legislacion || '';
 		var tipoAscensor = item.tipo_ascensor || '';
-		html += '<option value="' + nombre + '" data-legislacion="' + legislacion + '" data-tipo_ascensor="' + tipoAscensor + '"' + (nombre === selectedNombre ? ' selected' : '') + '>' + nombre + '</option>';
+		var value = id !== '' ? id : nombre;
+		var isSelected = false;
+
+		if(selectedRaw !== ''){
+			if(value === selectedRaw){
+				isSelected = true;
+			} else if(nombre === selectedRaw){
+				isSelected = true;
+			} else if(selectedNorm !== '' && normalizeCampoKey(nombre) === selectedNorm){
+				isSelected = true;
+			}
+		}
+
+		if(isSelected){
+			hasSelected = true;
+		}
+
+		html += '<option value="' + value + '" data-legislacion="' + legislacion + '" data-tipo_ascensor="' + tipoAscensor + '"' + (isSelected ? ' selected' : '') + '>' + nombre + '</option>';
 	});
+
+	if(selectedRaw !== '' && !hasSelected){
+		html = html.replace('<option value="" disabled>Selecciona grupo</option>', '<option value="" disabled selected>Selecciona grupo</option>');
+	}
+
 	return html;
 }
 
