@@ -336,7 +336,7 @@ function resizeInformeFirmaCanvas(){
 	ctx.lineWidth = 2;
 	ctx.lineCap = 'round';
 	ctx.lineJoin = 'round';
-	ctx.strokeStyle = '#1f2937';
+	ctx.strokeStyle = '#1565c0';
 	ctx.fillStyle = '#ffffff';
 	ctx.fillRect(0, 0, canvas.width / ratio, canvas.height / ratio);
 	firmaPadState.ctx = ctx;
