@@ -419,7 +419,8 @@ textarea{
 
 #modal_pri .firma-pri-pad {
   width: 100%;
-  height: 280px;
+  max-width: 760px;
+  aspect-ratio: 4 / 3;
   border: 1px solid #cfd8dc;
   border-radius: 6px;
   background: #fff;
@@ -457,6 +458,6 @@ textarea{
 
 @media (max-width: 768px) {
   #modal_pri .firma-pri-pad {
-    height: 220px;
+    max-width: 100%;
   }
 }
