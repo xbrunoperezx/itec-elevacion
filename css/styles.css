@@ -43,11 +43,13 @@ footer {
   border-radius: 20%;
 }
 
+
 input[type=text],
 input[type=number],
 input[type=date],
 input[type=time],
-select {
+select,
+textarea {
   padding-left: 10px !important;
   background-color: #FFFFFF !important;
 }
