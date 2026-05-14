@@ -9,6 +9,8 @@ var firmaPadState = {
 	hasStrokes: false,
 	currentInformeId: null
 };
+var FIRMA_EXPORT_WIDTH = 800;
+var FIRMA_EXPORT_HEIGHT = 600;
 
 function escapeHtml(text){
 	return String(text == null ? '' : text)
@@ -497,14 +499,38 @@ function setInformeFirmaPreview(url){
 	}
 }
 
+function drawImageContain(ctx, img, targetW, targetH){
+	if(!ctx || !img || !targetW || !targetH) return;
+	var scale = Math.min(targetW / img.width, targetH / img.height);
+	var drawW = img.width * scale;
+	var drawH = img.height * scale;
+	var offsetX = (targetW - drawW) / 2;
+	var offsetY = (targetH - drawH) / 2;
+	ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
+}
+
+function buildNormalizedFirmaDataUrl(){
+	if(!firmaPadState.canvas) return null;
+	var outCanvas = document.createElement('canvas');
+	outCanvas.width = FIRMA_EXPORT_WIDTH;
+	outCanvas.height = FIRMA_EXPORT_HEIGHT;
+	var outCtx = outCanvas.getContext('2d');
+	outCtx.fillStyle = '#ffffff';
+	outCtx.fillRect(0, 0, FIRMA_EXPORT_WIDTH, FIRMA_EXPORT_HEIGHT);
+	drawImageContain(outCtx, firmaPadState.canvas, FIRMA_EXPORT_WIDTH, FIRMA_EXPORT_HEIGHT);
+	return outCanvas.toDataURL('image/png');
+}
+
 function drawInformeFirmaFromUrl(url){
 	if(!url || !firmaPadState.canvas || !firmaPadState.ctx) return;
 	var ratio = Math.max(window.devicePixelRatio || 1, 1);
 	var img = new Image();
 	img.onload = function(){
+		var targetW = firmaPadState.canvas.width / ratio;
+		var targetH = firmaPadState.canvas.height / ratio;
 		firmaPadState.ctx.fillStyle = '#ffffff';
-		firmaPadState.ctx.fillRect(0, 0, firmaPadState.canvas.width / ratio, firmaPadState.canvas.height / ratio);
-		firmaPadState.ctx.drawImage(img, 0, 0, firmaPadState.canvas.width / ratio, firmaPadState.canvas.height / ratio);
+		firmaPadState.ctx.fillRect(0, 0, targetW, targetH);
+		drawImageContain(firmaPadState.ctx, img, targetW, targetH);
 		firmaPadState.hasStrokes = true;
 	};
 	img.src = url;
@@ -544,7 +570,7 @@ function saveInformeFirma(){
 
 	var imgData = '';
 	try {
-		imgData = firmaPadState.canvas.toDataURL('image/png');
+		imgData = buildNormalizedFirmaDataUrl();
 	} catch(err){
 		modalError('ERROR', 'No se pudo generar la imagen de la firma.', false, 'Cerrar', 'error');
 		return;
