@@ -1745,13 +1745,13 @@ var openInforme = function(seccion, cual, id){
 												'</div>' +
 												'<div class="input-field col s6">' +
 													'<select id="resultado_inspeccion" name="resultado_inspeccion">' +
-														'<option value="" disabled' + ((item.resultado == null || item.resultado === "") ? ' selected' : '') + '>Selecciona resultado</option>' +
-														'<option value="1"' + (item.resultado == 1 ? ' selected' : '') + '>Favorable</option>' +
-														'<option value="2"' + (item.resultado == 2 ? ' selected' : '') + '>Defectos leves</option>' +
-														'<option value="3"' + (item.resultado == 3 ? ' selected' : '') + '>Defectos graves</option>' +
-														'<option value="4"' + (item.resultado == 4 ? ' selected' : '') + '>Defectos muy graves</option>' +
-													'</select>' +
-													'<label for="resultado_inspeccion" class="active">Resultado</label>' +
+															'<option value="0"' + (item.resultado == 0 || item.resultado === null || item.resultado === "" ? ' selected' : '') + '>---</option>' +
+															'<option value="1"' + (item.resultado == 1 ? ' selected' : '') + '>Favorable</option>' +
+															'<option value="2"' + (item.resultado == 2 ? ' selected' : '') + '>Defectos leves</option>' +
+															'<option value="3"' + (item.resultado == 3 ? ' selected' : '') + '>Defectos graves</option>' +
+															'<option value="4"' + (item.resultado == 4 ? ' selected' : '') + '>Defectos muy graves</option>' +
+														'</select>' +
+														'<label for="resultado_inspeccion" class="active">Resultado</label>' +
 												'</div>' +
 											'</div>' +
 											'<div class="row">' +
