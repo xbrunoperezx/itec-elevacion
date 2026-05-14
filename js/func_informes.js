@@ -32,6 +32,11 @@ function parseDateToStorage(dateText){
 	return text;
 }
 
+function stripEquipoCaducidad(nombre){
+	if(!nombre) return '';
+	return String(nombre).replace(/\s*=>{4}\s*Caducidad:\s*[0-9]{2}-[0-9]{2}-[0-9]{4}\s*$/i, '').trim();
+}
+
 function buildEquipoLabel(equipo){
 	if(!equipo) return '';
 	var codigo = (equipo.codigo || '').trim();
@@ -39,18 +44,13 @@ function buildEquipoLabel(equipo){
 	var marca = (equipo.marca || '').trim();
 	var modelo = (equipo.modelo || '').trim();
 	var numSerie = (equipo.num_serie || '').trim();
-	var fechaCaducidad = (equipo.prox_calibracion_dmy || equipo.prox_calibracion || '').trim();
 	var parts = [];
 	if(codigo) parts.push(codigo);
 	if(nombre) parts.push(nombre);
 	if(marca || modelo || numSerie){
 		parts.push([marca, modelo].filter(Boolean).join(' - ') + (numSerie ? ' (' + numSerie + ')' : ''));
 	}
-	var label = parts.filter(Boolean).join(' - ');
-	if(fechaCaducidad){
-		label += ' =>>>> Caducidad: ' + fechaCaducidad;
-	}
-	return label;
+	return parts.filter(Boolean).join(' - ');
 }
 
 function renderEquiposCatalogList(){
@@ -119,7 +119,7 @@ function buildEquiposTab7(equiposData){
 		'</tr></thead>' +
 		'<tbody id="equipos_tbody">';
 	$.each(equiposData || {}, function(key, data){
-		var nombre = (data && data.nombre) ? data.nombre : '';
+		var nombre = stripEquipoCaducidad((data && data.nombre) ? data.nombre : '');
 		var proxima = (data && data.proxima_calibracion) ? data.proxima_calibracion : '';
 		html += '<tr class="equipo-utilizado-row" data-equipo-key="' + escapeHtml(key) + '">' +
 			'<td class="equipo-nombre-cell"><input type="text" class="equipo_nombre" list="equipos_catalogo_list" value="' + escapeHtml(nombre) + '" placeholder="Equipo utilizado"></td>' +
@@ -144,7 +144,7 @@ function serializeEquiposFromForm(){
 	var equipos = {};
 	var index = 1;
 	$('#equipos_tbody .equipo-utilizado-row').each(function(){
-		var nombre = ($(this).find('.equipo_nombre').val() || '').trim();
+		var nombre = stripEquipoCaducidad(($(this).find('.equipo_nombre').val() || '').trim());
 		var proxima = ($(this).find('.equipo_proxima_calibracion').val() || '').trim();
 		if(nombre !== '' || proxima !== ''){
 			equipos[String(index)] = {
