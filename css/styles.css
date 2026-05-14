@@ -410,6 +410,7 @@ textarea{
 
 #modal_pri .firma-pri-wrap {
   width: 100%;
+  text-align: center;
 }
 
 #modal_pri .firma-pri-header {
@@ -419,12 +420,13 @@ textarea{
 
 #modal_pri .firma-pri-pad {
   width: 100%;
-  max-width: 760px;
+  max-width: 500px;
   aspect-ratio: 4 / 3;
   border: 1px solid #cfd8dc;
   border-radius: 6px;
   background: #fff;
   overflow: hidden;
+  margin: 0 auto;
 }
 
 #modal_pri #firma_pri_canvas {
@@ -437,6 +439,7 @@ textarea{
 
 #modal_pri .firma-pri-actions {
   margin-top: 10px;
+  text-align: center;
 }
 
 #modal_pri .firma-pri-preview-wrap {
