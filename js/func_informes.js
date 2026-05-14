@@ -1741,7 +1741,7 @@ var openInforme = function(seccion, cual, id){
 															'<option value="1"' + (item.estado == 1 ? ' selected' : '') + '>Inspección Realizada</option>' +
 															'<option value="2"' + (item.estado == 2 ? ' selected' : '') + '>Enviada a Facturación</option>' +
 														'</select>' +
-														'<label for="estado_inspeccion" class="active">Estado inspección</label>' +
+														'<label for="estado_inspeccion" class="active">Estado</label>' +
 												'</div>' +
 												'<div class="input-field col s6">' +
 													'<select id="resultado_inspeccion" name="resultado_inspeccion">' +
@@ -1751,7 +1751,7 @@ var openInforme = function(seccion, cual, id){
 															'<option value="3"' + (item.resultado == 3 ? ' selected' : '') + '>Defectos graves</option>' +
 															'<option value="4"' + (item.resultado == 4 ? ' selected' : '') + '>Defectos muy graves</option>' +
 														'</select>' +
-														'<label for="resultado_inspeccion" class="active">Resultado</label>' +
+														'<label for="resultado_inspeccion" class="active">Resultado de la inspección</label>' +
 												'</div>' +
 											'</div>' +
 											'<div class="row">' +
