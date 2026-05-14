@@ -1,4 +1,28 @@
 // Funciones relacionadas con la pestaña de clientes
+function parseServiceResponse(raw, contextLabel){
+	if (raw && typeof raw === 'object') {
+		return raw;
+	}
+
+	var text = (raw == null) ? '' : String(raw).trim();
+	if (!text) {
+		return null;
+	}
+
+	if (text.indexOf('KO: sesión') === 0 || text.indexOf('KO: sesion') === 0) {
+		window.location.href = 'login.html';
+		return null;
+	}
+
+	try {
+		return JSON.parse(text);
+	} catch (e) {
+		console.error('Respuesta no JSON en ' + contextLabel + ':', text);
+		modalError('ERROR', 'Respuesta inválida del servidor (' + contextLabel + ')', false);
+		return null;
+	}
+}
+
 var readClientes = function(id, totalParams){
 	// limpiamos la tabla de clientes
 	$("#table_cli tbody").empty();
@@ -10,13 +34,15 @@ var readClientes = function(id, totalParams){
 		success: function(data) {
 				$("span.direct").html('');
 		    // Recorrer los datos devueltos por la consulta
-		    datos = JSON.parse(data)["resultados"];
+		    var parsed = parseServiceResponse(data, 'listado de clientes');
+		    if (!parsed) return;
+		    datos = parsed["resultados"] || [];
 		    dataLayer.push({
 		    	"event" : "service",
 		    	"type" : "list_cli",
 		    	"data" : datos
 		    });
-		    mantenedores = JSON.parse(data)["mantenedores"];
+		    mantenedores = parsed["mantenedores"] || {};
 		    var totalResultados = 0;
 		    $.each(datos, function(index, item) {
 		      // Construir la fila de la tabla con los datos
@@ -103,7 +129,8 @@ var readDatosFacturacion = function(id){
 				$("#resultados_facturacion").html('No hay datos');
 				return;
 			}
-			var parsed = JSON.parse(data);
+			var parsed = parseServiceResponse(data, 'datos de facturación');
+			if (!parsed) return;
 			var datos = parsed["resultados"] || [];
 			if(!datos || datos.length === 0){
 				$("#resultados_facturacion").html('No hay datos');
@@ -145,12 +172,8 @@ var readHistorial = function(id){
 		type: 'POST',
 		data: { filtro_id_cliente: id },
 		success: function(data){
-			try{
-				var parsed = (typeof data === 'string') ? JSON.parse(data) : data;
-			}catch(e){
-				$("#resultados_historial").html('Error parseando respuesta');
-				return;
-			}
+			var parsed = parseServiceResponse(data, 'historial');
+			if (!parsed) return;
 			var datos = parsed['resultados'] || [];
 			if(!datos || datos.length === 0){
 				$("#resultados_historial").html('No hay historial');
@@ -189,7 +212,8 @@ var readContratadasClientes = function(id){
 				$("#resultados_cli_con").html('No hay datos');
 				return;
 			}
-			var parsed = JSON.parse(data);
+			var parsed = parseServiceResponse(data, 'contratadas por cliente');
+			if (!parsed) return;
 			var datos = parsed["resultados"] || [];
 			if(!datos || datos.length === 0){
 				$("#resultados_cli_con").html('No hay datos');
@@ -630,13 +654,19 @@ var openCliente = function(seccion, cual, id){
 			data: totalParams,
 			success: function(data) {
 			    // Recorrer los datos devueltos por la consulta
-			    item = JSON.parse(data)["resultados"][0];
+			    var parsed = parseServiceResponse(data, 'abrir cliente');
+			    if (!parsed) return;
+			    item = (parsed["resultados"] || [])[0];
+			    if (!item) {
+			    	modalError('ERROR', 'No se encontraron datos del cliente', false);
+			    	return;
+			    }
 			    dataLayer.push({
 		    		"event" : "service",
 		    		"type" : "view_cli",
 		    		"data" : item
 		    	});
-			    mantenedores = JSON.parse(data)["mantenedores"];
+			    mantenedores = parsed["mantenedores"] || {};
 			    var title = " Editar cliente";
 			    title+= " - RAE: "+item.rae;
 					$("#modal_"+seccion).find(".modal_txt_title").text(title);
@@ -834,7 +864,9 @@ var openCliente = function(seccion, cual, id){
 			type: 'POST',
 			data: {},
 			success: function(data) {
-				mantenedores = JSON.parse(data)["mantenedores"];
+				var parsed = parseServiceResponse(data, 'nuevo cliente');
+				if (!parsed) return;
+				mantenedores = parsed["mantenedores"] || {};
 				var title = "Nuevo cliente";
 				$("#modal_"+seccion).find(".modal_txt_title").text(title);
 				$("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
