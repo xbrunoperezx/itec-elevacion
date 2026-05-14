@@ -1452,7 +1452,14 @@ function savePrimera(){
 		hora_fin: $('#hora_fin').val(),
 		gps_latitud: $('#gps_latitud').val(),
 		gps_longitud: $('#gps_longitud').val(),
-		grupo: $('#grupo_pri').val()
+		grupo: $('#grupo_pri').val(),
+		estado: $('#estado_inspeccion').val(),
+		resultado: $('#resultado_inspeccion').val(),
+		proxima: $('#proxima_inspeccion').val(),
+		industria: $('#industria_inspeccion').val(),
+		enviada_cliente: $('#enviado_cliente').val(),
+		observaciones: $('#observaciones_acta').val(),
+		observaciones_check: $('#observaciones_hoja').val()
 	};
 
 	// Guardar informe (si existe servicio)
@@ -1725,8 +1732,52 @@ var openInforme = function(seccion, cual, id){
 						'<div id="tab7_pri" class="col s12">' + 
 						'<div id="equipos_container"></div>' +
 						'</div>' +	
-						'<div id="tab8_pri" class="col s12">' + 
-						'</div>' +	
+										'<div id="tab8_pri" class="col s12">' + 
+											'<div class="row">' +
+												'<div class="input-field col s6">' +
+													'<select id="estado_inspeccion" name="estado_inspeccion">' +
+														'<option value="" disabled' + ((item.estado == null || item.estado === "") ? ' selected' : '') + '>Selecciona estado</option>' +
+														'<option value="1"' + (item.estado == 1 ? ' selected' : '') + '>Realizada</option>' +
+														'<option value="2"' + (item.estado == 2 ? ' selected' : '') + '>Pendiente</option>' +
+													'</select>' +
+													'<label for="estado_inspeccion" class="active">Estado inspección</label>' +
+												'</div>' +
+												'<div class="input-field col s6">' +
+													'<select id="resultado_inspeccion" name="resultado_inspeccion">' +
+														'<option value="" disabled' + ((item.resultado == null || item.resultado === "") ? ' selected' : '') + '>Selecciona resultado</option>' +
+														'<option value="1"' + (item.resultado == 1 ? ' selected' : '') + '>Favorable</option>' +
+														'<option value="2"' + (item.resultado == 2 ? ' selected' : '') + '>Defectos leves</option>' +
+														'<option value="3"' + (item.resultado == 3 ? ' selected' : '') + '>Defectos graves</option>' +
+														'<option value="4"' + (item.resultado == 4 ? ' selected' : '') + '>Defectos muy graves</option>' +
+													'</select>' +
+													'<label for="resultado_inspeccion" class="active">Resultado</label>' +
+												'</div>' +
+											'</div>' +
+											'<div class="row">' +
+												'<div class="input-field col s4">' +
+													'<input type="date" id="proxima_inspeccion" name="proxima_inspeccion" value="' + (item.proxima ? item.proxima : '') + '">' +
+													'<label for="proxima_inspeccion" class="active">Próxima inspección</label>' +
+												'</div>' +
+												'<div class="input-field col s4">' +
+													'<input type="date" id="industria_inspeccion" name="industria_inspeccion" value="' + (item.industria ? item.industria : '') + '">' +
+													'<label for="industria_inspeccion" class="active">Industria</label>' +
+												'</div>' +
+												'<div class="input-field col s4">' +
+													'<input type="date" id="enviado_cliente" name="enviado_cliente" value="' + (item.enviada_cliente ? item.enviada_cliente : '') + '">' +
+													'<label for="enviado_cliente" class="active">Enviado a cliente</label>' +
+												'</div>' +
+											'</div>' +
+											'<div class="row">' +
+												'<div class="input-field col s6">' +
+													'<textarea id="observaciones_acta" name="observaciones_acta" class="materialize-textarea">' + (item.observaciones ? item.observaciones : '') + '</textarea>' +
+													'<label for="observaciones_acta" class="active">Observaciones acta</label>' +
+												'</div>' +
+												'<div class="input-field col s6">' +
+													'<textarea id="observaciones_hoja" name="observaciones_hoja" class="materialize-textarea">' + (item.observaciones_check ? item.observaciones_check : '') + '</textarea>' +
+													'<label for="observaciones_hoja" class="active">Observaciones hoja de campo</label>' +
+												'</div>' +
+											'</div>' +
+										'</div>' +
 						'<div id="tab9_pri" class="col s12">' + 
 						'<div id="firma_container"></div>' +
 						'</div>' +	

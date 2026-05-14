@@ -8,6 +8,7 @@ if (!isset($_COOKIE['user_id'])) {
   exit;
 }
 
+
 $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
 $fecha_inspeccion = isset($_POST['fecha_inspeccion']) ? trim($_POST['fecha_inspeccion']) : '';
 $hora_ini = isset($_POST['hora_ini']) ? trim($_POST['hora_ini']) : '';
@@ -15,6 +16,13 @@ $hora_fin = isset($_POST['hora_fin']) ? trim($_POST['hora_fin']) : '';
 $gps_latitud = isset($_POST['gps_latitud']) ? trim($_POST['gps_latitud']) : '';
 $gps_longitud = isset($_POST['gps_longitud']) ? trim($_POST['gps_longitud']) : '';
 $grupo = isset($_POST['grupo']) ? trim($_POST['grupo']) : '';
+$estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
+$resultado = isset($_POST['resultado']) ? trim($_POST['resultado']) : '';
+$proxima = isset($_POST['proxima']) ? trim($_POST['proxima']) : '';
+$industria = isset($_POST['industria']) ? trim($_POST['industria']) : '';
+$enviada_cliente = isset($_POST['enviada_cliente']) ? trim($_POST['enviada_cliente']) : '';
+$observaciones = isset($_POST['observaciones']) ? trim($_POST['observaciones']) : '';
+$observaciones_check = isset($_POST['observaciones_check']) ? trim($_POST['observaciones_check']) : '';
 
 if (!$link) {
   echo json_encode(array('error' => 'Conexión fallida: ' . mysqli_connect_error()));
@@ -73,13 +81,29 @@ if ($fecha_db_sql === null) {
   exit;
 }
 
+
+$proxima_sql = ($proxima !== '') ? "'" . mysqli_real_escape_string($link, $proxima) . "'" : "NULL";
+$industria_sql = ($industria !== '') ? "'" . mysqli_real_escape_string($link, $industria) . "'" : "NULL";
+$enviada_cliente_sql = ($enviada_cliente !== '') ? "'" . mysqli_real_escape_string($link, $enviada_cliente) . "'" : "NULL";
+$estado_sql = ($estado !== '') ? intval($estado) : "NULL";
+$resultado_sql = ($resultado !== '') ? intval($resultado) : "NULL";
+$observaciones_sql = "'" . mysqli_real_escape_string($link, $observaciones) . "'";
+$observaciones_check_sql = "'" . mysqli_real_escape_string($link, $observaciones_check) . "'";
+
 $sql = "UPDATE `informes` SET
   `fecha` = {$fecha_db_sql},
   `hora_ini` = {$hora_ini_sql},
   `hora_fin` = {$hora_fin_sql},
   `gps_latitud` = {$gps_latitud_sql},
   `gps_longitud` = {$gps_longitud_sql},
-  `grupo` = {$grupo_sql}
+  `grupo` = {$grupo_sql},
+  `estado` = {$estado_sql},
+  `resultado` = {$resultado_sql},
+  `proxima` = {$proxima_sql},
+  `industria` = {$industria_sql},
+  `enviada_cliente` = {$enviada_cliente_sql},
+  `observaciones` = {$observaciones_sql},
+  `observaciones_check` = {$observaciones_check_sql}
   WHERE `id` = {$id}
   LIMIT 1";
 
