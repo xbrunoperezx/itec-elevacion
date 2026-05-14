@@ -47,7 +47,7 @@ input[type=text],
 input[type=number],
 input[type=date],
 select {
-  padding-left: 10px;
+  padding-left: 10px !important;
   background-color: #FFFFFF !important;
 }
 
@@ -56,6 +56,12 @@ select {
 [id^="sectionToggle_"] input[type=date],
 [id^="sectionToggle_"] select {
   background-color: transparent !important;
+}
+
+.modal .input-field input[type=text],
+.modal .input-field input[type=number],
+.modal .input-field input[type=date] {
+  padding-left: 10px !important;
 }
 
 .footer-copyright {
