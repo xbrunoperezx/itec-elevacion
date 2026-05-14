@@ -1,5 +1,7 @@
 // Funciones relacionadas con la pestaña de informes
 var equiposCatalogMap = {};
+var equiposCatalogById = {};
+var inspectorEquiposDefaultIds = [];
 
 function escapeHtml(text){
 	return String(text == null ? '' : text)
@@ -53,6 +55,128 @@ function buildEquipoLabel(equipo){
 	return parts.filter(Boolean).join(' - ');
 }
 
+function normalizeInspectorEquiposIds(rawEquipos){
+	var ids = [];
+	if(rawEquipos == null) return ids;
+
+	var value = rawEquipos;
+	if(typeof value === 'string'){
+		var text = value.trim();
+		if(text === '' || text.toLowerCase() === 'null') return ids;
+		try {
+			value = JSON.parse(text);
+		} catch(err){
+			return ids;
+		}
+	}
+
+	if(Array.isArray(value)){
+		$.each(value, function(_, item){
+			if(item && typeof item === 'object' && item.id !== undefined){
+				var parsedObj = parseInt(item.id, 10);
+				if(!isNaN(parsedObj) && parsedObj > 0) ids.push(parsedObj);
+				return;
+			}
+			var parsed = parseInt(item, 10);
+			if(!isNaN(parsed) && parsed > 0) ids.push(parsed);
+		});
+	} else if(value && typeof value === 'object'){
+		if(Array.isArray(value.ids)){
+			$.each(value.ids, function(_, item){
+				var parsed = parseInt(item, 10);
+				if(!isNaN(parsed) && parsed > 0) ids.push(parsed);
+			});
+		} else {
+			$.each(Object.keys(value), function(_, key){
+				var parsedKey = parseInt(key, 10);
+				if(!isNaN(parsedKey) && parsedKey > 0){
+					ids.push(parsedKey);
+					return;
+				}
+				var maybe = value[key];
+				var parsedVal = parseInt(maybe, 10);
+				if(!isNaN(parsedVal) && parsedVal > 0) ids.push(parsedVal);
+			});
+		}
+	}
+
+	return Array.from(new Set(ids));
+}
+
+function loadInspectorEquiposDefaults(userId, callback){
+	if(!userId){
+		inspectorEquiposDefaultIds = [];
+		if(typeof callback === 'function') callback(inspectorEquiposDefaultIds);
+		return;
+	}
+
+	$.ajax({
+		url: 'services/usuarios.php',
+		type: 'POST',
+		data: { action: 'list', filtro_id: userId },
+		success: function(data){
+			var parsed = null;
+			try {
+				parsed = (typeof data === 'string') ? JSON.parse(data) : data;
+			} catch(err){
+				parsed = null;
+			}
+			var usuario = (parsed && parsed.resultados && parsed.resultados.length) ? parsed.resultados[0] : null;
+			inspectorEquiposDefaultIds = normalizeInspectorEquiposIds(usuario ? usuario.equipos : null);
+			if(typeof callback === 'function') callback(inspectorEquiposDefaultIds);
+		},
+		error: function(){
+			inspectorEquiposDefaultIds = [];
+			if(typeof callback === 'function') callback(inspectorEquiposDefaultIds);
+		}
+	});
+}
+
+function addInspectorEquiposToForm(){
+	if(!inspectorEquiposDefaultIds || !inspectorEquiposDefaultIds.length){
+		M.toast({ html: 'El inspector no tiene equipos predefinidos' });
+		return;
+	}
+
+	var addFromCatalog = function(){
+		var existingNames = {};
+		$('#equipos_tbody .equipo-utilizado-row .equipo_nombre').each(function(){
+			var current = stripEquipoCaducidad(($(this).val() || '').trim());
+			if(current) existingNames[current] = true;
+		});
+
+		var added = 0;
+		var missing = [];
+		$.each(inspectorEquiposDefaultIds, function(_, eqId){
+			var info = equiposCatalogById[String(eqId)];
+			if(!info){
+				missing.push(eqId);
+				return;
+			}
+			if(existingNames[info.label]) return;
+			addEquipoUtilizadoRow(info.label, info.proxima);
+			existingNames[info.label] = true;
+			added++;
+		});
+
+		if(added > 0){
+			M.toast({ html: 'Se añadieron ' + added + ' equipos del inspector' });
+		}
+		if(missing.length > 0){
+			M.toast({ html: 'IDs no encontrados en catálogo: ' + missing.join(', ') });
+		}
+		if(added === 0 && missing.length === 0){
+			M.toast({ html: 'No hay equipos nuevos para añadir' });
+		}
+	};
+
+	if(Object.keys(equiposCatalogById).length === 0){
+		loadEquiposCatalog(function(){ addFromCatalog(); });
+		return;
+	}
+	addFromCatalog();
+}
+
 function renderEquiposCatalogList(){
 	var html = '';
 	$.each(equiposCatalogMap, function(label, prox){
@@ -86,10 +210,19 @@ function loadEquiposCatalog(callback){
 				parsed = null;
 			}
 			equiposCatalogMap = {};
+			equiposCatalogById = {};
 			$.each((parsed && parsed.resultados) ? parsed.resultados : [], function(index, equipo){
 				var label = buildEquipoLabel(equipo);
+				var id = parseInt(equipo.id, 10);
+				var prox = (equipo.prox_calibracion_dmy && equipo.prox_calibracion_dmy !== '-') ? equipo.prox_calibracion_dmy : '';
 				if(label){
-					equiposCatalogMap[label] = equipo.prox_calibracion_dmy || '';
+					equiposCatalogMap[label] = prox;
+					if(!isNaN(id) && id > 0){
+						equiposCatalogById[String(id)] = {
+							label: label,
+							proxima: prox
+						};
+					}
 				}
 			});
 			renderEquiposCatalogList();
@@ -98,6 +231,7 @@ function loadEquiposCatalog(callback){
 		},
 		error: function(){
 			equiposCatalogMap = {};
+			equiposCatalogById = {};
 			renderEquiposCatalogList();
 			if(typeof callback === 'function') callback();
 		}
@@ -109,6 +243,7 @@ function buildEquiposTab7(equiposData){
 	html += '<div class="row" style="margin-bottom:8px;">' +
 		'<div class="col s12 right-align">' +
 			'<a href="#" id="add_equipo_utilizado" class="btn waves-effect waves-light green btn-small"><i class="material-icons left">add</i>Agregar equipo utilizado</a>&nbsp;' +
+			'<a href="#" id="add_equipos_inspector" class="btn waves-effect waves-light teal btn-small"><i class="material-icons left">assignment_ind</i>Agregar equipos del inspector</a>&nbsp;' +
 			'<a href="#" id="refresh_equipos_catalog" class="btn waves-effect waves-light blue btn-small"><i class="material-icons left">refresh</i>Refrescar equipos</a>' +
 		'</div>' +
 	'</div>';
@@ -637,6 +772,11 @@ jQuery(document).on('click', '#add_equipo_utilizado', function(e){
 	addEquipoUtilizadoRow('', '');
 });
 
+jQuery(document).on('click', '#add_equipos_inspector', function(e){
+	e.preventDefault();
+	addInspectorEquiposToForm();
+});
+
 jQuery(document).on('click', '#refresh_equipos_catalog', function(e){
 	e.preventDefault();
 	loadEquiposCatalog();
@@ -873,7 +1013,6 @@ function savePrimera(){
 									var respEquipos = (typeof responseEquipos === 'string') ? JSON.parse(responseEquipos) : responseEquipos;
 									if(respEquipos.success){
 										$('#modal_pri').modal('close');
-										modalError('ÉXITO', 'Informe guardado correctamente', false, 'Cerrar', 'success');
 										readInformes('pri', { filtro_total: 15 });
 									} else {
 										modalError('ERROR', respEquipos.error || 'Error al guardar equipos', false, 'Cerrar', 'error');
@@ -1127,6 +1266,7 @@ var openInforme = function(seccion, cual, id){
 				  $('#ascensor_container').html(ascensorHtml);
 						$('#equipos_container').html(buildEquiposTab7(item.equipos || {}));
 						loadEquiposCatalog();
+						loadInspectorEquiposDefaults(item.id_usuarios || null);
 				  $("#modal_"+seccion).modal({ dismissible: false });
 				  $("#modal_"+seccion).modal("open");
 				  syncGrupoLegislacion();

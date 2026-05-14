@@ -12,6 +12,92 @@ if (!$link) {
     die(json_encode(["error" => "Conexión fallida: " . mysqli_connect_error()]));
 }
 
+function normalize_equipos_ids($raw, &$error = null, $strict = true) {
+  $error = null;
+
+  if ($raw === null) return [];
+  if (is_string($raw)) {
+    $text = trim($raw);
+    if ($text === '' || strtolower($text) === 'null') return [];
+    $decoded = json_decode($text, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+      if ($strict) $error = 'Equipos JSON inválido';
+      return $strict ? null : [];
+    }
+    $raw = $decoded;
+  }
+
+  $ids = [];
+
+  if (is_array($raw)) {
+    $isSequential = array_keys($raw) === range(0, count($raw) - 1);
+    if ($isSequential) {
+      foreach ($raw as $item) {
+        if (is_array($item) && isset($item['id'])) {
+          $idVal = intval($item['id']);
+        } else {
+          $idVal = intval($item);
+        }
+        if ($idVal > 0) $ids[] = $idVal;
+      }
+    } else {
+      if (isset($raw['ids']) && is_array($raw['ids'])) {
+        foreach ($raw['ids'] as $item) {
+          $idVal = intval($item);
+          if ($idVal > 0) $ids[] = $idVal;
+        }
+      } else {
+        foreach ($raw as $key => $value) {
+          $keyId = intval($key);
+          if ($keyId > 0) {
+            $ids[] = $keyId;
+            continue;
+          }
+          $valId = intval($value);
+          if ($valId > 0) $ids[] = $valId;
+        }
+      }
+    }
+  } else {
+    if ($strict) $error = 'Equipos debe ser un array JSON de IDs';
+    return $strict ? null : [];
+  }
+
+  $ids = array_values(array_unique(array_filter($ids, function($v){ return intval($v) > 0; })));
+  sort($ids);
+  return $ids;
+}
+
+function validate_equipos_exist($link, $ids, &$error = null) {
+  $error = null;
+  if (empty($ids)) return true;
+
+  $idsInt = array_map('intval', $ids);
+  $idsInt = array_values(array_unique(array_filter($idsInt, function($v){ return $v > 0; })));
+  if (empty($idsInt)) return true;
+
+  $in = implode(',', $idsInt);
+  $sql = "SELECT `id` FROM `equipos` WHERE `id` IN ({$in})";
+  $res = mysqli_query($link, $sql);
+  if (!$res) {
+    $error = 'Error validando equipos: ' . mysqli_error($link);
+    return false;
+  }
+
+  $existing = [];
+  while ($row = mysqli_fetch_assoc($res)) {
+    $existing[] = intval($row['id']);
+  }
+
+  $missing = array_values(array_diff($idsInt, $existing));
+  if (!empty($missing)) {
+    $error = 'IDs de equipos no válidos: ' . implode(', ', $missing);
+    return false;
+  }
+
+  return true;
+}
+
 // Determinar la acción solicitada
 $action = isset($_POST['action']) ? $_POST['action'] : 'list';
 
@@ -34,13 +120,16 @@ switch($action) {
       $sql = "SELECT * FROM usuarios";
       $where = array();
       if (!empty($_POST['filtro_user'])) {
-        $where[] = "`user` LIKE '%{$_POST['filtro_user']}%'";
+        $f = mysqli_real_escape_string($link, $_POST['filtro_user']);
+        $where[] = "`user` LIKE '%{$f}%'";
       }
       if (!empty($_POST['filtro_name'])) {
-        $where[] = "`name` LIKE '%{$_POST['filtro_name']}%'";
+        $f = mysqli_real_escape_string($link, $_POST['filtro_name']);
+        $where[] = "`name` LIKE '%{$f}%'";
       }
       if (!empty($_POST['filtro_email'])) {
-        $where[] = "`email` LIKE '%{$_POST['filtro_email']}%'";
+        $f = mysqli_real_escape_string($link, $_POST['filtro_email']);
+        $where[] = "`email` LIKE '%{$f}%'";
       }
       if (count($where) > 0) {
         $sql .= " WHERE " . implode(" AND ", $where);
@@ -53,12 +142,12 @@ switch($action) {
     $result = mysqli_query($link, $sql);
     $resultados = array();
     while ($row = mysqli_fetch_assoc($result)) {
-      // si el campo 'equipos' existe y contiene JSON, decodificarlo
+      // devolver equipos como lista normalizada de IDs
       if (isset($row['equipos']) && $row['equipos'] !== null && $row['equipos'] !== '') {
-        $decoded = json_decode($row['equipos'], true);
-        if (json_last_error() === JSON_ERROR_NONE) {
-          $row['equipos'] = $decoded;
-        }
+        $normErr = null;
+        $row['equipos'] = normalize_equipos_ids($row['equipos'], $normErr, false);
+      } else {
+        $row['equipos'] = [];
       }
       $resultados[] = $row;
     }
@@ -80,25 +169,18 @@ switch($action) {
     $puesto = isset($_POST['puesto']) ? mysqli_real_escape_string($link, $_POST['puesto']) : '';
     $tipo = isset($_POST['tipo']) ? mysqli_real_escape_string($link, $_POST['tipo']) : '';
     $abrev = isset($_POST['abrev']) ? mysqli_real_escape_string($link, $_POST['abrev']) : '';
-    $equipos = isset($_POST['equipos']) ? $_POST['equipos'] : '';
+    $equipos_raw = isset($_POST['equipos']) ? $_POST['equipos'] : '';
 
-    // Procesar equipos JSON
-    $equipos_is_null = false;
-    if(isset($equipos) && trim($equipos) !== ''){
-      $decoded_equipos = json_decode($equipos, true);
-      if(json_last_error() !== JSON_ERROR_NONE){
-        $equipos_is_null = true;
-        $equipos = null;
-      } else {
-        $equipos = json_encode($decoded_equipos, JSON_UNESCAPED_UNICODE);
-        $equipos_is_null = false;
-      }
-    } else {
-      $equipos_is_null = true;
-      $equipos = null;
+    // Procesar y validar equipos como lista de IDs
+    $equipos_error = null;
+    $equipos_ids = normalize_equipos_ids($equipos_raw, $equipos_error, true);
+    if ($equipos_ids === null) {
+      echo 'Error al validar equipos: ' . $equipos_error;
+      break;
     }
-    if(!$equipos_is_null){
-      $equipos = mysqli_real_escape_string($link, $equipos);
+    if (!validate_equipos_exist($link, $equipos_ids, $equipos_error)) {
+      echo 'Error al validar equipos: ' . $equipos_error;
+      break;
     }
 
     // Hash de contraseña (usar '1234' por defecto si no se envió)
@@ -112,10 +194,12 @@ switch($action) {
 
     $cols = array('`user`','`password`','`name`','`email`','`extension`','`pphone`','`oficina`','`puesto`','`tipo`','`abrev`','`equipos`');
     $vals = array("'{$user}'","'{$password_hashed}'","'{$name}'","'{$email}'","'{$extension}'","'{$pphone}'","'{$oficina}'","'{$puesto}'","'{$tipo}'","'{$abrev}'");
-    if($equipos_is_null){
+    if(empty($equipos_ids)){
       $vals[] = "NULL";
     } else {
-      $vals[] = "'{$equipos}'";
+      $equipos_json = json_encode($equipos_ids, JSON_UNESCAPED_UNICODE);
+      $equipos_json = mysqli_real_escape_string($link, $equipos_json);
+      $vals[] = "'{$equipos_json}'";
     }
 
     $sql = "INSERT INTO `usuarios` (" . implode(',', $cols) . ") VALUES (" . implode(',', $vals) . ")";
@@ -145,25 +229,18 @@ switch($action) {
     $puesto = isset($_POST['puesto']) ? mysqli_real_escape_string($link, $_POST['puesto']) : '';
     $tipo = isset($_POST['tipo']) ? mysqli_real_escape_string($link, $_POST['tipo']) : '';
     $abrev = isset($_POST['abrev']) ? mysqli_real_escape_string($link, $_POST['abrev']) : '';
-    $equipos = isset($_POST['equipos']) ? $_POST['equipos'] : '';
+    $equipos_raw = isset($_POST['equipos']) ? $_POST['equipos'] : '';
 
-    // Procesar equipos JSON
-    $equipos_is_null = false;
-    if(isset($equipos) && trim($equipos) !== ''){
-      $decoded_equipos = json_decode($equipos, true);
-      if(json_last_error() !== JSON_ERROR_NONE){
-        $equipos_is_null = true;
-        $equipos = null;
-      } else {
-        $equipos = json_encode($decoded_equipos, JSON_UNESCAPED_UNICODE);
-        $equipos_is_null = false;
-      }
-    } else {
-      $equipos_is_null = true;
-      $equipos = null;
+    // Procesar y validar equipos como lista de IDs
+    $equipos_error = null;
+    $equipos_ids = normalize_equipos_ids($equipos_raw, $equipos_error, true);
+    if ($equipos_ids === null) {
+      echo 'Error al validar equipos: ' . $equipos_error;
+      break;
     }
-    if(!$equipos_is_null){
-      $equipos = mysqli_real_escape_string($link, $equipos);
+    if (!validate_equipos_exist($link, $equipos_ids, $equipos_error)) {
+      echo 'Error al validar equipos: ' . $equipos_error;
+      break;
     }
 
     $setParts = array();
@@ -185,10 +262,12 @@ switch($action) {
     $setParts[] = "`puesto`='{$puesto}'";
     $setParts[] = "`tipo`='{$tipo}'";
     $setParts[] = "`abrev`='{$abrev}'";
-    if($equipos_is_null){
+    if(empty($equipos_ids)){
       $setParts[] = "`equipos`=NULL";
     } else {
-      $setParts[] = "`equipos`='{$equipos}'";
+      $equipos_json = json_encode($equipos_ids, JSON_UNESCAPED_UNICODE);
+      $equipos_json = mysqli_real_escape_string($link, $equipos_json);
+      $setParts[] = "`equipos`='{$equipos_json}'";
     }
 
     $sql = "UPDATE `usuarios` SET " . implode(', ', $setParts) . " WHERE `id`={$id}";

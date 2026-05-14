@@ -34,6 +34,211 @@ var UsuariosAPI = (function(){
 // Ejemplo de uso:
 // UsuariosAPI.list({filtro_nombre: 'Juan'}).done(function(res){ console.log(res); });
 
+var equiposCatalogUsuarios = [];
+var equiposCatalogUsuariosById = {};
+
+function normalizeUsuarioEquiposIds(raw){
+  var ids = [];
+  if(raw == null) return ids;
+
+  var value = raw;
+  if(typeof value === 'string'){
+    var text = value.trim();
+    if(text === '' || text.toLowerCase() === 'null') return ids;
+    try {
+      value = JSON.parse(text);
+    } catch(err){
+      return ids;
+    }
+  }
+
+  if(Array.isArray(value)){
+    $.each(value, function(_, item){
+      if(item && typeof item === 'object' && item.id !== undefined){
+        var parsedObj = parseInt(item.id, 10);
+        if(!isNaN(parsedObj) && parsedObj > 0) ids.push(parsedObj);
+        return;
+      }
+      var parsed = parseInt(item, 10);
+      if(!isNaN(parsed) && parsed > 0) ids.push(parsed);
+    });
+  } else if(value && typeof value === 'object'){
+    if(Array.isArray(value.ids)){
+      $.each(value.ids, function(_, item){
+        var parsed = parseInt(item, 10);
+        if(!isNaN(parsed) && parsed > 0) ids.push(parsed);
+      });
+    } else {
+      $.each(Object.keys(value), function(_, key){
+        var parsedKey = parseInt(key, 10);
+        if(!isNaN(parsedKey) && parsedKey > 0){
+          ids.push(parsedKey);
+          return;
+        }
+        var parsedVal = parseInt(value[key], 10);
+        if(!isNaN(parsedVal) && parsedVal > 0) ids.push(parsedVal);
+      });
+    }
+  }
+
+  ids = Array.from(new Set(ids));
+  ids.sort(function(a,b){ return a-b; });
+  return ids;
+}
+
+function loadEquiposCatalogUsuarios(callback){
+  $.ajax({
+    url: 'services/equipos.php',
+    method: 'POST',
+    data: { filtro_total: 500 },
+    success: function(res){
+      if(typeof res === 'string'){
+        try { res = JSON.parse(res); } catch(err){ res = { resultados: [] }; }
+      }
+      equiposCatalogUsuarios = (res && res.resultados) ? res.resultados : [];
+      equiposCatalogUsuariosById = {};
+      $.each(equiposCatalogUsuarios, function(_, eq){
+        var id = parseInt(eq.id, 10);
+        if(!isNaN(id) && id > 0){
+          equiposCatalogUsuariosById[String(id)] = eq;
+        }
+      });
+      if(typeof callback === 'function') callback();
+    },
+    error: function(){
+      equiposCatalogUsuarios = [];
+      equiposCatalogUsuariosById = {};
+      if(typeof callback === 'function') callback();
+    }
+  });
+}
+
+function buildEquipoUsuarioOptionLabel(eq){
+  var parts = [];
+  if(eq.codigo) parts.push(eq.codigo);
+  if(eq.nombre) parts.push(eq.nombre);
+  if(eq.marca) parts.push(eq.marca);
+  if(eq.modelo) parts.push(eq.modelo);
+  return parts.filter(Boolean).join(' - ');
+}
+
+function buildEquiposUsuarioSelectHtml(selectedId){
+  var selected = parseInt(selectedId, 10);
+  var html = '<select class="equipo_usr_id">';
+  html += '<option value="" disabled ' + (isNaN(selected) ? 'selected' : '') + '>Selecciona equipo</option>';
+  $.each(equiposCatalogUsuarios, function(_, eq){
+    var id = parseInt(eq.id, 10);
+    if(isNaN(id) || id <= 0) return;
+    var label = buildEquipoUsuarioOptionLabel(eq);
+    html += '<option value="' + id + '" ' + (id === selected ? 'selected' : '') + '>' + label + '</option>';
+  });
+  html += '</select>';
+  return html;
+}
+
+function addEquipoUsuarioRow(id){
+  var html = '<tr class="equipo_usr_row">' +
+    '<td>' + buildEquiposUsuarioSelectHtml(id) + '</td>' +
+    '<td style="width:60px;"><a class="btn-floating btn-small waves-effect waves-light red remove-equipo-usr" title="Eliminar"><i class="material-icons">close</i></a></td>' +
+  '</tr>';
+  $('#equipos_usr_tbody').append(html);
+  if(typeof $.fn.formSelect === 'function') $('#equipos_usr_tbody select').formSelect();
+}
+
+function serializeEquiposUsuarioFromTable(){
+  var ids = [];
+  $('#equipos_usr_tbody .equipo_usr_row').each(function(){
+    var val = parseInt(($(this).find('.equipo_usr_id').val() || ''), 10);
+    if(!isNaN(val) && val > 0) ids.push(val);
+  });
+  ids = Array.from(new Set(ids));
+  ids.sort(function(a,b){ return a-b; });
+  return ids;
+}
+
+function syncEquiposUsuarioJsonFromTable(){
+  var ids = serializeEquiposUsuarioFromTable();
+  $('#equipos_usr_json').val(JSON.stringify(ids, null, 2));
+}
+
+function syncEquiposUsuarioTableFromJson(){
+  var raw = ($('#equipos_usr_json').val() || '').trim();
+  var parsed;
+  try {
+    parsed = raw === '' ? [] : JSON.parse(raw);
+  } catch(err){
+    modalError('ERROR', 'El JSON de equipos no es válido.', false, 'Cerrar', 'error');
+    return false;
+  }
+  var ids = normalizeUsuarioEquiposIds(parsed);
+  $('#equipos_usr_tbody').empty();
+  $.each(ids, function(_, id){ addEquipoUsuarioRow(id); });
+  return true;
+}
+
+function toggleEquiposUsuarioMode(mode){
+  if(mode === 'json'){
+    syncEquiposUsuarioJsonFromTable();
+    $('#equipos_usr_mode_tabla').hide();
+    $('#equipos_usr_mode_json').show();
+  } else {
+    if(!syncEquiposUsuarioTableFromJson()){
+      $('#equipos_usr_mode').val('json');
+      if(typeof $.fn.formSelect === 'function') $('#equipos_usr_mode').formSelect();
+      $('#equipos_usr_mode_tabla').hide();
+      $('#equipos_usr_mode_json').show();
+      return;
+    }
+    $('#equipos_usr_mode_json').hide();
+    $('#equipos_usr_mode_tabla').show();
+  }
+}
+
+function getEquiposUsuarioPayload(){
+  var mode = $('#equipos_usr_mode').val() || 'tabla';
+  if(mode === 'json'){
+    var raw = ($('#equipos_usr_json').val() || '').trim();
+    var parsed;
+    try {
+      parsed = raw === '' ? [] : JSON.parse(raw);
+    } catch(err){
+      modalError('ERROR', 'El JSON de equipos no es válido.', false, 'Cerrar', 'error');
+      return null;
+    }
+    return JSON.stringify(normalizeUsuarioEquiposIds(parsed));
+  }
+  return JSON.stringify(serializeEquiposUsuarioFromTable());
+}
+
+function initEquiposUsuarioEditor(initialEquipos){
+  var ids = normalizeUsuarioEquiposIds(initialEquipos);
+  loadEquiposCatalogUsuarios(function(){
+    $('#equipos_usr_tbody').empty();
+    $.each(ids, function(_, id){ addEquipoUsuarioRow(id); });
+    if(typeof $.fn.formSelect === 'function'){
+      $('#equipos_usr_mode').formSelect();
+      $('#equipos_usr_tbody select').formSelect();
+    }
+    $('#equipos_usr_mode').val('tabla');
+    if(typeof $.fn.formSelect === 'function') $('#equipos_usr_mode').formSelect();
+    toggleEquiposUsuarioMode('tabla');
+  });
+}
+
+jQuery(document).on('click', '#add_equipo_usr', function(e){
+  e.preventDefault();
+  addEquipoUsuarioRow('');
+});
+
+jQuery(document).on('click', '.remove-equipo-usr', function(e){
+  e.preventDefault();
+  $(this).closest('.equipo_usr_row').remove();
+});
+
+jQuery(document).on('change', '#equipos_usr_mode', function(){
+  toggleEquiposUsuarioMode($(this).val());
+});
+
 // Render lista de usuarios en el contenedor #Usuarios
 function readUsuarios(){
   // leer filtros desde el formulario en admin.html
@@ -76,7 +281,7 @@ function readUsuarios(){
       } else {
         tipoIcon = tipo; // fallback: mostrar texto si no coincide
       }
-      var equipos = item.equipos || {};
+      var equipos = item.equipos || [];
 
       var tr = "<tr class='alto50'>";
       tr += "<td class='ancho50'>&nbsp;</td>";
@@ -103,12 +308,8 @@ function readUsuarios(){
       tr += "<td class='ancho50'>" + tipoIcon + "</td>";
       tr += "<td class='ancho200'>" + puesto + "</td>";
       tr += "<td class='ancho150'>" + emailIcon + "&nbsp;";
-      if(Object.keys(equipos).length > 0){
-        tr += "<a class='btn-floating btn-small waves-effect waves-light orange' title='";
-        for(var eqId in equipos){
-          tr += eqId + " - " + equipos[eqId] +"\n";
-        }
-        tr += "'><i class='material-icons'>business_center</i></a>";
+      if(Array.isArray(equipos) && equipos.length > 0){
+        tr += "<a class='btn-floating btn-small waves-effect waves-light orange' title='Equipos predefinidos: " + equipos.join(', ') + "'><i class='material-icons'>business_center</i></a>";
       }
       tr += "</td>";
       tr += "<td class='ancho50'>" +
@@ -172,7 +373,10 @@ var saveUsuario = function() {
   var puesto = ($('#puesto_usr').val() || '').trim();
   var tipo = ($('#tipo_usr').val() || '').trim();
   var abrev = ($('#abrev_usr').val() || '').trim();
-  var equipos = ($('#equipos_usr').val() || '').trim();
+  var equiposPayload = getEquiposUsuarioPayload();
+  if(equiposPayload === null){
+    return;
+  }
 
   var usuario = {
     user: user,
@@ -185,7 +389,7 @@ var saveUsuario = function() {
     puesto: puesto,
     tipo: tipo,
     abrev: abrev,
-    equipos: equipos
+    equipos: equiposPayload
   };
 
   var apiCall;
@@ -327,9 +531,31 @@ var openUsuario = function(seccion, cual, id){
               '<label for="tipo_usr" class="active">Tipo</label>' +
             '</div>' +
           '</div>' +
-          '<div class="input-field">' +
-            '<textarea id="equipos_usr" name="equipos">'+ (typeof item.equipos === 'object' ? JSON.stringify(item.equipos) : (item.equipos || '')) +'</textarea>' +
-            '<label for="equipos_usr" class="active">Equipos (JSON)</label>' +
+          '<div id="equipos_usr_editor">' +
+            '<div class="row" style="margin-bottom:8px;">' +
+              '<div class="input-field anchoFrm4 left">' +
+                '<select id="equipos_usr_mode">' +
+                  '<option value="tabla" selected>Modo tabla</option>' +
+                  '<option value="json">Modo JSON</option>' +
+                '</select>' +
+                '<label for="equipos_usr_mode" class="active">Equipos predefinidos</label>' +
+              '</div>' +
+              '<div class="col s8 right-align" style="margin-top:10px;">' +
+                '<a href="#" id="add_equipo_usr" class="btn waves-effect waves-light green btn-small"><i class="material-icons left">add</i>Agregar equipo predefinido</a>' +
+              '</div>' +
+            '</div>' +
+            '<div id="equipos_usr_mode_tabla">' +
+              '<table class="mediciones-table" id="equipos_usr_table">' +
+                '<thead><tr><th>Equipo</th><th>Acción</th></tr></thead>' +
+                '<tbody id="equipos_usr_tbody"></tbody>' +
+              '</table>' +
+            '</div>' +
+            '<div id="equipos_usr_mode_json" style="display:none;">' +
+              '<div class="input-field" style="margin-top:8px;">' +
+                '<textarea id="equipos_usr_json" class="materialize-textarea" spellcheck="false"></textarea>' +
+                '<label for="equipos_usr_json" class="active">Equipos (JSON)</label>' +
+              '</div>' +
+            '</div>' +
           '</div>' +
           '<div class="input-field" style="display:none;">' +
             '<input type="text" id="id_usr" name="id" value="'+ (item.id || '') +'">' +
@@ -345,6 +571,7 @@ var openUsuario = function(seccion, cual, id){
             console.warn('formSelect no disponible: asegúrate de que Materialize.js está cargado');
           }
         }
+        initEquiposUsuarioEditor(item.equipos || []);
         $("#modal_"+seccion).modal({ dismissible: false });
         $("#modal_"+seccion).modal('open');
     }).fail(function(xhr,status,error){
@@ -408,9 +635,31 @@ var openUsuario = function(seccion, cual, id){
           '<label for="tipo_usr" class="active">Tipo</label>' +
         '</div>' +
       '</div>' +
-      '<div class="input-field">' +
-        '<textarea id="equipos_usr" name="equipos"></textarea>' +
-        '<label for="equipos_usr">Equipos (JSON)</label>' +
+      '<div id="equipos_usr_editor">' +
+        '<div class="row" style="margin-bottom:8px;">' +
+          '<div class="input-field anchoFrm4 left">' +
+            '<select id="equipos_usr_mode">' +
+              '<option value="tabla" selected>Modo tabla</option>' +
+              '<option value="json">Modo JSON</option>' +
+            '</select>' +
+            '<label for="equipos_usr_mode" class="active">Equipos predefinidos</label>' +
+          '</div>' +
+          '<div class="col s8 right-align" style="margin-top:10px;">' +
+            '<a href="#" id="add_equipo_usr" class="btn waves-effect waves-light green btn-small"><i class="material-icons left">add</i>Agregar equipo predefinido</a>' +
+          '</div>' +
+        '</div>' +
+        '<div id="equipos_usr_mode_tabla">' +
+          '<table class="mediciones-table" id="equipos_usr_table">' +
+            '<thead><tr><th>Equipo</th><th>Acción</th></tr></thead>' +
+            '<tbody id="equipos_usr_tbody"></tbody>' +
+          '</table>' +
+        '</div>' +
+        '<div id="equipos_usr_mode_json" style="display:none;">' +
+          '<div class="input-field" style="margin-top:8px;">' +
+            '<textarea id="equipos_usr_json" class="materialize-textarea" spellcheck="false"></textarea>' +
+            '<label for="equipos_usr_json" class="active">Equipos (JSON)</label>' +
+          '</div>' +
+        '</div>' +
       '</div>' +
     '</form>';
 
@@ -423,6 +672,7 @@ var openUsuario = function(seccion, cual, id){
         console.warn('formSelect no disponible: asegúrate de que Materialize.js está cargado');
       }
     }
+    initEquiposUsuarioEditor([]);
     $("#modal_"+seccion).modal({ dismissible: false });
     $("#modal_"+seccion).modal('open');
     setTimeout(function(){ $('#user_usr').focus(); }, 200);
