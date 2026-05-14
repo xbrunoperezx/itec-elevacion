@@ -113,9 +113,10 @@ div#resultados_cli, div#resultados_con, div#resultados_pri, div#resultados_seg, 
   padding-left: 40px;
   padding-right: 40px;
   min-height: 400px;
+  background-color: #EEEEEE;
 }
 .tabs{
-  background-color: #EEEEEE;
+  background-color: #DDDDDD;
 }
 
 .tabs .tab a {
