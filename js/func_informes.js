@@ -1736,11 +1736,12 @@ var openInforme = function(seccion, cual, id){
 											'<div class="row">' +
 												'<div class="input-field col s6">' +
 													'<select id="estado_inspeccion" name="estado_inspeccion">' +
-														'<option value="" disabled' + ((item.estado == null || item.estado === "") ? ' selected' : '') + '>Selecciona estado</option>' +
-														'<option value="1"' + (item.estado == 1 ? ' selected' : '') + '>Realizada</option>' +
-														'<option value="2"' + (item.estado == 2 ? ' selected' : '') + '>Pendiente</option>' +
-													'</select>' +
-													'<label for="estado_inspeccion" class="active">Estado inspección</label>' +
+															'<option value="" disabled' + ((item.estado == null || item.estado === "") ? ' selected' : '') + '>Selecciona estado</option>' +
+															'<option value="0"' + (item.estado == 0 ? ' selected' : '') + '>Pendiente</option>' +
+															'<option value="1"' + (item.estado == 1 ? ' selected' : '') + '>Inspección Realizada</option>' +
+															'<option value="2"' + (item.estado == 2 ? ' selected' : '') + '>Enviada a Facturación</option>' +
+														'</select>' +
+														'<label for="estado_inspeccion" class="active">Estado inspección</label>' +
 												'</div>' +
 												'<div class="input-field col s6">' +
 													'<select id="resultado_inspeccion" name="resultado_inspeccion">' +
