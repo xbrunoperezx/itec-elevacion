@@ -829,16 +829,21 @@ function savePrimera(){
 		hora_fin: $('#hora_fin').val(),
 		gps_latitud: $('#gps_latitud').val(),
 		gps_longitud: $('#gps_longitud').val(),
-		grupo: $('#grupo_pri').val(),
-		legislacion: $('#legislacion_pri').val()
+		grupo: $('#grupo_pri').val()
 	};
 
 	// Guardar informe (si existe servicio)
 	$.ajax({
 		url: 'services/primeras_new.php',
 		type: 'POST',
+		dataType: 'json',
 		data: data,
 		success: function(response){
+			if(!response || !response.success){
+				modalError('ERROR', (response && response.error) ? response.error : 'Error al guardar informe', false, 'Cerrar', 'error');
+				return;
+			}
+
 			// Guardar mediciones + instalación en una sola llamada
 			var allMediciones = {
 				medidas: mediciones,
