@@ -851,12 +851,85 @@ jQuery(document).on('input change', '#hora_ini, #hora_fin', function(){
 	syncDuracionMinutos();
 });
 
+function safeInputValue(value){
+	return (value === undefined || value === null) ? '' : value;
+}
+
+function normalizeCampoKey(value){
+	var txt = String(value === undefined || value === null ? '' : value).toLowerCase().trim();
+	if(typeof txt.normalize === 'function'){
+		txt = txt.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+	}
+	txt = txt.replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+	return txt;
+}
+
+function resolveCampoData(dataMap, abrev, nombre){
+	if(!dataMap || typeof dataMap !== 'object') return null;
+
+	var exactKeys = [];
+	if(abrev) exactKeys.push(abrev);
+	if(nombre) exactKeys.push(nombre);
+	for(var i = 0; i < exactKeys.length; i++){
+		if(dataMap[exactKeys[i]] !== undefined) return dataMap[exactKeys[i]];
+	}
+
+	var candidateKeys = {};
+	if(abrev) candidateKeys[normalizeCampoKey(abrev)] = true;
+	if(nombre) candidateKeys[normalizeCampoKey(nombre)] = true;
+
+	if(Array.isArray(dataMap)){
+		for(var idx = 0; idx < dataMap.length; idx++){
+			var arrItem = dataMap[idx];
+			if(!arrItem || typeof arrItem !== 'object') continue;
+			var arrKey = arrItem.abrev || arrItem.clave || arrItem.key || arrItem.name || arrItem.nombre || '';
+			if(candidateKeys[normalizeCampoKey(arrKey)]) return arrItem;
+		}
+		return null;
+	}
+
+	for(var k in dataMap){
+		if(!Object.prototype.hasOwnProperty.call(dataMap, k)) continue;
+		if(candidateKeys[normalizeCampoKey(k)]) return dataMap[k];
+	}
+
+	for(var key in dataMap){
+		if(!Object.prototype.hasOwnProperty.call(dataMap, key)) continue;
+		var item = dataMap[key];
+		if(!item || typeof item !== 'object') continue;
+		var itemKey = item.abrev || item.clave || item.key || item.name || item.nombre || '';
+		if(candidateKeys[normalizeCampoKey(itemKey)]) return item;
+	}
+
+	return null;
+}
+
+function resolveCampoValor(fieldData){
+	if(fieldData === undefined || fieldData === null) return '';
+	if(typeof fieldData !== 'object') return fieldData;
+	if(fieldData.valor !== undefined && fieldData.valor !== null) return fieldData.valor;
+	if(fieldData.value !== undefined && fieldData.value !== null) return fieldData.value;
+	return '';
+}
+
+function resolveCampoUnidad(fieldData, defaultUnidad){
+	var unidad = defaultUnidad || '';
+	if(fieldData && typeof fieldData === 'object'){
+		if(fieldData.unidad !== undefined && fieldData.unidad !== null && fieldData.unidad !== ''){
+			unidad = fieldData.unidad;
+		} else if(fieldData.unit !== undefined && fieldData.unit !== null && fieldData.unit !== ''){
+			unidad = fieldData.unit;
+		}
+	}
+	return unidad;
+}
+
 function buildCamposInputHtml(dataType, nombreCampo, valor, listaValores){
 	var html = '';
 	if(dataType === 'NUMERO'){
-		html += '<input type="number" class="campo_valor" data-campo-nombre="' + nombreCampo + '" value="' + (valor || '') + '">';
+		html += '<input type="number" class="campo_valor" data-campo-nombre="' + nombreCampo + '" value="' + safeInputValue(valor) + '">';
 	} else if(dataType === 'TEXTO NORMAL'){
-		html += '<input type="text" class="campo_valor" data-campo-nombre="' + nombreCampo + '" value="' + (valor || '') + '">';
+		html += '<input type="text" class="campo_valor" data-campo-nombre="' + nombreCampo + '" value="' + safeInputValue(valor) + '">';
 	} else if(dataType === 'LISTA VALORES'){
 		html += '<select class="campo_valor" data-campo-nombre="' + nombreCampo + '">';
 		html += '<option value="" ' + ((valor === '' || valor === null || valor === undefined) ? 'selected' : '') + '>---</option>';
@@ -867,9 +940,9 @@ function buildCamposInputHtml(dataType, nombreCampo, valor, listaValores){
 	} else if(dataType === 'CHECKBOX'){
 		html += '<label><input type="checkbox" class="campo_valor" data-campo-nombre="' + nombreCampo + '" ' + (valor ? 'checked' : '') + '><span></span></label>';
 	} else if(dataType === 'FECHA'){
-		html += '<input type="date" class="campo_valor" data-campo-nombre="' + nombreCampo + '" value="' + (valor || '') + '">';
+		html += '<input type="date" class="campo_valor" data-campo-nombre="' + nombreCampo + '" value="' + safeInputValue(valor) + '">';
 	} else {
-		html += '<input type="text" class="campo_valor" data-campo-nombre="' + nombreCampo + '" value="' + (valor || '') + '">';
+		html += '<input type="text" class="campo_valor" data-campo-nombre="' + nombreCampo + '" value="' + safeInputValue(valor) + '">';
 	}
 	return html;
 }
@@ -893,8 +966,9 @@ function buildInstalacionTab2(camposData, instalacionData){
 		var abrevCampo = campo.abrev || nombreCampo;
 		var dataType = campo.data_type || 'TEXTO NORMAL';
 		var descripcion = campo.descripcion || '';
-		var valor = (instalacion[abrevCampo] && instalacion[abrevCampo].valor !== undefined && instalacion[abrevCampo].valor !== null) ? instalacion[abrevCampo].valor : '';
-		var unidad = (instalacion[abrevCampo] && instalacion[abrevCampo].unidad) ? instalacion[abrevCampo].unidad : (campo.unidad || '');
+		var campoData = resolveCampoData(instalacion, abrevCampo, nombreCampo);
+		var valor = resolveCampoValor(campoData);
+		var unidad = resolveCampoUnidad(campoData, campo.unidad || '');
 		var listaValores = (campo.lista || '').split(',').map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
 
 		html += '<tr class="instalacion-row" data-campo-abrev="' + abrevCampo + '" data-campo-nombre="' + nombreCampo + '" data-campo-tipo="' + dataType + '">';
@@ -932,8 +1006,9 @@ function buildAscensorTab3(camposData, ascensorData){
 		var abrevCampo = campo.abrev || nombreCampo;
 		var dataType = campo.data_type || 'TEXTO NORMAL';
 		var descripcion = campo.descripcion || '';
-		var valor = (ascensor[abrevCampo] && ascensor[abrevCampo].valor !== undefined && ascensor[abrevCampo].valor !== null) ? ascensor[abrevCampo].valor : '';
-		var unidad = (ascensor[abrevCampo] && ascensor[abrevCampo].unidad) ? ascensor[abrevCampo].unidad : (campo.unidad || '');
+		var campoData = resolveCampoData(ascensor, abrevCampo, nombreCampo);
+		var valor = resolveCampoValor(campoData);
+		var unidad = resolveCampoUnidad(campoData, campo.unidad || '');
 		var listaValores = (campo.lista || '').split(',').map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
 
 		html += '<tr class="ascensor-row" data-campo-abrev="' + abrevCampo + '" data-campo-nombre="' + nombreCampo + '" data-campo-tipo="' + dataType + '">';
@@ -1019,10 +1094,13 @@ function buildMedicionesTab4(camposData, medicionesData){
 		var nombreCampo = campo.nombre || '';
 		var abrevCampo = campo.abrev || nombreCampo;
 		baseNames[abrevCampo] = true;
+		baseNames[normalizeCampoKey(abrevCampo)] = true;
+		baseNames[normalizeCampoKey(nombreCampo)] = true;
 		var dataType = campo.data_type || 'NUMERO';
 		var descripcion = campo.descripcion || '';
-		var valor = (mediciones[abrevCampo] && mediciones[abrevCampo].valor !== undefined && mediciones[abrevCampo].valor !== null) ? mediciones[abrevCampo].valor : '';
-		var unidad = (mediciones[abrevCampo] && mediciones[abrevCampo].unidad) ? mediciones[abrevCampo].unidad : (campo.unidad || '');
+		var medicionData = resolveCampoData(mediciones, abrevCampo, nombreCampo);
+		var valor = resolveCampoValor(medicionData);
+		var unidad = resolveCampoUnidad(medicionData, campo.unidad || '');
 		var listaValores = (campo.lista || '').split(',').map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
 
 		html += '<tr class="medicion-row" data-medicion-abrev="' + abrevCampo + '" data-medicion-nombre="' + nombreCampo + '" data-medicion-tipo="' + dataType + '">';
@@ -1030,9 +1108,9 @@ function buildMedicionesTab4(camposData, medicionesData){
 		html += '<td class="medicion-nombre-cell">' + nombreCampo + '</td>';
 		html += '<td class="medicion-valor-cell">';
 		if(dataType === 'NUMERO'){
-			html += '<input type="number" class="medicion_valor" data-medicion-abrev="' + abrevCampo + '" value="' + (valor || '') + '">';
+			html += '<input type="number" class="medicion_valor" data-medicion-abrev="' + abrevCampo + '" value="' + safeInputValue(valor) + '">';
 		} else if(dataType === 'TEXTO NORMAL'){
-			html += '<input type="text" class="medicion_valor" data-medicion-abrev="' + abrevCampo + '" value="' + (valor || '') + '">';
+			html += '<input type="text" class="medicion_valor" data-medicion-abrev="' + abrevCampo + '" value="' + safeInputValue(valor) + '">';
 		} else if(dataType === 'LISTA VALORES'){
 			html += '<select class="medicion_valor" data-medicion-abrev="' + abrevCampo + '">';
 			html += '<option value="" ' + ((valor === '' || valor === null || valor === undefined) ? 'selected' : '') + '>---</option>';
@@ -1043,9 +1121,9 @@ function buildMedicionesTab4(camposData, medicionesData){
 		} else if(dataType === 'CHECKBOX'){
 			html += '<label><input type="checkbox" class="medicion_valor" data-medicion-abrev="' + abrevCampo + '" ' + (valor ? 'checked' : '') + '><span></span></label>';
 		} else if(dataType === 'FECHA'){
-			html += '<input type="date" class="medicion_valor" data-medicion-abrev="' + abrevCampo + '" value="' + (valor || '') + '">';
+			html += '<input type="date" class="medicion_valor" data-medicion-abrev="' + abrevCampo + '" value="' + safeInputValue(valor) + '">';
 		} else {
-			html += '<input type="text" class="medicion_valor" data-medicion-abrev="' + abrevCampo + '" value="' + (valor || '') + '">';
+			html += '<input type="text" class="medicion_valor" data-medicion-abrev="' + abrevCampo + '" value="' + safeInputValue(valor) + '">';
 		}
 		html += '</td>';
 		html += '<td class="medicion-unidad-cell">';
@@ -1059,13 +1137,15 @@ function buildMedicionesTab4(camposData, medicionesData){
 
 	// Mediciones personalizadas existentes
 	$.each(mediciones, function(abrev, data){
-		if(baseNames[abrev]) return;
-		var nombreDisplay = (data && data.name) ? data.name : abrev;
+		if(baseNames[abrev] || baseNames[normalizeCampoKey(abrev)]) return;
+		var nombreDisplay = (data && typeof data === 'object' && data.name) ? data.name : abrev;
+		var valorPersonalizado = resolveCampoValor(data);
+		var unidadPersonalizada = resolveCampoUnidad(data, '');
 		html += '<tr class="medicion_personalizada_row">' +
 			'<td class="medicion-clave-cell"><input type="text" class="medicion_personalizada_clave" placeholder="clave_var" value="' + (abrev || '') + '"></td>' +
 			'<td class="medicion-nombre-cell"><input type="text" class="medicion_personalizada_nombre" placeholder="Nombre de medida" value="' + (nombreDisplay || '') + '"></td>' +
-			'<td class="medicion-valor-cell"><input type="text" class="medicion_personalizada_valor" placeholder="Valor" value="' + ((data && data.valor !== undefined && data.valor !== null) ? data.valor : '') + '"></td>' +
-			'<td class="medicion-unidad-cell"><input type="text" class="medicion_personalizada_unidad" placeholder="Unidad" value="' + (data && data.unidad ? data.unidad : '') + '"></td>' +
+			'<td class="medicion-valor-cell"><input type="text" class="medicion_personalizada_valor" placeholder="Valor" value="' + safeInputValue(valorPersonalizado) + '"></td>' +
+			'<td class="medicion-unidad-cell"><input type="text" class="medicion_personalizada_unidad" placeholder="Unidad" value="' + safeInputValue(unidadPersonalizada) + '"></td>' +
 			'<td class="medicion-desc-cell"><a class="btn-floating btn-small waves-effect waves-light red remove-medicion-personalizada"><i class="material-icons">close</i></a></td>' +
 		'</tr>';
 	});
