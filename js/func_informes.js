@@ -350,6 +350,17 @@ function resizeInformeFirmaCanvas(){
 	}
 }
 
+function ensureInformeFirmaCanvasReady(){
+	if(!firmaPadState.canvas) return;
+	var canvas = firmaPadState.canvas;
+	var ratio = Math.max(window.devicePixelRatio || 1, 1);
+	var targetW = Math.max(1, Math.floor(canvas.offsetWidth * ratio));
+	var targetH = Math.max(1, Math.floor(canvas.offsetHeight * ratio));
+	if(canvas.width !== targetW || canvas.height !== targetH){
+		resizeInformeFirmaCanvas();
+	}
+}
+
 function getFirmaCanvasPoint(evt){
 	var canvas = firmaPadState.canvas;
 	if(!canvas) return null;
@@ -382,11 +393,15 @@ function initInformeFirmaPad(idInforme){
 
 	var onDown = function(evt){
 		if(evt && evt.cancelable) evt.preventDefault();
+		ensureInformeFirmaCanvasReady();
 		var p = getFirmaCanvasPoint(evt);
 		if(!p) return;
 		firmaPadState.isDrawing = true;
 		firmaPadState.ctx.beginPath();
 		firmaPadState.ctx.moveTo(p.x, p.y);
+		if(window.PointerEvent && evt && evt.pointerId !== undefined && canvas.setPointerCapture){
+			try { canvas.setPointerCapture(evt.pointerId); } catch(err) {}
+		}
 	};
 
 	var onMove = function(evt){
@@ -404,6 +419,9 @@ function initInformeFirmaPad(idInforme){
 		if(!firmaPadState.isDrawing) return;
 		firmaPadState.isDrawing = false;
 		firmaPadState.ctx.closePath();
+		if(window.PointerEvent && evt && evt.pointerId !== undefined && canvas.releasePointerCapture){
+			try { canvas.releasePointerCapture(evt.pointerId); } catch(err) {}
+		}
 	};
 
 	canvas.onpointerdown = null;
@@ -1097,6 +1115,12 @@ jQuery(document).on('click', '#firma_pri_delete', function(e){
 
 jQuery(window).on('resize', function(){
 	resizeInformeFirmaCanvas();
+});
+
+jQuery(document).on('click', '.tablink9', function(){
+	setTimeout(function(){
+		ensureInformeFirmaCanvasReady();
+	}, 60);
 });
 
 jQuery(document).on('click', '.remove-equipo-utilizado', function(e){
