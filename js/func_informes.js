@@ -1047,7 +1047,19 @@ jQuery(document).on('click', '#firma_pri_save', function(e){
 
 jQuery(document).on('click', '#firma_pri_delete', function(e){
 	e.preventDefault();
-	deleteInformeFirma();
+	modalConfirm(
+		'Eliminar firma',
+		'¿Seguro que quieres eliminar la firma del informe?',
+		false,
+		'Eliminar',
+		'Cancelar',
+		'delete',
+		'clear',
+		function(){
+			deleteInformeFirma();
+		},
+		function(){}
+	);
 });
 
 jQuery(window).on('resize', function(){
