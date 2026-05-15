@@ -19,6 +19,7 @@ $acude = isset($_POST['acude']) ? trim($_POST['acude']) : '';
 $grupo = isset($_POST['grupo']) ? trim($_POST['grupo']) : '';
 $estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
 $resultado = isset($_POST['resultado']) ? trim($_POST['resultado']) : '';
+$segunda = isset($_POST['segunda']) ? trim($_POST['segunda']) : '';
 $proxima = isset($_POST['proxima']) ? trim($_POST['proxima']) : '';
 $comunicada = isset($_POST['comunicada']) ? trim($_POST['comunicada']) : '';
 $comunicada_aquien = isset($_POST['comunicada_aquien']) ? trim($_POST['comunicada_aquien']) : '';
@@ -95,6 +96,7 @@ $industria_sql = ($industria !== '') ? "'" . mysqli_real_escape_string($link, $i
 $enviada_cliente_sql = ($enviada_cliente !== '') ? "'" . mysqli_real_escape_string($link, $enviada_cliente) . "'" : "NULL";
 $estado_sql = ($estado !== '') ? intval($estado) : "NULL";
 $resultado_sql = ($resultado !== '') ? intval($resultado) : "NULL";
+$segunda_sql = ($segunda !== '') ? intval($segunda) : "NULL";
 $observaciones_sql = "'" . mysqli_real_escape_string($link, $observaciones) . "'";
 $observaciones_check_sql = "'" . mysqli_real_escape_string($link, $observaciones_check) . "'";
 
@@ -108,6 +110,7 @@ $sql = "UPDATE `informes` SET
   `grupo` = {$grupo_sql},
   `estado` = {$estado_sql},
   `resultado` = {$resultado_sql},
+  `segunda` = {$segunda_sql},
   `proxima` = {$proxima_sql},
   `comunicada` = {$comunicada_sql},
   `comunicada_aquien` = {$comunicada_aquien_sql},

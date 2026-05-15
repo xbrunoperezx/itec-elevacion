@@ -1485,6 +1485,7 @@ function savePrimera(){
 		grupo: $('#grupo_pri').val(),
 		estado: $('#estado_inspeccion').val(),
 		resultado: $('#resultado_inspeccion').val(),
+		segunda: $('#estado_cierre_inspeccion').val(),
 		proxima: $('#proxima_inspeccion').val(),
 		comunicada: $('#comunicada_fecha').val(),
 		comunicada_aquien: $('#comunicada_destinatario').val(),
@@ -1794,7 +1795,7 @@ var openInforme = function(seccion, cual, id){
 						'</div>' +	
 										'<div id="tab8_pri" class="col s12">' + 
 											'<div class="row">' +
-												'<div class="input-field col s6">' +
+												'<div class="input-field col s4">' +
 													'<select id="estado_inspeccion" name="estado_inspeccion">' +
 															'<option value="" disabled' + ((item.estado == null || item.estado === "") ? ' selected' : '') + '>Selecciona estado</option>' +
 															'<option value="0"' + (item.estado == 0 ? ' selected' : '') + '>Pendiente</option>' +
@@ -1804,7 +1805,7 @@ var openInforme = function(seccion, cual, id){
 														'</select>' +
 														'<label for="estado_inspeccion" class="active">Estado</label>' +
 												'</div>' +
-												'<div class="input-field col s6">' +
+												'<div class="input-field col s4">' +
 													'<select id="resultado_inspeccion" name="resultado_inspeccion">' +
 															'<option value="0"' + (item.resultado == 0 || item.resultado === null || item.resultado === "" ? ' selected' : '') + '>---</option>' +
 															'<option value="1"' + (item.resultado == 1 ? ' selected' : '') + '>Favorable</option>' +
@@ -1813,6 +1814,14 @@ var openInforme = function(seccion, cual, id){
 															'<option value="4"' + (item.resultado == 4 ? ' selected' : '') + '>Defectos muy graves</option>' +
 														'</select>' +
 														'<label for="resultado_inspeccion" class="active">Resultado de la inspección</label>' +
+												'</div>' +
+												'<div class="input-field col s4">' +
+													'<select id="estado_cierre_inspeccion" name="estado_cierre_inspeccion">' +
+															'<option value="0"' + (item.segunda == 0 || item.segunda === null || item.segunda === "" ? ' selected' : '') + '>---</option>' +
+															'<option value="1"' + (item.segunda == 1 ? ' selected' : '') + '>Abierta, pendiente de nueva visita</option>' +
+															'<option value="2"' + (item.segunda == 2 ? ' selected' : '') + '>Cerrada, sin seguimiento pendiente</option>' +
+														'</select>' +
+														'<label for="estado_cierre_inspeccion" class="active">Estado de cierre</label>' +
 												'</div>' +
 											'</div>' +
 											'<div class="row">' +

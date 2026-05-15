@@ -189,6 +189,7 @@ while ($row = mysqli_fetch_assoc($result)) {
   $item['estado'] = isset($row['estado']) ? $row['estado'] : null;
   $item['resultado'] = isset($row['resultado']) ? $row['resultado'] : null;
   $item['plazo'] = isset($row['plazo']) ? $row['plazo'] : null;
+  $item['segunda'] = isset($row['segunda']) ? $row['segunda'] : null;
   $item['grupo'] = isset($row['grupo']) ? $row['grupo'] : null;
   $item['acude'] = isset($row['acude']) ? $row['acude'] : null;
   $item['proxima'] = isset($row['proxima']) ? $row['proxima'] : null;
