@@ -1813,26 +1813,30 @@ var openInforme = function(seccion, cual, id){
 								'</table>' +
 							'</div>' +
 						'</div>' +
-						'<div class="row" style="border-top: 1px solid #ddd; padding-top: 15px; margin-top: 15px;">' +
-							'<div class="col s12"><h6>Añadir Defecto</h6></div>' +
+						'<div class="row" style="margin-bottom: 15px;">' +
+							'<div class="col s12">' +
+								'<button class="btn waves-effect waves-light green" id="btn_agregar_defecto"><i class="material-icons left">add</i>Agregar Defecto</button>' +
+							'</div>' +
 						'</div>' +
 						'<div class="row">' +
 							'<div class="input-field col s2">' +
 								'<input type="text" id="defecto_codigo_edit" placeholder="Ej: 1.01.1">' +
 								'<label for="defecto_codigo_edit" class="active">Código</label>' +
 							'</div>' +
-							'<div class="input-field col s6">' +
+							'<div class="input-field col s10">' +
 								'<input type="text" id="defecto_descripcion_edit" placeholder="Descripción del defecto">' +
 								'<label for="defecto_descripcion_edit" class="active">Descripción</label>' +
 							'</div>' +
+						'</div>' +
+						'<div class="row">' +
 							'<div class="input-field col s2">' +
 								'<input type="text" id="defecto_valoracion_edit" placeholder="LEVE" readonly>' +
 								'<label for="defecto_valoracion_edit" class="active">Valoración</label>' +
 							'</div>' +
-							'<div class="col s2" style="padding-top: 10px;">' +
-								'<button class="btn waves-effect waves-light btn-small" id="btn_leve" style="background-color: #4CAF50; width: 100%; padding: 4px 2px; font-size: 11px; margin-bottom: 2px; height: auto;">LEVE</button>' +
-								'<button class="btn waves-effect waves-light btn-small" id="btn_grave" style="background-color: #FFC107; color: black; width: 100%; padding: 4px 2px; font-size: 11px; margin-bottom: 2px; height: auto;">GRAVE</button>' +
-								'<button class="btn waves-effect waves-light btn-small" id="btn_muyg" style="background-color: #F44336; width: 100%; padding: 4px 2px; font-size: 11px; height: auto;">MUY GRAVE</button>' +
+							'<div class="col s10" style="padding-top: 10px;">' +
+								'<button class="btn waves-effect waves-light btn-small" id="btn_leve" style="background-color: #4CAF50; padding: 4px 8px; font-size: 11px; margin-right: 5px; height: auto;">LEVE</button>' +
+								'<button class="btn waves-effect waves-light btn-small" id="btn_grave" style="background-color: #FFC107; color: black; padding: 4px 8px; font-size: 11px; margin-right: 5px; height: auto;">GRAVE</button>' +
+								'<button class="btn waves-effect waves-light btn-small" id="btn_muyg" style="background-color: #F44336; padding: 4px 8px; font-size: 11px; height: auto;">MUY GRAVE</button>' +
 							'</div>' +
 						'</div>' +
 						'<div class="row">' +
@@ -1840,11 +1844,6 @@ var openInforme = function(seccion, cual, id){
 								'<input type="text" id="defecto_buscar" placeholder="Buscar por código o descripción...">' +
 								'<label for="defecto_buscar" class="active">Buscar Defectos</label>' +
 								'<div id="defecto_buscar_resultados" style="position: absolute; background: white; border: 1px solid #ccc; max-height: 300px; overflow-y: auto; width: 100%; display: none; z-index: 10;"></div>' +
-							'</div>' +
-						'</div>' +
-						'<div class="row">' +
-							'<div class="col s12">' +
-								'<button class="btn waves-effect waves-light green" id="btn_agregar_defecto"><i class="material-icons left">add</i>Agregar Defecto</button>' +
 							'</div>' +
 						'</div>' +
 						'</div>' +	
