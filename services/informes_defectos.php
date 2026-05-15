@@ -2,14 +2,14 @@
 
 // Comprobar cookie de sesion 'user_id'
 if (!isset($_COOKIE['user_id'])) {
-  echo json_encode(["success" => false, "error" => "KO: sesión ha expirado"]);
+  echo json_encode(["success" => false, "message" => "Error", "error" => "KO: sesión ha expirado"]);
   exit;
 }
 
 include("conn_bbdd.php");
 
 if (!$link) {
-  die(json_encode(["success" => false, "error" => "Conexión fallida: " . mysqli_connect_error()]));
+  die(json_encode(["success" => false, "message" => "Error", "error" => "Conexión fallida: " . mysqli_connect_error()]));
 }
 
 $action = isset($_POST['action']) ? $_POST['action'] : 'list';
@@ -36,7 +36,7 @@ if ($action === 'list_by_informe') {
     $data[] = $row;
   }
   
-  echo json_encode(["success" => true, "data" => $data]);
+  echo json_encode(["success" => true, "message" => "Defectos cargados", "data" => $data]);
   exit;
 }
 
@@ -55,7 +55,7 @@ if ($action === 'list_check_ascensores') {
     $data[] = $row;
   }
   
-  echo json_encode(["success" => true, "data" => $data]);
+  echo json_encode(["success" => true, "message" => "Catálogo de defectos cargado", "data" => $data]);
   exit;
 }
 
@@ -74,7 +74,7 @@ if ($action === 'delete_all_by_informe') {
     exit;
   }
   
-  echo json_encode(["success" => true]);
+  echo json_encode(["success" => true, "message" => "Defectos eliminados"]);
   exit;
 }
 
@@ -116,9 +116,9 @@ if ($action === 'save') {
     }
   }
   
-  echo json_encode(["success" => true]);
+  echo json_encode(["success" => true, "message" => "Defectos guardados correctamente"]);
   exit;
 }
 
-echo json_encode(["success" => false, "error" => "Acción no reconocida"]);
+echo json_encode(["success" => false, "message" => "Error", "error" => "Acción no reconocida"]);
 ?>
