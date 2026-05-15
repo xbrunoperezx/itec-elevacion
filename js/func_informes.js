@@ -1803,6 +1803,7 @@ var openInforme = function(seccion, cual, id){
 									'<thead>' +
 										'<tr>' +
 											'<th style="width:60px">Orden</th>' +
+											'<th style="width:60px">Editar</th>' +
 											'<th>Código</th>' +
 											'<th>Descripción</th>' +
 											'<th>Valoración</th>' +
@@ -1811,6 +1812,7 @@ var openInforme = function(seccion, cual, id){
 									'</thead>' +
 									'<tbody>' +
 										'<tr>' +
+											'<td>-</td>' +
 											'<td>-</td>' +
 											'<td>-</td>' +
 											'<td>No se han añadido defectos</td>' +
@@ -2174,11 +2176,11 @@ function renderDefectosTable() {
 			row += '<button class="btn-flat btn-small move-defecto-up" data-index="' + idx + '" ' + (isFirst ? 'disabled' : '') + ' style="padding:0 4px;min-width:auto"><i class="material-icons" style="font-size:18px">arrow_upward</i></button>';
 			row += '<button class="btn-flat btn-small move-defecto-down" data-index="' + idx + '" ' + (isLast ? 'disabled' : '') + ' style="padding:0 4px;min-width:auto"><i class="material-icons" style="font-size:18px">arrow_downward</i></button>';
 			row += '</td>';
+			row += '<td style="text-align:center"><button class="btn-small waves-effect waves-light green edit-defecto" data-index="' + idx + '" style="margin:0"><i class="material-icons">edit</i></button></td>';
 			row += '<td>' + (defecto.codigo || '') + '</td>';
 			row += '<td>' + (defecto.descripcion || '') + '</td>';
 			row += '<td>' + (defecto.valoracion || '') + '</td>';
 			row += '<td style="white-space:nowrap">';
-			row += '<button class="btn-small waves-effect waves-light blue edit-defecto" data-index="' + idx + '" style="margin-right:4px"><i class="material-icons">edit</i></button>';
 			row += '<button class="btn-small waves-effect waves-light red delete-defecto" data-index="' + idx + '"><i class="material-icons">close</i></button>';
 			row += '</td>';
 			row += '</tr>';
