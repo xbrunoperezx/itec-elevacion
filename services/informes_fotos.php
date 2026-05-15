@@ -212,20 +212,35 @@ if ($action === 'list') {
 }
 
 if ($action === 'upload') {
+  // DEBUG
+  error_log("=== UPLOAD DEBUG ===");
+  error_log("baseDir: " . $baseDir);
+  error_log("informeDir: " . $informeDir);
+  error_log("id_informe: " . $id_informe);
+  error_log("FILES: " . print_r($_FILES, true));
+  
   if (!ensureDir($informeDir)) {
+    error_log("ERROR: ensureDir failed");
     jsonError('No se pudo crear el directorio de fotos del informe');
   }
+  
+  error_log("Directory created/exists: " . $informeDir);
+  error_log("is_writable: " . (is_writable($informeDir) ? 'YES' : 'NO'));
 
   if (!function_exists('imagecreatefromstring')) {
+    error_log("ERROR: GD not available");
     jsonError('La extensión GD no está habilitada en el servidor');
   }
 
   if (!isset($_FILES['fotos'])) {
+    error_log("ERROR: No FILES[fotos]");
     jsonError('No se recibieron archivos');
   }
 
   $files = normalizeFilesArray($_FILES['fotos']);
+  error_log("normalizeFilesArray count: " . count($files));
   if (empty($files)) {
+    error_log("ERROR: empty files array after normalize");
     jsonError('No se recibieron archivos válidos');
   }
 
