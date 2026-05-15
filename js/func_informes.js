@@ -516,12 +516,25 @@ function openFotoCropper(file, callback){
 			function draw(){
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+				ctx.save();
 				ctx.fillStyle = 'rgba(0,0,0,0.45)';
 				ctx.fillRect(0, 0, canvas.width, canvas.height);
+				ctx.restore();
+
+				ctx.save();
+				ctx.beginPath();
+				ctx.rect(selection.x, selection.y, selection.w, selection.h);
+				ctx.clip();
 				ctx.clearRect(selection.x, selection.y, selection.w, selection.h);
-				ctx.strokeStyle = '#ff5252';
+				ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+				ctx.restore();
+
+				ctx.strokeStyle = '#43a047';
+				ctx.setLineDash([8, 5]);
 				ctx.lineWidth = 2;
 				ctx.strokeRect(selection.x, selection.y, selection.w, selection.h);
+				ctx.setLineDash([]);
 			}
 
 			function getPoint(evt){

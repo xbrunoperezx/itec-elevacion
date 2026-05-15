@@ -612,7 +612,7 @@ textarea{
 #foto_cropper_canvas {
   max-width: 100%;
   border: 1px solid #b0bec5;
-  background: #fff;
+  background: transparent;
   display: block;
   cursor: crosshair;
 }
