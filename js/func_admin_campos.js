@@ -70,6 +70,8 @@ function readCampos(){
       var abrev = item.abrev || '';
       var unidad = item.unidad || '';
       var dataType = item.data_type || '';
+      var subcategory = item.subcategory || '';
+      var order = item.order || '';
       var mandatory = parseInt(item.mandatory, 10) === 1;
 
       var tr = "<tr class='alto50'>";
@@ -81,6 +83,8 @@ function readCampos(){
       tr += "<td class='ancho200'><b>" + abrev + "</b></td>";
       tr += "<td class='ancho80'>" + unidad + "</td>";
       tr += "<td class='ancho100'>" + dataType + "</td>";
+      tr += "<td class='ancho80'>" + subcategory + "</td>";
+      tr += "<td class='ancho50'>" + order + "</td>";
       tr += "<td class='ancho80'>" + nombre_revision + "</td>";
       tr += "<td class='ancho50'>" +
             "<a class='more_camp btn-floating btn-small waves-effect waves-light red' title='Más' data-id='"+id+"'><i class='material-icons'>more_vert</i></a>" +
@@ -136,6 +140,8 @@ var saveCampo = function() {
   var unidad = ($('#unidad_camp').val() || '').trim();
   var data_type = ($('#data_type_camp').val() || '').trim();
   var lista = ($('#lista_camp').val() || '').trim();
+  var subcategory = ($('#subcategory_camp').val() || '').trim();
+  var order = ($('#order_camp').val() || '').trim();
   var mandatory = $('#mandatory_camp').is(':checked') ? 1 : 0;
 
   if (data_type !== 'LISTA VALORES') {
@@ -151,6 +157,8 @@ var saveCampo = function() {
     unidad: unidad,
     data_type: data_type,
     lista: lista,
+    subcategory: subcategory,
+    order: order,
     mandatory: mandatory
   };
 
@@ -260,6 +268,16 @@ var openCampo = function(seccion, cual, id){
             '</div>' +
           '</div>' +
           '<div class="row">' +
+            '<div class="input-field anchoFrm4 left">' +
+              '<input type="text" id="subcategory_camp" name="subcategory" value="'+ (item.subcategory || '') +'" autocomplete="off">' +
+              '<label for="subcategory_camp" class="active">Subcategoría</label>' +
+            '</div>' +
+            '<div class="input-field anchoFrm4 inline">' +
+              '<input type="number" id="order_camp" name="order" value="'+ (item.order || '') +'" autocomplete="off">' +
+              '<label for="order_camp" class="active">Order</label>' +
+            '</div>' +
+          '</div>' +
+          '<div class="row">' +
             '<div class="col s12">' +
               '<label>' +
                 '<input type="checkbox" id="mandatory_camp" name="mandatory" ' + ((parseInt(item.mandatory, 10) === 1) ? 'checked' : '') + '>' +
@@ -335,6 +353,16 @@ var openCampo = function(seccion, cual, id){
         '<div class="input-field col s12">' +
           '<input type="text" id="descripcion_camp" name="descripcion" value="" autocomplete="off">' +
           '<label for="descripcion_camp">Descripción</label>' +
+        '</div>' +
+      '</div>' +
+      '<div class="row">' +
+        '<div class="input-field anchoFrm4 left">' +
+          '<input type="text" id="subcategory_camp" name="subcategory" value="" autocomplete="off">' +
+          '<label for="subcategory_camp">Subcategoría</label>' +
+        '</div>' +
+        '<div class="input-field anchoFrm4 inline">' +
+          '<input type="number" id="order_camp" name="order" value="" autocomplete="off">' +
+          '<label for="order_camp">Order</label>' +
         '</div>' +
       '</div>' +
       '<div class="row">' +

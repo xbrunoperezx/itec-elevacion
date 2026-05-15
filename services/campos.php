@@ -130,6 +130,8 @@ switch($action) {
     $unidad = isset($_POST['unidad']) ? mysqli_real_escape_string($link, $_POST['unidad']) : '';
     $data_type = isset($_POST['data_type']) ? mysqli_real_escape_string($link, $_POST['data_type']) : 'NUMERO';
     $lista = isset($_POST['lista']) ? mysqli_real_escape_string($link, trim($_POST['lista'])) : '';
+    $subcategory = isset($_POST['subcategory']) ? mysqli_real_escape_string($link, trim($_POST['subcategory'])) : '';
+    $order = isset($_POST['order']) ? intval($_POST['order']) : 0;
     $mandatory = isset($_POST['mandatory']) ? intval($_POST['mandatory']) : 0;
     $mandatory = ($mandatory === 1) ? 1 : 0;
 
@@ -147,8 +149,8 @@ switch($action) {
     }
 
     $listaSql = ($lista === '') ? "NULL" : "'{$lista}'";
-    $cols = array('`id_revision`','`tipo`','`nombre`','`descripcion`','`abrev`','`unidad`','`data_type`','`lista`','`mandatory`');
-    $vals = array("{$id_revision}","'{$tipo}'","'{$nombre}'","'{$descripcion}'","'{$abrev}'","'{$unidad}'","'{$data_type}'",$listaSql,"{$mandatory}");
+    $cols = array('`id_revision`','`tipo`','`nombre`','`descripcion`','`abrev`','`unidad`','`data_type`','`lista`','`subcategory`','`order`','`mandatory`');
+    $vals = array("{$id_revision}","'{$tipo}'","'{$nombre}'","'{$descripcion}'","'{$abrev}'","'{$unidad}'","'{$data_type}'",$listaSql,"'{$subcategory}'","{$order}","{$mandatory}");
     $sql = "INSERT INTO `informe_campos` (" . implode(',', $cols) . ") VALUES (" . implode(',', $vals) . ")";
 
     if (mysqli_query($link, $sql)) {
@@ -174,6 +176,8 @@ switch($action) {
     $unidad = isset($_POST['unidad']) ? mysqli_real_escape_string($link, $_POST['unidad']) : '';
     $data_type = isset($_POST['data_type']) ? mysqli_real_escape_string($link, $_POST['data_type']) : 'NUMERO';
     $lista = isset($_POST['lista']) ? mysqli_real_escape_string($link, trim($_POST['lista'])) : '';
+    $subcategory = isset($_POST['subcategory']) ? mysqli_real_escape_string($link, trim($_POST['subcategory'])) : '';
+    $order = isset($_POST['order']) ? intval($_POST['order']) : 0;
     $mandatory = isset($_POST['mandatory']) ? intval($_POST['mandatory']) : 0;
     $mandatory = ($mandatory === 1) ? 1 : 0;
 
@@ -198,6 +202,8 @@ switch($action) {
     $setParts[] = "`abrev`='{$abrev}'";
     $setParts[] = "`unidad`='{$unidad}'";
     $setParts[] = "`data_type`='{$data_type}'";
+    $setParts[] = "`subcategory`='{$subcategory}'";
+    $setParts[] = "`order`={$order}";
     $setParts[] = "`mandatory`={$mandatory}";
     if($lista === '') {
       $setParts[] = "`lista`=NULL";
