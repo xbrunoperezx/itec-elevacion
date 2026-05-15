@@ -42,8 +42,7 @@ if ($action === 'list_by_informe') {
 
 if ($action === 'list_check_ascensores') {
   // Obtener todos los defectos del catálogo (check_ascensores)
-  // Asumiendo que check_ascensores tiene estructura similar a defectos
-  $sql = "SELECT id, codigo, descripcion FROM defectos ORDER BY codigo ASC";
+  $sql = "SELECT id, codigo, defecto FROM check_ascensores ORDER BY codigo ASC";
   $res = mysqli_query($link, $sql);
   
   if (!$res) {

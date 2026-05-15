@@ -2213,8 +2213,8 @@ function initDefectoSearch() {
 		
 		var filtered = allCheckAscensores.filter(function(item) {
 			var codigo = String(item.codigo || '').toLowerCase();
-			var descripcion = String(item.descripcion || '').toLowerCase();
-			return codigo.includes(searchTerm) || descripcion.includes(searchTerm);
+			var defecto = String(item.defecto || '').toLowerCase();
+			return codigo.includes(searchTerm) || defecto.includes(searchTerm);
 		});
 		
 		var html = '';
@@ -2222,8 +2222,8 @@ function initDefectoSearch() {
 			html = '<div style="padding: 10px; color: #999;">No hay resultados</div>';
 		} else {
 			filtered.slice(0, 10).forEach(function(item) {
-				html += '<div class="defecto-item" data-codigo="' + (item.codigo || '') + '" data-descripcion="' + (item.descripcion || '') + '" style="padding: 8px; border-bottom: 1px solid #f0f0f0; cursor: pointer;">';
-				html += '<strong>' + (item.codigo || '') + '</strong> - ' + (item.descripcion || '');
+				html += '<div class="defecto-item" data-codigo="' + (item.codigo || '') + '" data-defecto="' + (item.defecto || '') + '" style="padding: 8px; border-bottom: 1px solid #f0f0f0; cursor: pointer;">';
+				html += '<strong>' + (item.codigo || '') + '</strong> - ' + (item.defecto || '');
 				html += '</div>';
 			});
 		}
@@ -2233,9 +2233,9 @@ function initDefectoSearch() {
 		// Manejador de clics en resultados
 		$resultados.off('click', '.defecto-item').on('click', '.defecto-item', function() {
 			var codigo = $(this).data('codigo');
-			var descripcion = $(this).data('descripcion');
+			var defecto = $(this).data('defecto');
 			$('#defecto_codigo_edit').val(codigo);
-			$('#defecto_descripcion_edit').val(descripcion);
+			$('#defecto_descripcion_edit').val(defecto);
 			$resultados.empty().hide();
 		});
 	});
