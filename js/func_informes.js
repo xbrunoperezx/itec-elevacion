@@ -1840,9 +1840,9 @@ var openInforme = function(seccion, cual, id){
 								'<label for="defecto_valoracion_edit" class="active">Valoración</label>' +
 							'</div>' +
 							'<div class="col s10" style="padding-top: 10px;">' +
-								'<button class="btn waves-effect waves-light btn-small" id="btn_leve" style="background-color: #4CAF50; padding: 4px 8px; font-size: 11px; margin-right: 5px; height: auto;">LEVE</button>' +
-								'<button class="btn waves-effect waves-light btn-small" id="btn_grave" style="background-color: #FFC107; color: black; padding: 4px 8px; font-size: 11px; margin-right: 5px; height: auto;">GRAVE</button>' +
-								'<button class="btn waves-effect waves-light btn-small" id="btn_muyg" style="background-color: #F44336; padding: 4px 8px; font-size: 11px; height: auto;">MUY GRAVE</button>' +
+								'<button class="btn waves-effect waves-light btn-small" id="btn_leve" style="background-color: #4CAF50; padding: 4px 8px; font-size: 11px; margin-right: 5px; height: auto; width: 90px;">LEVE</button>' +
+								'<button class="btn waves-effect waves-light btn-small" id="btn_grave" style="background-color: #FFC107; color: black; padding: 4px 8px; font-size: 11px; margin-right: 5px; height: auto; width: 90px;">GRAVE</button>' +
+								'<button class="btn waves-effect waves-light btn-small" id="btn_muyg" style="background-color: #F44336; padding: 4px 8px; font-size: 11px; height: auto; width: 90px;">MUY GRAVE</button>' +
 							'</div>' +
 						'</div>' +
 						'<div class="row">' +
@@ -2171,7 +2171,7 @@ function renderDefectosTable() {
 			row += '<td>' + (defecto.valoracion || '') + '</td>';
 			row += '<td>';
 			row += '<button class="btn-small waves-effect waves-light red delete-defecto" data-index="' + idx + '">';
-			row += '<i class="material-icons">delete</i></button>';
+			row += '<i class="material-icons">close</i></button>';
 			row += '</td>';
 			row += '</tr>';
 			$tbody.append(row);
