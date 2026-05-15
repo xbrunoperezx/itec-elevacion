@@ -1825,13 +1825,11 @@ var openInforme = function(seccion, cual, id){
 							'</div>' +
 						'</div>' +
 						'<div class="row">' +
-							'<div class="input-field col s12">' +
+							'<div class="input-field col s2">' +
 								'<input type="text" id="defecto_codigo_edit" placeholder="Ej: 1.01.1">' +
 								'<label for="defecto_codigo_edit" class="active">Código</label>' +
 							'</div>' +
-						'</div>' +
-						'<div class="row">' +
-							'<div class="input-field col s12">' +
+							'<div class="input-field col s10">' +
 								'<input type="text" id="defecto_descripcion_edit" placeholder="Descripción del defecto">' +
 								'<label for="defecto_descripcion_edit" class="active">Descripción</label>' +
 							'</div>' +
