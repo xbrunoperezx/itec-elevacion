@@ -1802,6 +1802,7 @@ var openInforme = function(seccion, cual, id){
 								'<table class="highlight bordered" id="table_defectos_pri">' +
 									'<thead>' +
 										'<tr>' +
+											'<th style="width:60px">Orden</th>' +
 											'<th>Código</th>' +
 											'<th>Descripción</th>' +
 											'<th>Valoración</th>' +
@@ -1810,6 +1811,7 @@ var openInforme = function(seccion, cual, id){
 									'</thead>' +
 									'<tbody>' +
 										'<tr>' +
+											'<td>-</td>' +
 											'<td>-</td>' +
 											'<td>No se han añadido defectos</td>' +
 											'<td>-</td>' +
@@ -2165,25 +2167,79 @@ function renderDefectosTable() {
 	} else {
 		// Mostrar defectos
 		defectosTemporales.forEach(function(defecto, idx) {
+			var isFirst = idx === 0;
+			var isLast = idx === defectosTemporales.length - 1;
 			var row = '<tr>';
+			row += '<td style="white-space:nowrap">';
+			row += '<button class="btn-flat btn-small move-defecto-up" data-index="' + idx + '" ' + (isFirst ? 'disabled' : '') + ' style="padding:0 4px;min-width:auto"><i class="material-icons" style="font-size:18px">arrow_upward</i></button>';
+			row += '<button class="btn-flat btn-small move-defecto-down" data-index="' + idx + '" ' + (isLast ? 'disabled' : '') + ' style="padding:0 4px;min-width:auto"><i class="material-icons" style="font-size:18px">arrow_downward</i></button>';
+			row += '</td>';
 			row += '<td>' + (defecto.codigo || '') + '</td>';
 			row += '<td>' + (defecto.descripcion || '') + '</td>';
 			row += '<td>' + (defecto.valoracion || '') + '</td>';
-			row += '<td>';
-			row += '<button class="btn-small waves-effect waves-light red delete-defecto" data-index="' + idx + '">';
-			row += '<i class="material-icons">close</i></button>';
+			row += '<td style="white-space:nowrap">';
+			row += '<button class="btn-small waves-effect waves-light blue edit-defecto" data-index="' + idx + '" style="margin-right:4px"><i class="material-icons">edit</i></button>';
+			row += '<button class="btn-small waves-effect waves-light red delete-defecto" data-index="' + idx + '"><i class="material-icons">close</i></button>';
 			row += '</td>';
 			row += '</tr>';
 			$tbody.append(row);
 		});
 	}
 	
-	// Agregar manejador de clics para eliminar
+	// Mover arriba
+	$tbody.off('click', '.move-defecto-up').on('click', '.move-defecto-up', function(e) {
+		e.preventDefault();
+		var idx = parseInt($(this).data('index'));
+		if (idx > 0) {
+			var tmp = defectosTemporales[idx - 1];
+			defectosTemporales[idx - 1] = defectosTemporales[idx];
+			defectosTemporales[idx] = tmp;
+			renderDefectosTable();
+		}
+	});
+
+	// Mover abajo
+	$tbody.off('click', '.move-defecto-down').on('click', '.move-defecto-down', function(e) {
+		e.preventDefault();
+		var idx = parseInt($(this).data('index'));
+		if (idx < defectosTemporales.length - 1) {
+			var tmp = defectosTemporales[idx + 1];
+			defectosTemporales[idx + 1] = defectosTemporales[idx];
+			defectosTemporales[idx] = tmp;
+			renderDefectosTable();
+		}
+	});
+
+	// Editar defecto
+	$tbody.off('click', '.edit-defecto').on('click', '.edit-defecto', function(e) {
+		e.preventDefault();
+		var idx = parseInt($(this).data('index'));
+		var defecto = defectosTemporales[idx];
+		$('#defecto_codigo_edit').val(defecto.codigo || '');
+		$('#defecto_descripcion_edit').val(defecto.descripcion || '');
+		$('#defecto_valoracion_edit').val(defecto.valoracion || '');
+		defectosTemporales.splice(idx, 1);
+		renderDefectosTable();
+	});
+
+	// Eliminar defecto
 	$tbody.off('click', '.delete-defecto').on('click', '.delete-defecto', function(e) {
 		e.preventDefault();
 		var idx = $(this).data('index');
-		defectosTemporales.splice(idx, 1);
-		renderDefectosTable();
+		modalConfirm(
+			'Eliminar defecto',
+			'¿Seguro que quieres eliminar este defecto?',
+			false,
+			'Eliminar',
+			'Cancelar',
+			'close',
+			'clear',
+			function() {
+				defectosTemporales.splice(idx, 1);
+				renderDefectosTable();
+			},
+			function() {}
+		);
 	});
 }
 
