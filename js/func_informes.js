@@ -734,7 +734,7 @@ var readInformes = function(id, totalParams){
 				
 				tableRow += "</td>" +
 				"<td class='ancho50'>" +
-					"<a class='btn-floating btn-small waves-effect waves-light red' title='Más'>" +
+					"<a class='more_pri btn-floating btn-small waves-effect waves-light red' title='Más' data-id='" + item.id + "'>" +
 						"<i class='material-icons'>more_vert</i>" +
 					"</a>" +
 				"</td>" +
@@ -1860,4 +1860,103 @@ jQuery(document).on("click", "#filtrar_pri_clear", function() {
 	jQuery(this).parents("#tab_pri").find("#filtro_pri_fechainicio").val('');	
 	jQuery(this).parents("#tab_pri").find("#filtro_pri_fechafin").val('');	
 	jQuery(this).parents("#tab_pri").find("label").not(":eq(0)").removeClass("active");
+});
+
+// Menú contextual para cada fila de informes (ocultar fila / eliminar / cancelar)
+jQuery(document).on("click", ".more_pri", function(e){
+	e.preventDefault();
+	jQuery('.row-menu').remove();
+
+	var $btn = jQuery(this);
+	var itemId = parseInt($btn.data('id'), 10) || 0;
+	var offset = $btn.offset();
+
+	var menu = jQuery("<div class='row-menu'><ul><li class='row-menu-hide'>Ocultar fila</li><li class='row-menu-delete' data-id='" + itemId + "'>Eliminar</li><li class='row-menu-cancel'>Cancelar</li></ul></div>");
+
+	menu.css({ visibility: 'hidden', top: 0, left: 0 });
+	jQuery('body').append(menu);
+
+	var menuW = menu.outerWidth();
+	var menuH = menu.outerHeight();
+	var winW = jQuery(window).width();
+	var winTop = jQuery(window).scrollTop();
+
+	var desiredLeft = offset.left + $btn.outerWidth() - menuW;
+	if (desiredLeft + menuW > winW - 6) {
+		desiredLeft = winW - menuW - 6;
+	}
+	if (desiredLeft < 6) {
+		desiredLeft = 6;
+	}
+
+	var desiredTop = offset.top + $btn.outerHeight() + 6;
+	if (desiredTop + menuH > winTop + jQuery(window).height()) {
+		desiredTop = offset.top - menuH - 6;
+		if (desiredTop < winTop + 6) desiredTop = winTop + 6;
+	}
+
+	menu.css({ top: desiredTop + 'px', left: desiredLeft + 'px', visibility: 'visible' });
+
+	menu.on('click', '.row-menu-hide', function(ev){
+		ev.stopPropagation();
+		$btn.closest('tr').addClass('hidden-row');
+		menu.remove();
+	});
+
+	menu.on('click', '.row-menu-delete', function(ev){
+		ev.stopPropagation();
+		var idInforme = parseInt(jQuery(this).data('id'), 10) || 0;
+		menu.remove();
+		if(idInforme <= 0){
+			modalError('ERROR', 'ID de informe no válido para eliminar.', false, 'Cerrar', 'error');
+			return;
+		}
+
+		modalConfirm(
+			'Eliminar informe',
+			'¿Desea eliminar el informe con ID' + idInforme + ' de la base de datos?',
+			false,
+			'Eliminar',
+			'Cancelar',
+			'delete_forever',
+			'cancel',
+			function(){
+				$.ajax({
+					url: 'services/primeras_delete.php',
+					type: 'POST',
+					data: { id: idInforme },
+					success: function(data){
+						var text = (data == null) ? '' : String(data).trim();
+						if(text === 'OK'){
+							$btn.closest('tr').remove();
+							jQuery('#filtrar_pri').click();
+							return;
+						}
+						if(text.indexOf('KO: sesión') === 0 || text.indexOf('KO: sesion') === 0){
+							window.location.href = 'login.html';
+							return;
+						}
+						modalError('ERROR', 'No se pudo eliminar el informe: ' + text, false, 'Cerrar', 'error');
+					},
+					error: function(xhr, status, error){
+						modalError('ERROR', 'Error eliminando informe: ' + error, false, 'Cerrar', 'error');
+					}
+				});
+			}
+		);
+	});
+
+	menu.on('click', '.row-menu-cancel', function(ev){
+		ev.stopPropagation();
+		menu.remove();
+	});
+
+	setTimeout(function(){
+		jQuery(document).on('click.rowMenuClose', function(ev){
+			if(jQuery(ev.target).closest('.row-menu').length===0 && jQuery(ev.target).closest('.more_pri').length===0){
+				jQuery('.row-menu').remove();
+				jQuery(document).off('click.rowMenuClose');
+			}
+		});
+	}, 10);
 });
