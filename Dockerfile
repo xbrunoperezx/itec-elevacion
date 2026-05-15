@@ -11,6 +11,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 	&& docker-php-ext-install mysqli pdo pdo_mysql gd exif
 
+# Configurar límites de PHP para subida de archivos
+RUN { \
+	echo 'upload_max_filesize = 100M'; \
+	echo 'post_max_size = 100M'; \
+	echo 'memory_limit = 256M'; \
+	} > /usr/local/etc/php/conf.d/limits.ini
+
 # Copiar el código al document root
 COPY . /var/www/html/
 
