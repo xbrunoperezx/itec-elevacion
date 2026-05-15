@@ -22,8 +22,8 @@ if ($action === 'list_by_informe') {
     exit;
   }
   
-  // Asumiendo estructura: id, id_informe, codigo, descripcion, valoracion
-  $sql = "SELECT id, codigo, descripcion, valoracion FROM informes_defectos WHERE id_informe = " . $id_informe . " ORDER BY id ASC";
+  // Asumiendo estructura: id, id_informe, codigo, descripcion, valoracion, corregido
+  $sql = "SELECT id, codigo, descripcion, valoracion, corregido FROM informes_defectos WHERE id_informe = " . $id_informe . " ORDER BY id ASC";
   $res = mysqli_query($link, $sql);
   
   if (!$res) {
@@ -108,7 +108,7 @@ if ($action === 'save') {
     $descripcion = isset($defecto['descripcion']) ? "'" . mysqli_real_escape_string($link, $defecto['descripcion']) . "'" : "NULL";
     $valoracion = isset($defecto['valoracion']) ? "'" . mysqli_real_escape_string($link, $defecto['valoracion']) . "'" : "NULL";
     
-    $sql_insert = "INSERT INTO informes_defectos (id_informe, codigo, descripcion, valoracion) VALUES (" . $id_informe . ", " . $codigo . ", " . $descripcion . ", " . $valoracion . ")";
+    $sql_insert = "INSERT INTO informes_defectos (id_informe, codigo, descripcion, valoracion, corregido) VALUES (" . $id_informe . ", " . $codigo . ", " . $descripcion . ", " . $valoracion . ", 0)";
     
     if (!mysqli_query($link, $sql_insert)) {
       echo json_encode(["success" => false, "error" => "Error al insertar defecto: " . mysqli_error($link)]);
