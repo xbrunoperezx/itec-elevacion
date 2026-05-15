@@ -114,14 +114,12 @@ function readDefectos(){
       var tr = "<tr class='alto50'>";
       tr += "<td class='ancho50'>&nbsp;</td>";
       tr += "<td class='ancho30'>" + (item.id || '') + "</td>";
+      tr += "<td class='ancho30'><a seccion='def' tipo='frm_editdef' data-id='" + (item.id || '') + "' class='editar_def btn-floating btn-small waves-effect waves-light green' title='Editar defecto'><i class='material-icons'>edit</i></a></td>";
       tr += "<td class='ancho100'><span class='main-text'>" + (item.codigo || '') + "</span></td>";
       tr += "<td class='ancho100'>" + (item.provincia || '') + "</td>";
       tr += "<td>" + (item.defecto || '') + "</td>";
       tr += "<td class='ancho200'>" + (item.valoracion || '') + "</td>";
       tr += "<td class='ancho75'>" + (item.id_revision || '') + "</td>";
-      tr += "<td class='ancho100'>" +
-            "<a seccion='def' tipo='frm_editdef' data-id='" + (item.id || '') + "' class='editar_def btn-floating btn-small waves-effect waves-light green' title='Editar defecto'><i class='material-icons'>edit</i></a>" +
-            "</td>";
       tr += "<td class='ancho50'>" +
             "<a class='more_def btn-floating btn-small waves-effect waves-light red' title='Mas' data-id='" + (item.id || '') + "'><i class='material-icons'>more_vert</i></a>" +
             "</td>";
