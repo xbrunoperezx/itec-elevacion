@@ -30,6 +30,24 @@ mysqli_query($link, "DELETE FROM `informes_mediciones` WHERE `id_informe` = {$id
 mysqli_query($link, "DELETE FROM `informes_equipos` WHERE `id_informe` = {$id}");
 mysqli_query($link, "DELETE FROM `informes_firmas` WHERE `id_informe` = {$id}");
 
+// Eliminar fotos del informe (almacenadas en disco)
+$uploadsBase = realpath(__DIR__ . '/../uploads');
+if ($uploadsBase === false) {
+    $uploadsBase = __DIR__ . '/../uploads';
+}
+$informeFotosDir = rtrim($uploadsBase, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'informes' . DIRECTORY_SEPARATOR . $id;
+if (is_dir($informeFotosDir)) {
+    $files = glob($informeFotosDir . DIRECTORY_SEPARATOR . '*');
+    if ($files) {
+        foreach ($files as $f) {
+            if (is_file($f)) {
+                @unlink($f);
+            }
+        }
+    }
+    @rmdir($informeFotosDir);
+}
+
 // Si existe relación en contratadas con el informe, se limpia para evitar referencias huérfanas.
 mysqli_query($link, "UPDATE `contratadas` SET `id_informe` = 0 WHERE `id_informe` = {$id}");
 

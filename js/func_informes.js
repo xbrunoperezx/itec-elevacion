@@ -13,6 +13,10 @@ var firmaPadState = {
 };
 var FIRMA_EXPORT_WIDTH = 800;
 var FIRMA_EXPORT_HEIGHT = 600;
+var informeFotosState = {
+	currentInformeId: null,
+	isBusy: false
+};
 
 function escapeHtml(text){
 	return String(text == null ? '' : text)
@@ -322,6 +326,315 @@ function buildFirmaTab9(idInforme){
 	html += '</div>';
 	html += '</div>';
 	return html;
+}
+
+function formatFotoBytes(size){
+	var n = parseInt(size, 10) || 0;
+	if(n < 1024) return n + ' B';
+	if(n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+	return (n / (1024 * 1024)).toFixed(2) + ' MB';
+}
+
+function buildFotosTab10(idInforme){
+	var idSafe = (idInforme || '').toString();
+	var html = '';
+	html += '<div class="fotos-pri-wrap" data-informe-id="' + escapeHtml(idSafe) + '">';
+	html += '<div class="fotos-pri-toolbar">';
+	html += '<a href="#" id="fotos_pri_pick" class="btn waves-effect waves-light blue"><i class="material-icons left">add_a_photo</i>Subir fotos</a>&nbsp;';
+	html += '<a href="#" id="fotos_pri_reload" class="btn waves-effect waves-light grey"><i class="material-icons left">refresh</i>Recargar</a>&nbsp;';
+	html += '<label class="fotos-pri-crop-toggle"><input type="checkbox" id="fotos_pri_crop_before" class="filled-in"><span>Recortar antes de subir</span></label>';
+	html += '<input type="file" id="fotos_pri_input" accept="image/*" multiple style="display:none;">';
+	html += '</div>';
+	html += '<div id="fotos_pri_status" class="fotos-pri-status"></div>';
+	html += '<div id="fotos_pri_grid" class="fotos-pri-grid"></div>';
+	html += '</div>';
+	return html;
+}
+
+function setInformeFotosStatus(text, kind){
+	var $status = $('#fotos_pri_status');
+	$status.removeClass('ok error work').addClass(kind || '').text(text || '');
+}
+
+function setInformeFotosBusy(busy){
+	informeFotosState.isBusy = !!busy;
+	$('#fotos_pri_pick').toggleClass('disabled', busy);
+	$('#fotos_pri_reload').toggleClass('disabled', busy);
+	$('#fotos_pri_crop_before').prop('disabled', busy);
+	if(busy){
+		setInformeFotosStatus('Procesando fotos...', 'work');
+	}
+}
+
+function renderInformeFotos(list){
+	var $grid = $('#fotos_pri_grid');
+	$grid.empty();
+
+	if(!list || !list.length){
+		$grid.html('<div class="fotos-pri-empty">No hay fotos en este informe.</div>');
+		setInformeFotosStatus('Sin fotos guardadas.', '');
+		return;
+	}
+
+	$.each(list, function(_, item){
+		var card = '';
+		card += '<div class="fotos-pri-card">';
+		card += '<a href="' + escapeHtml(item.url || '#') + '" target="_blank" rel="noopener noreferrer" class="fotos-pri-thumb-link">';
+		card += '<img class="fotos-pri-thumb" src="' + escapeHtml(item.url || '') + '" alt="Foto informe">';
+		card += '</a>';
+		card += '<div class="fotos-pri-meta">';
+		card += '<div class="fotos-pri-name" title="' + escapeHtml(item.name || '') + '">' + escapeHtml(item.name || '') + '</div>';
+		card += '<div class="fotos-pri-size">' + escapeHtml(formatFotoBytes(item.size || 0)) + '</div>';
+		card += '</div>';
+		card += '<div class="fotos-pri-actions">';
+		card += '<a href="#" class="btn-floating btn-small waves-effect waves-light red foto-pri-delete" data-name="' + escapeHtml(item.name || '') + '" title="Eliminar foto"><i class="material-icons">delete</i></a>';
+		card += '</div>';
+		card += '</div>';
+		$grid.append(card);
+	});
+
+	setInformeFotosStatus('Fotos cargadas: ' + list.length, 'ok');
+}
+
+function loadInformeFotos(idInforme){
+	if(!idInforme) return;
+	$.ajax({
+		url: 'services/informes_fotos.php',
+		type: 'POST',
+		dataType: 'json',
+		data: {
+			action: 'list',
+			id_informe: idInforme
+		},
+		success: function(resp){
+			if(resp && resp.success){
+				renderInformeFotos(resp.data || []);
+			} else {
+				renderInformeFotos([]);
+				setInformeFotosStatus((resp && resp.error) ? resp.error : 'No se pudieron cargar las fotos.', 'error');
+			}
+		},
+		error: function(){
+			renderInformeFotos([]);
+			setInformeFotosStatus('Error cargando fotos.', 'error');
+		}
+	});
+}
+
+function createCroppedFileFromCanvas(canvas, originalName, callback){
+	if(!canvas || !canvas.toBlob){
+		callback(null);
+		return;
+	}
+	canvas.toBlob(function(blob){
+		if(!blob){
+			callback(null);
+			return;
+		}
+		var baseName = (originalName || 'foto').replace(/\.[^\.]+$/g, '');
+		var outFile = new File([blob], baseName + '.jpg', { type: 'image/jpeg' });
+		callback(outFile);
+	}, 'image/jpeg', 0.92);
+}
+
+function openFotoCropper(file, callback){
+	var reader = new FileReader();
+	reader.onload = function(e){
+		var img = new Image();
+		img.onload = function(){
+			var $overlay = $('<div class="foto-cropper-overlay"></div>');
+			var html = '';
+			html += '<div class="foto-cropper-box">';
+			html += '<div class="foto-cropper-title">Recorte previo: arrastra para seleccionar área</div>';
+			html += '<canvas id="foto_cropper_canvas"></canvas>';
+			html += '<div class="foto-cropper-actions">';
+			html += '<a href="#" id="foto_cropper_cancel" class="btn waves-effect waves-light grey">Cancelar</a>&nbsp;';
+			html += '<a href="#" id="foto_cropper_original" class="btn waves-effect waves-light blue">Usar original</a>&nbsp;';
+			html += '<a href="#" id="foto_cropper_apply" class="btn waves-effect waves-light green">Aplicar recorte</a>';
+			html += '</div>';
+			html += '</div>';
+			$overlay.html(html);
+			$('body').append($overlay);
+
+			var canvas = document.getElementById('foto_cropper_canvas');
+			var ctx = canvas.getContext('2d');
+			var maxW = Math.min(window.innerWidth - 120, 900);
+			var scale = Math.min(1, maxW / img.width);
+			canvas.width = Math.max(1, Math.round(img.width * scale));
+			canvas.height = Math.max(1, Math.round(img.height * scale));
+
+			var selection = {
+				x: Math.round(canvas.width * 0.1),
+				y: Math.round(canvas.height * 0.1),
+				w: Math.round(canvas.width * 0.8),
+				h: Math.round(canvas.height * 0.8)
+			};
+			var dragging = false;
+			var start = null;
+
+			function clampSelection(){
+				selection.x = Math.max(0, Math.min(selection.x, canvas.width - 1));
+				selection.y = Math.max(0, Math.min(selection.y, canvas.height - 1));
+				selection.w = Math.max(1, Math.min(selection.w, canvas.width - selection.x));
+				selection.h = Math.max(1, Math.min(selection.h, canvas.height - selection.y));
+			}
+
+			function draw(){
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+				ctx.fillStyle = 'rgba(0,0,0,0.45)';
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+				ctx.clearRect(selection.x, selection.y, selection.w, selection.h);
+				ctx.strokeStyle = '#ff5252';
+				ctx.lineWidth = 2;
+				ctx.strokeRect(selection.x, selection.y, selection.w, selection.h);
+			}
+
+			function getPoint(evt){
+				var rect = canvas.getBoundingClientRect();
+				return {
+					x: Math.max(0, Math.min(canvas.width, evt.clientX - rect.left)),
+					y: Math.max(0, Math.min(canvas.height, evt.clientY - rect.top))
+				};
+			}
+
+			canvas.onpointerdown = function(evt){
+				evt.preventDefault();
+				dragging = true;
+				start = getPoint(evt);
+				selection.x = start.x;
+				selection.y = start.y;
+				selection.w = 1;
+				selection.h = 1;
+				draw();
+			};
+
+			canvas.onpointermove = function(evt){
+				if(!dragging || !start) return;
+				evt.preventDefault();
+				var p = getPoint(evt);
+				selection.x = Math.min(start.x, p.x);
+				selection.y = Math.min(start.y, p.y);
+				selection.w = Math.abs(p.x - start.x);
+				selection.h = Math.abs(p.y - start.y);
+				clampSelection();
+				draw();
+			};
+
+			canvas.onpointerup = function(){
+				dragging = false;
+				start = null;
+			};
+
+			canvas.onpointercancel = canvas.onpointerup;
+			canvas.onpointerleave = canvas.onpointerup;
+
+			draw();
+
+			$overlay.on('click', '#foto_cropper_cancel', function(ev){
+				ev.preventDefault();
+				$overlay.remove();
+				callback(null);
+			});
+
+			$overlay.on('click', '#foto_cropper_original', function(ev){
+				ev.preventDefault();
+				$overlay.remove();
+				callback(file);
+			});
+
+			$overlay.on('click', '#foto_cropper_apply', function(ev){
+				ev.preventDefault();
+				if(selection.w < 5 || selection.h < 5){
+					modalError('ERROR', 'Selecciona un área mayor para recortar.', false, 'Cerrar', 'error');
+					return;
+				}
+
+				var srcX = Math.round((selection.x / canvas.width) * img.width);
+				var srcY = Math.round((selection.y / canvas.height) * img.height);
+				var srcW = Math.round((selection.w / canvas.width) * img.width);
+				var srcH = Math.round((selection.h / canvas.height) * img.height);
+
+				var out = document.createElement('canvas');
+				out.width = Math.max(1, srcW);
+				out.height = Math.max(1, srcH);
+				var outCtx = out.getContext('2d');
+				outCtx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, out.width, out.height);
+
+				createCroppedFileFromCanvas(out, file.name, function(cropped){
+					$overlay.remove();
+					callback(cropped || file);
+				});
+			});
+		};
+		img.src = e.target.result;
+	};
+	reader.readAsDataURL(file);
+}
+
+function uploadInformeFoto(idInforme, file, callback){
+	var formData = new FormData();
+	formData.append('action', 'upload');
+	formData.append('id_informe', idInforme);
+	formData.append('fotos[]', file);
+
+	$.ajax({
+		url: 'services/informes_fotos.php',
+		type: 'POST',
+		dataType: 'json',
+		data: formData,
+		processData: false,
+		contentType: false,
+		success: function(resp){
+			if(resp && resp.success){
+				callback(true, null);
+			} else {
+				callback(false, (resp && resp.error) ? resp.error : 'No se pudo subir la foto.');
+			}
+		},
+		error: function(){
+			callback(false, 'Error subiendo foto.');
+		}
+	});
+}
+
+function processInformeFotosQueue(idInforme, files, index, done){
+	if(index >= files.length){
+		done();
+		return;
+	}
+
+	var file = files[index];
+	if(!file || !file.type || file.type.indexOf('image/') !== 0){
+		processInformeFotosQueue(idInforme, files, index + 1, done);
+		return;
+	}
+
+	var withCrop = $('#fotos_pri_crop_before').is(':checked');
+	var nextStep = function(finalFile){
+		if(!finalFile){
+			processInformeFotosQueue(idInforme, files, index + 1, done);
+			return;
+		}
+		uploadInformeFoto(idInforme, finalFile, function(ok, errorMsg){
+			if(!ok){
+				setInformeFotosStatus(errorMsg || 'Error subiendo foto.', 'error');
+			}
+			processInformeFotosQueue(idInforme, files, index + 1, done);
+		});
+	};
+
+	if(withCrop){
+		openFotoCropper(file, nextStep);
+	} else {
+		nextStep(file);
+	}
+}
+
+function initInformeFotosTab(idInforme){
+	informeFotosState.currentInformeId = idInforme;
+	setInformeFotosStatus('Cargando fotos...', 'work');
+	loadInformeFotos(idInforme);
 }
 
 function resizeInformeFirmaCanvas(){
@@ -1296,6 +1609,80 @@ jQuery(document).on('click', '.tablink9', function(){
 	}, 60);
 });
 
+jQuery(document).on('click', '#fotos_pri_pick', function(e){
+	e.preventDefault();
+	if(informeFotosState.isBusy) return;
+	$('#fotos_pri_input').trigger('click');
+});
+
+jQuery(document).on('click', '#fotos_pri_reload', function(e){
+	e.preventDefault();
+	if(informeFotosState.isBusy) return;
+	loadInformeFotos(informeFotosState.currentInformeId || $('#id_bbdd').val());
+});
+
+jQuery(document).on('change', '#fotos_pri_input', function(){
+	var idInforme = informeFotosState.currentInformeId || $('#id_bbdd').val();
+	if(!idInforme){
+		modalError('ERROR', 'No se encontró el ID del informe.', false, 'Cerrar', 'error');
+		return;
+	}
+
+	var files = Array.prototype.slice.call(this.files || []);
+	if(!files.length) return;
+
+	setInformeFotosBusy(true);
+	processInformeFotosQueue(idInforme, files, 0, function(){
+		setInformeFotosBusy(false);
+		$('#fotos_pri_input').val('');
+		loadInformeFotos(idInforme);
+		M.toast({ html: 'Proceso de subida finalizado' });
+	});
+});
+
+jQuery(document).on('click', '.foto-pri-delete', function(e){
+	e.preventDefault();
+	if(informeFotosState.isBusy) return;
+
+	var idInforme = informeFotosState.currentInformeId || $('#id_bbdd').val();
+	var filename = ($(this).data('name') || '').toString();
+	if(!idInforme || !filename) return;
+
+	modalConfirm(
+		'Eliminar foto',
+		'¿Seguro que quieres eliminar esta foto del informe?',
+		false,
+		'Eliminar',
+		'Cancelar',
+		'delete',
+		'clear',
+		function(){
+			$.ajax({
+				url: 'services/informes_fotos.php',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					action: 'delete',
+					id_informe: idInforme,
+					filename: filename
+				},
+				success: function(resp){
+					if(resp && resp.success){
+						loadInformeFotos(idInforme);
+						M.toast({ html: 'Foto eliminada' });
+					} else {
+						modalError('ERROR', (resp && resp.error) ? resp.error : 'No se pudo eliminar la foto.', false, 'Cerrar', 'error');
+					}
+				},
+				error: function(){
+					modalError('ERROR', 'Error eliminando foto.', false, 'Cerrar', 'error');
+				}
+			});
+		},
+		function(){}
+	);
+});
+
 jQuery(document).on('click', '.remove-equipo-utilizado', function(e){
 	e.preventDefault();
 	$(this).closest('.equipo-utilizado-row').remove();
@@ -1794,7 +2181,6 @@ var openInforme = function(seccion, cual, id){
 						'<div id="tab5_pri" class="col s12">' + 
 						'</div>' +	
 						'<div id="tab6_pri" class="col s12">' + 
-	// ...eliminado el div con el h5 'Defectos Detectados'...
 						'<div class="row">' +
 							'<div class="col s12">' +
 								'<table class="highlight bordered" id="table_defectos_pri">' +
@@ -1940,7 +2326,9 @@ var openInforme = function(seccion, cual, id){
 				  $('#ascensor_container select').formSelect();
 						$('#equipos_container').html(buildEquiposTab7(item.equipos || {}));
 						$('#firma_container').html(buildFirmaTab9(item.id || id));
+						$('#tab10_pri').html(buildFotosTab10(item.id || id));
 						initInformeFirmaPad(item.id || id);
+						initInformeFotosTab(item.id || id);
 						loadEquiposCatalog();
 						loadInspectorEquiposDefaults(item.id_usuarios || null);
 				  $("#modal_"+seccion).modal({ dismissible: false });
