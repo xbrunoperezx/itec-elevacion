@@ -1809,21 +1809,29 @@ var openInforme = function(seccion, cual, id){
 										'</tr>' +
 									'</thead>' +
 									'<tbody>' +
+										'<tr>' +
+											'<td>-</td>' +
+											'<td>No se han añadido defectos</td>' +
+											'<td>-</td>' +
+											'<td>-</td>' +
+										'</tr>' +
 									'</tbody>' +
 								'</table>' +
 							'</div>' +
 						'</div>' +
-						'<div class="row" style="margin-bottom: 15px;">' +
+						'<div class="row" style="margin-bottom: 15px; margin-top: 15px; border-top: 1px solid #ddd; padding-top: 15px;">' +
 							'<div class="col s12">' +
 								'<button class="btn waves-effect waves-light green" id="btn_agregar_defecto"><i class="material-icons left">add</i>Agregar Defecto</button>' +
 							'</div>' +
 						'</div>' +
 						'<div class="row">' +
-							'<div class="input-field col s2">' +
+							'<div class="input-field col s12">' +
 								'<input type="text" id="defecto_codigo_edit" placeholder="Ej: 1.01.1">' +
 								'<label for="defecto_codigo_edit" class="active">Código</label>' +
 							'</div>' +
-							'<div class="input-field col s10">' +
+						'</div>' +
+						'<div class="row">' +
+							'<div class="input-field col s12">' +
 								'<input type="text" id="defecto_descripcion_edit" placeholder="Descripción del defecto">' +
 								'<label for="defecto_descripcion_edit" class="active">Descripción</label>' +
 							'</div>' +
@@ -2147,18 +2155,30 @@ function renderDefectosTable() {
 	var $tbody = $('#table_defectos_pri tbody');
 	$tbody.empty();
 	
-	defectosTemporales.forEach(function(defecto, idx) {
+	if (defectosTemporales.length === 0) {
+		// Mostrar fila por defecto cuando no hay defectos
 		var row = '<tr>';
-		row += '<td>' + (defecto.codigo || '') + '</td>';
-		row += '<td>' + (defecto.descripcion || '') + '</td>';
-		row += '<td>' + (defecto.valoracion || '') + '</td>';
-		row += '<td>';
-		row += '<button class="btn-small waves-effect waves-light red delete-defecto" data-index="' + idx + '">';
-		row += '<i class="material-icons">delete</i></button>';
-		row += '</td>';
+		row += '<td>-</td>';
+		row += '<td>No se han añadido defectos</td>';
+		row += '<td>-</td>';
+		row += '<td>-</td>';
 		row += '</tr>';
 		$tbody.append(row);
-	});
+	} else {
+		// Mostrar defectos
+		defectosTemporales.forEach(function(defecto, idx) {
+			var row = '<tr>';
+			row += '<td>' + (defecto.codigo || '') + '</td>';
+			row += '<td>' + (defecto.descripcion || '') + '</td>';
+			row += '<td>' + (defecto.valoracion || '') + '</td>';
+			row += '<td>';
+			row += '<button class="btn-small waves-effect waves-light red delete-defecto" data-index="' + idx + '">';
+			row += '<i class="material-icons">delete</i></button>';
+			row += '</td>';
+			row += '</tr>';
+			$tbody.append(row);
+		});
+	}
 	
 	// Agregar manejador de clics para eliminar
 	$tbody.off('click', '.delete-defecto').on('click', '.delete-defecto', function(e) {
