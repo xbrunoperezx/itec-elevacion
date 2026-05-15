@@ -1477,15 +1477,18 @@ function buildMedicionesTab4(camposData, medicionesData){
 		mediciones = {};
 	}
 
-	html += '<div class="row mediciones-toolbar">' +
-		'<div class="input-field col s4 m3 l3" style="margin-top:0;">' +
-			'<select id="mediciones_mode">' +
-				'<option value="normal" selected>Modo normal</option>' +
-				'<option value="codigo">Modo codigo JSON</option>' +
-			'</select>' +
-			'<label class="active" for="mediciones_mode">Modo de edicion</label>' +
-		'</div>' +
-		'<div class="col s8 m9 l9 right-align" style="padding-top:8px;">' +
+	html += '<div class="row mediciones-toolbar" style="align-items:center;">' +
+		'<div class="col s12" style="display:flex;align-items:center;justify-content:space-between;">' +
+			'<div style="display:flex;align-items:center;gap:24px;">' +
+				'<div class="switch" style="margin-bottom:0;">' +
+					'<label style="font-size:1em;">' +
+						'Tabla' +
+						'<input type="checkbox" id="mediciones_mode_switch">' +
+						'<span class="lever"></span>' +
+						'JSON' +
+					'</label>' +
+				'</div>' +
+			'</div>' +
 			'<a id="copy_mediciones_json" class="btn blue waves-effect waves-light"><i class="material-icons left">content_copy</i>Copiar JSON</a>' +
 		'</div>' +
 	'</div>';
@@ -1822,34 +1825,36 @@ function syncMedicionesFormFromJson(){
 		var nombreDisplay = (data && data.name) ? data.name : abrev;
 		addMedicionPersonalizada(abrev, nombreDisplay, (data && data.valor !== undefined && data.valor !== null) ? data.valor : '', data && data.unidad ? data.unidad : '');
 	});
-	$('#mediciones_mode').formSelect();
+	// No formSelect, return true
 	return true;
 }
 
 function getMedicionesMode(){
-	return $('#mediciones_mode').val() || 'normal';
+	return $('#mediciones_mode_switch').is(':checked') ? 'codigo' : 'normal';
 }
+
 
 function toggleMedicionesMode(mode){
 	if(mode === 'codigo'){
 		syncMedicionesJsonFromForm();
 		$('#mediciones_mode_normal').hide();
 		$('#mediciones_mode_codigo').show();
+		$('#mediciones_mode_switch').prop('checked', true);
 	} else {
 		if(!syncMedicionesFormFromJson()){
-			$('#mediciones_mode').val('codigo');
+			$('#mediciones_mode_switch').prop('checked', true);
 			$('#mediciones_mode_normal').hide();
 			$('#mediciones_mode_codigo').show();
-			$('#mediciones_mode').formSelect();
 			return;
 		}
 		$('#mediciones_mode_codigo').hide();
 		$('#mediciones_mode_normal').show();
+		$('#mediciones_mode_switch').prop('checked', false);
 	}
 }
 
-jQuery(document).on('change', '#mediciones_mode', function(){
-	toggleMedicionesMode($(this).val());
+jQuery(document).on('change', '#mediciones_mode_switch', function(){
+	toggleMedicionesMode($(this).is(':checked') ? 'codigo' : 'normal');
 });
 
 jQuery(document).on('click', '#copy_mediciones_json', function(e){

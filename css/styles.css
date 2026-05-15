@@ -578,6 +578,10 @@ textarea{
   color: #666;
 }
 
+#modal_pri .input-field {
+  margin-bottom: 0px;
+}
+
 #modal_pri .fotos-pri-actions {
   display: flex;
   justify-content: flex-end;
