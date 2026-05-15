@@ -2,6 +2,8 @@
 var equiposCatalogMap = {};
 var equiposCatalogById = {};
 var inspectorEquiposDefaultIds = [];
+var defectosTemporales = []; // Array para almacenar defectos a agregar
+var allCheckAscensores = []; // Cache de todos los check_ascensores
 var firmaPadState = {
 	canvas: null,
 	ctx: null,
@@ -1536,8 +1538,11 @@ function savePrimera(){
 								success: function(responseEquipos){
 									var respEquipos = (typeof responseEquipos === 'string') ? JSON.parse(responseEquipos) : responseEquipos;
 									if(respEquipos.success){
-										$('#modal_pri').modal('close');
-										readInformes('pri', { filtro_total: 15 });
+										// Guardar defectos
+										saveDefectosInforme(id, function() {
+											$('#modal_pri').modal('close');
+											readInformes('pri', { filtro_total: 15 });
+										});
 									} else {
 										modalError('ERROR', respEquipos.error || 'Error al guardar equipos', false, 'Cerrar', 'error');
 									}
@@ -1789,6 +1794,71 @@ var openInforme = function(seccion, cual, id){
 						'<div id="tab5_pri" class="col s12">' + 
 						'</div>' +	
 						'<div id="tab6_pri" class="col s12">' + 
+						'<div class="row">' +
+							'<div class="col s12"><h5>Defectos Detectados</h5></div>' +
+						'</div>' +
+						'<div class="row">' +
+							'<div class="col s12">' +
+								'<table class="highlight bordered" id="table_defectos_pri">' +
+									'<thead>' +
+										'<tr>' +
+											'<th>Código</th>' +
+											'<th>Descripción</th>' +
+											'<th>Valoración</th>' +
+											'<th>Acciones</th>' +
+										'</tr>' +
+									'</thead>' +
+									'<tbody>' +
+									'</tbody>' +
+								'</table>' +
+							'</div>' +
+						'</div>' +
+						'<div class="row" style="border-top: 1px solid #ddd; padding-top: 15px; margin-top: 15px;">' +
+							'<div class="col s12"><h6>Añadir Defecto</h6></div>' +
+						'</div>' +
+						'<div class="row">' +
+							'<div class="input-field col s4">' +
+								'<input type="text" id="defecto_codigo_edit" placeholder="Ej: 1.01.1">' +
+								'<label for="defecto_codigo_edit" class="active">Código</label>' +
+							'</div>' +
+							'<div class="input-field col s8">' +
+								'<input type="text" id="defecto_descripcion_edit" placeholder="Descripción del defecto">' +
+								'<label for="defecto_descripcion_edit" class="active">Descripción</label>' +
+							'</div>' +
+						'</div>' +
+						'<div class="row">' +
+							'<div class="col s3">' +
+								'<button class="btn waves-effect waves-light" id="btn_leve" style="background-color: #4CAF50; width: 100%;">' +
+									'<i class="material-icons left">check</i>LEVE' +
+								'</button>' +
+							'</div>' +
+							'<div class="col s3">' +
+								'<button class="btn waves-effect waves-light" id="btn_grave" style="background-color: #FFC107; color: black; width: 100%;">' +
+									'<i class="material-icons left">warning</i>GRAVE' +
+								'</button>' +
+							'</div>' +
+							'<div class="col s3">' +
+								'<button class="btn waves-effect waves-light" id="btn_muyg" style="background-color: #F44336; width: 100%;">' +
+									'<i class="material-icons left">error</i>MUY GRAVE' +
+								'</button>' +
+							'</div>' +
+							'<div class="input-field col s3">' +
+								'<input type="text" id="defecto_valoracion_edit" placeholder="LEVE" readonly>' +
+								'<label for="defecto_valoracion_edit" class="active">Valoración</label>' +
+							'</div>' +
+						'</div>' +
+						'<div class="row">' +
+							'<div class="input-field col s12">' +
+								'<input type="text" id="defecto_buscar" placeholder="Buscar por código o descripción...">' +
+								'<label for="defecto_buscar" class="active">Buscar Defectos</label>' +
+								'<div id="defecto_buscar_resultados" style="position: absolute; background: white; border: 1px solid #ccc; max-height: 300px; overflow-y: auto; width: 100%; display: none; z-index: 10;"></div>' +
+							'</div>' +
+						'</div>' +
+						'<div class="row">' +
+							'<div class="col s12">' +
+								'<button class="btn waves-effect waves-light green" id="btn_agregar_defecto"><i class="material-icons left">add</i>Agregar Defecto</button>' +
+							'</div>' +
+						'</div>' +
 						'</div>' +	
 						'<div id="tab7_pri" class="col s12">' + 
 						'<div id="equipos_container"></div>' +
@@ -1879,6 +1949,11 @@ var openInforme = function(seccion, cual, id){
 						loadInspectorEquiposDefaults(item.id_usuarios || null);
 				  $("#modal_"+seccion).modal({ dismissible: false });
 				  $("#modal_"+seccion).modal("open");
+				  // Inicializar defectos
+				  loadDefectosInforme(item.id || id);
+				  initDefectoSearch();
+				  initValorationButtons();
+				  initAddDefectoButton();
 				  syncGrupoLegislacion();
 				  syncDuracionMinutos();
 				  syncGoogleMapsButton();
@@ -2018,3 +2093,214 @@ jQuery(document).on("click", ".more_pri", function(e){
 		});
 	}, 10);
 });
+
+// ========== FUNCIONES PARA GESTIÓN DE DEFECTOS EN INFORME ==========
+
+/**
+ * Cargar y mostrar defectos existentes para una inspección
+ */
+function loadDefectosInforme(idInforme) {
+	defectosTemporales = [];
+	var $tbody = $('#table_defectos_pri tbody');
+	$tbody.empty();
+	
+	// Cargar defectos del servidor
+	$.ajax({
+		url: 'services/informes_defectos.php',
+		type: 'POST',
+		dataType: 'json',
+		data: {
+			action: 'list_by_informe',
+			id_informe: idInforme
+		},
+		success: function(response) {
+			if (response && response.success && response.data) {
+				defectosTemporales = response.data;
+				renderDefectosTable();
+			}
+		},
+		error: function() {
+			console.log('Error loading defectos');
+		}
+	});
+}
+
+/**
+ * Guardar defectos de un informe
+ */
+function saveDefectosInforme(idInforme, callback) {
+	$.ajax({
+		url: 'services/informes_defectos.php',
+		type: 'POST',
+		dataType: 'json',
+		data: {
+			action: 'save',
+			id_informe: idInforme,
+			defectos_json: JSON.stringify(defectosTemporales)
+		},
+		success: function(response) {
+			if (response && response.success) {
+				if (typeof callback === 'function') {
+					callback();
+				}
+			} else {
+				modalError('ERROR', response && response.error ? response.error : 'Error al guardar defectos', false, 'Cerrar', 'error');
+			}
+		},
+		error: function() {
+			modalError('ERROR', 'Error al guardar defectos', false, 'Cerrar', 'error');
+		}
+	});
+}
+
+/**
+ * Renderizar la tabla de defectos
+ */
+function renderDefectosTable() {
+	var $tbody = $('#table_defectos_pri tbody');
+	$tbody.empty();
+	
+	defectosTemporales.forEach(function(defecto, idx) {
+		var row = '<tr>';
+		row += '<td>' + (defecto.codigo || '') + '</td>';
+		row += '<td>' + (defecto.descripcion || '') + '</td>';
+		row += '<td>' + (defecto.valoracion || '') + '</td>';
+		row += '<td>';
+		row += '<button class="btn-small waves-effect waves-light red delete-defecto" data-index="' + idx + '">';
+		row += '<i class="material-icons">delete</i></button>';
+		row += '</td>';
+		row += '</tr>';
+		$tbody.append(row);
+	});
+	
+	// Agregar manejador de clics para eliminar
+	$tbody.off('click', '.delete-defecto').on('click', '.delete-defecto', function(e) {
+		e.preventDefault();
+		var idx = $(this).data('index');
+		defectosTemporales.splice(idx, 1);
+		renderDefectosTable();
+	});
+}
+
+/**
+ * Buscar defectos en catálogo
+ */
+function initDefectoSearch() {
+	// Cargar todos los defectos si no están cargados
+	if (allCheckAscensores.length === 0) {
+		$.ajax({
+			url: 'services/informes_defectos.php',
+			type: 'POST',
+			dataType: 'json',
+			data: { action: 'list_check_ascensores' },
+			success: function(response) {
+				if (response && response.data) {
+					allCheckAscensores = response.data;
+				}
+			}
+		});
+	}
+	
+	// Búsqueda en tiempo real
+	$('#defecto_buscar').off('keyup').on('keyup', function() {
+		var searchTerm = $(this).val().toLowerCase();
+		var $resultados = $('#defecto_buscar_resultados');
+		
+		if (searchTerm.length < 2) {
+			$resultados.empty().hide();
+			return;
+		}
+		
+		var filtered = allCheckAscensores.filter(function(item) {
+			var codigo = String(item.codigo || '').toLowerCase();
+			var descripcion = String(item.descripcion || '').toLowerCase();
+			return codigo.includes(searchTerm) || descripcion.includes(searchTerm);
+		});
+		
+		var html = '';
+		if (filtered.length === 0) {
+			html = '<div style="padding: 10px; color: #999;">No hay resultados</div>';
+		} else {
+			filtered.slice(0, 10).forEach(function(item) {
+				html += '<div class="defecto-item" data-codigo="' + (item.codigo || '') + '" data-descripcion="' + (item.descripcion || '') + '" style="padding: 8px; border-bottom: 1px solid #f0f0f0; cursor: pointer;">';
+				html += '<strong>' + (item.codigo || '') + '</strong> - ' + (item.descripcion || '');
+				html += '</div>';
+			});
+		}
+		
+		$resultados.html(html).show();
+		
+		// Manejador de clics en resultados
+		$resultados.off('click', '.defecto-item').on('click', '.defecto-item', function() {
+			var codigo = $(this).data('codigo');
+			var descripcion = $(this).data('descripcion');
+			$('#defecto_codigo_edit').val(codigo);
+			$('#defecto_descripcion_edit').val(descripcion);
+			$resultados.empty().hide();
+		});
+	});
+	
+	// Cerrar resultados al hacer clic fuera
+	$(document).off('click.defectoSearch').on('click.defectoSearch', function(e) {
+		if (!$(e.target).closest('#defecto_buscar').length && !$(e.target).closest('#defecto_buscar_resultados').length) {
+			$('#defecto_buscar_resultados').empty().hide();
+		}
+	});
+}
+
+/**
+ * Inicializar botones de valoración rápida
+ */
+function initValorationButtons() {
+	$('#btn_leve').off('click').on('click', function(e) {
+		e.preventDefault();
+		$('#defecto_valoracion_edit').val('LEVE');
+	});
+	
+	$('#btn_grave').off('click').on('click', function(e) {
+		e.preventDefault();
+		$('#defecto_valoracion_edit').val('GRAVE');
+	});
+	
+	$('#btn_muyg').off('click').on('click', function(e) {
+		e.preventDefault();
+		$('#defecto_valoracion_edit').val('MUY GRAVE');
+	});
+}
+
+/**
+ * Agregar defecto a la tabla temporal
+ */
+function initAddDefectoButton() {
+	$('#btn_agregar_defecto').off('click').on('click', function(e) {
+		e.preventDefault();
+		
+		var codigo = $('#defecto_codigo_edit').val().trim();
+		var descripcion = $('#defecto_descripcion_edit').val().trim();
+		var valoracion = $('#defecto_valoracion_edit').val().trim();
+		
+		if (!codigo || !descripcion) {
+			alert('Debe especificar código y descripción del defecto');
+			return;
+		}
+		
+		if (!valoracion) {
+			alert('Debe especificar la valoración del defecto');
+			return;
+		}
+		
+		defectosTemporales.push({
+			codigo: codigo,
+			descripcion: descripcion,
+			valoracion: valoracion
+		});
+		
+		// Limpiar formulario
+		$('#defecto_codigo_edit').val('');
+		$('#defecto_descripcion_edit').val('');
+		$('#defecto_valoracion_edit').val('');
+		$('#defecto_buscar').val('').focus();
+		
+		renderDefectosTable();
+	});
+}
