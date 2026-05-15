@@ -951,6 +951,27 @@ function resolveCampoUnidad(fieldData, defaultUnidad){
 	return unidad;
 }
 
+function sortCamposBySubcategoryAndOrder(campos, tipo){
+	var filtered = [];
+	$.each(campos || [], function(idx, campo){
+		if(campo.tipo === tipo){
+			filtered.push(campo);
+		}
+	});
+
+	filtered.sort(function(a, b){
+		var subcatA = (a.subcategory || '').toString();
+		var subcatB = (b.subcategory || '').toString();
+		if(subcatA !== subcatB){
+			return subcatA.localeCompare(subcatB);
+		}
+		var orderA = parseInt(a.order, 10) || 0;
+		var orderB = parseInt(b.order, 10) || 0;
+		return orderA - orderB;
+	});
+	return filtered;
+}
+
 function buildCamposInputHtml(dataType, nombreCampo, valor, listaValores){
 	var html = '';
 	if(dataType === 'NUMERO'){
@@ -983,22 +1004,24 @@ function buildInstalacionTab2(camposData, instalacionData){
 
 	html += '<table class="mediciones-table">' +
 		'<thead><tr>' +
-			'<th>Campo</th><th>Valor</th><th>Unidades</th><th>Descripción</th>' +
+			'<th>Categoría</th><th>Campo</th><th>Valor</th><th>Unidades</th><th>Descripción</th>' +
 		'</tr></thead>' +
 		'<tbody id="instalacion_tbody">';
 
-	$.each(camposData || [], function(idx, campo){
-		if(campo.tipo !== 'INSTALACIÓN') return;
+	var camposOrdenados = sortCamposBySubcategoryAndOrder(camposData, 'INSTALACIÓN');
+	$.each(camposOrdenados, function(idx, campo){
 		var nombreCampo = campo.nombre || '';
 		var abrevCampo = campo.abrev || nombreCampo;
 		var dataType = campo.data_type || 'TEXTO NORMAL';
 		var descripcion = campo.descripcion || '';
+		var subcategoria = campo.subcategory || '';
 		var campoData = resolveCampoData(instalacion, abrevCampo, nombreCampo);
 		var valor = resolveCampoValor(campoData);
 		var unidad = resolveCampoUnidad(campoData, campo.unidad || '');
 		var listaValores = (campo.lista || '').split(',').map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
 
 		html += '<tr class="instalacion-row" data-campo-abrev="' + abrevCampo + '" data-campo-nombre="' + nombreCampo + '" data-campo-tipo="' + dataType + '">';
+		html += '<td class="medicion-categoria-cell">' + subcategoria + '</td>';
 		html += '<td class="medicion-nombre-cell">' + nombreCampo + '</td>';
 		html += '<td class="medicion-valor-cell">' + buildCamposInputHtml(dataType, nombreCampo, valor, listaValores) + '</td>';
 		html += '<td class="medicion-unidad-cell">';
@@ -1023,22 +1046,24 @@ function buildAscensorTab3(camposData, ascensorData){
 
 	html += '<table class="mediciones-table">' +
 		'<thead><tr>' +
-			'<th>Campo</th><th>Valor</th><th>Unidades</th><th>Descripción</th>' +
+			'<th>Categoría</th><th>Campo</th><th>Valor</th><th>Unidades</th><th>Descripción</th>' +
 		'</tr></thead>' +
 		'<tbody id="ascensor_tbody">';
 
-	$.each(camposData || [], function(idx, campo){
-		if(campo.tipo !== 'CARACTERÍSTICAS') return;
+	var camposOrdenados = sortCamposBySubcategoryAndOrder(camposData, 'CARACTERÍSTICAS');
+	$.each(camposOrdenados, function(idx, campo){
 		var nombreCampo = campo.nombre || '';
 		var abrevCampo = campo.abrev || nombreCampo;
 		var dataType = campo.data_type || 'TEXTO NORMAL';
 		var descripcion = campo.descripcion || '';
+		var subcategoria = campo.subcategory || '';
 		var campoData = resolveCampoData(ascensor, abrevCampo, nombreCampo);
 		var valor = resolveCampoValor(campoData);
 		var unidad = resolveCampoUnidad(campoData, campo.unidad || '');
 		var listaValores = (campo.lista || '').split(',').map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
 
 		html += '<tr class="ascensor-row" data-campo-abrev="' + abrevCampo + '" data-campo-nombre="' + nombreCampo + '" data-campo-tipo="' + dataType + '">';
+		html += '<td class="medicion-categoria-cell">' + subcategoria + '</td>';
 		html += '<td class="medicion-nombre-cell">' + nombreCampo + '</td>';
 		html += '<td class="medicion-valor-cell">' + buildCamposInputHtml(dataType, nombreCampo, valor, listaValores) + '</td>';
 		html += '<td class="medicion-unidad-cell">';
@@ -1110,16 +1135,17 @@ function buildMedicionesTab4(camposData, medicionesData){
 
 	html += '<table class="mediciones-table">' +
 		'<thead><tr>' +
-			'<th>Clave</th><th>Medición</th><th>Valor</th><th>Unidades</th><th>Descripción</th>' +
+			'<th>Categoría</th><th>Clave</th><th>Medición</th><th>Valor</th><th>Unidades</th><th>Descripción</th>' +
 		'</tr></thead>' +
 		'<tbody id="mediciones_tbody">';
 
 	// Campos de base de datos
-	$.each(camposData || [], function(idx, campo){
-		if(campo.tipo !== 'MEDIDAS') return;
+	var camposOrdenados = sortCamposBySubcategoryAndOrder(camposData, 'MEDIDAS');
+	$.each(camposOrdenados, function(idx, campo){
 
 		var nombreCampo = campo.nombre || '';
 		var abrevCampo = campo.abrev || nombreCampo;
+		var subcategoria = campo.subcategory || '';
 		baseNames[abrevCampo] = true;
 		baseNames[normalizeCampoKey(abrevCampo)] = true;
 		baseNames[normalizeCampoKey(nombreCampo)] = true;
@@ -1131,6 +1157,7 @@ function buildMedicionesTab4(camposData, medicionesData){
 		var listaValores = (campo.lista || '').split(',').map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
 
 		html += '<tr class="medicion-row" data-medicion-abrev="' + abrevCampo + '" data-medicion-nombre="' + nombreCampo + '" data-medicion-tipo="' + dataType + '">';
+		html += '<td class="medicion-categoria-cell">' + subcategoria + '</td>';
 		html += '<td class="medicion-clave-cell"><span class="medicion-clave-text">' + abrevCampo + '</span></td>';
 		html += '<td class="medicion-nombre-cell">' + nombreCampo + '</td>';
 		html += '<td class="medicion-valor-cell">';
