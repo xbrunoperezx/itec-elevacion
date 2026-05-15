@@ -1794,9 +1794,7 @@ var openInforme = function(seccion, cual, id){
 						'<div id="tab5_pri" class="col s12">' + 
 						'</div>' +	
 						'<div id="tab6_pri" class="col s12">' + 
-						'<div class="row">' +
-							'<div class="col s12"><h5>Defectos Detectados</h5></div>' +
-						'</div>' +
+	// ...eliminado el div con el h5 'Defectos Detectados'...
 						'<div class="row">' +
 							'<div class="col s12">' +
 								'<table class="highlight bordered" id="table_defectos_pri">' +
@@ -1854,6 +1852,7 @@ var openInforme = function(seccion, cual, id){
 								'<input type="text" id="defecto_buscar" placeholder="Buscar por código o descripción...">' +
 								'<label for="defecto_buscar" class="active">Buscar Defectos</label>' +
 								'<div id="defecto_buscar_resultados" style="position: absolute; background: white; border: 1px solid #ccc; max-height: 300px; overflow-y: auto; width: 100%; display: none; z-index: 10;"></div>' +
+								'<div style="height:200px;"></div>' +
 							'</div>' +
 						'</div>' +
 						'</div>' +	
