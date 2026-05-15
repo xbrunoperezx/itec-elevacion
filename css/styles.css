@@ -565,6 +565,19 @@ textarea{
   color: #607d8b;
 }
 
+#modal_pri .fotos-pri-fecha,
+#modal_pri .fotos-pri-hora,
+#modal_pri .fotos-pri-id {
+  font-size: 0.72em;
+  color: #999;
+  margin-top: 4px;
+}
+
+#modal_pri .fotos-pri-id {
+  font-weight: 600;
+  color: #666;
+}
+
 #modal_pri .fotos-pri-actions {
   display: flex;
   justify-content: flex-end;

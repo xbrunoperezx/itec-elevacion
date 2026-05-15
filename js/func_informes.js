@@ -366,6 +366,30 @@ function setInformeFotosBusy(busy){
 	}
 }
 
+function parseFotoFilename(filename){
+	// Formato: inf{id_informe}-YYYY-MM-DD_HH-mm-ss_{counter}.jpg
+	// Ejemplo: inf1843-2026-05-15_23-02-48_1.jpg
+	var result = {
+		fecha: '',
+		hora: '',
+		id: ''
+	};
+	
+	// Pattern: inf\d+-(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})-(\d{2})_(\d+)\.jpg
+	var match = filename.match(/^inf\d+-(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})-(\d{2})_(\d+)\.jpg$/i);
+	if(match){
+		var year = match[1], month = match[2], day = match[3];
+		var hour = match[4], min = match[5], sec = match[6];
+		var id = match[7];
+		
+		result.fecha = day + '/' + month + '/' + year; // dd/mm/YYYY
+		result.hora = hour + ':' + min + ':' + sec;      // HH:mm:ss
+		result.id = id;
+	}
+	
+	return result;
+}
+
 function renderInformeFotos(list){
 	var $grid = $('#fotos_pri_grid');
 	$grid.empty();
@@ -377,6 +401,7 @@ function renderInformeFotos(list){
 	}
 
 	$.each(list, function(_, item){
+		var photoData = parseFotoFilename(item.name || '');
 		var card = '';
 		card += '<div class="fotos-pri-card">';
 		card += '<a href="' + escapeHtml(item.url || '#') + '" target="_blank" rel="noopener noreferrer" class="fotos-pri-thumb-link">';
@@ -385,9 +410,18 @@ function renderInformeFotos(list){
 		card += '<div class="fotos-pri-meta">';
 		card += '<div class="fotos-pri-name" title="' + escapeHtml(item.name || '') + '">' + escapeHtml(item.name || '') + '</div>';
 		card += '<div class="fotos-pri-size">' + escapeHtml(formatFotoBytes(item.size || 0)) + '</div>';
+		if(photoData.fecha){
+			card += '<div class="fotos-pri-fecha">' + escapeHtml(photoData.fecha) + '</div>';
+		}
+		if(photoData.hora){
+			card += '<div class="fotos-pri-hora">' + escapeHtml(photoData.hora) + '</div>';
+		}
+		if(photoData.id){
+			card += '<div class="fotos-pri-id">ID: ' + escapeHtml(photoData.id) + '</div>';
+		}
 		card += '</div>';
 		card += '<div class="fotos-pri-actions">';
-		card += '<a href="#" class="btn-floating btn-small waves-effect waves-light red foto-pri-delete" data-name="' + escapeHtml(item.name || '') + '" title="Eliminar foto"><i class="material-icons">delete</i></a>';
+		card += '<a href="#" class="btn-floating btn-small waves-effect waves-light red foto-pri-delete" data-name="' + escapeHtml(item.name || '') + '" title="Eliminar foto"><i class="material-icons">close</i></a>';
 		card += '</div>';
 		card += '</div>';
 		$grid.append(card);
