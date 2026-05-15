@@ -410,11 +410,8 @@ function renderInformeFotos(list){
 		card += '<div class="fotos-pri-meta">';
 		card += '<div class="fotos-pri-name" title="' + escapeHtml(item.name || '') + '">' + escapeHtml(item.name || '') + '</div>';
 		card += '<div class="fotos-pri-size">' + escapeHtml(formatFotoBytes(item.size || 0)) + '</div>';
-		if(photoData.fecha){
-			card += '<div class="fotos-pri-fecha">' + escapeHtml(photoData.fecha) + '</div>';
-		}
-		if(photoData.hora){
-			card += '<div class="fotos-pri-hora">' + escapeHtml(photoData.hora) + '</div>';
+		if(photoData.fecha || photoData.hora){
+			card += '<div class="fotos-pri-fecha">' + escapeHtml((photoData.fecha || '') + (photoData.fecha && photoData.hora ? ' - ' : '') + (photoData.hora || '')) + '</div>';
 		}
 		if(photoData.id){
 			card += '<div class="fotos-pri-id">ID: ' + escapeHtml(photoData.id) + '</div>';
@@ -2132,10 +2129,6 @@ var openInforme = function(seccion, cual, id){
 						'<div id="tab1_pri" class="col s12">' + 
 						'<div class="row">' +
 						  '<div class="input-field col s4">' +
-						    '<input type="text" id="id_bbdd" name="id_bbdd" value="' + item.id + '" disabled>' +
-						    '<label for="id_bbdd" class="active">ID BBDD</label>' +
-						  '</div>' +
-						  '<div class="input-field col s4">' +
 						    '<input type="text" id="num_informe" name="num_informe" value="' + item.informe + '" disabled>' +
 						    '<label for="num_informe" class="active">Núm. Informe</label>' +
 						  '</div>' +
@@ -2264,7 +2257,9 @@ var openInforme = function(seccion, cual, id){
 								'<input type="text" id="defecto_codigo_edit" placeholder="Ej: 1.01.1">' +
 								'<label for="defecto_codigo_edit" class="active">Código</label>' +
 							'</div>' +
-							'<div class="input-field col s10">' +
+						'</div>' +
+						'<div class="row">' +
+							'<div class="input-field col s12">' +
 								'<input type="text" id="defecto_descripcion_edit" placeholder="Descripción del defecto">' +
 								'<label for="defecto_descripcion_edit" class="active">Descripción</label>' +
 							'</div>' +
@@ -2354,6 +2349,12 @@ var openInforme = function(seccion, cual, id){
 						'<div id="tab10_pri" class="col s12">' + 
 						'</div>' +	
 						'<div id="tab11_pri" class="col s12">' + 
+						'<div class="row">' +
+						  '<div class="input-field col s4">' +
+						    '<input type="text" id="id_bbdd" name="id_bbdd" value="' + item.id + '" disabled>' +
+						    '<label for="id_bbdd" class="active">ID BBDD</label>' +
+						  '</div>' +
+						'</div>' +
 						'</div>' +	
  					'</form>';
 				  $("#modal_"+seccion).find(".contentTabs").html(frm_tabs);
