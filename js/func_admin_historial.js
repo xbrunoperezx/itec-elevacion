@@ -46,8 +46,9 @@ function readHistorial(){
     var totalResultados = 0;
 
     datos.forEach(function(item){
+      var visible = parseInt(item.visible, 10);
       var tr = "<tr class='alto50'>";
-      tr += "<td class='ancho50'>&nbsp;</td>";
+      tr += "<td class='ancho50'>" + (visible === 0 ? "<i class='material-icons grey-text' title='No visible'>visibility_off</i>" : "&nbsp;") + "</td>";
       tr += "<td class='ancho30'>" + (item.id || '') + "</td>";
       tr += "<td class='ancho30'><a seccion='his' tipo='frm_edithis' data-id='" + (item.id || '') + "' class='editar_his btn-floating btn-small waves-effect waves-light green' title='Editar version'><i class='material-icons'>edit</i></a></td>";
       tr += "<td><span class='main-text'>" + (item.version || '') + "</span></td>";
@@ -80,10 +81,13 @@ function saveHistorial(){
     return;
   }
 
+  var visible = $('#his_visible').is(':checked') ? 1 : 0;
+
   var payload = {
     version: version,
     texto: texto,
-    date: date
+    date: date,
+    visible: visible
   };
 
   var apiCall;
@@ -136,6 +140,14 @@ var openHistorial = function(seccion, cual, id){
             '<input type="date" id="his_date" value="' + (item.date || '') + '">' +
             '<label for="his_date" class="active">Fecha</label>' +
           '</div>' +
+          '<div class="row">' +
+            '<div class="col s12">' +
+              '<label>' +
+                '<input type="checkbox" id="his_visible"' + (parseInt(item.visible, 10) === 1 ? ' checked' : '') + '>' +
+                '<span>Visible</span>' +
+              '</label>' +
+            '</div>' +
+          '</div>' +
           '<div class="input-field" style="display:none;">' +
             '<input type="text" id="id_his" value="' + (item.id || '') + '">' +
           '</div>' +
@@ -166,6 +178,14 @@ var openHistorial = function(seccion, cual, id){
         '<div class="input-field">' +
           '<input type="date" id="his_date" value="">' +
           '<label for="his_date">Fecha</label>' +
+        '</div>' +
+        '<div class="row">' +
+          '<div class="col s12">' +
+            '<label>' +
+              '<input type="checkbox" id="his_visible">' +
+              '<span>Visible</span>' +
+            '</label>' +
+          '</div>' +
         '</div>' +
       '</form>';
 

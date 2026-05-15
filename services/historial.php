@@ -20,9 +20,9 @@ switch($action) {
     $id = isset($_POST['filtro_id']) ? intval($_POST['filtro_id']) : 0;
 
     if ($id > 0) {
-      $sql = "SELECT id, version, texto, date FROM historial_versiones WHERE id=" . $id;
+      $sql = "SELECT id, version, texto, date, visible FROM historial_versiones WHERE id=" . $id;
     } else {
-      $sql = "SELECT id, version, texto, date FROM historial_versiones";
+      $sql = "SELECT id, version, texto, date, visible FROM historial_versiones";
       $where = array();
 
       if (!empty($_POST['filtro_version'])) {
@@ -61,7 +61,10 @@ switch($action) {
       break;
     }
 
-    $sql = "INSERT INTO `historial_versiones` (`version`, `texto`, `date`) VALUES ('{$version}', '{$texto}', '{$date}')";
+    $visible = isset($_POST['visible']) ? intval($_POST['visible']) : 0;
+    $visible = ($visible === 1) ? 1 : 0;
+
+    $sql = "INSERT INTO `historial_versiones` (`version`, `texto`, `date`, `visible`) VALUES ('{$version}', '{$texto}', '{$date}', {$visible})";
     if (mysqli_query($link, $sql)) {
       echo "OK";
     } else {
@@ -79,7 +82,10 @@ switch($action) {
     $texto   = isset($_POST['texto'])   ? mysqli_real_escape_string($link, trim($_POST['texto']))   : '';
     $date    = (!empty($_POST['date'])) ? mysqli_real_escape_string($link, $_POST['date']) : date('Y-m-d');
 
-    $sql = "UPDATE `historial_versiones` SET `version`='{$version}', `texto`='{$texto}', `date`='{$date}' WHERE `id`={$id}";
+    $visible = isset($_POST['visible']) ? intval($_POST['visible']) : 0;
+    $visible = ($visible === 1) ? 1 : 0;
+
+    $sql = "UPDATE `historial_versiones` SET `version`='{$version}', `texto`='{$texto}', `date`='{$date}', `visible`={$visible} WHERE `id`={$id}";
     if (mysqli_query($link, $sql)) {
       echo "OK";
     } else {
