@@ -1817,34 +1817,22 @@ var openInforme = function(seccion, cual, id){
 							'<div class="col s12"><h6>Añadir Defecto</h6></div>' +
 						'</div>' +
 						'<div class="row">' +
-							'<div class="input-field col s4">' +
+							'<div class="input-field col s2">' +
 								'<input type="text" id="defecto_codigo_edit" placeholder="Ej: 1.01.1">' +
 								'<label for="defecto_codigo_edit" class="active">Código</label>' +
 							'</div>' +
-							'<div class="input-field col s8">' +
+							'<div class="input-field col s6">' +
 								'<input type="text" id="defecto_descripcion_edit" placeholder="Descripción del defecto">' +
 								'<label for="defecto_descripcion_edit" class="active">Descripción</label>' +
 							'</div>' +
-						'</div>' +
-						'<div class="row">' +
-							'<div class="col s3">' +
-								'<button class="btn waves-effect waves-light" id="btn_leve" style="background-color: #4CAF50; width: 100%;">' +
-									'<i class="material-icons left">check</i>LEVE' +
-								'</button>' +
-							'</div>' +
-							'<div class="col s3">' +
-								'<button class="btn waves-effect waves-light" id="btn_grave" style="background-color: #FFC107; color: black; width: 100%;">' +
-									'<i class="material-icons left">warning</i>GRAVE' +
-								'</button>' +
-							'</div>' +
-							'<div class="col s3">' +
-								'<button class="btn waves-effect waves-light" id="btn_muyg" style="background-color: #F44336; width: 100%;">' +
-									'<i class="material-icons left">error</i>MUY GRAVE' +
-								'</button>' +
-							'</div>' +
-							'<div class="input-field col s3">' +
+							'<div class="input-field col s2">' +
 								'<input type="text" id="defecto_valoracion_edit" placeholder="LEVE" readonly>' +
 								'<label for="defecto_valoracion_edit" class="active">Valoración</label>' +
+							'</div>' +
+							'<div class="col s2" style="padding-top: 10px;">' +
+								'<button class="btn waves-effect waves-light btn-small" id="btn_leve" style="background-color: #4CAF50; width: 100%; padding: 4px 2px; font-size: 11px; margin-bottom: 2px; height: auto;">LEVE</button>' +
+								'<button class="btn waves-effect waves-light btn-small" id="btn_grave" style="background-color: #FFC107; color: black; width: 100%; padding: 4px 2px; font-size: 11px; margin-bottom: 2px; height: auto;">GRAVE</button>' +
+								'<button class="btn waves-effect waves-light btn-small" id="btn_muyg" style="background-color: #F44336; width: 100%; padding: 4px 2px; font-size: 11px; height: auto;">MUY GRAVE</button>' +
 							'</div>' +
 						'</div>' +
 						'<div class="row">' +
@@ -2222,7 +2210,7 @@ function initDefectoSearch() {
 			html = '<div style="padding: 10px; color: #999;">No hay resultados</div>';
 		} else {
 			filtered.slice(0, 10).forEach(function(item) {
-				html += '<div class="defecto-item" data-codigo="' + (item.codigo || '') + '" data-defecto="' + (item.defecto || '') + '" style="padding: 8px; border-bottom: 1px solid #f0f0f0; cursor: pointer;">';
+				html += '<div class="defecto-item" data-codigo="' + (item.codigo || '') + '" data-defecto="' + (item.defecto || '') + '" data-valoracion="' + (item.valoracion || '') + '" style="padding: 8px; border-bottom: 1px solid #f0f0f0; cursor: pointer;">';
 				html += '<strong>' + (item.codigo || '') + '</strong> - ' + (item.defecto || '');
 				html += '</div>';
 			});
@@ -2234,8 +2222,10 @@ function initDefectoSearch() {
 		$resultados.off('click', '.defecto-item').on('click', '.defecto-item', function() {
 			var codigo = $(this).data('codigo');
 			var defecto = $(this).data('defecto');
+			var valoracion = $(this).data('valoracion');
 			$('#defecto_codigo_edit').val(codigo);
 			$('#defecto_descripcion_edit').val(defecto);
+			$('#defecto_valoracion_edit').val(valoracion);
 			$resultados.empty().hide();
 		});
 	});
