@@ -1196,6 +1196,7 @@ function buildMedicionesTab4(camposData, medicionesData){
 		var valorPersonalizado = resolveCampoValor(data);
 		var unidadPersonalizada = resolveCampoUnidad(data, '');
 		html += '<tr class="medicion_personalizada_row">' +
+			'<td class="medicion-categoria-cell"></td>' +
 			'<td class="medicion-clave-cell"><input type="text" class="medicion_personalizada_clave" placeholder="clave_var" value="' + (abrev || '') + '"></td>' +
 			'<td class="medicion-nombre-cell"><input type="text" class="medicion_personalizada_nombre" placeholder="Nombre de medida" value="' + (nombreDisplay || '') + '"></td>' +
 			'<td class="medicion-valor-cell"><input type="text" class="medicion_personalizada_valor" placeholder="Valor" value="' + safeInputValue(valorPersonalizado) + '"></td>' +
@@ -1226,6 +1227,7 @@ function buildMedicionesTab4(camposData, medicionesData){
 
 function addMedicionPersonalizada(clave, nombre, valor, unidad){
 	var html = '<tr class="medicion_personalizada_row">' +
+		'<td class="medicion-categoria-cell"></td>' +
 		'<td class="medicion-clave-cell"><input type="text" class="medicion_personalizada_clave" placeholder="clave_var" value="' + (clave || '') + '"></td>' +
 		'<td class="medicion-nombre-cell"><input type="text" class="medicion_personalizada_nombre" placeholder="Nombre de medida" value="' + (nombre || '') + '"></td>' +
 		'<td class="medicion-valor-cell"><input type="text" class="medicion_personalizada_valor" placeholder="Valor" value="' + ((valor !== undefined && valor !== null && valor !== '') ? valor : '') + '"></td>' +
