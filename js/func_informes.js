@@ -1457,6 +1457,9 @@ function savePrimera(){
 		estado: $('#estado_inspeccion').val(),
 		resultado: $('#resultado_inspeccion').val(),
 		proxima: $('#proxima_inspeccion').val(),
+		comunicada: $('#comunicada_fecha').val(),
+		comunicada_aquien: $('#comunicada_destinatario').val(),
+		comunicada_como: $('#comunicada_metodo').val(),
 		industria: $('#industria_inspeccion').val(),
 		enviada_cliente: $('#enviado_cliente').val(),
 		observaciones: $('#observaciones_acta').val(),
@@ -1636,6 +1639,9 @@ var openInforme = function(seccion, cual, id){
 			    	"data" : item
 			    });
 				console.log(item);
+				var comunicadaFecha = (item.comunicada && item.comunicada !== '-') ? parseDateToInput(item.comunicada) : '';
+				var comunicadaDestinatario = item.comunicada_aquien || '';
+				var comunicadaMetodo = item.comunicada_como || '';
 				var title = " Editar informe " + item.informe + "| RAE: "+item.contratada.cliente.rae;
 					$("#modal_"+seccion).find(".modal_txt_title").text(title);
 					$("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
@@ -1708,6 +1714,20 @@ var openInforme = function(seccion, cual, id){
 						  '<div class="input-field col s6">' +
 						    '<input type="text" id="mantenedor_pri" name="mantenedor" value="' + ((item.contratada && item.contratada.cliente && item.contratada.cliente.mantenedor) ? item.contratada.cliente.mantenedor : '') + '" disabled>' +
 						    '<label for="mantenedor_pri" class="active">Mantenedor</label>' +
+						  '</div>' +
+						'</div>' +
+						'<div class="row">' +
+						  '<div class="input-field col s4">' +
+						    '<input type="date" id="comunicada_fecha" name="comunicada_fecha" value="' + comunicadaFecha + '">' +
+						    '<label for="comunicada_fecha" class="active">Comunicada fecha</label>' +
+						  '</div>' +
+						  '<div class="input-field col s4">' +
+						    '<input type="text" id="comunicada_destinatario" name="comunicada_destinatario" value="' + comunicadaDestinatario + '">' +
+						    '<label for="comunicada_destinatario" class="active">Destinatario</label>' +
+						  '</div>' +
+						  '<div class="input-field col s4">' +
+						    '<input type="text" id="comunicada_metodo" name="comunicada_metodo" value="' + comunicadaMetodo + '">' +
+						    '<label for="comunicada_metodo" class="active">Método de comunicación</label>' +
 						  '</div>' +
 						'</div>' +
 						'</div>' +	

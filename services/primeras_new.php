@@ -20,6 +20,9 @@ $grupo = isset($_POST['grupo']) ? trim($_POST['grupo']) : '';
 $estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
 $resultado = isset($_POST['resultado']) ? trim($_POST['resultado']) : '';
 $proxima = isset($_POST['proxima']) ? trim($_POST['proxima']) : '';
+$comunicada = isset($_POST['comunicada']) ? trim($_POST['comunicada']) : '';
+$comunicada_aquien = isset($_POST['comunicada_aquien']) ? trim($_POST['comunicada_aquien']) : '';
+$comunicada_como = isset($_POST['comunicada_como']) ? trim($_POST['comunicada_como']) : '';
 $industria = isset($_POST['industria']) ? trim($_POST['industria']) : '';
 $enviada_cliente = isset($_POST['enviada_cliente']) ? trim($_POST['enviada_cliente']) : '';
 $observaciones = isset($_POST['observaciones']) ? trim($_POST['observaciones']) : '';
@@ -85,6 +88,9 @@ if ($fecha_db_sql === null) {
 
 
 $proxima_sql = ($proxima !== '') ? "'" . mysqli_real_escape_string($link, $proxima) . "'" : "NULL";
+$comunicada_sql = ($comunicada !== '') ? "'" . mysqli_real_escape_string($link, $comunicada) . "'" : "NULL";
+$comunicada_aquien_sql = "'" . mysqli_real_escape_string($link, $comunicada_aquien) . "'";
+$comunicada_como_sql = "'" . mysqli_real_escape_string($link, $comunicada_como) . "'";
 $industria_sql = ($industria !== '') ? "'" . mysqli_real_escape_string($link, $industria) . "'" : "NULL";
 $enviada_cliente_sql = ($enviada_cliente !== '') ? "'" . mysqli_real_escape_string($link, $enviada_cliente) . "'" : "NULL";
 $estado_sql = ($estado !== '') ? intval($estado) : "NULL";
@@ -103,6 +109,9 @@ $sql = "UPDATE `informes` SET
   `estado` = {$estado_sql},
   `resultado` = {$resultado_sql},
   `proxima` = {$proxima_sql},
+  `comunicada` = {$comunicada_sql},
+  `comunicada_aquien` = {$comunicada_aquien_sql},
+  `comunicada_como` = {$comunicada_como_sql},
   `industria` = {$industria_sql},
   `enviada_cliente` = {$enviada_cliente_sql},
   `observaciones` = {$observaciones_sql},
