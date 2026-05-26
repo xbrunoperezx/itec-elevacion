@@ -2131,6 +2131,198 @@ jQuery(document).on("click", "#filtrar_pri", function() {
   }
 });
 
+// -----------------------------------------------------------------------
+// Lógica de estado/bloqueo de pestañas
+// -----------------------------------------------------------------------
+
+function getInformeEstado(item){
+	var horaIni = (item.hora_ini || '').trim();
+	var grupo   = (item.grupo   || '').trim();
+	var resultado = (item.resultado == null) ? '' : String(item.resultado).trim();
+	if(resultado !== '' && resultado !== '0') return 'finalizada';
+	if(!horaIni) return 'pendiente';
+	if(horaIni && !grupo) return 'iniciada';
+	return 'en_curso';
+}
+
+var TAB_DEFS = [
+	{ num: 1,  link: 'tablink1',  href: '#tab1_pri',  title: 'Datos',                    icon: 'looks_one' },
+	{ num: 2,  link: 'tablink2',  href: '#tab2_pri',  title: 'Instalación',              icon: 'business' },
+	{ num: 3,  link: 'tablink3',  href: '#tab3_pri',  title: 'Ascensor',                 icon: 'code' },
+	{ num: 4,  link: 'tablink4',  href: '#tab4_pri',  title: 'Mediciones realizadas',    icon: 'assignment' },
+	{ num: 5,  link: 'tablink5',  href: '#tab5_pri',  title: 'Checking',                 icon: 'assignment_returned' },
+	{ num: 6,  link: 'tablink6',  href: '#tab6_pri',  title: 'Defectos detectados',      icon: 'assignment_late' },
+	{ num: 7,  link: 'tablink7',  href: '#tab7_pri',  title: 'Equipos',                  icon: 'business_center' },
+	{ num: 8,  link: 'tablink8',  href: '#tab8_pri',  title: 'Resultado',                icon: 'assignment_turned_in' },
+	{ num: 9,  link: 'tablink9',  href: '#tab9_pri',  title: 'Firma',                    icon: 'edit' },
+	{ num: 10, link: 'tablink10', href: '#tab10_pri', title: 'Fotos',                    icon: 'photo_camera' },
+	{ num: 11, link: 'tablink11', href: '#tab11_pri', title: 'Otros',                    icon: 'settings' }
+];
+
+// Tabs desbloqueadas por estado (11 siempre libre)
+var TABS_BY_ESTADO = {
+	pendiente:  [1, 11],
+	iniciada:   [1, 2, 3, 11],
+	en_curso:   [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+	finalizada: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+};
+
+var INFORME_STEPPER = [
+	{ key: 'pendiente',  label: 'Pendiente' },
+	{ key: 'iniciada',   label: 'Iniciada' },
+	{ key: 'en_curso',   label: 'En curso' },
+	{ key: 'finalizada', label: 'Finalizada' }
+];
+
+function buildInformeStepperHtml(estado){
+	var currentIndex = 0;
+	$.each(INFORME_STEPPER, function(idx, step){
+		if(step.key === estado){
+			currentIndex = idx;
+			return false;
+		}
+	});
+
+	var html = '<div id="admin_estado_stepper" class="informe-stepper" data-estado="' + estado + '">';
+	$.each(INFORME_STEPPER, function(idx, step){
+		var cls = 'is-pending';
+		if(idx < currentIndex) cls = 'is-done';
+		if(idx === currentIndex) cls = 'is-active';
+		html += '<div class="informe-step ' + cls + '" data-step="' + step.key + '">' +
+			'<span class="informe-step-dot">' + (idx + 1) + '</span>' +
+			'<span class="informe-step-label">' + step.label + '</span>' +
+		'</div>';
+		if(idx < INFORME_STEPPER.length - 1){
+			html += '<div class="informe-step-line ' + (idx < currentIndex ? 'is-done' : '') + '"></div>';
+		}
+	});
+	html += '</div>';
+	return html;
+}
+
+function getInformeEstadoFromForm(){
+	var horaIni = ($('#hora_ini').val() || '').trim();
+	var grupo = ($('#grupo_pri').val() || '').trim();
+	var resultado = ($('#resultado_inspeccion').val() || '').trim();
+	if(resultado !== '' && resultado !== '0') return 'finalizada';
+	if(!horaIni) return 'pendiente';
+	if(!grupo) return 'iniciada';
+	return 'en_curso';
+}
+
+function updateInformeStepper(estado){
+	var $stepper = $('#admin_estado_stepper');
+	if(!$stepper.length) return;
+
+	var currentIndex = 0;
+	$.each(INFORME_STEPPER, function(idx, step){
+		if(step.key === estado){
+			currentIndex = idx;
+			return false;
+		}
+	});
+
+	$stepper.attr('data-estado', estado);
+	$stepper.find('.informe-step').each(function(idx){
+		var cls = 'is-pending';
+		if(idx < currentIndex) cls = 'is-done';
+		if(idx === currentIndex) cls = 'is-active';
+		$(this).removeClass('is-pending is-done is-active').addClass(cls);
+	});
+	$stepper.find('.informe-step-line').each(function(idx){
+		$(this).toggleClass('is-done', idx < currentIndex);
+	});
+}
+
+function refreshInformeEstadoUIFromForm(){
+	var estado = getInformeEstadoFromForm();
+	updateInformeStepper(estado);
+	applyInformeEstadoTabs(estado);
+	$('#modal_pri .tabs').tabs();
+}
+
+function buildFrmTabs(estado){
+	var allowed = TABS_BY_ESTADO[estado] || [1, 11];
+	var html = '<ul class="tabs modalEditar">';
+	$.each(TAB_DEFS, function(_, t){
+		var locked = allowed.indexOf(t.num) === -1;
+		var activeClass = (t.num === 1) ? ' active' : '';
+		if(locked){
+			html += '<li class="tab col s3 tab-locked">' +
+				'<a class="' + t.link + ' tab-link-locked" href="#" data-tab="' + t.href + '" title="' + t.title + ' (bloqueado)">' +
+				'<i class="material-icons left">lock</i></a></li>';
+		} else {
+			html += '<li class="tab col s3">' +
+				'<a class="' + activeClass + ' ' + t.link + '" href="' + t.href + '" title="' + t.title + '">' +
+				'<i class="material-icons left">' + t.icon + '</i></a></li>';
+		}
+	});
+	html += '</ul>';
+	return html;
+}
+
+function applyInformeEstadoTabs(estado){
+	var allowed = TABS_BY_ESTADO[estado] || [1, 11];
+	$.each(TAB_DEFS, function(_, t){
+		var locked = allowed.indexOf(t.num) === -1;
+		var $li = $('#modal_pri .tabs .' + t.link).closest('li');
+		if(locked){
+			$li.addClass('tab-locked');
+			$li.find('a').addClass('tab-link-locked').attr('href', '#').attr('title', t.title + ' (bloqueado)').html('<i class="material-icons left">lock</i>');
+		} else {
+			$li.removeClass('tab-locked');
+			$li.find('a').removeClass('tab-link-locked').attr('href', t.href).attr('title', t.title).html('<i class="material-icons left">' + t.icon + '</i>');
+		}
+	});
+}
+
+jQuery(document).on('click', '#modal_pri .tab-link-locked', function(e){
+	e.preventDefault();
+	e.stopImmediatePropagation();
+	M.toast({ html: 'Esta pestaña no está disponible aún' });
+});
+
+jQuery(document).on('click', '#btn_iniciar_inspeccion', function(e){
+	e.preventDefault();
+	var idInforme = $('#id_bbdd').val();
+	if(!idInforme){ return; }
+	var now = new Date();
+	var hh = String(now.getHours()).padStart(2, '0');
+	var mm = String(now.getMinutes()).padStart(2, '0');
+	var horaIni = hh + ':' + mm;
+
+	// Guardar hora_ini en servidor
+	$.ajax({
+		url: 'services/primeras_iniciar.php',
+		type: 'POST',
+		dataType: 'json',
+		data: {
+			id_informe: idInforme,
+			hora_ini: horaIni
+		},
+		success: function(resp){
+			if(resp && resp.error){
+				M.toast({ html: resp.error });
+				return;
+			}
+
+			$('#hora_ini').val(horaIni);
+			$('#tab1_pri .tab1-full-fields').show();
+			$('#btn_iniciar_inspeccion').closest('.row').hide();
+			refreshInformeEstadoUIFromForm();
+			M.toast({ html: 'Inspección iniciada: ' + horaIni });
+		},
+		error: function(){
+			M.toast({ html: 'No se pudo iniciar la inspección' });
+		}
+	});
+});
+
+jQuery(document).on('change', '#grupo_pri, #resultado_inspeccion, #hora_ini', function(){
+	if(!$('#modal_pri').is(':visible')) return;
+	refreshInformeEstadoUIFromForm();
+});
+
 var openInforme = function(seccion, cual, id){
 	if(cual=="frm_editpri"){
 		// Realizar la petición HTTP a la API
@@ -2198,19 +2390,9 @@ var openInforme = function(seccion, cual, id){
 					$("#modal_"+seccion).find(".modal_txt_title").text(title);
 					$("#modal_"+seccion).find(".modal_txt_btn_left").html("<i class='material-icons left'>save</i>Guardar");
 					$("#modal_"+seccion).find(".modal_txt_btn_right").html("<i class='material-icons left'>exit_to_app</i>Salir");
-					var frm_tabs = '<ul class="tabs modalEditar">' + 
-						'<li class="tab col s3"><a class="tablink1" href="#tab1_pri" title="Datos"><i class="material-icons left">looks_one</i></a></li>' + 
-						'<li class="tab col s3"><a class="active tablink2" href="#tab2_pri" title="Instalación"><i class="material-icons left">business</i></a></a></li>' + 
-						'<li class="tab col s3"><a class="tablink3" href="#tab3_pri" title="Ascensor"><i class="material-icons left">code</i></a></a></li>' + 
-						'<li class="tab col s3"><a class="tablink4" href="#tab4_pri" title="Mediciones realizadas"><i class="material-icons left">assignment</i></a></a></li>' + 
-						'<li class="tab col s3"><a class="tablink5" href="#tab5_pri" title="Checking"><i class="material-icons left">assignment_returned</i></a></a></li>' + 
-						'<li class="tab col s3"><a class="tablink6" href="#tab6_pri" title="Defectos detectados"><i class="material-icons left">assignment_late</i></a></a></li>' + 
-						'<li class="tab col s3"><a class="tablink7" href="#tab7_pri" title="Equipos"><i class="material-icons left">business_center</i></a></a></li>' + 
-						'<li class="tab col s3"><a class="tablink8" href="#tab8_pri" title="Resultado"><i class="material-icons left">assignment_turned_in</i></a></a></li>' + 
-						'<li class="tab col s3"><a class="tablink9" href="#tab9_pri" title="Firma"><i class="material-icons left">edit</i></a></a></li>' + 
-						'<li class="tab col s3"><a class="tablink10" href="#tab10_pri" title="Fotos"><i class="material-icons left">photo_camera</i></a></a></li>' + 
-						'<li class="tab col s3"><a class="tablink11" href="#tab11_pri" title="Otros"><i class="material-icons left">settings</i></a></a></li>' + 
-					'</ul>';
+					var informeEstado = getInformeEstado(item);
+					var informeStepperHtml = buildInformeStepperHtml(informeEstado);
+					var frm_tabs = buildFrmTabs(informeEstado);
 					var frm_render = '<form id="informe_frm_editar">' + 
 						'<div id="tab1_pri" class="col s12">' + 
 						'<div class="row">' +
@@ -2228,6 +2410,14 @@ var openInforme = function(seccion, cual, id){
 						    '<input type="date" id="fecha_inspeccion" name="fecha_inspeccion" value="' + item.fecha + '">' +
 						    '<label for="fecha_inspeccion" class="active">Fecha Inspección</label>' +
 						  '</div>' +
+						(informeEstado === 'pendiente' ?
+						  '<div class="col s4" style="padding-top:10px;">' +
+						    '<a href="#" id="btn_iniciar_inspeccion" class="btn waves-effect waves-light blue"><i class="material-icons left">play_arrow</i>Iniciar Inspección</a>' +
+						  '</div>'
+						: '') +
+						'</div>' +
+						'<div id="tab1_full_fields" class="tab1-full-fields"' + (informeEstado === 'pendiente' ? ' style="display:none;"' : '') + '>' +
+						'<div class="row">' +
 						  '<div class="input-field col s2">' +
 						    '<input type="time" id="hora_ini" name="hora_ini" value="' + item.hora_ini + '">' +
 						    '<label for="hora_ini" class="active">Hora inicio</label>' +
@@ -2278,7 +2468,8 @@ var openInforme = function(seccion, cual, id){
 						    '<label for="comunicada_metodo" class="active">Método de comunicación</label>' +
 						  '</div>' +
 						'</div>' +
-						'</div>' +	
+						'</div>' + // end tab1_full_fields
+						'</div>' +	// end tab1_pri
 						'<div id="tab2_pri" class="active col s12">' +
 						'<div class="row">' +
 						'  <div class="input-field col s12">' +
@@ -2436,6 +2627,12 @@ var openInforme = function(seccion, cual, id){
 						'</div>' +	
 						'<div id="tab11_pri" class="col s12">' + 
 						'<div class="row">' +
+						  '<div class="col s12">' +
+						    '<h6 class="admin-estado-title">Estado del informe</h6>' +
+						    informeStepperHtml +
+						  '</div>' +
+						'</div>' +
+						'<div class="row">' +
 						  '<div class="input-field col s4">' +
 						    '<input type="text" id="id_bbdd" name="id_bbdd" value="' + item.id + '" disabled>' +
 						    '<label for="id_bbdd" class="active">ID BBDD</label>' +
@@ -2475,6 +2672,7 @@ var openInforme = function(seccion, cual, id){
 				  syncGrupoLegislacion();
 				  syncDuracionMinutos();
 				  syncGoogleMapsButton();
+				  refreshInformeEstadoUIFromForm();
 				  $("#modal_"+seccion).find('#grupo_pri').formSelect();
 										},
 										error: function() {
