@@ -2502,6 +2502,7 @@ var openInforme = function(seccion, cual, id){
 						'<div id="tab2_pri" class="col s12">' +
 						'<div class="row">' +
 						'  <div class="input-field col s12">' +
+						'    <select id="grupo_pri" name="grupo">' + buildGrupoOptions(grupos, item.grupo || '') + '</select>' +
 						'    <label>Grupo</label>' +
 						'  </div>' +
 						'</div>' +
@@ -2668,7 +2669,6 @@ var openInforme = function(seccion, cual, id){
 					'<div class="contentStepper">' +
 					  '<div class="row">' +
 					    '<div class="col s12">' +
-					      '<h6 class="admin-estado-title">Estado del informe</h6>' +
 					      informeStepperHtml +
 					    '</div>' +
 					  '</div>' +
