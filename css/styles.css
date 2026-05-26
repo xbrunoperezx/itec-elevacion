@@ -679,7 +679,10 @@ textarea{
 #modal_pri .tabs .tab.tab-locked > a {
   color: #bdbdbd !important;
   cursor: not-allowed !important;
-  pointer-events: auto !important; /* handled via JS */
+  pointer-events: none !important;
+}
+#modal_pri .tabs .tab.tab-locked {
+  pointer-events: none !important;
 }
 #modal_pri .tabs .tab.tab-locked > a:hover {
   background: rgba(0,0,0,0.04);

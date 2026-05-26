@@ -2248,7 +2248,7 @@ function buildFrmTabs(estado){
 		var locked = allowed.indexOf(t.num) === -1;
 		var linkClass = (t.num === 1 ? 'active ' : '') + t.link + (locked ? ' tab-link-locked' : '');
 		if(locked){
-			html += '<li class="tab col s3 tab-locked">' +
+			html += '<li class="tab col s3 tab-locked disabled">' +
 				'<a class="' + linkClass + '" href="' + t.href + '" data-tab="' + t.href + '" title="' + t.title + ' (bloqueado)">' +
 				'<i class="material-icons left">lock</i></a></li>';
 		} else {
@@ -2267,10 +2267,10 @@ function applyInformeEstadoTabs(estado){
 		var locked = allowed.indexOf(t.num) === -1;
 		var $li = $('#modal_pri .tabs .' + t.link).closest('li');
 		if(locked){
-			$li.addClass('tab-locked');
+			$li.addClass('tab-locked disabled');
 			$li.find('a').addClass('tab-link-locked').attr('href', t.href).attr('title', t.title + ' (bloqueado)').html('<i class="material-icons left">lock</i>');
 		} else {
-			$li.removeClass('tab-locked');
+			$li.removeClass('tab-locked disabled');
 			$li.find('a').removeClass('tab-link-locked').attr('href', t.href).attr('title', t.title).html('<i class="material-icons left">' + t.icon + '</i>');
 		}
 	});
