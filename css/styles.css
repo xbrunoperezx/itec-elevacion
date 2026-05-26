@@ -694,6 +694,16 @@ textarea{
   color: #37474f;
 }
 
+#modal_pri .contentStepper {
+  padding: 10px 14px 4px;
+  border-bottom: 1px solid #eceff1;
+  background: #fafafa;
+}
+
+#modal_pri .contentStepper .row {
+  margin-bottom: 0;
+}
+
 #modal_pri .informe-stepper {
   display: flex;
   align-items: center;

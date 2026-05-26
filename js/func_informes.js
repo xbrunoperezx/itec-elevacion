@@ -2246,14 +2246,14 @@ function buildFrmTabs(estado){
 	var html = '<ul class="tabs modalEditar">';
 	$.each(TAB_DEFS, function(_, t){
 		var locked = allowed.indexOf(t.num) === -1;
-		var activeClass = (t.num === 1) ? ' active' : '';
+		var linkClass = (t.num === 1 ? 'active ' : '') + t.link + (locked ? ' tab-link-locked' : '');
 		if(locked){
 			html += '<li class="tab col s3 tab-locked">' +
-				'<a class="' + t.link + ' tab-link-locked" href="#" data-tab="' + t.href + '" title="' + t.title + ' (bloqueado)">' +
+				'<a class="' + linkClass + '" href="' + t.href + '" data-tab="' + t.href + '" title="' + t.title + ' (bloqueado)">' +
 				'<i class="material-icons left">lock</i></a></li>';
 		} else {
 			html += '<li class="tab col s3">' +
-				'<a class="' + activeClass + ' ' + t.link + '" href="' + t.href + '" title="' + t.title + '">' +
+				'<a class="' + linkClass + '" href="' + t.href + '" title="' + t.title + '">' +
 				'<i class="material-icons left">' + t.icon + '</i></a></li>';
 		}
 	});
@@ -2268,7 +2268,7 @@ function applyInformeEstadoTabs(estado){
 		var $li = $('#modal_pri .tabs .' + t.link).closest('li');
 		if(locked){
 			$li.addClass('tab-locked');
-			$li.find('a').addClass('tab-link-locked').attr('href', '#').attr('title', t.title + ' (bloqueado)').html('<i class="material-icons left">lock</i>');
+			$li.find('a').addClass('tab-link-locked').attr('href', t.href).attr('title', t.title + ' (bloqueado)').html('<i class="material-icons left">lock</i>');
 		} else {
 			$li.removeClass('tab-locked');
 			$li.find('a').removeClass('tab-link-locked').attr('href', t.href).attr('title', t.title).html('<i class="material-icons left">' + t.icon + '</i>');
@@ -2470,7 +2470,7 @@ var openInforme = function(seccion, cual, id){
 						'</div>' +
 						'</div>' + // end tab1_full_fields
 						'</div>' +	// end tab1_pri
-						'<div id="tab2_pri" class="active col s12">' +
+						'<div id="tab2_pri" class="col s12">' +
 						'<div class="row">' +
 						'  <div class="input-field col s12">' +
 						'    <select id="grupo_pri" name="grupo">' + buildGrupoOptions(grupos, item.grupo || '') + '</select>' +
@@ -2627,12 +2627,6 @@ var openInforme = function(seccion, cual, id){
 						'</div>' +	
 						'<div id="tab11_pri" class="col s12">' + 
 						'<div class="row">' +
-						  '<div class="col s12">' +
-						    '<h6 class="admin-estado-title">Estado del informe</h6>' +
-						    informeStepperHtml +
-						  '</div>' +
-						'</div>' +
-						'<div class="row">' +
 						  '<div class="input-field col s4">' +
 						    '<input type="text" id="id_bbdd" name="id_bbdd" value="' + item.id + '" disabled>' +
 						    '<label for="id_bbdd" class="active">ID BBDD</label>' +
@@ -2640,10 +2634,22 @@ var openInforme = function(seccion, cual, id){
 						'</div>' +
 						'</div>' +	
  					'</form>';
-				  $("#modal_"+seccion).find(".contentTabs").html(frm_tabs);
-				  $("#modal_"+seccion).find(".contentForm").html(frm_render);
-				  $("#modal_"+seccion).find('.tabs').tabs();
-				  $("#modal_"+seccion).find('select').formSelect();
+				  var $modal = $("#modal_"+seccion);
+				  $modal.find('.contentStepper').remove();
+				  $modal.find('.contentTabs').before(
+					'<div class="contentStepper">' +
+					  '<div class="row">' +
+					    '<div class="col s12">' +
+					      '<h6 class="admin-estado-title">Estado del informe</h6>' +
+					      informeStepperHtml +
+					    '</div>' +
+					  '</div>' +
+					'</div>'
+				  );
+				  $modal.find(".contentTabs").html(frm_tabs);
+				  $modal.find(".contentForm").html(frm_render);
+				  $modal.find('.tabs').tabs();
+				  $modal.find('select').formSelect();
 				  
 				  // Renderizar mediciones, instalación y ascensor
 				  var medicionesHtml = buildMedicionesTab4(campos, mediciones);
