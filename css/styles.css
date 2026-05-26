@@ -147,6 +147,7 @@ div#resultados_cli, div#resultados_con, div#resultados_pri, div#resultados_seg, 
 
 div.modal#modal_pri {
   width: 92%;
+  max-width: 1400px;
   max-height: 92%;
 }
 
