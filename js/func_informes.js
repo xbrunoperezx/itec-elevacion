@@ -2284,38 +2284,67 @@ jQuery(document).on('click', '#modal_pri .tab-link-locked', function(e){
 
 jQuery(document).on('click', '#btn_iniciar_inspeccion', function(e){
 	e.preventDefault();
-	var idInforme = $('#id_bbdd').val();
-	if(!idInforme){ return; }
 	var now = new Date();
 	var hh = String(now.getHours()).padStart(2, '0');
 	var mm = String(now.getMinutes()).padStart(2, '0');
 	var horaIni = hh + ':' + mm;
+	var idInforme = $('#id_bbdd').val();
+	if(!idInforme){
+		M.toast({ html: 'No se ha podido identificar el informe' });
+		return;
+	}
 
-	// Guardar hora_ini en servidor
-	$.ajax({
-		url: 'services/primeras_iniciar.php',
-		type: 'POST',
-		dataType: 'json',
-		data: {
-			id_informe: idInforme,
-			hora_ini: horaIni
-		},
-		success: function(resp){
-			if(resp && resp.error){
-				M.toast({ html: resp.error });
-				return;
+	var guardarInicio = function(lat, lon){
+		$.ajax({
+			url: 'services/primeras_iniciar.php',
+			type: 'POST',
+			dataType: 'json',
+			data: {
+				id_informe: idInforme,
+				hora_ini: horaIni,
+				gps_latitud: lat || '',
+				gps_longitud: lon || ''
+			},
+			success: function(resp){
+				if(resp && resp.error){
+					M.toast({ html: resp.error });
+					return;
+				}
+
+				if(resp && resp.gps_latitud !== undefined){
+					$('#gps_latitud').val(resp.gps_latitud || '').trigger('input');
+				}
+				if(resp && resp.gps_longitud !== undefined){
+					$('#gps_longitud').val(resp.gps_longitud || '').trigger('input');
+				}
+				$('#hora_ini').val(horaIni).trigger('change');
+				$('#tab1_pri .tab1-full-fields').show();
+				$('#btn_iniciar_inspeccion').closest('.row').hide();
+				syncGoogleMapsButton();
+				refreshInformeEstadoUIFromForm();
+				M.toast({ html: 'Inspección iniciada: ' + horaIni });
+			},
+			error: function(){
+				M.toast({ html: 'No se pudo guardar el inicio de inspección' });
 			}
+		});
+	};
 
-			$('#hora_ini').val(horaIni);
-			$('#tab1_pri .tab1-full-fields').show();
-			$('#btn_iniciar_inspeccion').closest('.row').hide();
-			refreshInformeEstadoUIFromForm();
-			M.toast({ html: 'Inspección iniciada: ' + horaIni });
-		},
-		error: function(){
-			M.toast({ html: 'No se pudo iniciar la inspección' });
-		}
-	});
+	if(navigator.geolocation){
+		navigator.geolocation.getCurrentPosition(function(position){
+			var lat = String(position.coords.latitude);
+			var lon = String(position.coords.longitude);
+			guardarInicio(lat, lon);
+		}, function(){
+			guardarInicio($('#gps_latitud').val() || '', $('#gps_longitud').val() || '');
+		}, {
+			enableHighAccuracy: true,
+			timeout: 8000,
+			maximumAge: 0
+		});
+	} else {
+		guardarInicio($('#gps_latitud').val() || '', $('#gps_longitud').val() || '');
+	}
 });
 
 jQuery(document).on('change', '#grupo_pri, #resultado_inspeccion, #hora_ini', function(){
@@ -2473,7 +2502,6 @@ var openInforme = function(seccion, cual, id){
 						'<div id="tab2_pri" class="col s12">' +
 						'<div class="row">' +
 						'  <div class="input-field col s12">' +
-						'    <select id="grupo_pri" name="grupo">' + buildGrupoOptions(grupos, item.grupo || '') + '</select>' +
 						'    <label>Grupo</label>' +
 						'  </div>' +
 						'</div>' +
