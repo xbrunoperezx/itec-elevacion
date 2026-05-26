@@ -86,8 +86,81 @@ $(document).ready(function() {
 	});
 	$(".modal").modal();
 
+  function resetModalPosition($modal){
+    if(!$modal || !$modal.length) return;
+    $modal.css({
+      position: '',
+      left: '',
+      top: '',
+      transform: '',
+      margin: ''
+    });
+  }
+
+  function makeModalDraggable(modalSelector){
+    var $modal = $(modalSelector);
+    if(!$modal.length) return;
+    var $handle = $modal.find('.tituloModal').first();
+    if(!$handle.length) return;
+
+    $handle.css('cursor', 'move');
+    $handle.off('.modalDrag');
+
+    $handle.on('mousedown.modalDrag', function(e){
+      if(e.which !== 1) return;
+
+      var rect = $modal[0].getBoundingClientRect();
+      var startX = e.clientX;
+      var startY = e.clientY;
+      var startLeft = rect.left;
+      var startTop = rect.top;
+
+      $modal.css({
+        position: 'fixed',
+        left: startLeft + 'px',
+        top: startTop + 'px',
+        transform: 'none',
+        margin: 0
+      });
+
+      $('body').addClass('modal-dragging');
+
+      $(document)
+        .on('mousemove.modalDragActive', function(ev){
+          var currentRect = $modal[0].getBoundingClientRect();
+          var dx = ev.clientX - startX;
+          var dy = ev.clientY - startY;
+          var newLeft = startLeft + dx;
+          var newTop = startTop + dy;
+
+          var maxLeft = Math.max(0, window.innerWidth - currentRect.width);
+          var maxTop = Math.max(0, window.innerHeight - currentRect.height);
+
+          newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+          newTop = Math.max(0, Math.min(newTop, maxTop));
+
+          $modal.css({
+            left: newLeft + 'px',
+            top: newTop + 'px'
+          });
+        })
+        .on('mouseup.modalDragActive', function(){
+          $(document).off('.modalDragActive');
+          $('body').removeClass('modal-dragging');
+        });
+
+      e.preventDefault();
+    });
+  }
+
+  makeModalDraggable('#modal_cli');
+  makeModalDraggable('#modal_con');
+  makeModalDraggable('#modal_pri');
+  makeModalDraggable('#modal_seg');
+
 	// funcion de abrir popups en funcion de la seccion y formulario (también recibe el id)
 	window.openModal = function(seccion, cual, id){
+    resetModalPosition($("#modal_"+seccion));
 		$("#modal_"+seccion).find(".modal_txt_title").empty();
 		$("#modal_"+seccion).find(".modal_txt_btn_left").empty();
 		$("#modal_"+seccion).find(".modal_txt_btn_right").empty();
