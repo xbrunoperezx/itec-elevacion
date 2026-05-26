@@ -487,6 +487,35 @@ textarea{
 
 #modal_pri .fotos-pri-wrap {
   width: 100%;
+  position: relative;
+  border: 2px dashed transparent;
+  border-radius: 10px;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+
+#modal_pri .fotos-pri-drop-hint {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #1565c0;
+  background: rgba(227, 242, 253, 0.72);
+  border-radius: 10px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+#modal_pri .fotos-pri-wrap.fotos-pri-drop-zone-active {
+  border-color: #64b5f6;
+  background: rgba(227, 242, 253, 0.28);
+}
+
+#modal_pri .fotos-pri-wrap.fotos-pri-drop-zone-active .fotos-pri-drop-hint {
+  display: flex;
 }
 
 #modal_pri .fotos-pri-toolbar {
@@ -499,6 +528,11 @@ textarea{
 
 #modal_pri .fotos-pri-crop-toggle {
   margin-left: 8px;
+}
+
+#modal_pri #fotos_pri_pick.fotos-pri-drop-active {
+  background-color: #1e88e5 !important;
+  box-shadow: inset 0 0 0 2px #81d4fa, 0 3px 8px rgba(0, 0, 0, 0.25);
 }
 
 #modal_pri .fotos-pri-status {

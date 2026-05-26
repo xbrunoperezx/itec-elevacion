@@ -15,7 +15,8 @@ var FIRMA_EXPORT_WIDTH = 800;
 var FIRMA_EXPORT_HEIGHT = 600;
 var informeFotosState = {
 	currentInformeId: null,
-	isBusy: false
+	isBusy: false,
+	dragCounter: 0
 };
 
 function escapeHtml(text){
@@ -339,6 +340,7 @@ function buildFotosTab10(idInforme){
 	var idSafe = (idInforme || '').toString();
 	var html = '';
 	html += '<div class="fotos-pri-wrap" data-informe-id="' + escapeHtml(idSafe) + '">';
+	html += '<div id="fotos_pri_drop_hint" class="fotos-pri-drop-hint" aria-hidden="true">Suelta el archivo aqui</div>';
 	html += '<div class="fotos-pri-toolbar">';
 	html += '<a href="#" id="fotos_pri_pick" class="btn waves-effect waves-light blue"><i class="material-icons left">add_a_photo</i>Subir fotos</a>&nbsp;';
 	html += '<a href="#" id="fotos_pri_reload" class="btn waves-effect waves-light grey"><i class="material-icons left">refresh</i>Recargar</a>&nbsp;';
@@ -649,7 +651,7 @@ function processInformeFotosQueue(idInforme, files, index, done){
 	}
 
 	var file = files[index];
-	if(!file || !file.type || file.type.indexOf('image/') !== 0){
+	if(!isInformeFotoImageFile(file)){
 		processInformeFotosQueue(idInforme, files, index + 1, done);
 		return;
 	}
@@ -677,8 +679,64 @@ function processInformeFotosQueue(idInforme, files, index, done){
 
 function initInformeFotosTab(idInforme){
 	informeFotosState.currentInformeId = idInforme;
+	informeFotosState.dragCounter = 0;
+	setFotosDropZoneActive(false);
 	setInformeFotosStatus('Cargando fotos...', 'work');
 	loadInformeFotos(idInforme);
+}
+
+function isInformeFotoImageFile(file){
+	if(!file) return false;
+	var type = (file.type || '').toLowerCase();
+	if(type.indexOf('image/') === 0) return true;
+	var name = (file.name || '').toLowerCase();
+	return /\.(jpg|jpeg|png|gif|webp|bmp|heic|heif|tif|tiff)$/i.test(name);
+}
+
+function splitInformeFotoFiles(files){
+	var valid = [];
+	var invalid = [];
+	$.each(files || [], function(_, file){
+		if(isInformeFotoImageFile(file)) {
+			valid.push(file);
+		} else {
+			invalid.push(file);
+		}
+	});
+	return { valid: valid, invalid: invalid };
+}
+
+function setFotosDropZoneActive(active){
+	var isActive = !!active && !informeFotosState.isBusy;
+	$('#tab10_pri .fotos-pri-wrap').toggleClass('fotos-pri-drop-zone-active', isActive);
+	$('#fotos_pri_pick').toggleClass('fotos-pri-drop-active', isActive);
+}
+
+function startInformeFotosUploadFromFiles(idInforme, files){
+	if(!idInforme){
+		modalError('ERROR', 'No se encontró el ID del informe.', false, 'Cerrar', 'error');
+		return;
+	}
+
+	if(!files || !files.length) return;
+
+	var split = splitInformeFotoFiles(files);
+	if(split.invalid.length > 0){
+		setInformeFotosStatus('Solo se permiten imagenes. Ignorados: ' + split.invalid.length + ' archivo(s).', 'error');
+		M.toast({ html: 'Solo se permiten imagenes' });
+	}
+
+	if(!split.valid.length){
+		return;
+	}
+
+	setInformeFotosBusy(true);
+	processInformeFotosQueue(idInforme, split.valid, 0, function(){
+		setInformeFotosBusy(false);
+		$('#fotos_pri_input').val('');
+		loadInformeFotos(idInforme);
+		M.toast({ html: 'Proceso de subida finalizado' });
+	});
 }
 
 function resizeInformeFirmaCanvas(){
@@ -1670,21 +1728,44 @@ jQuery(document).on('click', '#fotos_pri_reload', function(e){
 
 jQuery(document).on('change', '#fotos_pri_input', function(){
 	var idInforme = informeFotosState.currentInformeId || $('#id_bbdd').val();
-	if(!idInforme){
-		modalError('ERROR', 'No se encontró el ID del informe.', false, 'Cerrar', 'error');
-		return;
-	}
-
 	var files = Array.prototype.slice.call(this.files || []);
-	if(!files.length) return;
+	startInformeFotosUploadFromFiles(idInforme, files);
+});
 
-	setInformeFotosBusy(true);
-	processInformeFotosQueue(idInforme, files, 0, function(){
-		setInformeFotosBusy(false);
-		$('#fotos_pri_input').val('');
-		loadInformeFotos(idInforme);
-		M.toast({ html: 'Proceso de subida finalizado' });
-	});
+jQuery(document).on('dragenter', '#tab10_pri .fotos-pri-wrap', function(e){
+	e.preventDefault();
+	e.stopPropagation();
+	if(informeFotosState.isBusy) return;
+	informeFotosState.dragCounter = (informeFotosState.dragCounter || 0) + 1;
+	setFotosDropZoneActive(true);
+});
+
+jQuery(document).on('dragover', '#tab10_pri .fotos-pri-wrap', function(e){
+	e.preventDefault();
+	e.stopPropagation();
+});
+
+jQuery(document).on('dragleave', '#tab10_pri .fotos-pri-wrap', function(e){
+	e.preventDefault();
+	e.stopPropagation();
+	if(informeFotosState.isBusy) return;
+	informeFotosState.dragCounter = Math.max(0, (informeFotosState.dragCounter || 0) - 1);
+	if(informeFotosState.dragCounter === 0){
+		setFotosDropZoneActive(false);
+	}
+});
+
+jQuery(document).on('drop', '#tab10_pri .fotos-pri-wrap', function(e){
+	e.preventDefault();
+	e.stopPropagation();
+	informeFotosState.dragCounter = 0;
+	setFotosDropZoneActive(false);
+	if(informeFotosState.isBusy) return;
+
+	var idInforme = informeFotosState.currentInformeId || $('#id_bbdd').val();
+	var dt = e.originalEvent ? e.originalEvent.dataTransfer : null;
+	var files = Array.prototype.slice.call((dt && dt.files) ? dt.files : []);
+	startInformeFotosUploadFromFiles(idInforme, files);
 });
 
 jQuery(document).on('click', '.foto-pri-delete', function(e){
