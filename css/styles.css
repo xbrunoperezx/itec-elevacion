@@ -697,12 +697,25 @@ textarea{
   color: #37474f;
 }
 
+#modal_pri #tab11_pri > .row:first-child {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#modal_pri #tab11_pri > .row:first-child > .col.s12 {
+  width: 50%;
+  float: none;
+  margin-left: auto;
+  padding-right: 0;
+}
+
 #modal_pri .informe-stepper {
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
   overflow-x: auto;
   padding-bottom: 6px;
+  width: 100%;
 }
 
 #modal_pri .informe-step {
@@ -766,6 +779,13 @@ textarea{
 
 #modal_pri .informe-step-line.is-done {
   background: #26a69a;
+}
+
+@media (max-width: 992px) {
+  #modal_pri #tab11_pri > .row:first-child > .col.s12 {
+    width: 100%;
+    padding-right: 0.75rem;
+  }
 }
 
 @media (max-width: 768px) {
