@@ -2663,15 +2663,13 @@ var openInforme = function(seccion, cual, id){
 						'<div id="tab10_pri" class="col s12">' + 
 						'</div>' +	
 						'<div id="tab11_pri" class="col s12">' + 
-						'<div class="row">' +
-						  '<div class="col s12">' +
-						    informeStepperHtml +
-						  '</div>' +
-						'</div>' +
-						'<div class="row">' +
+						'<div class="row tab11-stepper-row">' +
 						  '<div class="input-field col s4">' +
 						    '<input type="text" id="id_bbdd" name="id_bbdd" value="' + item.id + '" disabled>' +
 						    '<label for="id_bbdd" class="active">ID BBDD</label>' +
+						  '</div>' +
+						  '<div class="col s8 tab11-stepper-col">' +
+						    informeStepperHtml +
 						  '</div>' +
 						'</div>' +
 						'</div>' +	

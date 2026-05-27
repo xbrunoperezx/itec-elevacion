@@ -691,22 +691,17 @@ textarea{
   color: #bdbdbd;
 }
 
-#modal_pri .admin-estado-title {
-  margin: 4px 0 12px;
-  font-weight: 600;
-  color: #37474f;
-}
-
-#modal_pri #tab11_pri > .row:first-child {
+#modal_pri #tab11_pri .tab11-stepper-row {
   display: flex;
-  justify-content: flex-end;
+  align-items: flex-start;
 }
 
-#modal_pri #tab11_pri > .row:first-child > .col.s12 {
+#modal_pri #tab11_pri .tab11-stepper-col {
   width: 50%;
   float: none;
   margin-left: auto;
   padding-right: 0;
+  padding-top: 2px;
 }
 
 #modal_pri .informe-stepper {
@@ -782,9 +777,15 @@ textarea{
 }
 
 @media (max-width: 992px) {
-  #modal_pri #tab11_pri > .row:first-child > .col.s12 {
+  #modal_pri #tab11_pri .tab11-stepper-row {
+    display: block;
+  }
+
+  #modal_pri #tab11_pri .tab11-stepper-col {
     width: 100%;
     padding-right: 0.75rem;
+    margin-left: 0;
+    padding-top: 0;
   }
 }
 
