@@ -259,11 +259,11 @@ div.modal#modal_pri {
 }
 
 #modal_pri #tab2_pri .mediciones-table .medicion-categoria-cell {
-  width: 10%;
+  width: 8%;
 }
 
 #modal_pri #tab2_pri .mediciones-table .medicion-nombre-cell {
-  width: 15%;
+  width: 12%;
 }
 
 #modal_pri #tab2_pri .mediciones-table .medicion-valor-cell {
@@ -275,7 +275,7 @@ div.modal#modal_pri {
 }
 
 #modal_pri #tab2_pri .mediciones-table .medicion-desc-cell {
-  width: 38%;
+  width: 43%;
 }
 .tabs{
   background-color: #DDDDDD;
