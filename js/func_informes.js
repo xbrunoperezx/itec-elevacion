@@ -2193,8 +2193,9 @@ function buildInformeStepperHtml(estado){
 		var cls = 'is-pending';
 		if(idx < currentIndex) cls = 'is-done';
 		if(idx === currentIndex) cls = 'is-active';
+		var dotValue = (idx < currentIndex) ? '✓' : String(idx + 1);
 		html += '<div class="informe-step ' + cls + '" data-step="' + step.key + '">' +
-			'<span class="informe-step-dot">' + (idx + 1) + '</span>' +
+			'<span class="informe-step-dot">' + dotValue + '</span>' +
 			'<span class="informe-step-label">' + step.label + '</span>' +
 		'</div>';
 		if(idx < INFORME_STEPPER.length - 1){
@@ -2234,6 +2235,7 @@ function updateInformeStepper(estado){
 		if(idx < currentIndex) cls = 'is-done';
 		if(idx === currentIndex) cls = 'is-active';
 		$(this).removeClass('is-pending is-done is-active').addClass(cls);
+		$(this).find('.informe-step-dot').text(idx < currentIndex ? '✓' : String(idx + 1));
 	});
 	$stepper.find('.informe-step-line').each(function(idx){
 		$(this).toggleClass('is-done', idx < currentIndex);

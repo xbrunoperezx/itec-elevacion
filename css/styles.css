@@ -734,15 +734,15 @@ textarea{
   justify-content: center;
   font-weight: 700;
   font-size: 0.85rem;
-  border: 2px solid #cfd8dc;
-  color: #90a4ae;
+  border: 3px solid #c7d0d6;
+  color: #8fa1ad;
   background: #fff;
 }
 
 #modal_pri .informe-step-label {
   margin-top: 6px;
   font-size: 0.82rem;
-  color: #78909c;
+  color: #748897;
   text-align: center;
   white-space: nowrap;
 }
@@ -750,35 +750,35 @@ textarea{
 #modal_pri .informe-step-line {
   flex: 1 1 34px;
   min-width: 28px;
-  height: 2px;
-  background: #e0e0e0;
+  height: 3px;
+  background: #d9dee3;
   margin: 0 6px;
 }
 
 #modal_pri .informe-step.is-done .informe-step-dot {
-  border-color: #26a69a;
-  background: #26a69a;
+  border-color: #9f2f23;
+  background: #9f2f23;
   color: #fff;
 }
 
 #modal_pri .informe-step.is-done .informe-step-label {
-  color: #00695c;
+  color: #6d2018;
   font-weight: 600;
 }
 
 #modal_pri .informe-step.is-active .informe-step-dot {
-  border-color: #1e88e5;
-  background: #e3f2fd;
-  color: #1565c0;
+  border-color: #c74230;
+  background: #fff;
+  color: #c74230;
 }
 
 #modal_pri .informe-step.is-active .informe-step-label {
-  color: #1565c0;
+  color: #c74230;
   font-weight: 700;
 }
 
 #modal_pri .informe-step-line.is-done {
-  background: #26a69a;
+  background: #9f2f23;
 }
 
 @media (max-width: 992px) {
