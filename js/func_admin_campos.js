@@ -43,6 +43,18 @@ function toggleListaCampoVisibility(){
   }
 }
 
+function toggleUnidadCampoVisibility(){
+  var dt = ($('#data_type_camp').val() || '').trim();
+  var showUnidad = (dt === 'NUMERO');
+  $('#unidad_camp_wrap').toggleClass('hide', !showUnidad);
+  if (!showUnidad) {
+    $('#unidad_camp').val('');
+    $('label[for="unidad_camp"]').removeClass('active');
+  } else if ($('#unidad_camp').val()) {
+    $('label[for="unidad_camp"]').addClass('active');
+  }
+}
+
 // Render lista de campos en el contenedor #Campos
 function readCampos(){
   var total = parseInt($('#filtro_campos_total').val(),10) || 15;
@@ -146,6 +158,9 @@ var saveCampo = function() {
 
   if (data_type !== 'LISTA VALORES') {
     lista = '';
+  }
+  if (data_type !== 'NUMERO') {
+    unidad = '';
   }
 
   var campo = {
@@ -256,7 +271,7 @@ var openCampo = function(seccion, cual, id){
               '<input type="text" id="abrev_camp" name="abrev" value="'+ (item.abrev || '') +'" autocomplete="off">' +
               '<label for="abrev_camp" class="active">Abreviatura</label>' +
             '</div>' +
-            '<div class="input-field anchoFrm4 inline">' +
+            '<div class="input-field anchoFrm4 inline" id="unidad_camp_wrap">' +
               '<input type="text" id="unidad_camp" name="unidad" value="'+ (item.unidad || '') +'" autocomplete="off">' +
               '<label for="unidad_camp" class="active">Unidad</label>' +
             '</div>' +
@@ -300,6 +315,7 @@ var openCampo = function(seccion, cual, id){
         $('select#tipo_camp').formSelect();
         $('select#data_type_camp').formSelect();
         toggleListaCampoVisibility();
+        toggleUnidadCampoVisibility();
         $("#modal_"+seccion).modal({ dismissible: false });
         $("#modal_"+seccion).modal('open');
     }).fail(function(){
@@ -331,6 +347,7 @@ var openCampo = function(seccion, cual, id){
             '<option value="TEXTO NORMAL">TEXTO NORMAL</option>' +
             '<option value="CHECKBOX">CHECKBOX</option>' +
             '<option value="LISTA VALORES">LISTA VALORES</option>' +
+            '<option value="FECHA">FECHA</option>' +
           '</select>' +
           '<label for="data_type_camp" class="active">Tipo de dato</label>' +
         '</div>' +
@@ -344,7 +361,7 @@ var openCampo = function(seccion, cual, id){
           '<input type="text" id="abrev_camp" name="abrev" value="" autocomplete="off">' +
           '<label for="abrev_camp">Abreviatura</label>' +
         '</div>' +
-        '<div class="input-field anchoFrm4 inline">' +
+        '<div class="input-field anchoFrm4 inline" id="unidad_camp_wrap">' +
           '<input type="text" id="unidad_camp" name="unidad" value="" autocomplete="off">' +
           '<label for="unidad_camp">Unidad</label>' +
         '</div>' +
@@ -385,6 +402,7 @@ var openCampo = function(seccion, cual, id){
     $('select#tipo_camp').formSelect();
     $('select#data_type_camp').formSelect();
     toggleListaCampoVisibility();
+    toggleUnidadCampoVisibility();
     $("#modal_"+seccion).modal({ dismissible: false });
     $("#modal_"+seccion).modal('open');
     setTimeout(function(){ $('#id_revision_camp').focus(); }, 200);
@@ -393,6 +411,7 @@ var openCampo = function(seccion, cual, id){
 
 jQuery(document).on('change', '#data_type_camp', function(){
   toggleListaCampoVisibility();
+  toggleUnidadCampoVisibility();
 });
 
 // Permitir pulsar Enter en los campos de filtro para ejecutar la búsqueda

@@ -1372,6 +1372,11 @@ function resolveCampoUnidad(fieldData, defaultUnidad){
 	return unidad;
 }
 
+function shouldRenderUnidadInput(dataType, unidad){
+	if((dataType || '') !== 'NUMERO') return false;
+	return String(unidad === undefined || unidad === null ? '' : unidad).trim() !== '';
+}
+
 function sortCamposBySubcategoryAndOrder(campos, tipo){
 	var filtered = [];
 	$.each(campos || [], function(idx, campo){
@@ -1439,6 +1444,7 @@ function buildInstalacionTab2(camposData, instalacionData){
 		var campoData = resolveCampoData(instalacion, abrevCampo, nombreCampo);
 		var valor = resolveCampoValor(campoData);
 		var unidad = resolveCampoUnidad(campoData, campo.unidad || '');
+		var showUnidad = shouldRenderUnidadInput(dataType, unidad || campo.unidad || '');
 		var listaValores = (campo.lista || '').split(',').map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
 
 		html += '<tr class="instalacion-row" data-campo-abrev="' + abrevCampo + '" data-campo-nombre="' + nombreCampo + '" data-campo-tipo="' + dataType + '">';
@@ -1446,7 +1452,7 @@ function buildInstalacionTab2(camposData, instalacionData){
 		html += '<td class="medicion-nombre-cell">' + nombreCampo + '</td>';
 		html += '<td class="medicion-valor-cell">' + buildCamposInputHtml(dataType, nombreCampo, valor, listaValores) + '</td>';
 		html += '<td class="medicion-unidad-cell">';
-		if(dataType !== 'CHECKBOX' && dataType !== 'TEXTO NORMAL'){
+		if(showUnidad){
 			html += '<input type="text" class="campo_unidad" data-campo-abrev="' + abrevCampo + '" data-default-unidad="' + (campo.unidad || '') + '" value="' + (unidad || campo.unidad || '') + '" placeholder="Unidad">';
 		}
 		html += '</td>';
@@ -1481,6 +1487,7 @@ function buildAscensorTab3(camposData, ascensorData){
 		var campoData = resolveCampoData(ascensor, abrevCampo, nombreCampo);
 		var valor = resolveCampoValor(campoData);
 		var unidad = resolveCampoUnidad(campoData, campo.unidad || '');
+		var showUnidad = shouldRenderUnidadInput(dataType, unidad || campo.unidad || '');
 		var listaValores = (campo.lista || '').split(',').map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
 
 		html += '<tr class="ascensor-row" data-campo-abrev="' + abrevCampo + '" data-campo-nombre="' + nombreCampo + '" data-campo-tipo="' + dataType + '">';
@@ -1488,7 +1495,7 @@ function buildAscensorTab3(camposData, ascensorData){
 		html += '<td class="medicion-nombre-cell">' + nombreCampo + '</td>';
 		html += '<td class="medicion-valor-cell">' + buildCamposInputHtml(dataType, nombreCampo, valor, listaValores) + '</td>';
 		html += '<td class="medicion-unidad-cell">';
-		if(dataType !== 'CHECKBOX' && dataType !== 'TEXTO NORMAL'){
+		if(showUnidad){
 			html += '<input type="text" class="campo_unidad" data-campo-abrev="' + abrevCampo + '" data-default-unidad="' + (campo.unidad || '') + '" value="' + (unidad || campo.unidad || '') + '" placeholder="Unidad">';
 		}
 		html += '</td>';
@@ -1578,6 +1585,7 @@ function buildMedicionesTab4(camposData, medicionesData){
 		var medicionData = resolveCampoData(mediciones, abrevCampo, nombreCampo);
 		var valor = resolveCampoValor(medicionData);
 		var unidad = resolveCampoUnidad(medicionData, campo.unidad || '');
+		var showUnidad = shouldRenderUnidadInput(dataType, unidad || campo.unidad || '');
 		var listaValores = (campo.lista || '').split(',').map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
 
 		html += '<tr class="medicion-row" data-medicion-abrev="' + abrevCampo + '" data-medicion-nombre="' + nombreCampo + '" data-medicion-tipo="' + dataType + '">';
@@ -1605,7 +1613,7 @@ function buildMedicionesTab4(camposData, medicionesData){
 		}
 		html += '</td>';
 		html += '<td class="medicion-unidad-cell">';
-		if(dataType !== 'CHECKBOX' && dataType !== 'TEXTO NORMAL'){
+		if(showUnidad){
 			html += '<input type="text" class="medicion_unidad" data-medicion-abrev="' + abrevCampo + '" data-default-unidad="' + (campo.unidad || '') + '" value="' + (unidad || campo.unidad || '') + '" placeholder="Unidad">';
 		}
 		html += '</td>';

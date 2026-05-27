@@ -138,11 +138,14 @@ switch($action) {
     // Normalizar y validar 'tipo' (acepta variantes con y sin tilde)
     $tipo = tipo_campo_canonico($tipo);
 
-    $validDataTypes = array('NUMERO','TEXTO NORMAL','CHECKBOX','LISTA VALORES');
+    $validDataTypes = array('NUMERO','TEXTO NORMAL','CHECKBOX','LISTA VALORES','FECHA');
     if(!in_array(strtoupper($data_type), $validDataTypes)){
       $data_type = 'NUMERO';
     } else {
       $data_type = strtoupper($data_type);
+    }
+    if($data_type !== 'NUMERO'){
+      $unidad = '';
     }
     if($data_type !== 'LISTA VALORES') {
       $lista = '';
@@ -184,11 +187,14 @@ switch($action) {
     // Normalizar y validar 'tipo' (acepta variantes con y sin tilde)
     $tipo = tipo_campo_canonico($tipo);
 
-    $validDataTypes = array('NUMERO','TEXTO NORMAL','CHECKBOX','LISTA VALORES');
+    $validDataTypes = array('NUMERO','TEXTO NORMAL','CHECKBOX','LISTA VALORES','FECHA');
     if(!in_array(strtoupper($data_type), $validDataTypes)){
       $data_type = 'NUMERO';
     } else {
       $data_type = strtoupper($data_type);
+    }
+    if($data_type !== 'NUMERO'){
+      $unidad = '';
     }
     if($data_type !== 'LISTA VALORES') {
       $lista = '';
