@@ -279,6 +279,34 @@ div.modal#modal_pri {
 #modal_pri #tab2_pri .mediciones-table thead th:nth-child(3) { width: 26%; }
 #modal_pri #tab2_pri .mediciones-table thead th:nth-child(4) { width: 11%; }
 #modal_pri #tab2_pri .mediciones-table thead th:nth-child(5) { width: 43%; }
+
+/* Tab3: mismo reparto que tab2 */
+#modal_pri #tab3_pri .mediciones-table .medicion-categoria-cell { width: 8%; }
+#modal_pri #tab3_pri .mediciones-table .medicion-nombre-cell { width: 12%; }
+#modal_pri #tab3_pri .mediciones-table .medicion-valor-cell { width: 26%; }
+#modal_pri #tab3_pri .mediciones-table .medicion-unidad-cell { width: 11%; }
+#modal_pri #tab3_pri .mediciones-table .medicion-desc-cell { width: 43%; }
+
+#modal_pri #tab3_pri .mediciones-table thead th:nth-child(1) { width: 8%; }
+#modal_pri #tab3_pri .mediciones-table thead th:nth-child(2) { width: 12%; }
+#modal_pri #tab3_pri .mediciones-table thead th:nth-child(3) { width: 26%; }
+#modal_pri #tab3_pri .mediciones-table thead th:nth-child(4) { width: 11%; }
+#modal_pri #tab3_pri .mediciones-table thead th:nth-child(5) { width: 43%; }
+
+/* Tab4: misma lógica, dejando más espacio en descripción */
+#modal_pri #tab4_pri .mediciones-table .medicion-categoria-cell { width: 8%; }
+#modal_pri #tab4_pri .mediciones-table .medicion-clave-cell { width: 8%; }
+#modal_pri #tab4_pri .mediciones-table .medicion-nombre-cell { width: 12%; }
+#modal_pri #tab4_pri .mediciones-table .medicion-valor-cell { width: 26%; }
+#modal_pri #tab4_pri .mediciones-table .medicion-unidad-cell { width: 11%; }
+#modal_pri #tab4_pri .mediciones-table .medicion-desc-cell { width: 35%; }
+
+#modal_pri #tab4_pri .mediciones-table thead th:nth-child(1) { width: 8%; }
+#modal_pri #tab4_pri .mediciones-table thead th:nth-child(2) { width: 8%; }
+#modal_pri #tab4_pri .mediciones-table thead th:nth-child(3) { width: 12%; }
+#modal_pri #tab4_pri .mediciones-table thead th:nth-child(4) { width: 26%; }
+#modal_pri #tab4_pri .mediciones-table thead th:nth-child(5) { width: 11%; }
+#modal_pri #tab4_pri .mediciones-table thead th:nth-child(6) { width: 35%; }
 .tabs{
   background-color: #DDDDDD;
 }
