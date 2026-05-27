@@ -56,12 +56,12 @@ $hora_fin_sql = "'" . mysqli_real_escape_string($link, $hora_fin) . "'";
 $gps_latitud_sql = "'" . mysqli_real_escape_string($link, $gps_latitud) . "'";
 $gps_longitud_sql = "'" . mysqli_real_escape_string($link, $gps_longitud) . "'";
 $acude_sql = "'" . mysqli_real_escape_string($link, $acude) . "'";
-$grupo_sql = "NULL";
+$grupo_sql = "0";
 
 if ($grupo !== '') {
   if (preg_match('/^[0-9]+$/', $grupo)) {
     $grupo_id = intval($grupo);
-    if ($grupo_id > 0) {
+    if ($grupo_id >= 0) {
       $grupo_sql = (string)$grupo_id;
     }
   } else {
@@ -71,13 +71,11 @@ if ($grupo !== '') {
     if ($result_grupo && mysqli_num_rows($result_grupo) > 0) {
       $row_grupo = mysqli_fetch_assoc($result_grupo);
       $grupo_sql = (string)intval($row_grupo['id']);
+    } else {
+      echo json_encode(array('error' => 'Grupo inválido. Selecciona un grupo existente.'));
+      mysqli_close($link);
+      exit;
     }
-  }
-
-  if ($grupo_sql === "NULL") {
-    echo json_encode(array('error' => 'Grupo inválido. Selecciona un grupo existente.'));
-    mysqli_close($link);
-    exit;
   }
 }
 

@@ -1183,6 +1183,10 @@ function buildGrupoOptions(grupos, selectedGrupo){
 	var selectedNorm = normalizeCampoKey(selectedRaw);
 	var hasSelected = false;
 	var html = '<option value="" disabled' + (selectedRaw === '' ? ' selected' : '') + '>Selecciona grupo</option>';
+	html += '<option value="0"' + (selectedRaw === '0' ? ' selected' : '') + '>Sin grupo</option>';
+	if(selectedRaw === '0'){
+		hasSelected = true;
+	}
 
 	$.each(grupos || [], function(index, item){
 		var id = String(item.id === undefined || item.id === null ? '' : item.id).trim();
@@ -2137,11 +2141,12 @@ jQuery(document).on("click", "#filtrar_pri", function() {
 
 function getInformeEstado(item){
 	var horaIni = (item.hora_ini || '').trim();
-	var grupo   = (item.grupo   || '').trim();
+	var grupoRaw = String(item.grupo === undefined || item.grupo === null ? '' : item.grupo).trim();
+	var hasGrupo = (grupoRaw !== '' && grupoRaw !== '0');
 	var resultado = (item.resultado == null) ? '' : String(item.resultado).trim();
 	if(resultado !== '' && resultado !== '0') return 'finalizada';
 	if(!horaIni) return 'pendiente';
-	if(horaIni && !grupo) return 'iniciada';
+	if(horaIni && !hasGrupo) return 'iniciada';
 	return 'en_curso';
 }
 
@@ -2202,11 +2207,12 @@ function buildInformeStepperHtml(estado){
 
 function getInformeEstadoFromForm(){
 	var horaIni = ($('#hora_ini').val() || '').trim();
-	var grupo = ($('#grupo_pri').val() || '').trim();
+	var grupoRaw = ($('#grupo_pri').val() || '').trim();
+	var hasGrupo = (grupoRaw !== '' && grupoRaw !== '0');
 	var resultado = ($('#resultado_inspeccion').val() || '').trim();
 	if(resultado !== '' && resultado !== '0') return 'finalizada';
 	if(!horaIni) return 'pendiente';
-	if(!grupo) return 'iniciada';
+	if(!hasGrupo) return 'iniciada';
 	return 'en_curso';
 }
 
