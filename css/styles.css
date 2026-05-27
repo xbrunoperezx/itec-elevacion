@@ -254,10 +254,6 @@ div.modal#modal_pri {
 }
 
 /* Tab2: desplazar antes la columna de valor (input) */
-#modal_pri #tab2_pri .mediciones-table {
-  table-layout: fixed;
-}
-
 #modal_pri #tab2_pri .mediciones-table .medicion-categoria-cell {
   width: 8%;
 }
@@ -277,6 +273,12 @@ div.modal#modal_pri {
 #modal_pri #tab2_pri .mediciones-table .medicion-desc-cell {
   width: 43%;
 }
+
+#modal_pri #tab2_pri .mediciones-table thead th:nth-child(1) { width: 8%; }
+#modal_pri #tab2_pri .mediciones-table thead th:nth-child(2) { width: 12%; }
+#modal_pri #tab2_pri .mediciones-table thead th:nth-child(3) { width: 26%; }
+#modal_pri #tab2_pri .mediciones-table thead th:nth-child(4) { width: 11%; }
+#modal_pri #tab2_pri .mediciones-table thead th:nth-child(5) { width: 43%; }
 .tabs{
   background-color: #DDDDDD;
 }
