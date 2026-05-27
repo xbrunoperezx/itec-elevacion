@@ -2662,6 +2662,11 @@ var openInforme = function(seccion, cual, id){
 						'</div>' +	
 						'<div id="tab11_pri" class="col s12">' + 
 						'<div class="row">' +
+						  '<div class="col s12">' +
+						    informeStepperHtml +
+						  '</div>' +
+						'</div>' +
+						'<div class="row">' +
 						  '<div class="input-field col s4">' +
 						    '<input type="text" id="id_bbdd" name="id_bbdd" value="' + item.id + '" disabled>' +
 						    '<label for="id_bbdd" class="active">ID BBDD</label>' +
@@ -2670,16 +2675,6 @@ var openInforme = function(seccion, cual, id){
 						'</div>' +	
  					'</form>';
 				  var $modal = $("#modal_"+seccion);
-				  $modal.find('.contentStepper').remove();
-				  $modal.find('.contentTabs').before(
-					'<div class="contentStepper">' +
-					  '<div class="row">' +
-					    '<div class="col s12">' +
-					      informeStepperHtml +
-					    '</div>' +
-					  '</div>' +
-					'</div>'
-				  );
 				  $modal.find(".contentTabs").html(frm_tabs);
 				  $modal.find(".contentForm").html(frm_render);
 				  $modal.find('.tabs').tabs();
