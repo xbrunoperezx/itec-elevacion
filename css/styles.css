@@ -252,6 +252,31 @@ div.modal#modal_pri {
   padding-left: 10px;
   box-sizing: border-box;
 }
+
+/* Tab2: desplazar antes la columna de valor (input) */
+#modal_pri #tab2_pri .mediciones-table {
+  table-layout: fixed;
+}
+
+#modal_pri #tab2_pri .mediciones-table .medicion-categoria-cell {
+  width: 10%;
+}
+
+#modal_pri #tab2_pri .mediciones-table .medicion-nombre-cell {
+  width: 15%;
+}
+
+#modal_pri #tab2_pri .mediciones-table .medicion-valor-cell {
+  width: 26%;
+}
+
+#modal_pri #tab2_pri .mediciones-table .medicion-unidad-cell {
+  width: 11%;
+}
+
+#modal_pri #tab2_pri .mediciones-table .medicion-desc-cell {
+  width: 38%;
+}
 .tabs{
   background-color: #DDDDDD;
 }
