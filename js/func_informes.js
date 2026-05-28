@@ -2266,11 +2266,11 @@ function buildFrmTabs(estado, stepperHtml){
 		var locked = allowed.indexOf(t.num) === -1;
 		var linkClass = (t.num === 1 ? 'active ' : '') + t.link + (locked ? ' tab-link-locked' : '');
 		if(locked){
-			html += '<li class="tab col s3 tab-locked disabled">' +
+			html += '<li class="tab tab-locked disabled">' +
 				'<a class="' + linkClass + '" href="' + t.href + '" data-tab="' + t.href + '" title="' + t.title + ' (bloqueado)">' +
 				'<i class="material-icons left">lock</i></a></li>';
 		} else {
-			html += '<li class="tab col s3">' +
+			html += '<li class="tab">' +
 				'<a class="' + linkClass + '" href="' + t.href + '" title="' + t.title + '">' +
 				'<i class="material-icons left">' + t.icon + '</i></a></li>';
 		}
