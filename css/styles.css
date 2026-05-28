@@ -746,63 +746,72 @@ textarea{
   color: #bdbdbd;
 }
 
-#modal_pri #tab11_pri .tab11-stepper-row {
+#modal_pri .modal-tabs-stepper-row {
+  margin-bottom: 0;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
 }
 
-#modal_pri #tab11_pri .tab11-stepper-col {
-  width: 50%;
-  float: none;
-  margin-left: auto;
+#modal_pri .modal-tabs-col,
+#modal_pri .modal-stepper-col {
+  padding-left: 0;
   padding-right: 0;
-  padding-top: 2px;
+}
+
+#modal_pri .modal-stepper-col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 48px;
+  padding-right: 10px;
 }
 
 #modal_pri .informe-stepper {
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
-  overflow-x: auto;
-  padding-bottom: 6px;
+  justify-content: flex-end;
+  overflow: hidden;
   width: 100%;
+  max-width: 460px;
 }
 
 #modal_pri .informe-step {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 110px;
+  min-width: 82px;
 }
 
 #modal_pri .informe-step-dot {
-  width: 30px;
-  height: 30px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.85rem;
-  border: 3px solid #c7d0d6;
+  font-size: 0.72rem;
+  border: 2px solid #c7d0d6;
   color: #8fa1ad;
   background: #fff;
 }
 
 #modal_pri .informe-step-label {
-  margin-top: 6px;
-  font-size: 0.82rem;
+  margin-top: 4px;
+  font-size: 0.72rem;
+  line-height: 1.1;
   color: #748897;
   text-align: center;
   white-space: nowrap;
 }
 
 #modal_pri .informe-step-line {
-  flex: 1 1 34px;
-  min-width: 28px;
-  height: 3px;
+  flex: 1 1 20px;
+  min-width: 16px;
+  height: 2px;
   background: #d9dee3;
-  margin: 0 6px;
+  margin: 0 4px;
 }
 
 #modal_pri .informe-step.is-done .informe-step-dot {
@@ -832,15 +841,19 @@ textarea{
 }
 
 @media (max-width: 992px) {
-  #modal_pri #tab11_pri .tab11-stepper-row {
+  #modal_pri .modal-tabs-stepper-row {
     display: block;
   }
 
-  #modal_pri #tab11_pri .tab11-stepper-col {
-    width: 100%;
-    padding-right: 0.75rem;
-    margin-left: 0;
-    padding-top: 0;
+  #modal_pri .modal-stepper-col {
+    justify-content: flex-start;
+    padding: 6px 0.75rem 4px;
+    min-height: 0;
+  }
+
+  #modal_pri .informe-stepper {
+    max-width: none;
+    overflow-x: auto;
   }
 }
 
