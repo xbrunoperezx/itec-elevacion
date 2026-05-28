@@ -2341,8 +2341,9 @@ jQuery(document).on('click', '#btn_iniciar_inspeccion', function(e){
 					$('#gps_longitud').val(resp.gps_longitud || '').trigger('input');
 				}
 				$('#hora_ini').val(horaIni).trigger('change');
+				$('#tab1_pri .tab1-time-fields').show();
 				$('#tab1_pri .tab1-full-fields').show();
-				$('#btn_iniciar_inspeccion').closest('.row').hide();
+				$('#tab1_pri .tab1-start-wrapper').hide();
 				syncGoogleMapsButton();
 				refreshInformeEstadoUIFromForm();
 				M.toast({ html: 'Inspección iniciada: ' + horaIni });
@@ -2462,20 +2463,20 @@ var openInforme = function(seccion, cual, id){
 						    '<input type="date" id="fecha_inspeccion" name="fecha_inspeccion" value="' + item.fecha + '">' +
 						    '<label for="fecha_inspeccion" class="active">Fecha Inspección</label>' +
 						  '</div>' +
-						  '<div class="input-field col s2">' +
+						  '<div class="input-field col s2 tab1-time-fields"' + (informeEstado === 'pendiente' ? ' style="display:none;"' : '') + '>' +
 						    '<input type="time" id="hora_ini" name="hora_ini" value="' + item.hora_ini + '">' +
 						    '<label for="hora_ini" class="active">Hora inicio</label>' +
 						  '</div>' +
-						  '<div class="input-field col s2">' +
+						  '<div class="input-field col s2 tab1-time-fields"' + (informeEstado === 'pendiente' ? ' style="display:none;"' : '') + '>' +
 						    '<input type="time" id="hora_fin" name="hora_fin" value="' + item.hora_fin + '">' +
 						    '<label for="hora_fin" class="active">Hora fin</label>' +
 						  '</div>' +
-						  '<div class="input-field col s2">' +
+						  '<div class="input-field col s2 tab1-time-fields"' + (informeEstado === 'pendiente' ? ' style="display:none;"' : '') + '>' +
 						    '<input type="text" id="duracion_minutos" name="duracion_minutos" value="" readonly>' +
 						    '<label for="duracion_minutos" class="active">Duración (min)</label>' +
 						  '</div>' +
 						(informeEstado === 'pendiente' ?
-						  '<div class="col s3" style="padding-top:10px;">' +
+						  '<div class="col s3 tab1-start-wrapper" style="padding-top:10px;">' +
 						    '<a href="#" id="btn_iniciar_inspeccion" class="btn waves-effect waves-light blue"><i class="material-icons left">play_arrow</i>Iniciar Inspección</a>' +
 						  '</div>'
 						: '') +
