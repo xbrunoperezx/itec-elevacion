@@ -2458,18 +2458,10 @@ var openInforme = function(seccion, cual, id){
 						  '</div>' +
 						'</div>' +
 						'<div class="row">' +
-						  '<div class="input-field col s4">' +
+						  '<div class="input-field col s3">' +
 						    '<input type="date" id="fecha_inspeccion" name="fecha_inspeccion" value="' + item.fecha + '">' +
 						    '<label for="fecha_inspeccion" class="active">Fecha Inspección</label>' +
 						  '</div>' +
-						(informeEstado === 'pendiente' ?
-						  '<div class="col s4" style="padding-top:10px;">' +
-						    '<a href="#" id="btn_iniciar_inspeccion" class="btn waves-effect waves-light blue"><i class="material-icons left">play_arrow</i>Iniciar Inspección</a>' +
-						  '</div>'
-						: '') +
-						'</div>' +
-						'<div id="tab1_full_fields" class="tab1-full-fields"' + (informeEstado === 'pendiente' ? ' style="display:none;"' : '') + '>' +
-						'<div class="row">' +
 						  '<div class="input-field col s2">' +
 						    '<input type="time" id="hora_ini" name="hora_ini" value="' + item.hora_ini + '">' +
 						    '<label for="hora_ini" class="active">Hora inicio</label>' +
@@ -2478,11 +2470,17 @@ var openInforme = function(seccion, cual, id){
 						    '<input type="time" id="hora_fin" name="hora_fin" value="' + item.hora_fin + '">' +
 						    '<label for="hora_fin" class="active">Hora fin</label>' +
 						  '</div>' +
-						  '<div class="input-field col s4">' +
+						  '<div class="input-field col s2">' +
 						    '<input type="text" id="duracion_minutos" name="duracion_minutos" value="" readonly>' +
 						    '<label for="duracion_minutos" class="active">Duración (min)</label>' +
 						  '</div>' +
+						(informeEstado === 'pendiente' ?
+						  '<div class="col s3" style="padding-top:10px;">' +
+						    '<a href="#" id="btn_iniciar_inspeccion" class="btn waves-effect waves-light blue"><i class="material-icons left">play_arrow</i>Iniciar Inspección</a>' +
+						  '</div>'
+						: '') +
 						'</div>' +
+						'<div id="tab1_full_fields" class="tab1-full-fields"' + (informeEstado === 'pendiente' ? ' style="display:none;"' : '') + '>' +
 						'<div class="row">' +
 						  '<div class="input-field col s2">' +
 						    '<input type="text" id="gps_latitud" name="gps_latitud" value="' + item.gps_latitud + '">' +

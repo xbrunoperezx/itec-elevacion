@@ -750,6 +750,7 @@ textarea{
   margin-bottom: 0;
   display: flex;
   align-items: center;
+  background: #DDDDDD;
 }
 
 #modal_pri .modal-tabs-col,
@@ -764,6 +765,7 @@ textarea{
   justify-content: flex-end;
   min-height: 48px;
   padding-right: 10px;
+  background: #DDDDDD;
 }
 
 #modal_pri .informe-stepper {
@@ -774,6 +776,7 @@ textarea{
   overflow: hidden;
   width: 100%;
   max-width: 460px;
+  background: #DDDDDD;
 }
 
 #modal_pri .informe-step {
